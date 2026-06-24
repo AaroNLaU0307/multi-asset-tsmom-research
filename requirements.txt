@@ -1,0 +1,13 @@
+# Dependencies for the multi-asset TSMOM research project.
+# Minimum versions below; tested with the exact versions noted in the comment.
+#
+# tested with (Python 3.13):
+#   yfinance==1.4.1  pandas==3.0.3  numpy==2.4.6
+#   scipy==1.17.1    matplotlib==3.11.0  pytest==9.1.0
+
+yfinance>=0.2.40
+pandas>=2.0
+numpy>=1.24
+scipy>=1.10
+matplotlib>=3.7
+pytest>=7.4

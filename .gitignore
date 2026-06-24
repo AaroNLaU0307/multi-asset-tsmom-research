@@ -1,0 +1,34 @@
+# --- Virtual environment ---
+.venv/
+venv/
+env/
+
+# --- Python caches ---
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ipynb_checkpoints/
+
+# --- Market data: NEVER commit (yfinance pulls Yahoo data; licensing) ---
+data/
+data_cache/
+*.parquet
+
+# --- Generated analysis artifacts (re-creatable via the pipeline) ---
+# The whole output/ folder is regenerable and git-ignored. The key figures the
+# README/STUDY_SUMMARY reference are copied into assets/ (which IS tracked).
+output/
+
+# --- XSMOM quarantine (separated cross-sectional-momentum research) ---
+# Held on disk for reference but kept OUT of this clean TSMOM repo.
+_quarantine_xsmom/
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# --- NOTE: assets/ is intentionally NOT ignored (tracked figures for the README) ---
