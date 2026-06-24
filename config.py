@@ -306,6 +306,36 @@ DAILY_PRIMITIVES_CSV = OUTPUT_DIR / "daily_primitives_sample.csv"
 
 
 # --------------------------------------------------------------------------- #
+# SEASONALITY / CALENDAR EFFECTS (strategy C) — Step-1 DESCRIPTIVE premise test.
+# Every parameter is fixed by the pre-registration contract
+# (research/seasonality/PREREGISTRATION.md) BEFORE any computation — none is
+# searched/tuned. Descriptive only: mean returns on effect-days vs non-effect-days;
+# no positions / P&L / strategy at this step.
+# --------------------------------------------------------------------------- #
+# Effect definitions (fixed)
+SEAS_TOM_LAST = 1                  # E1: last N trading days of each month are TOM
+SEAS_TOM_FIRST = 3                 # E1: first N trading days of each month are TOM
+SEAS_WINTER_MONTHS = (11, 12, 1, 2, 3, 4)   # E2: Nov-Apr = "winter" (else summer)
+# E3 (Monday) = first trading day of each calendar week (handles holiday Mondays).
+
+# Test statistic / multiplicity (fixed)
+SEAS_HAC_LAG = 10                  # Newey-West HAC lag (trading days) for the primary t-test
+SEAS_BLOCK_LEN = 10                # moving-block bootstrap block length (trading days)
+SEAS_BOOTSTRAP_N = BOOTSTRAP_N     # 10,000 resamples (reuse the project default)
+SEAS_FDR_Q = 0.10                  # BH-FDR level across the full 18-test family
+SEAS_WINSOR = (0.01, 0.99)         # E1/E3 daily concentration check winsorization limits
+
+# Economic-magnitude bar (fixed): |Δ mean daily return| in basis points/day.
+SEAS_MAGNITUDE_BPS = 5.0           # confirm requires |Δ| >= 5 bps/day in the prior direction
+SEAS_WINSOR_RETAIN = 0.5           # E1/E3: winsorized Δ must retain >= 0.5x the bar (>=2.5 bps)
+
+# Seasonality premise artifacts
+SEASONALITY_PREMISE_MD = OUTPUT_DIR / "SEASONALITY_PHASE1_PREMISE.md"
+SEASONALITY_PREMISE_CSV = OUTPUT_DIR / "seasonality_premise_family.csv"
+SEASONALITY_PERYEAR_CSV = OUTPUT_DIR / "seasonality_e2_per_year.csv"
+
+
+# --------------------------------------------------------------------------- #
 # Keep-priority for the greedy screening filter (lower number = processed and
 # kept first). Domain-informed prior: broad / canonical / liquid representatives
 # of a factor are processed first so they become the kept anchor; narrow sector
