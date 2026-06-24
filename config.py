@@ -285,6 +285,27 @@ DD_TIMELINE_PNG = OUTPUT_DIR / "dd_chop_crash_timeline.png"
 
 
 # --------------------------------------------------------------------------- #
+# VOL-COMPRESSION BREAKOUT (strategy B) — daily infra + premise test + (gated)
+# overlay. Conventional values, STATED UP FRONT and NOT searched/tuned. Data is
+# adjusted-close only (no intraday H/L), so the "ATR" compression measure is the
+# daily realized-vol percentile — the same verified-causal definition style as the
+# Step-5 regime vars (rolling vol + trailing percentile rank).
+# --------------------------------------------------------------------------- #
+COMPRESSION_VOL_WINDOW = 20        # daily realized-vol window (~1 trading month, ATR-style)
+COMPRESSION_PCTILE_WINDOW = 252    # trailing (~1y) window for the causal vol-percentile rank
+COMPRESSION_THRESHOLD = 0.20       # "compressed" = vol percentile <= 0.20 (low-vol regime)
+BREAKOUT_LOOKBACK = 20             # Donchian recent-high/low breakout reference (~1 month)
+PREMISE_HORIZONS = (5, 10, 20)     # post-compression look-forward windows (Phase 1B, descriptive)
+DAILY_RECONCILE_TOL = 1e-9         # daily->monthly return reconciliation tolerance
+
+# Strategy-B / premise artifacts
+BREAKOUT_PHASE1A_MD = OUTPUT_DIR / "BREAKOUT_PHASE1A_INFRA.md"
+BREAKOUT_PREMISE_MD = OUTPUT_DIR / "BREAKOUT_PHASE1B_PREMISE.md"
+BREAKOUT_PREMISE_CSV = OUTPUT_DIR / "breakout_premise_by_sleeve.csv"
+DAILY_PRIMITIVES_CSV = OUTPUT_DIR / "daily_primitives_sample.csv"
+
+
+# --------------------------------------------------------------------------- #
 # Keep-priority for the greedy screening filter (lower number = processed and
 # kept first). Domain-informed prior: broad / canonical / liquid representatives
 # of a factor are processed first so they become the kept anchor; narrow sector
