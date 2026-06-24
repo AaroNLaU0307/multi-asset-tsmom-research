@@ -1,13 +1,13 @@
 # Multi-Asset Time-Series Momentum — a research project
 
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)
-strategy: a *confirmed* core edge, then two candidate overlays each *falsified* at the
+strategy: a *confirmed* core edge, then three candidate overlays each *falsified* at the
 cheapest stage with a mechanism explanation.** The deliverable is not a single strategy —
 it is the discipline: confirm what survives, reject what doesn't, and explain *why* in
 each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
-> zero) · a drawdown diagnostic · two falsified overlays · 55 passing tests · strict
+> zero) · a drawdown diagnostic · three falsified overlays · 65 passing tests · strict
 > no-look-ahead, reconciled at every step.
 
 ---
@@ -64,16 +64,21 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
   3.5e-18; the daily infra compounds back to the monthly engine at 1.3e-15).
 - **Full transaction-cost modelling**, with a cost-sensitivity sweep.
 - **Premise before strategy.** An overlay must first be shown to *have a premise* (cheap,
-  read-only) before any P&L is fit. Both overlays below were rejected at this gate.
-- **Falsification standard for any overlay** (ready, per the XSMOM sibling project):
-  **paired-difference bootstrap** of Δ-Sharpe vs the core, **BH-FDR** family-wise correction
-  across pre-registered variants. In practice both overlays failed earlier, at the premise gate.
+  read-only) before any P&L is fit. All three overlays below were rejected at this gate.
+- **Pre-registration + multiplicity control.** Calendar/seasonality is a multiple-comparisons
+  minefield, so the seasonality study (3d) **pre-registered** its 18-test family and decision rule
+  *before computing anything*, and corrected with **BH-FDR** across the whole family — the machinery
+  actively caught a tempting false positive (below).
+- **Falsification standard for any overlay** (ready, per the XSMOM sibling project): once a premise
+  survives, a **paired-difference bootstrap** of Δ-Sharpe vs the core with **BH-FDR** across
+  pre-registered variants. In practice all three overlays failed earlier, at the premise gate, so no
+  P&L was ever fit.
 
-**55 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
-attribution reconciliation, daily↔monthly reconciliation, regime/premise causality). Run
-`python -m pytest -q`.
+**65 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
+attribution reconciliation, daily↔monthly reconciliation, regime/premise causality, and the
+seasonality labellers/BH-FDR/HAC primitives). Run `python -m pytest -q`.
 
-## 3. The research arc — one diagnostic, two falsified overlays
+## 3. The research arc — one diagnostic, three falsified overlays
 
 Full write-ups in [`research/`](research/README.md). Summary:
 
@@ -83,7 +88,7 @@ Decomposes the equity curve per asset/sleeve and classifies each drawdown as **c
 multi-sleeve**, and — the decision-relevant part — they occur in **ordinary-volatility,
 low-correlation** regimes, *not* crises. (Honest caveat in the report: the position-conditional
 split structurally leans "crash" for a slow trend-follower; the robust facts are the loss
-*mechanism* and the multi-sleeve breadth.) This diagnosis is what gated the two overlays.
+*mechanism* and the multi-sleeve breadth.) This diagnosis is what gated the first two overlays (3b–3c).
 → [`research/diagnostic/`](research/diagnostic/DRAWDOWN_ATTRIBUTION_REPORT.md)
 
 ![drawdowns tagged chop vs crash](research/diagnostic/dd_chop_crash_timeline.png)
@@ -113,15 +118,44 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   need OHLC data) — stated, not glossed.
 → [`research/vol_breakout/`](research/vol_breakout/BREAKOUT_PHASE1B_PREMISE.md)
 
+### 3d. Seasonality / calendar-effects overlay — **FALSIFIED at premise (0/18)**
+- **Premise:** classic calendar anomalies — **turn-of-month**, **Halloween / "Sell-in-May"**, and the
+  **Monday** effect — tilt daily returns, so a mechanical calendar tilt could complement the core. A
+  different direction entirely from the drawdown-motivated overlays above.
+- **Gate (descriptive, pre-registered).** Seasonality is the **highest-overfitting-risk** direction
+  tested — calendar slicing has many dimensions, and *any* return series shows *some* "significant"
+  pattern by chance — so the family and decision rule were **pre-registered before any computation**:
+  3 a-priori effects × (pooled + 5 sleeves) = **18 cells**, each required to clear a **5-gate
+  conjunction** — survive **BH-FDR q = 0.10** across the whole family **and** match the prior sign
+  **and** clear a **≥ 5 bps/day** economic-magnitude bar **and** be **sub-period / year stable** **and**
+  be **non-concentrated** (year-level jackknife for the annual effect).
+- **Why it failed — nothing survives the multiplicity tax. 0 of 18 cells** clear the conjunction.
+  Turn-of-month and Halloween are essentially **absent** here (Δ mostly 0–5 bps, p > 0.24).
+- **The instructive near-miss — an *actively-caught false positive*.** The **Monday** effect had the
+  **correct (negative) sign in all six scopes** and looked "significant" in isolation (Bond *p* = 0.026)
+  — but the smallest raw *p* in the family (0.026) sits far above the BH rank-1 threshold (≈ 0.0056), so
+  it **evaporates once the 18-test multiplicity tax is paid**. This is exactly the false positive the
+  pre-registration + FDR existed to catch — *before* any modeling cost was spent. Flattening it to
+  "Monday wasn't significant" would miss the point: in isolation it *was*; the discipline is what
+  rejected it.
+- **Mechanism cross-link.** The textbook **equity** turn-of-month premium is ~**+0.5 bps** here — it has
+  essentially **arbitraged away at liquid-ETF granularity**, echoing the **XSMOM** sibling finding that
+  effects visible in large single-name universes dissipate at ETF granularity. Same mechanism family.
+→ [`research/seasonality/`](research/seasonality/SEASONALITY_PHASE1_PREMISE.md) · pre-registration:
+[`research/seasonality/PREREGISTRATION.md`](research/seasonality/PREREGISTRATION.md)
+
 ## 4. What this means
 
-The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the two
+The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the three
 directions tested** — and establishing that, *with the mechanism of each failure*, is itself
 the result. Crash-defense fails because the strategy's pain is not a contagion regime;
 vol-compression breakout fails because close-to-close compression carries no directional
-information here. Both were rejected before any curve-fitting, at the cheapest possible stage.
-That is the point of the project: the same honest validation machinery that **confirms** a real
-edge also **rejects** plausible-sounding additions — and says exactly why.
+information here; seasonality fails because the textbook calendar effects have essentially
+arbitraged away at liquid-ETF granularity. All three were rejected before any curve-fitting, at
+the cheapest possible stage. That is the point of the project: the same honest validation
+machinery that **confirms** a real edge also **rejects** plausible-sounding additions — and, in the
+seasonality case, **actively caught a tempting false positive** (the Monday effect) that the
+pre-registered multiplicity correction dissolved before a dollar of P&L was fit.
 
 ## How to run (reproducible)
 
@@ -139,8 +173,9 @@ python run_drawdown_attribution.py        # diagnostic
 python verify_systemic.py                 # crash-defense Phase 0 (falsified)
 python run_breakout_phase1a.py            # daily infra
 python run_breakout_phase1b.py            # vol-breakout premise (falsified)
+python run_seasonality_premise.py         # seasonality premise, 0/18 (falsified)
 
-python -m pytest -q                       # 55 tests
+python -m pytest -q                       # 65 tests
 ```
 
 First core run downloads daily ETF data from Yahoo Finance and caches it to `data/`
@@ -158,8 +193,9 @@ src/                              # library: engine + screening + diagnostic + d
   correlation clustering data_quality recommend report                  # universe screening
   attribution regime                                                    # drawdown diagnostic
   daily premise                                                         # vol-breakout infra + premise
+  seasonality                                                           # calendar-effects premise (BH-FDR + HAC)
 research/                         # committed arc write-ups (reports + figures), per investigation
-tests/                           # 55 tests (no-look-ahead + reconciliation + causality)
+tests/                           # 65 tests (no-look-ahead + reconciliation + causality)
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 ```
@@ -168,7 +204,9 @@ STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 
 Honest limitations are detailed in [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md): wide confidence
 interval, cost sensitivity, Monte-Carlo tail risk, post-2008 sample window, and ETF-vs-futures
-proxy bias. The vol-breakout negative is scoped to close-to-close compression (no intraday ATR).
+proxy bias. The vol-breakout negative is scoped to close-to-close compression (no intraday ATR);
+the seasonality negative is scoped to the three pre-registered calendar effects on this 17-ETF
+universe (not a claim that no calendar structure exists in any market).
 
 **For research and educational purposes only. Not investment advice. Backtested performance
 does not guarantee future results.**

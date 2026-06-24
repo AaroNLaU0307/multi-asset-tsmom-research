@@ -200,20 +200,43 @@ fewer parameters, lower turnover, no covariance dependence.
 
 ## 8. Research arc & future directions
 
-This is the third project in a deliberate arc using one honest validation methodology:
+One honest validation methodology, applied at two levels.
+
+**Across projects** — signal-to-noise is the deciding variable:
 
 - **SMC / breakout on XAUUSD (single instrument)** → *falsified* (CI crosses 0); low
   signal-to-noise is a mathematical inevitability for one instrument.
   [github.com/AaroNLaU0307/quant-backtest-framework](https://github.com/AaroNLaU0307/quant-backtest-framework)
 - **Multi-asset TSMOM (this project)** → *confirmed* a modest, cost-capped edge with
   genuine crisis alpha, via cross-factor diversification.
-- Together: a portfolio that **both falsifies ineffective strategies and confirms
-  effective ones** with the same rigor — the point is the methodology, not a number.
+- **Cross-sectional momentum (XSMOM sibling project)** → did *not* confirm at ETF
+  granularity: the cross-sectional premium that large single-name universes show dissipates
+  across 17 ETFs.
+
+**Within this project** — having confirmed the modest core, **three orthogonal overlay
+families** were tested to extend it, **each falsified at the cheapest premise stage** (full
+write-ups in [`research/`](research/README.md)):
+
+- **Crash-defense** — falsified: the strategy's pain is not a systemic-risk-spike regime; the
+  trigger maxes out in the 2008/2020 *profit* windows and is silent in the real drawdowns.
+- **Vol-compression breakout** — falsified: close-to-close compression precedes vol expansion
+  but **not direction**; the apparent edge was a narrow-channel counting artifact.
+- **Seasonality / calendar effects** — falsified: **0 of 18** pre-registered cells survived the
+  BH-FDR + magnitude + stability conjunction. The textbook equity turn-of-month premium is
+  ~+0.5 bps at ETF granularity (arbitraged away — the same mechanism as the XSMOM finding), and
+  the one tempting near-miss — the **Monday** effect, "significant" in isolation (Bond *p*=0.026)
+  — was an **actively-caught false positive** that the pre-registered 18-test multiplicity
+  correction dissolved *before any P&L was fit*.
+
+**The meta-point.** The modest TSMOM edge has **no obvious orthogonal extension in the three
+directions tested**, and establishing that — *with each failure's mechanism* — is itself the
+deliverable. The same machinery that **confirmed** the core also **rejected** every plausible
+addition, and in the seasonality case actively caught a false positive the discipline existed to
+catch. Negatives are first-class results here, reported as plainly as the one positive.
 
 **Future work:** true futures data (remove ETF roll/expense bias and extend the history
-pre-2008); cross-sectional momentum as a complementary factor; an explicit
-transaction-cost-aware execution layer; and combining trend with carry/value for a
-multi-style program.
+pre-2008); an explicit transaction-cost-aware execution layer; and combining trend with
+carry/value for a multi-style program.
 
 ---
 
