@@ -1,0 +1,6 @@
+universe,name,prior,N,net_sharpe,ci_lo,ci_hi,pvalue,qvalue,bh_reject,wf_pos,same_sign,confirmed,corr_vs_tsmom,combo_sharpe,best_leg_sharpe,rho_star_breakeven,cost_ceiling_bps,term1_autocov,term2_leadlag,term3_dispersion
+U1,US equity sectors,strong,9,0.088,-0.366,0.561,0.6974,0.9876,False,True,False,False,0.125,0.406,0.336,0.598,14.5,-4.19e-05,-6.298e-05,6.84e-06
+U2,Country equity indices,strong,18,-0.123,-0.577,0.351,0.6144,0.9876,False,False,True,False,0.139,0.031,0.109,-0.96,0.0,0.00013967,0.00018122,4.21e-06
+U3,G10 FX vs USD,weak,6,0.036,-0.426,0.503,0.878,0.9876,False,True,False,False,0.227,-0.003,0.069,-0.999,4.6,-1.819e-05,-1.033e-05,1.11e-06
+U4,Commodities (ETF),weak/caveated,7,0.422,-0.035,0.88,0.0714,0.357,False,True,True,False,0.305,0.563,0.464,0.992,150.2,0.00041433,0.00020776,7.88e-05
+U5,Bonds (NEGATIVE CONTROL),predicted negative,6,0.006,-0.442,0.462,0.9876,0.9876,False,True,True,False,0.247,0.517,0.635,-0.071,2.7,1.236e-05,-7e-08,1.01e-06
