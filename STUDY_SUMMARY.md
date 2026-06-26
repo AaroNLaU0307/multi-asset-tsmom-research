@@ -213,7 +213,7 @@ One honest validation methodology, applied at two levels.
   granularity: the cross-sectional premium that large single-name universes show dissipates
   across 17 ETFs.
 
-**Within this project** — having confirmed the modest core, **three orthogonal overlay
+**Within this project** — having confirmed the modest core, **four orthogonal overlay
 families** were tested to extend it, **each falsified at the cheapest premise stage** (full
 write-ups in [`research/`](research/README.md)):
 
@@ -227,12 +227,30 @@ write-ups in [`research/`](research/README.md)):
   the one tempting near-miss — the **Monday** effect, "significant" in isolation (Bond *p*=0.026)
   — was an **actively-caught false positive** that the pre-registered 18-test multiplicity
   correction dissolved *before any P&L was fit*.
+- **Yield-curve slope (macro regime)** — falsified: a single economy-wide curve slope (10Y-3M
+  primary, 10Y-2Y robustness) as a **portfolio-regime conditioner**; **0 of 6** pre-registered cells
+  confirmed (BH-FDR *p* = 0.60–0.67, every bootstrap CI crosses 0). The weak whipsaw-side (H−) tilt is
+  **noise-level and carried entirely by the single 2022-24 inversion episode** — it collapses below the
+  4%/yr bar when that one episode is dropped (the largest flat stretch, 2017-20, contributes ≈0) — so it
+  is a **clean null with no claimable direction**. Distinct lesson vs the prior three: the trap is
+  **nominal sample size, not statistical significance** — ~4,800 trading days, but the inverted state is
+  effectively **one** macro episode (2022-24 = 97% of 10Y-2Y inverted days), so any apparent effect is
+  indistinguishable from a single-episode coincidence; the **episode jackknife, ranked above the
+  significance test**, is what exposed it.
 
-**The meta-point.** The modest TSMOM edge has **no obvious orthogonal extension in the three
-directions tested**, and establishing that — *with each failure's mechanism* — is itself the
-deliverable. The same machinery that **confirmed** the core also **rejected** every plausible
-addition, and in the seasonality case actively caught a false positive the discipline existed to
-catch. Negatives are first-class results here, reported as plainly as the one positive.
+**The meta-point.** The modest TSMOM edge has **no obvious orthogonal extension in the four
+directions tested** — three price-based (crash-defense, vol-breakout, seasonality) and one genuinely
+macro / orthogonal to the price paths (yield-curve slope) — and establishing that, *with each
+failure's mechanism*, is itself the deliverable. The same machinery that **confirmed** the core also
+**rejected** every plausible addition, and along the way caught two *different* statistical illusions
+the discipline exists to catch: a tempting **false positive** (seasonality's Monday, dissolved by the
+BH-FDR multiplicity tax) and a **nominal-sample-size illusion** (yield-spread's single-episode effect,
+dissolved by the episode jackknife). A broader **macro-regime overlay** was deliberately not separately
+tested — pre-emptively ruled out at the event-count level: as the same class of slow, economy-wide signal
+as the yield curve, its regime transitions are equally sparse in-sample, so it would hit the identical
+single-episode wall; declining to test a direction already known to fail for the same reason is
+disciplined budget allocation, not an untested gap. Negatives are first-class results here, reported as
+plainly as the one positive.
 
 **Future work:** true futures data (remove ETF roll/expense bias and extend the history
 pre-2008); an explicit transaction-cost-aware execution layer; and combining trend with

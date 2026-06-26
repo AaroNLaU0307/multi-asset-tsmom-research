@@ -379,3 +379,38 @@ KEEP_PRIORITY: dict[str, int] = {
     "IEF": 35,   # intermediate Treasury (~0.92 with TLT)
     "FXE": 36,   # euro (~ -0.94 with UUP)
 }
+
+
+# --------------------------------------------------------------------------- #
+# YIELD-CURVE MACRO-REGIME overlay (research/yield_spread) — Step-1 premise.
+# Every parameter is fixed by the pre-registration
+# (research/yield_spread/PREREGISTRATION.md) BEFORE any slope x TSMOM result;
+# none is searched/tuned. The conditioning state is STRICTLY causal:
+# slope -> trailing-percentile rank (same style as the Step-5 regime vars)
+# -> tercile bucket -> used at t-1. Descriptive premise only (no positions/P&L).
+# --------------------------------------------------------------------------- #
+YIELD_FILES = {                          # user-supplied FRED CSVs in data/ (gitignored)
+    "DGS3MO": DATA_DIR / "DGS3MO.csv",
+    "DGS2": DATA_DIR / "DGS2.csv",
+    "DGS10": DATA_DIR / "DGS10.csv",
+}
+YIELD_SPREADS = {                        # name -> (long_leg, short_leg)
+    "10Y-3M": ("DGS10", "DGS3MO"),       # primary (NY-Fed recession-model standard)
+    "10Y-2Y": ("DGS10", "DGS2"),         # robustness
+}
+YIELD_PRIMARY_SPREAD = "10Y-3M"
+YIELD_PCTILE_WINDOW = REGIME_VOL_PCTILE_WINDOW   # 756 td (~3y) causal trailing-percentile window
+YIELD_TERCILE_LO = 1.0 / 3.0             # flat  = trailing-slope percentile <= 1/3
+YIELD_TERCILE_HI = 2.0 / 3.0             # steep = trailing-slope percentile >= 2/3
+YIELD_FWD_HORIZONS = (21, 63, 126)       # forward windows (~1, 3, 6 months); fixed, not searched
+YIELD_FWD_SKIP = 21                      # forward-skip robustness: start the window at t+SKIP
+YIELD_MAGNITUDE_ANN = 0.04               # economic-magnitude bar: |delta annualized| >= 4%/yr
+YIELD_EPISODE_BRIDGE = 10                # merge flat/inversion runs separated by <= N trading days
+YIELD_MIN_EPISODES = 2                   # >=2 independent episodes must carry the effect (>=2-episode gate)
+YIELD_FDR_Q = 0.10                       # BH-FDR level across the 6-cell primary family
+YIELD_WINDOW = ("2007-04-18", "2026-06-12")  # common all-17-present window (matches the engine)
+
+# artifacts
+YIELD_PREMISE_MD = OUTPUT_DIR / "YIELD_SPREAD_PHASE1_PREMISE.md"
+YIELD_PREMISE_CSV = OUTPUT_DIR / "yield_spread_premise_family.csv"
+YIELD_EPISODES_CSV = OUTPUT_DIR / "yield_spread_episodes.csv"
