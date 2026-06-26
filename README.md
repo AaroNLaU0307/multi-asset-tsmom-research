@@ -1,13 +1,13 @@
 # Multi-Asset Time-Series Momentum — a research project
 
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)
-strategy: a *confirmed* core edge, then three candidate overlays each *falsified* at the
+strategy: a *confirmed* core edge, then four candidate overlays each *falsified* at the
 cheapest stage with a mechanism explanation.** The deliverable is not a single strategy —
 it is the discipline: confirm what survives, reject what doesn't, and explain *why* in
 each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
-> zero) · a drawdown diagnostic · three falsified overlays · 65 passing tests · strict
+> zero) · a drawdown diagnostic · four falsified overlays · 73 passing tests · strict
 > no-look-ahead, reconciled at every step.
 
 ---
@@ -64,21 +64,21 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
   3.5e-18; the daily infra compounds back to the monthly engine at 1.3e-15).
 - **Full transaction-cost modelling**, with a cost-sensitivity sweep.
 - **Premise before strategy.** An overlay must first be shown to *have a premise* (cheap,
-  read-only) before any P&L is fit. All three overlays below were rejected at this gate.
+  read-only) before any P&L is fit. All four overlays below were rejected at this gate.
 - **Pre-registration + multiplicity control.** Calendar/seasonality is a multiple-comparisons
   minefield, so the seasonality study (3d) **pre-registered** its 18-test family and decision rule
   *before computing anything*, and corrected with **BH-FDR** across the whole family — the machinery
   actively caught a tempting false positive (below).
 - **Falsification standard for any overlay** (ready, per the XSMOM sibling project): once a premise
   survives, a **paired-difference bootstrap** of Δ-Sharpe vs the core with **BH-FDR** across
-  pre-registered variants. In practice all three overlays failed earlier, at the premise gate, so no
+  pre-registered variants. In practice all four overlays failed earlier, at the premise gate, so no
   P&L was ever fit.
 
-**65 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
-attribution reconciliation, daily↔monthly reconciliation, regime/premise causality, and the
-seasonality labellers/BH-FDR/HAC primitives). Run `python -m pytest -q`.
+**73 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
+attribution reconciliation, daily↔monthly reconciliation, regime/premise causality, the
+seasonality labellers/BH-FDR/HAC primitives, and the causal yield-curve primitives). Run `python -m pytest -q`.
 
-## 3. The research arc — one diagnostic, three falsified overlays
+## 3. The research arc — one diagnostic, four falsified overlays
 
 Full write-ups in [`research/`](research/README.md). Summary:
 
@@ -144,18 +144,46 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
 → [`research/seasonality/`](research/seasonality/SEASONALITY_PHASE1_PREMISE.md) · pre-registration:
 [`research/seasonality/PREREGISTRATION.md`](research/seasonality/PREREGISTRATION.md)
 
+### 3e. Yield-curve slope overlay (macro regime) — **FALSIFIED at premise (0/6)**
+- **Premise:** a single economy-wide **yield-curve slope** (10Y-3M primary, 10Y-2Y robustness) as a
+  **portfolio-regime conditioner** on the whole book — the one *genuinely macro / orthogonal* overlay
+  (the term structure of rates is not a function of the ETF price paths), unlike the three price-based ones.
+- **Gate (descriptive, pre-registered).** A small **6-cell** family (2 spreads × 3 forward horizons
+  {21, 63, 126}d × a causal trailing-percentile **tercile** state, conditioned at **t−1**), **BH-FDR
+  q = 0.10** across all six, plus a **≥ 4%/yr** economic-magnitude bar and — the load-bearing gate — an
+  **event-level leave-one-episode-out jackknife, ranked *above* the significance test**.
+- **Why it failed — a nominal-sample-size illusion. 0 of 6 cells** confirm: nothing is significant
+  (BH-FDR *p* 0.60–0.67; every bootstrap CI crosses 0), and the weak negative tilt is **carried entirely
+  by the single 2022-24 inversion episode** — it collapses below the magnitude bar when that one episode
+  is dropped (the larger 2017-20 flat stretch contributes ≈ 0). Reported as a **clean null with no
+  claimable direction**: the H− "whipsaw-side" tilt is noise-level and jackknife-fragile — *not*
+  "flatness predicts whipsaw".
+- **Distinct pitfall vs the prior three.** The trap here is **nominal sample size, not statistical
+  significance**: ~4,800 trading days, but the curve's inverted/flat state is effectively **one** macro
+  episode (2022-24 = 97% of the 10Y-2Y inverted days), so any apparent effect is indistinguishable from a
+  single-episode coincidence. The **episode jackknife** is what exposes it — a different
+  statistical-pitfall dimension than the earlier overlays caught.
+→ [`research/yield_spread/`](research/yield_spread/PHASE1_PREMISE.md) · pre-registration:
+[`research/yield_spread/PREREGISTRATION.md`](research/yield_spread/PREREGISTRATION.md)
+
 ## 4. What this means
 
-The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the three
+The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
 directions tested** — and establishing that, *with the mechanism of each failure*, is itself
 the result. Crash-defense fails because the strategy's pain is not a contagion regime;
 vol-compression breakout fails because close-to-close compression carries no directional
 information here; seasonality fails because the textbook calendar effects have essentially
-arbitraged away at liquid-ETF granularity. All three were rejected before any curve-fitting, at
-the cheapest possible stage. That is the point of the project: the same honest validation
-machinery that **confirms** a real edge also **rejects** plausible-sounding additions — and, in the
-seasonality case, **actively caught a tempting false positive** (the Monday effect) that the
-pre-registered multiplicity correction dissolved before a dollar of P&L was fit.
+arbitraged away at liquid-ETF granularity; and the yield-curve slope — the one genuinely macro,
+orthogonal direction — fails because its apparent regime effect is a **nominal-sample-size illusion**,
+carried entirely by the single 2022-24 inversion episode and gone under a leave-one-episode-out
+jackknife. All four were rejected before any curve-fitting, at the cheapest possible stage; a broader
+macro-regime overlay was then **pre-emptively closed at the event-count level** for the same sparsity
+reason, rather than spend the test budget reproducing a foregone conclusion. That is the point of the
+project: the same honest validation machinery that **confirms** a real edge also **rejects**
+plausible-sounding additions — and along the way caught two *different* statistical illusions the
+discipline exists to catch: a tempting **false positive** (seasonality's Monday, dissolved by the
+pre-registered multiplicity correction) and a **nominal-sample-size illusion** (yield-spread's
+single-episode effect, dissolved by the episode jackknife) — both before a dollar of P&L was fit.
 
 ## How to run (reproducible)
 
@@ -174,8 +202,9 @@ python verify_systemic.py                 # crash-defense Phase 0 (falsified)
 python run_breakout_phase1a.py            # daily infra
 python run_breakout_phase1b.py            # vol-breakout premise (falsified)
 python run_seasonality_premise.py         # seasonality premise, 0/18 (falsified)
+python run_yield_premise.py               # yield-curve slope premise, 0/6 (falsified)
 
-python -m pytest -q                       # 65 tests
+python -m pytest -q                       # 73 tests
 ```
 
 First core run downloads daily ETF data from Yahoo Finance and caches it to `data/`
@@ -194,8 +223,9 @@ src/                              # library: engine + screening + diagnostic + d
   attribution regime                                                    # drawdown diagnostic
   daily premise                                                         # vol-breakout infra + premise
   seasonality                                                           # calendar-effects premise (BH-FDR + HAC)
+  yields                                                                # yield-curve macro-regime premise (causal slope/tercile)
 research/                         # committed arc write-ups (reports + figures), per investigation
-tests/                           # 65 tests (no-look-ahead + reconciliation + causality)
+tests/                           # 73 tests (no-look-ahead + reconciliation + causality)
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 ```
