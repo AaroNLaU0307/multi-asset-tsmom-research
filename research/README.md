@@ -1,7 +1,8 @@
 # Research arc — the five investigations
 
 This folder holds the **committed write-ups** of the research arc around the confirmed
-multi-asset TSMOM core: one diagnostic and four falsified overlays. The reports and figures
+multi-asset TSMOM core: one diagnostic, four falsified overlays, and a parallel cross-sectional study
+(XSMOM). The reports and figures
 here are snapshots — the code lives at the repo root / `src/` (kept there so imports stay
 clean), and re-running the scripts regenerates the live copies under `output/` (git-ignored).
 
@@ -48,5 +49,23 @@ curve) was then **pre-emptively closed at the event-count level** rather than ta
 as the same class of slow, economy-wide signal, its regime transitions are equally sparse in-sample
 (a handful of independent episodes), so it would hit the identical wall and only reproduce a foregone
 conclusion — disciplined budget allocation, not an untested gap.
+
+## Parallel investigation — Cross-sectional momentum (XSMOM)
+
+Distinct from the overlay arc above: XSMOM is **not an overlay on** the TSMOM core but its
+**cross-sectional counterpart** — the same 17 ETFs and the same engine, ranking assets *against each
+other* (dollar-neutral long/short) instead of each against its own trend. Pre-registered, falsified,
+reusing the engine verbatim, in two phases:
+
+| Phase | Verdict | Report | Code (repo root / `src/`) |
+|---|---|---|---|
+| **P1 — 17-ETF head-to-head** | **FALSIFIED** — net Sharpe **0.28** (95% CI [−0.18, 0.75] crosses 0); `corr(XSMOM, TSMOM) = +0.42` ⇒ the 50/50 mix *dilutes* (0.66 < TSMOM's 0.75); part static premium (Sharpe halves under demeaning) | [`xsmom/XSMOM_README.md`](xsmom/XSMOM_README.md) | `src/xsmom.py`, `xsmom_config.py`, `run_xsmom.py` |
+| **P2 — 5-universe FDR map** | **FALSIFIED 0/5** — no universe survives BH-FDR + walk-forward + Deflated-Sharpe; Lo–MacKinlay shows the XSMOM-only **lead-lag term is not shown to be non-trivial anywhere** | [`xsmom/XSMOM_UNIVERSES_README.md`](xsmom/XSMOM_UNIVERSES_README.md) | `src/xsmom_data.py`, `src/xsmom_stats.py`, `xsmom_universes.py`, `run_xsmom_universes.py` |
+
+**Mechanism (why it belongs in the arc):** at liquid-ETF granularity, rank-relative and trend-absolute
+momentum are largely the **same source** the confirmed core already harvests — so XSMOM adds **no
+diversification** (the +0.42 correlation) and **no confirmable standalone edge**. A parallel
+falsification *with a mechanism*, sitting alongside the four overlays. (Reproduce: `python run_xsmom.py`
+→ 0.28 / +0.42; `python run_xsmom_universes.py` → 0/5. +28 tests, suite total 101.)
 
 See the top-level [`README.md`](../README.md) for the full narrative and the confirmed-core results.

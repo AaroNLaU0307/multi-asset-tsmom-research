@@ -7,7 +7,8 @@ it is the discipline: confirm what survives, reject what doesn't, and explain *w
 each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
-> zero) · a drawdown diagnostic · four falsified overlays · 73 passing tests · strict
+> zero) · a drawdown diagnostic · four falsified overlays · a parallel cross-sectional study (XSMOM)
+> · 101 passing tests · strict
 > no-look-ahead, reconciled at every step.
 
 ---
@@ -69,16 +70,17 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
   minefield, so the seasonality study (3d) **pre-registered** its 18-test family and decision rule
   *before computing anything*, and corrected with **BH-FDR** across the whole family — the machinery
   actively caught a tempting false positive (below).
-- **Falsification standard for any overlay** (ready, per the XSMOM sibling project): once a premise
+- **Falsification standard for any overlay** (demonstrated in the XSMOM study, §3·parallel): once a premise
   survives, a **paired-difference bootstrap** of Δ-Sharpe vs the core with **BH-FDR** across
   pre-registered variants. In practice all four overlays failed earlier, at the premise gate, so no
   P&L was ever fit.
 
-**73 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
+**101 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
 attribution reconciliation, daily↔monthly reconciliation, regime/premise causality, the
-seasonality labellers/BH-FDR/HAC primitives, and the causal yield-curve primitives). Run `python -m pytest -q`.
+seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
+signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-## 3. The research arc — one diagnostic, four falsified overlays
+## 3. The research arc — one diagnostic, four falsified overlays, one parallel study
 
 Full write-ups in [`research/`](research/README.md). Summary:
 
@@ -139,7 +141,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   "Monday wasn't significant" would miss the point: in isolation it *was*; the discipline is what
   rejected it.
 - **Mechanism cross-link.** The textbook **equity** turn-of-month premium is ~**+0.5 bps** here — it has
-  essentially **arbitraged away at liquid-ETF granularity**, echoing the **XSMOM** sibling finding that
+  essentially **arbitraged away at liquid-ETF granularity**, echoing the **XSMOM** finding (the parallel study below) that
   effects visible in large single-name universes dissipate at ETF granularity. Same mechanism family.
 → [`research/seasonality/`](research/seasonality/SEASONALITY_PHASE1_PREMISE.md) · pre-registration:
 [`research/seasonality/PREREGISTRATION.md`](research/seasonality/PREREGISTRATION.md)
@@ -166,6 +168,20 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
 → [`research/yield_spread/`](research/yield_spread/PHASE1_PREMISE.md) · pre-registration:
 [`research/yield_spread/PREREGISTRATION.md`](research/yield_spread/PREREGISTRATION.md)
 
+### Parallel investigation — Cross-sectional momentum (XSMOM) — **FALSIFIED (0/5)**
+*Not an overlay on the core, but its **cross-sectional counterpart**: the same 17 ETFs and the same
+engine, ranking assets against each other (dollar-neutral long-short) instead of each against its own
+trend. The question — does relative-strength add anything time-series momentum doesn't?*
+- **Phase 1 (head-to-head):** XSMOM net **Sharpe 0.28**, 95% CI [−0.18, 0.75] → **crosses 0**; and the
+  punchline **`corr(XSMOM, TSMOM) = +0.42`** → the 50/50 mix (0.66) *dilutes* rather than diversifies
+  (below TSMOM's 0.75). Part of the modest edge is a **static risk premium** (Sharpe halves under demeaning).
+- **Phase 2 (5-universe, FDR-controlled map):** **0/5** universes survive BH-FDR + walk-forward +
+  Deflated-Sharpe. The **Lo–MacKinlay decomposition** shows the XSMOM-only **lead-lag term is not shown
+  to be non-trivial anywhere** — the mechanism: at liquid-ETF granularity, rank-relative and
+  trend-absolute momentum are largely the **same source** the core already harvests.
+→ [`research/xsmom/`](research/xsmom/XSMOM_README.md) (Phase 1) ·
+[`research/xsmom/XSMOM_UNIVERSES_README.md`](research/xsmom/XSMOM_UNIVERSES_README.md) (Phase 2)
+
 ## 4. What this means
 
 The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
@@ -183,7 +199,11 @@ project: the same honest validation machinery that **confirms** a real edge also
 plausible-sounding additions — and along the way caught two *different* statistical illusions the
 discipline exists to catch: a tempting **false positive** (seasonality's Monday, dissolved by the
 pre-registered multiplicity correction) and a **nominal-sample-size illusion** (yield-spread's
-single-episode effect, dissolved by the episode jackknife) — both before a dollar of P&L was fit.
+single-episode effect, dissolved by the episode jackknife) — both before a dollar of P&L was fit. And
+the **cross-sectional counterpart (XSMOM)** — not an overlay, but the same core seen through
+relative-strength instead of trend — was *also* falsified (0/5 universes), for the most telling reason
+of all: at liquid-ETF granularity it is largely the **same source** the time-series core already
+harvests (corr +0.42; the XSMOM-only lead-lag term not shown to be non-trivial).
 
 ## How to run (reproducible)
 
@@ -204,7 +224,11 @@ python run_breakout_phase1b.py            # vol-breakout premise (falsified)
 python run_seasonality_premise.py         # seasonality premise, 0/18 (falsified)
 python run_yield_premise.py               # yield-curve slope premise, 0/6 (falsified)
 
-python -m pytest -q                       # 73 tests
+# --- parallel: cross-sectional momentum (XSMOM) ---
+python run_xsmom.py                        # XSMOM Phase 1 head-to-head, Sharpe 0.28 (falsified)
+python run_xsmom_universes.py             # XSMOM Phase 2 map, 0/5 (falsified)
+
+python -m pytest -q                       # 101 tests
 ```
 
 First core run downloads daily ETF data from Yahoo Finance and caches it to `data/`
@@ -224,8 +248,9 @@ src/                              # library: engine + screening + diagnostic + d
   daily premise                                                         # vol-breakout infra + premise
   seasonality                                                           # calendar-effects premise (BH-FDR + HAC)
   yields                                                                # yield-curve macro-regime premise (causal slope/tercile)
+  xsmom xsmom_data xsmom_stats                                          # cross-sectional momentum (parallel study)
 research/                         # committed arc write-ups (reports + figures), per investigation
-tests/                           # 73 tests (no-look-ahead + reconciliation + causality)
+tests/                           # 101 tests (no-look-ahead + reconciliation + causality)
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 ```

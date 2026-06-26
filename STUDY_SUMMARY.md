@@ -209,9 +209,11 @@ One honest validation methodology, applied at two levels.
   [github.com/AaroNLaU0307/quant-backtest-framework](https://github.com/AaroNLaU0307/quant-backtest-framework)
 - **Multi-asset TSMOM (this project)** → *confirmed* a modest, cost-capped edge with
   genuine crisis alpha, via cross-factor diversification.
-- **Cross-sectional momentum (XSMOM sibling project)** → did *not* confirm at ETF
-  granularity: the cross-sectional premium that large single-name universes show dissipates
-  across 17 ETFs.
+- **Cross-sectional momentum (XSMOM)** — *now folded into this repo*
+  ([`research/xsmom/`](research/xsmom/XSMOM_README.md)) → did *not* confirm at ETF granularity:
+  standalone Sharpe 0.28 (CI crosses 0), **+0.42-correlated** with the confirmed TSMOM core (no
+  diversification), and **0/5** universes in the Phase-2 FDR-controlled map. The cross-sectional
+  premium that large single-name universes show dissipates across liquid ETFs.
 
 **Within this project** — having confirmed the modest core, **four orthogonal overlay
 families** were tested to extend it, **each falsified at the cheapest premise stage** (full
