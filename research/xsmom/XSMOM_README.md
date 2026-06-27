@@ -7,8 +7,9 @@ trend-following on each asset alone does not?** The deliverable is not a standal
 Sharpe; it is the **comparison** — Sharpe, crisis behaviour, and above all the
 **correlation** of the two return streams (the diversification question).
 
-> Companion to [`README.md`](../../README.md) (TSMOM). Same universe, same 12-1 cadence, same
-> engine, same no-look-ahead discipline. Only three layers are new — signal,
+> The **cross-sectional counterpart** to this repo's TSMOM core ([`README.md`](../../README.md)) — a
+> *parallel investigation*, not an overlay. Same universe, same 12-1 cadence, same engine, same
+> no-look-ahead discipline. Only three layers are new — signal,
 > dollar-neutral construction, and comparison — in [`src/xsmom.py`](../../src/xsmom.py),
 > [`xsmom_config.py`](../../xsmom_config.py), [`run_xsmom.py`](../../run_xsmom.py). **No engine code
 > was modified.** Full results: [`XSMOM_REPORT.md`](XSMOM_REPORT.md).
@@ -40,14 +41,19 @@ premium**. A textbook negative result — pre-registered and reported as-is.
 
 ## How this fits the research arc
 
-Third strategy, **one honest validation methodology** — used to reject and confirm alike:
+**One honest validation methodology**, used to reject and confirm alike — across the full arc this
+repo now holds:
 
-- **SMC / breakout on XAUUSD** — *falsified* (single-instrument Sharpe CI crossed 0).
-- **Multi-asset TSMOM** (this repo, [`README.md`](../../README.md)) — *confirmed* a modest,
+- **SMC / breakout on XAUUSD** (the earlier single-instrument project) — *falsified*
+  (single-instrument Sharpe CI crossed 0).
+- **Multi-asset TSMOM** (this repo's core, [`README.md`](../../README.md)) — *confirmed* a modest,
   cost-capped edge with real crisis alpha.
-- **XSMOM** (this study) — *falsified on the same universe*, **and** shown to add no
-  diversification to TSMOM. The interesting negative: at ETF granularity, "rank-relative"
-  and "trend-absolute" momentum are largely the *same source*.
+- **Four overlays on that core** — crash-defense, vol-compression breakout, seasonality, and the
+  yield-curve macro regime — each *falsified at the cheapest premise stage*, with a mechanism (see the
+  [research arc](../README.md)).
+- **XSMOM** (this study) — the **parallel cross-sectional counterpart**: *falsified on the same
+  universe*, **and** shown to add no diversification to TSMOM. The interesting negative: at ETF
+  granularity, "rank-relative" and "trend-absolute" momentum are largely the *same source*.
 
 ## Pre-registered criteria (fixed before looking at any result)
 
@@ -146,7 +152,7 @@ no diversification payoff.
 .\.venv\Scripts\Activate.ps1
 python run_backtest.py     # TSMOM (the baseline this study compares against)
 python run_xsmom.py        # XSMOM build + full head-to-head -> output/XSMOM_REPORT.md
-python -m pytest -q        # 55 tests (43 engine + 12 new XSMOM no-look-ahead/correctness)
+python -m pytest -q        # 101 tests (incl. 28 XSMOM no-look-ahead/correctness, two phases)
 ```
 
 Reads the cached daily ETF data (`data/`); regenerates the report, CSVs and the
