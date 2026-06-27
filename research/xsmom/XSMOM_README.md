@@ -13,6 +13,10 @@ Sharpe; it is the **comparison** — Sharpe, crisis behaviour, and above all the
 > dollar-neutral construction, and comparison — in [`src/xsmom.py`](../../src/xsmom.py),
 > [`xsmom_config.py`](../../xsmom_config.py), [`run_xsmom.py`](../../run_xsmom.py). **No engine code
 > was modified.** Full results: [`XSMOM_REPORT.md`](XSMOM_REPORT.md).
+>
+> *The `*_REPORT.md` in this folder are **dated run snapshots** — their counts/dates reflect that run
+> (e.g. "43 tests", 2026-06-22), not the merged repo; the current project state is the
+> [top-level README](../../README.md).*
 
 ## TL;DR
 

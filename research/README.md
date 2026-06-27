@@ -1,4 +1,4 @@
-# Research arc — the five investigations
+# Research arc — five investigations + a parallel study
 
 This folder holds the **committed write-ups** of the research arc around the confirmed
 multi-asset TSMOM core: one diagnostic, four falsified overlays, and a parallel cross-sectional study
