@@ -1,8 +1,8 @@
-# Design decisions & anticipated questions
+# Design decisions & known objections
 
-*A short briefing, not an essay — the questions a sharp interviewer would actually ask, answered the
-same way the rest of this repo reports results: plainly, with the number attached, caveats included.
-Grounded only in what the repo already shows; nothing here is a new claim.*
+*A short briefing, not an essay — the strongest objections to this research, answered with the repo's
+own evidence: plainly, with the number attached, caveats included. Grounded only in what the repo
+already shows; nothing here is a new claim.*
 
 ---
 
@@ -57,12 +57,15 @@ Two, because they're different failure modes:
   above the BH rank-1 threshold (≈ 0.0056), so it evaporates under the pre-registered multiplicity
   correction. Eyeballing a "significant" *p* = 0.026 without the family context would have shipped a
   false discovery.
-- **The yield-curve single-episode illusion.** The tercile-state effect looked directionally consistent
-  and even cleared the magnitude bar at longer horizons — but the **leave-one-episode-out jackknife**
-  showed the whole effect was carried by the single 2022-24 inversion (97% of inverted 10Y-2Y days);
-  dropping it collapsed the effect below the bar. ~4,800 trading days is not ~4,800 independent
+- **The yield-curve nominal-sample-size illusion.** None of the 6 pre-registered cells were ever
+  statistically significant (BH-FDR *p* 0.60–0.67; every bootstrap CI crosses zero) — a clean null with
+  no claimable direction. But 2 of the 6 (both the 126-day horizon) cleared the 4%/yr economic-magnitude
+  bar on the raw full sample despite being insignificant — exactly the kind of point estimate that
+  invites over-reading. The **leave-one-episode-out jackknife** closed that door: even that weak,
+  full-sample tilt was carried entirely by the single 2022-24 inversion episode (97% of inverted 10Y-2Y
+  days); dropping it collapsed the tilt below the bar. ~4,800 trading days is not ~4,800 independent
   observations when the regime itself only transitioned a handful of times — the day count alone would
-  have fooled a naive significance test.
+  have overstated the evidence.
 
 ## "What would make you abandon the confirmed core?"
 

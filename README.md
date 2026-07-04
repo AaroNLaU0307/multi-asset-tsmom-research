@@ -293,8 +293,8 @@ proxy bias. The vol-breakout negative is scoped to close-to-close compression (n
 the seasonality negative is scoped to the three pre-registered calendar effects on this 17-ETF
 universe (not a claim that no calendar structure exists in any market).
 
-See [`INTERVIEW_NOTES.md`](INTERVIEW_NOTES.md) for the design decisions and objections a sharp reader
-would raise, answered in the same honest voice.
+See [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) for the strongest objections to this research,
+answered with the repo's own evidence.
 
 **For research and educational purposes only. Not investment advice. Backtested performance
 does not guarantee future results.**
