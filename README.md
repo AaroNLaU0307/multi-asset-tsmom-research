@@ -1,5 +1,7 @@
 # Multi-Asset Time-Series Momentum — a research project
 
+[![Tests](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml/badge.svg)](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml)
+
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)
 strategy: a *confirmed* core edge, then four candidate overlays each *falsified* at the
 cheapest stage with a mechanism explanation.** The deliverable is not a single strategy —
@@ -8,8 +10,36 @@ each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
 > zero) · a drawdown diagnostic · four falsified overlays · a parallel cross-sectional study (XSMOM)
-> · 101 passing tests · strict
+> · 101 passing tests, CI-verified · strict
 > no-look-ahead, reconciled at every step.
+
+## TL;DR (60 seconds)
+
+- **Confirmed core:** multi-asset TSMOM, 17 ETFs / 5 sleeves, monthly + vol-targeted — net Sharpe
+  **0.75** (95% bootstrap CI [0.29, 1.23], excludes 0), with genuine crisis alpha (GFC +11.6%, COVID +7.3%).
+- **Four overlays tested to extend it, all falsified at the cheapest premise stage** —
+  crash-defense (trigger anti-aligned with drawdowns), vol-compression breakout (no directional
+  premise), seasonality (0/18, BH-FDR multiplicity), yield-curve macro regime (0/6, single-episode
+  illusion) — each with a stated mechanism, not just "it didn't work."
+- **A parallel cross-sectional study (XSMOM)** — also falsified: Sharpe 0.28 (CI crosses 0),
+  +0.42-correlated with TSMOM (no diversification), 0/5 universes in the FDR-controlled map.
+- **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
+  control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
+- **101 tests, CI-verified** on every push (badge above) — not a self-reported count.
+- **Costs always modelled; negatives are first-class results**, reported as plainly as the one positive.
+
+## The arc at a glance
+
+```mermaid
+flowchart TD
+    CORE["TSMOM core<br/>✅ CONFIRMED — Sharpe 0.75, CI excludes 0"]
+
+    CORE --> O1["Crash-defense<br/>Gate: systemic-risk spike?<br/>❌ trigger anti-aligned"]
+    CORE --> O2["Vol-compression breakout<br/>Gate: compression → direction?<br/>❌ no directional premise"]
+    CORE --> O3["Seasonality<br/>Gate: BH-FDR, 18 cells<br/>❌ 0/18, multiplicity"]
+    CORE --> O4["Yield-curve slope<br/>Gate: episode jackknife<br/>❌ 0/6, single-episode illusion"]
+    CORE -. parallel study .-> X["XSMOM cross-sectional<br/>Gate: Sharpe CI + BH-FDR map<br/>❌ 0/5, same source (corr +0.42)"]
+```
 
 ---
 
@@ -262,6 +292,9 @@ interval, cost sensitivity, Monte-Carlo tail risk, post-2008 sample window, and 
 proxy bias. The vol-breakout negative is scoped to close-to-close compression (no intraday ATR);
 the seasonality negative is scoped to the three pre-registered calendar effects on this 17-ETF
 universe (not a claim that no calendar structure exists in any market).
+
+See [`INTERVIEW_NOTES.md`](INTERVIEW_NOTES.md) for the design decisions and objections a sharp reader
+would raise, answered in the same honest voice.
 
 **For research and educational purposes only. Not investment advice. Backtested performance
 does not guarantee future results.**
