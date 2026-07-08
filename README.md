@@ -162,7 +162,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   **and** clear a **≥ 5 bps/day** economic-magnitude bar **and** be **sub-period / year stable** **and**
   be **non-concentrated** (year-level jackknife for the annual effect).
 - **Why it failed — nothing survives the multiplicity tax. 0 of 18 cells** clear the conjunction.
-  Turn-of-month and Halloween are essentially **absent** here (Δ mostly 0–5 bps, p > 0.24).
+  Turn-of-month and Halloween are essentially **absent** here (Δ mostly 0–5 bps, p > 0.20).
 - **The instructive near-miss — an *actively-caught false positive*.** The **Monday** effect had the
   **correct (negative) sign in all six scopes** and looked "significant" in isolation (Bond *p* = 0.026)
   — but the smallest raw *p* in the family (0.026) sits far above the BH rank-1 threshold (≈ 0.0056), so

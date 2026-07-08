@@ -32,7 +32,8 @@ results.
 
 Stated as a limitation, not hidden: commodity and currency ETFs carry roll/expense drag that a real
 futures program wouldn't. It's called out explicitly where it matters most — the XSMOM commodities
-universe (U4) is flagged as "not a clean proxy for the futures the literature uses," and it's also the
+universe (U4)'s ETFs "suffer roll/contango decay and are not clean proxies for the futures the literature
+uses," and it's also the
 *one* universe with the largest (still-falsified) point estimate, so the caveat is directly
 load-bearing, not decorative. The honest scope: this is the confirmable edge **on liquid ETFs**, not a
 claim about the futures market. [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md)'s future-work section names true
@@ -102,7 +103,7 @@ even though picking the best-scoring variant would have looked better.
 
 The selection criterion was independence, not performance: a daily-return correlation matrix +
 hierarchical clustering removed redundant proxies for the same factor (e.g. QQQ/XLK/IWM/EFA are
-0.85–0.97 correlated with SPY) using a fixed threshold (`|r| ≥ 0.80`), decided before looking at any
+0.85–0.93 correlated with SPY) using a fixed threshold (`|r| ≥ 0.80`), decided before looking at any
 backtest result. The one deliberately *costly* choice — trading WEAT/CORN/CPER for the 2008 sample —
 went the **opposite** direction a snooper would: it was kept despite slightly weaker diversification,
 specifically to preserve the hardest regime for a trend-follower to survive, not to flatter the number.
