@@ -299,6 +299,17 @@ answered with the repo's own evidence.
 **For research and educational purposes only. Not investment advice. Backtested performance
 does not guarantee future results.**
 
+## Related research
+
+Part of a falsification-first research series applying the same protocol across asset classes
+and strategy families:
+
+- [`quant-backtest-framework`](https://github.com/AaroNLaU0307/quant-backtest-framework) - multi-instrument SMC price-action study, **falsified** (0/210 cross-instrument BH-FDR across 5 instruments x 42 configs).
+- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **falsified/null** (0/20 cells survive BH-FDR; 18-month OOS never opened).
+- [`spot-mfi-btc-perp-research`](https://github.com/AaroNLaU0307/spot-mfi-btc-perp-research) - spot money-flow signals for BTC perps, base study **falsified** (0/42 BH-FDR); funding-divergence follow-up **inconclusive, leaning falsified**.
+
+The series' base rate is the point: confirmations are earned against the same gates that falsify everything else.
+
 ---
 
 *MIT License. © 2026 Aaron Lau Chiong Wen.*
