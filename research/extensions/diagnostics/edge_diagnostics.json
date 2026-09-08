@@ -1,0 +1,693 @@
+{
+  "window": {
+    "first": "2008-05-31",
+    "last": "2026-06-30",
+    "n_months": 218
+  },
+  "assets": [
+    "SPY",
+    "EEM",
+    "EWJ",
+    "XLE",
+    "XLU",
+    "TLT",
+    "SHY",
+    "LQD",
+    "HYG",
+    "USO",
+    "UNG",
+    "GLD",
+    "DBA",
+    "UUP",
+    "FXY",
+    "VNQ",
+    "RWX"
+  ],
+  "X07": {
+    "corr_matrix": {
+      "SPY": {
+        "SPY": 1.0,
+        "EEM": 0.2271,
+        "EWJ": 0.5377,
+        "XLE": 0.0782,
+        "XLU": 0.1183,
+        "TLT": -0.1147,
+        "SHY": 0.046,
+        "LQD": 0.002,
+        "HYG": 0.4931,
+        "USO": 0.0195,
+        "UNG": -0.1049,
+        "GLD": 0.1493,
+        "DBA": 0.0766,
+        "UUP": 0.0078,
+        "FXY": 0.0564,
+        "VNQ": 0.282,
+        "RWX": 0.2335
+      },
+      "EEM": {
+        "SPY": 0.2271,
+        "EEM": 1.0,
+        "EWJ": 0.3431,
+        "XLE": 0.1607,
+        "XLU": -0.0026,
+        "TLT": 0.142,
+        "SHY": 0.2131,
+        "LQD": 0.0965,
+        "HYG": 0.3675,
+        "USO": 0.0065,
+        "UNG": -0.0863,
+        "GLD": 0.1102,
+        "DBA": 0.1126,
+        "UUP": 0.1368,
+        "FXY": -0.0057,
+        "VNQ": 0.1571,
+        "RWX": 0.4081
+      },
+      "EWJ": {
+        "SPY": 0.5377,
+        "EEM": 0.3431,
+        "EWJ": 1.0,
+        "XLE": 0.1455,
+        "XLU": 0.0273,
+        "TLT": 0.0207,
+        "SHY": 0.1238,
+        "LQD": -0.0798,
+        "HYG": 0.2847,
+        "USO": -0.0062,
+        "UNG": -0.0421,
+        "GLD": 0.0712,
+        "DBA": 0.1572,
+        "UUP": 0.047,
+        "FXY": 0.1237,
+        "VNQ": 0.1216,
+        "RWX": 0.2666
+      },
+      "XLE": {
+        "SPY": 0.0782,
+        "EEM": 0.1607,
+        "EWJ": 0.1455,
+        "XLE": 1.0,
+        "XLU": -0.0708,
+        "TLT": 0.1491,
+        "SHY": 0.0618,
+        "LQD": -0.0982,
+        "HYG": 0.0041,
+        "USO": 0.5869,
+        "UNG": 0.1023,
+        "GLD": 0.0528,
+        "DBA": 0.272,
+        "UUP": 0.0626,
+        "FXY": -0.0086,
+        "VNQ": 0.0732,
+        "RWX": 0.1238
+      },
+      "XLU": {
+        "SPY": 0.1183,
+        "EEM": -0.0026,
+        "EWJ": 0.0273,
+        "XLE": -0.0708,
+        "XLU": 1.0,
+        "TLT": 0.1253,
+        "SHY": 0.1247,
+        "LQD": 0.2386,
+        "HYG": 0.2053,
+        "USO": -0.0649,
+        "UNG": 0.0108,
+        "GLD": 0.0414,
+        "DBA": -0.0167,
+        "UUP": -0.0468,
+        "FXY": -0.0281,
+        "VNQ": 0.3666,
+        "RWX": 0.2543
+      },
+      "TLT": {
+        "SPY": -0.1147,
+        "EEM": 0.142,
+        "EWJ": 0.0207,
+        "XLE": 0.1491,
+        "XLU": 0.1253,
+        "TLT": 1.0,
+        "SHY": 0.3135,
+        "LQD": 0.4224,
+        "HYG": -0.065,
+        "USO": 0.0922,
+        "UNG": 0.0057,
+        "GLD": 0.0683,
+        "DBA": 0.0935,
+        "UUP": 0.2767,
+        "FXY": 0.2103,
+        "VNQ": 0.3367,
+        "RWX": 0.1754
+      },
+      "SHY": {
+        "SPY": 0.046,
+        "EEM": 0.2131,
+        "EWJ": 0.1238,
+        "XLE": 0.0618,
+        "XLU": 0.1247,
+        "TLT": 0.3135,
+        "SHY": 1.0,
+        "LQD": 0.3499,
+        "HYG": 0.0974,
+        "USO": -0.0038,
+        "UNG": -0.1495,
+        "GLD": 0.2671,
+        "DBA": 0.0661,
+        "UUP": 0.1319,
+        "FXY": 0.0931,
+        "VNQ": 0.0863,
+        "RWX": 0.0869
+      },
+      "LQD": {
+        "SPY": 0.002,
+        "EEM": 0.0965,
+        "EWJ": -0.0798,
+        "XLE": -0.0982,
+        "XLU": 0.2386,
+        "TLT": 0.4224,
+        "SHY": 0.3499,
+        "LQD": 1.0,
+        "HYG": 0.2968,
+        "USO": -0.1861,
+        "UNG": 0.0408,
+        "GLD": 0.1152,
+        "DBA": -0.0973,
+        "UUP": 0.0648,
+        "FXY": 0.0019,
+        "VNQ": 0.2533,
+        "RWX": 0.1356
+      },
+      "HYG": {
+        "SPY": 0.4931,
+        "EEM": 0.3675,
+        "EWJ": 0.2847,
+        "XLE": 0.0041,
+        "XLU": 0.2053,
+        "TLT": -0.065,
+        "SHY": 0.0974,
+        "LQD": 0.2968,
+        "HYG": 1.0,
+        "USO": -0.0891,
+        "UNG": 0.0598,
+        "GLD": -0.0087,
+        "DBA": 0.0655,
+        "UUP": -0.0724,
+        "FXY": -0.0356,
+        "VNQ": 0.2789,
+        "RWX": 0.3271
+      },
+      "USO": {
+        "SPY": 0.0195,
+        "EEM": 0.0065,
+        "EWJ": -0.0062,
+        "XLE": 0.5869,
+        "XLU": -0.0649,
+        "TLT": 0.0922,
+        "SHY": -0.0038,
+        "LQD": -0.1861,
+        "HYG": -0.0891,
+        "USO": 1.0,
+        "UNG": 0.1608,
+        "GLD": -0.0695,
+        "DBA": 0.1513,
+        "UUP": 0.1777,
+        "FXY": 0.0913,
+        "VNQ": 0.0499,
+        "RWX": 0.0256
+      },
+      "UNG": {
+        "SPY": -0.1049,
+        "EEM": -0.0863,
+        "EWJ": -0.0421,
+        "XLE": 0.1023,
+        "XLU": 0.0108,
+        "TLT": 0.0057,
+        "SHY": -0.1495,
+        "LQD": 0.0408,
+        "HYG": 0.0598,
+        "USO": 0.1608,
+        "UNG": 1.0,
+        "GLD": -0.0256,
+        "DBA": 0.0531,
+        "UUP": 0.0303,
+        "FXY": -0.0569,
+        "VNQ": 0.0573,
+        "RWX": -0.0079
+      },
+      "GLD": {
+        "SPY": 0.1493,
+        "EEM": 0.1102,
+        "EWJ": 0.0712,
+        "XLE": 0.0528,
+        "XLU": 0.0414,
+        "TLT": 0.0683,
+        "SHY": 0.2671,
+        "LQD": 0.1152,
+        "HYG": -0.0087,
+        "USO": -0.0695,
+        "UNG": -0.0256,
+        "GLD": 1.0,
+        "DBA": 0.1245,
+        "UUP": 0.1508,
+        "FXY": 0.2201,
+        "VNQ": 0.0214,
+        "RWX": 0.0227
+      },
+      "DBA": {
+        "SPY": 0.0766,
+        "EEM": 0.1126,
+        "EWJ": 0.1572,
+        "XLE": 0.272,
+        "XLU": -0.0167,
+        "TLT": 0.0935,
+        "SHY": 0.0661,
+        "LQD": -0.0973,
+        "HYG": 0.0655,
+        "USO": 0.1513,
+        "UNG": 0.0531,
+        "GLD": 0.1245,
+        "DBA": 1.0,
+        "UUP": 0.1903,
+        "FXY": 0.1503,
+        "VNQ": -0.0131,
+        "RWX": -0.1128
+      },
+      "UUP": {
+        "SPY": 0.0078,
+        "EEM": 0.1368,
+        "EWJ": 0.047,
+        "XLE": 0.0626,
+        "XLU": -0.0468,
+        "TLT": 0.2767,
+        "SHY": 0.1319,
+        "LQD": 0.0648,
+        "HYG": -0.0724,
+        "USO": 0.1777,
+        "UNG": 0.0303,
+        "GLD": 0.1508,
+        "DBA": 0.1903,
+        "UUP": 1.0,
+        "FXY": 0.3208,
+        "VNQ": 0.0178,
+        "RWX": 0.0965
+      },
+      "FXY": {
+        "SPY": 0.0564,
+        "EEM": -0.0057,
+        "EWJ": 0.1237,
+        "XLE": -0.0086,
+        "XLU": -0.0281,
+        "TLT": 0.2103,
+        "SHY": 0.0931,
+        "LQD": 0.0019,
+        "HYG": -0.0356,
+        "USO": 0.0913,
+        "UNG": -0.0569,
+        "GLD": 0.2201,
+        "DBA": 0.1503,
+        "UUP": 0.3208,
+        "FXY": 1.0,
+        "VNQ": 0.042,
+        "RWX": 0.0617
+      },
+      "VNQ": {
+        "SPY": 0.282,
+        "EEM": 0.1571,
+        "EWJ": 0.1216,
+        "XLE": 0.0732,
+        "XLU": 0.3666,
+        "TLT": 0.3367,
+        "SHY": 0.0863,
+        "LQD": 0.2533,
+        "HYG": 0.2789,
+        "USO": 0.0499,
+        "UNG": 0.0573,
+        "GLD": 0.0214,
+        "DBA": -0.0131,
+        "UUP": 0.0178,
+        "FXY": 0.042,
+        "VNQ": 1.0,
+        "RWX": 0.5281
+      },
+      "RWX": {
+        "SPY": 0.2335,
+        "EEM": 0.4081,
+        "EWJ": 0.2666,
+        "XLE": 0.1238,
+        "XLU": 0.2543,
+        "TLT": 0.1754,
+        "SHY": 0.0869,
+        "LQD": 0.1356,
+        "HYG": 0.3271,
+        "USO": 0.0256,
+        "UNG": -0.0079,
+        "GLD": 0.0227,
+        "DBA": -0.1128,
+        "UUP": 0.0965,
+        "FXY": 0.0617,
+        "VNQ": 0.5281,
+        "RWX": 1.0
+      }
+    },
+    "enb_participation_ratio": 11.174191731216357,
+    "enb_entropy": 13.532247237306649,
+    "n_assets": 17,
+    "mean_abs_offdiag_corr": 0.1334811276887471,
+    "max_offdiag_corr": 0.5868637836664523,
+    "min_offdiag_corr": -0.18605984855232988,
+    "sleeve_members": {
+      "Equity": [
+        "SPY",
+        "EEM",
+        "EWJ",
+        "XLE",
+        "XLU"
+      ],
+      "Bond": [
+        "TLT",
+        "SHY",
+        "LQD",
+        "HYG"
+      ],
+      "Commodity": [
+        "USO",
+        "UNG",
+        "GLD",
+        "DBA"
+      ],
+      "FX": [
+        "UUP",
+        "FXY"
+      ],
+      "RealEstate": [
+        "VNQ",
+        "RWX"
+      ]
+    },
+    "sleeve_corr": {
+      "Equity": {
+        "Equity": 1.0,
+        "Bond": 0.3221,
+        "Commodity": 0.2507,
+        "FX": 0.0691,
+        "RealEstate": 0.4606
+      },
+      "Bond": {
+        "Equity": 0.3221,
+        "Bond": 1.0,
+        "Commodity": 0.0349,
+        "FX": 0.132,
+        "RealEstate": 0.3948
+      },
+      "Commodity": {
+        "Equity": 0.2507,
+        "Bond": 0.0349,
+        "Commodity": 1.0,
+        "FX": 0.2567,
+        "RealEstate": 0.0131
+      },
+      "FX": {
+        "Equity": 0.0691,
+        "Bond": 0.132,
+        "Commodity": 0.2567,
+        "FX": 1.0,
+        "RealEstate": 0.0789
+      },
+      "RealEstate": {
+        "Equity": 0.4606,
+        "Bond": 0.3948,
+        "Commodity": 0.0131,
+        "FX": 0.0789,
+        "RealEstate": 1.0
+      }
+    },
+    "sleeve_enb_participation_ratio": 3.993244338148106,
+    "named_overlaps": {
+      "VNQ_vs_SPY": 0.28200235395026774,
+      "RWX_vs_SPY": 0.23345277230973568,
+      "VNQ_vs_RWX": 0.5280502836048255,
+      "UUP_vs_FXY": 0.32077686125467714,
+      "RealEstate_vs_Equity_sleeve": 0.4605671707093948,
+      "FX_vs_Equity_sleeve": 0.06911577512088783
+    },
+    "top_10_dependent_pairs": [
+      {
+        "a": "XLE",
+        "b": "USO",
+        "corr": 0.5869
+      },
+      {
+        "a": "SPY",
+        "b": "EWJ",
+        "corr": 0.5377
+      },
+      {
+        "a": "VNQ",
+        "b": "RWX",
+        "corr": 0.5281
+      },
+      {
+        "a": "SPY",
+        "b": "HYG",
+        "corr": 0.4931
+      },
+      {
+        "a": "TLT",
+        "b": "LQD",
+        "corr": 0.4224
+      },
+      {
+        "a": "EEM",
+        "b": "RWX",
+        "corr": 0.4081
+      },
+      {
+        "a": "EEM",
+        "b": "HYG",
+        "corr": 0.3675
+      },
+      {
+        "a": "XLU",
+        "b": "VNQ",
+        "corr": 0.3666
+      },
+      {
+        "a": "SHY",
+        "b": "LQD",
+        "corr": 0.3499
+      },
+      {
+        "a": "EEM",
+        "b": "EWJ",
+        "corr": 0.3431
+      }
+    ]
+  },
+  "reconciliation": {
+    "n_months": 218,
+    "max_abs_residual": 5.000000000074389e-07,
+    "mean_abs_residual": 2.4380733944926013e-07,
+    "worst_month": "2024-09-30"
+  },
+  "X45": {
+    "weights_window": {
+      "first": "2008-05-31",
+      "last": "2026-06-30",
+      "n_months": 218
+    },
+    "avg_net_exposure_by_asset": {
+      "SPY": 0.104,
+      "EEM": 0.0288,
+      "EWJ": 0.0481,
+      "XLE": 0.0253,
+      "XLU": 0.0719,
+      "TLT": 0.0151,
+      "SHY": 0.2254,
+      "LQD": 0.1387,
+      "HYG": 0.1886,
+      "USO": 0.0061,
+      "UNG": -0.0186,
+      "GLD": 0.0259,
+      "DBA": -0.0163,
+      "UUP": 0.0362,
+      "FXY": -0.0385,
+      "VNQ": 0.0528,
+      "RWX": 0.0384
+    },
+    "avg_net_exposure_by_sleeve": {
+      "Equity": 0.2779307339449541,
+      "Bond": 0.5678036697247706,
+      "Commodity": -0.0028743119266055038,
+      "FX": -0.002356422018348626,
+      "RealEstate": 0.09120825688073393
+    },
+    "avg_gross_exposure": 2.0275321100917436,
+    "avg_net_exposure_total": 0.9317119266055046,
+    "pct_months_net_long_by_asset": {
+      "SPY": 0.7431192660550459,
+      "EEM": 0.518348623853211,
+      "EWJ": 0.5642201834862385,
+      "XLE": 0.518348623853211,
+      "XLU": 0.7064220183486238,
+      "TLT": 0.44036697247706424,
+      "SHY": 0.7293577981651376,
+      "LQD": 0.6146788990825688,
+      "HYG": 0.7110091743119266,
+      "USO": 0.4036697247706422,
+      "UNG": 0.1834862385321101,
+      "GLD": 0.5137614678899083,
+      "DBA": 0.3577981651376147,
+      "UUP": 0.4908256880733945,
+      "FXY": 0.3211009174311927,
+      "VNQ": 0.591743119266055,
+      "RWX": 0.5229357798165137
+    },
+    "factor_regression": {
+      "n": 218,
+      "hac_maxlags": 4,
+      "r_squared": 0.009613892839154592,
+      "params": {
+        "const": 0.006667211347890051,
+        "SPY": -0.031108301023553813,
+        "TLT": 0.061911585842933665,
+        "UUP": -0.03310390854065414,
+        "COMMOD": 0.012439352263290473
+      },
+      "hac_tstats": {
+        "const": 3.4040935187530215,
+        "SPY": -0.5086672581601286,
+        "TLT": 0.871717808625332,
+        "UUP": -0.28195723041704623,
+        "COMMOD": 0.26017230431798355
+      },
+      "hac_pvalues": {
+        "const": 0.0006638402138919204,
+        "SPY": 0.6109854761921718,
+        "TLT": 0.3833623425267031,
+        "UUP": 0.7779763054252709,
+        "COMMOD": 0.7947308667544415
+      },
+      "alpha_monthly": 0.006667211347890051,
+      "alpha_annualised": 0.08000653617468062
+    },
+    "static_book_control": {
+      "n_months": 218,
+      "basis": "GROSS of costs (gross is additive, so the split is exact)",
+      "note": "Retrospective full-sample description of the burned sample. The average-position book uses the full-sample mean position and is therefore NOT an ex-ante deployable strategy; this is not a test of any candidate and not an out-of-sample result.",
+      "avg_position_by_asset": {
+        "SPY": 0.1037,
+        "EEM": 0.0288,
+        "EWJ": 0.0479,
+        "XLE": 0.0253,
+        "XLU": 0.0717,
+        "TLT": 0.0144,
+        "SHY": 0.2252,
+        "LQD": 0.138,
+        "HYG": 0.1878,
+        "USO": 0.0063,
+        "UNG": -0.0182,
+        "GLD": 0.0261,
+        "DBA": -0.0162,
+        "UUP": 0.0347,
+        "FXY": -0.0374,
+        "VNQ": 0.0524,
+        "RWX": 0.0382
+      },
+      "sharpe_full_gross": 0.7832347561887943,
+      "sharpe_static_book_gross": 0.775636436466373,
+      "sharpe_residual_gross": 0.15301278201093624,
+      "corr_full_vs_static": -0.014186564776262886,
+      "corr_full_vs_residual": 0.7991922930508989,
+      "var_share_static": 0.5780443758584302,
+      "var_share_residual": 1.5996162476799827,
+      "identity_max_abs_residual": 2.7755575615628914e-17,
+      "residual_sharpe_retention_pct": 19.536005112374426,
+      "static_book_turnover_note": "A genuinely static book rebalances only to maintain constant weights; its cost is not modelled here, so the static Sharpe is an upper bound relative to the full book's cost-bearing turnover.",
+      "mean_monthly_turnover_full": 1.458039908256881
+    }
+  },
+  "reconstruction_reconciliation": {
+    "n_months": 218,
+    "cost_bps": 2.0,
+    "convention": "positions_t = decision_weights_{t-1}; gross_i = positions * monthly asset return",
+    "gross_corr": 0.9999999811105144,
+    "gross_max_abs_diff": 1.9329954173959605e-05,
+    "net_corr": 0.9999999811557709,
+    "net_max_abs_diff": 2.020405330929601e-05,
+    "per_asset_net_max_abs_diff": 2.4136689906383013e-05,
+    "published_rounding_dp": 6,
+    "verdict": "RECONCILED at the published 6-dp rounding scale"
+  },
+  "X46": {
+    "quadratic_fit_vs_SPY": {
+      "n": 218,
+      "hac_maxlags": 4,
+      "r_squared": 0.001181878926684865,
+      "params": {
+        "const": 0.0067003736454838035,
+        "spy": -0.02252338968575623,
+        "spy_sq": -0.02105262372887246
+      },
+      "hac_tstats": {
+        "const": 3.068846634125395,
+        "spy": -0.3696186259469508,
+        "spy_sq": -0.026843834328361342
+      },
+      "hac_pvalues": {
+        "const": 0.002148868754277202,
+        "spy": 0.7116666709666917,
+        "spy_sq": 0.9785842910636293
+      }
+    },
+    "long_short_attribution": {
+      "note": "Per-asset published net PnL split by the sign of that month's published decision weight. Attribution of a burned stream, not a test of any candidate.",
+      "total_long": 1.33978477,
+      "total_short": 0.07230462000000001,
+      "total_flat_or_missing": -0.01193684,
+      "sum_check_vs_per_asset_total": 2.7755575615628914e-17
+    },
+    "crisis_attribution": {
+      "GFC_2008": {
+        "n_months": 11,
+        "window": [
+          "2008-05-31",
+          "2009-03-31"
+        ],
+        "long_pnl": -0.03603397,
+        "short_pnl": 0.11475052999999999,
+        "total_pnl": 0.07818689000000001,
+        "short_share_of_total": 1.4676441280629013
+      },
+      "COVID_2020": {
+        "n_months": 4,
+        "window": [
+          "2020-01-31",
+          "2020-04-30"
+        ],
+        "long_pnl": -0.07160561000000001,
+        "short_pnl": 0.14650538000000002,
+        "total_pnl": 0.07465751,
+        "short_share_of_total": 1.962366277685929
+      },
+      "CY2022": {
+        "n_months": 12,
+        "window": [
+          "2022-01-31",
+          "2022-12-31"
+        ],
+        "long_pnl": 0.02854896000000001,
+        "short_pnl": 0.12127054,
+        "total_pnl": 0.14945907999999997,
+        "short_share_of_total": 0.8113962698017412
+      }
+    },
+    "tail_dependence": {
+      "spy_10pct_quantile": -0.05204120777833286,
+      "n_tail_months": 22,
+      "corr_all": -0.03429793601779718,
+      "corr_in_spy_left_tail": -0.5157044143987988,
+      "mean_tsmom_net_in_tail": 0.008561863636363637,
+      "mean_tsmom_net_out_of_tail": 0.006182612244897959
+    }
+  }
+}

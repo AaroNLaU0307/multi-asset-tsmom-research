@@ -1,0 +1,577 @@
+{
+  "generated_utc": "2026-09-08T02:24:12.139675+00:00",
+  "supersedes": "run_x03_structural_v2.py (naive 5-calendar-day comparator)",
+  "authoritative_comparator": {
+    "source": "commodity-carry-research/src/robustness.py::fixed_calendar_front_series",
+    "specification": "carry DEVIATIONS.md 2026-07-16, PREREGISTRATION \u00a78 item 7",
+    "roll_timing": "last business day of the month preceding the expiry month",
+    "candidate_selection": "A2 existence filter: earliest later expiration with OI at t-1 > 0",
+    "free_parameters": "none",
+    "oi_lag": "t-1 (oi_panel.shift(1))"
+  },
+  "non_authoritative_comparator": {
+    "rule": "roll 5 CALENDAR days before the expiration date, into the next LISTED contract regardless of liquidity",
+    "why_reported": "Fable \u00a78 established the disagreement magnitude is comparator-dependent; both are recorded rather than silently swapping one number for the other",
+    "why_not_authoritative": "walks through dead serial months, which is what drove the metals to 98-100%"
+  },
+  "scope": "STRUCTURAL ONLY: roll dates, counts, days-to-expiry, availability, rule disagreement. No return, no Sharpe, no PnL, no performance comparison, no roll-rule selection.",
+  "roots": {
+    "CL": {
+      "n_contracts": 320,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 136,
+        "days_to_expiry_at_roll_median": 9.0,
+        "days_to_expiry_at_roll_p10": 7.0,
+        "days_to_expiry_at_roll_p90": 12.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 21.0,
+        "days_to_expiry_at_roll_p10": 20.0,
+        "days_to_expiry_at_roll_p90": 24.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.5542168674698795,
+      "disagreement_A1_vs_NAIVE": 0.41025117418827856
+    },
+    "HO": {
+      "n_contracts": 235,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 192,
+        "days_to_expiry_at_roll_median": 15.0,
+        "days_to_expiry_at_roll_p10": 12.0,
+        "days_to_expiry_at_roll_p90": 18.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 30.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 32.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.5107208494996937,
+      "disagreement_A1_vs_NAIVE": 0.32632223810496225
+    },
+    "RB": {
+      "n_contracts": 236,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 16.0,
+        "days_to_expiry_at_roll_p10": 13.0,
+        "days_to_expiry_at_roll_p90": 18.80000000000001,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 30.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 32.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.47151317132938536,
+      "disagreement_A1_vs_NAIVE": 0.3585868899326118
+    },
+    "NG": {
+      "n_contracts": 342,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 127,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 12.0,
+        "days_to_expiry_at_roll_p90": 18.0,
+        "held_missing_settlement": 1,
+        "availability": 0.999796
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 1,
+        "availability": 0.999796
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 1,
+        "availability": 0.999796
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.48213191750051054,
+      "disagreement_A1_vs_NAIVE": 0.5550336940984276
+    },
+    "GC": {
+      "n_contracts": 227,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 34.0,
+        "days_to_expiry_at_roll_p10": 31.0,
+        "days_to_expiry_at_roll_p90": 40.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.6842320261437909,
+      "disagreement_A1_vs_NAIVE": 0.9838643790849673
+    },
+    "SI": {
+      "n_contracts": 224,
+      "sessions": 4895,
+      "A1": {
+        "n_rolls": 82,
+        "days_to_expiry_at_roll_median": 37.0,
+        "days_to_expiry_at_roll_p10": 33.1,
+        "days_to_expiry_at_roll_p90": 42.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.7201225740551583,
+      "disagreement_A1_vs_NAIVE": 0.9953013278855976
+    },
+    "HG": {
+      "n_contracts": 241,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 82,
+        "days_to_expiry_at_roll_median": 42.0,
+        "days_to_expiry_at_roll_p10": 38.0,
+        "days_to_expiry_at_roll_p90": 45.900000000000006,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 194,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.7822712418300654,
+      "disagreement_A1_vs_NAIVE": 0.9997957516339869
+    },
+    "PL": {
+      "n_contracts": 207,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 66,
+        "days_to_expiry_at_roll_median": 36.0,
+        "days_to_expiry_at_roll_p10": 33.0,
+        "days_to_expiry_at_roll_p90": 40.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 185,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.7079248366013072,
+      "disagreement_A1_vs_NAIVE": 0.9924428104575164
+    },
+    "PA": {
+      "n_contracts": 207,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 65,
+        "days_to_expiry_at_roll_median": 34.0,
+        "days_to_expiry_at_roll_p10": 31.0,
+        "days_to_expiry_at_roll_p90": 38.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 145,
+        "days_to_expiry_at_roll_median": 28.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 29.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.48590686274509803,
+      "disagreement_A1_vs_NAIVE": 0.9838643790849673
+    },
+    "ZC": {
+      "n_contracts": 96,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 69,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 37.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 50,
+        "availability": 0.989792
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.35157207023274806,
+      "disagreement_A1_vs_NAIVE": 0.458146182115149
+    },
+    "ZS": {
+      "n_contracts": 133,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 78,
+        "days_to_expiry_at_roll_median": 30.0,
+        "days_to_expiry_at_roll_p10": 23.7,
+        "days_to_expiry_at_roll_p90": 34.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 113,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 112,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.4209881584320131,
+      "disagreement_A1_vs_NAIVE": 0.5342997141690486
+    },
+    "ZW": {
+      "n_contracts": 95,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 35.10000000000001,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 178,
+        "availability": 0.963659
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.25663536137198856,
+      "disagreement_A1_vs_NAIVE": 0.38873009391588403
+    },
+    "ZM": {
+      "n_contracts": 159,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 36.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 129,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 128,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 126,
+        "availability": 0.974275
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.4942833809718252,
+      "disagreement_A1_vs_NAIVE": 0.6233156390363414
+    },
+    "ZL": {
+      "n_contracts": 153,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 32.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 36.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 129,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 128,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 50,
+        "availability": 0.989792
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.50939158840343,
+      "disagreement_A1_vs_NAIVE": 0.6331155573703553
+    },
+    "KE": {
+      "n_contracts": 73,
+      "sessions": 3818,
+      "A1": {
+        "n_rolls": 63,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.2,
+        "days_to_expiry_at_roll_p90": 35.800000000000004,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 63,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 14.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 62,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.24410686223153483,
+      "disagreement_A1_vs_NAIVE": 0.3606600314300681
+    },
+    "LE": {
+      "n_contracts": 107,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 97,
+        "days_to_expiry_at_roll_median": 49.0,
+        "days_to_expiry_at_roll_p10": 46.0,
+        "days_to_expiry_at_roll_p90": 50.400000000000006,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 97,
+        "days_to_expiry_at_roll_median": 30.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 32.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 97,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.2980769230769231,
+      "disagreement_A1_vs_NAIVE": 0.7135842880523732
+    },
+    "HE": {
+      "n_contracts": 141,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 114,
+        "days_to_expiry_at_roll_median": 33.0,
+        "days_to_expiry_at_roll_p10": 30.0,
+        "days_to_expiry_at_roll_p90": 36.7,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 130,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 14.0,
+        "days_to_expiry_at_roll_p90": 15.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 129,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.4441489361702128,
+      "disagreement_A1_vs_NAIVE": 0.617430441898527
+    },
+    "GF": {
+      "n_contracts": 139,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 121,
+        "days_to_expiry_at_roll_median": 38.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 48.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "AUTHORITATIVE_CALENDAR": {
+        "n_rolls": 128,
+        "days_to_expiry_at_roll_median": 27.0,
+        "days_to_expiry_at_roll_p10": 20.0,
+        "days_to_expiry_at_roll_p90": 30.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "NAIVE_CALENDAR": {
+        "n_rolls": 130,
+        "days_to_expiry_at_roll_median": 4.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 4.0,
+        "held_missing_settlement": 23,
+        "availability": 0.995295
+      },
+      "disagreement_A1_vs_AUTHORITATIVE": 0.29337152209492634,
+      "disagreement_A1_vs_NAIVE": 0.6344108019639935
+    }
+  },
+  "summary": {
+    "n_roots": 18,
+    "AUTHORITATIVE_disagreement_mean": 0.48397861945336057,
+    "AUTHORITATIVE_disagreement_median": 0.48401939012280426,
+    "AUTHORITATIVE_disagreement_min": 0.24410686223153483,
+    "AUTHORITATIVE_disagreement_max": 0.7822712418300654,
+    "AUTHORITATIVE_min_root": "KE",
+    "AUTHORITATIVE_max_root": "HG",
+    "NAIVE_disagreement_mean": 0.6427308552457253,
+    "all_roots_above_10pct_AUTHORITATIVE": true,
+    "roots_at_or_below_10pct": [],
+    "total_rolls_A1": 1807,
+    "total_rolls_AUTHORITATIVE": 2639,
+    "STRUCTURAL_DOF_REQUIRED": true,
+    "ECONOMIC_MATERIALITY": "UNRESOLVED",
+    "materiality_note": "Structural non-equivalence is established under BOTH comparators. No margin was sealed and no performance quantity was computed, so economic materiality is UNRESOLVED and is the X01 S2 secondary arm's question. Structural disagreement does NOT imply an economically meaningful performance difference."
+  }
+}

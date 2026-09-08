@@ -1,0 +1,315 @@
+# TSMOM-EXT-001 state file (L6 Runtime spec §2).
+#
+# Created 2026-09-07T20:40Z at Wave-0 governance execution, under Aaron's
+# explicit authorization. This is the project's first state file.
+#
+# Aaron's authorization, verbatim from his Wave-0 execution message:
+#
+#   "OWNER_DECISION =
+#    AARON_DECISION = AUTHORIZE_WAVE_0_GOVERNANCE_EXECUTION
+#    This authorization is explicit."
+#
+# and, bounding it:
+#
+#   "This does NOT authorize: Wave 1; strategy construction; alpha testing;
+#    target-performance backtests; FULL studies; X01 performance evaluation;
+#    protected-forward outcome release; data purchase; deployment; live/paper
+#    trading."
+#
+# That authorization is NOT recorded in `human_decisions[]` below. §2.9 fixes
+# that field's `type` vocabulary at exactly three values -- DORMANT_ENTER,
+# DORMANT_EXIT, REVIEW_ATTEMPT_EXCLUDED -- and `qros check` rejects any other.
+# A Wave-0 governance authorization is none of those. Inventing a fourth token
+# would be a schema violation dressed as diligence, so the authorization is
+# recorded here, in `session_log[]` below, and in every Wave-0 artifact's
+# append log instead. `human_decisions[]` is therefore empty, and empty is the
+# correct state, not an omission.
+#
+# Per the ratified §10.2 the DECLARED partition is a non-authoritative
+# self-report -- canonical artifacts win in their domains, always -- and per
+# §2.1 the state file is edited only by working sessions of this project.
+#
+# The CLI's YAML subset takes double-quoted scalars (plus bare `null`) and no
+# trailing comments, so every note here sits on its own line.
+
+schema_version: "17"
+
+# ---------------------------------------------------------------- DECLARED --
+
+# research_id: free value, declares no vocabulary (§2.4).
+# Fixed by `TSMOM_EXTENSION_RESEARCH_PROGRAM_v2.md` §2, which names
+# `research_id: TSMOM-EXT-001` in the Wave-0 artifact table.
+research_id: "TSMOM-EXT-001"
+
+# lane: FULL | MEASUREMENT | EXPLORATORY, closed at three, "Never inferred"
+# (2.4).
+#
+# DECLARED BY AARON. Basis: his Wave-1 routing header declares
+# `LANE = MEASUREMENT`, and his permit list authorizes "governance state
+# transitions that are canonically required and legally supported". Lane
+# declarations sit in 4.1's Authority row, so this records HIS act.
+#
+# WAS EXPLORATORY at Wave 0. Why it had to change: QROS 1 fixes lane semantics
+# as WHICH CLAIMS THE WORK MAY EMIT. EXPLORATORY emits hypotheses and leads;
+# MEASUREMENT emits implementation facts, structural findings and premise
+# results. Every Wave-1 item authorized -- X07, X45, X46, X02a,
+# X03-structural, X05 -- is labelled `Lane: MEASUREMENT` in MAP_v2. Emitting
+# them under EXPLORATORY would emit claims the declared lane does not license.
+#
+# ORDER MATTERS, and was verified against the runtime before use: the
+# MEASUREMENT chain is C -> D -> E -> F -> L and contains NO stage A. Declaring
+# this lane while still at stage A renders "no transition leaves stage A in the
+# MEASUREMENT chain" -- a dead end. So A -> C was taken on the EXPLORATORY
+# chain first (a real edge, reported ELIGIBLE), and the lane declared after.
+# See research/extensions/wave1/WAVE1_PREFLIGHT.md section 4.
+lane: "MEASUREMENT"
+
+# workflow_stage: A A2 B C D E F G H I J K L, closed (2.5). The stage
+# currently DUE OR IN PROGRESS -- not a status, not a verdict.
+#
+# DECLARED BY THE WORKING SESSION. 4.1's Authority row does not contain
+# `workflow_stage`, and 10.2 makes DECLARED a working-session self-report, so
+# it is mine to state and Aaron's to correct.
+#
+# C (build), advanced from A at Wave-1 preflight. C is the MEASUREMENT chain's
+# entry stage and the honest description of where the project is: Wave 1 builds
+# the futures input path and runs mechanical verification over it. Nothing in
+# Wave 1 reaches L, and no KB card is written.
+workflow_stage: "C"
+
+# measurement_materiality: ORDINARY | MATERIAL | UNKNOWN | N_A
+# ([TBL-MATERIALITY], §2.8).
+#
+# DECLARED BY THE WORKING SESSION, per Program v2 §2's Wave-0 table, which
+# specifies `measurement_materiality: UNKNOWN`.
+#
+# The table's `N_A` row reads "lane is not MEASUREMENT", which would also fit a
+# project on the EXPLORATORY lane. UNKNOWN is declared anyway, deliberately and
+# following the architecture, because it is the conservative reading: no
+# candidate has been classified, and §10.4's representation question is itself
+# unresolved. The ITSF precedent declares UNKNOWN on a non-MEASUREMENT lane for
+# the same reason.
+#
+# Consequence, recorded rather than hidden: UNKNOWN holds `F -> L`
+# (eligibility.py:409, "nothing may be recorded as evidence on an unresolved
+# classification"). For a project at stage A with no evidence to record, that
+# hold costs nothing today and is the correct fail-closed posture.
+measurement_materiality: "UNKNOWN"
+
+# outcome_exposure: §3.4C is the sole normative definition site.
+# `scope` is drawn from [TBL-EXPOSURE-SCOPES].
+#
+# DECLARED BY THE WORKING SESSION, and it agrees with the canonical ledger:
+# `ops/EXPOSURE_LEDGER.md`'s event table rows 1-9 all carry
+# REVEALED_TARGET_METRIC, whose
+# contribution is TARGET_METRIC, and the aggregation is the maximum over the
+# scope. HISTORICAL_CUMULATIVE therefore normalizes to TARGET_METRIC.
+#
+# This is not a hedge. The architecture's designer read the published
+# full-sample core, sleeve, robustness-grid, cost-sweep and overlay results and
+# declared `OUTCOME_EXPOSED=TARGET_METRIC` in its own routing header. Declaring
+# anything lower here would contradict the ledger.
+#
+# The two ledgers required by the L6 runtime are named in `inputs[]` below:
+# `exposure_record` (research axis) and `reviewer_exposure_log` (seat axis).
+# Per axis: no ledger means UNKNOWN, never NONE. Both exist.
+outcome_exposure:
+  declared: "TARGET_METRIC"
+  scope: "HISTORICAL_CUMULATIVE"
+
+# prereg: DELIBERATELY ABSENT.
+#
+# The block's `reference` field is required whenever the block is present, and
+# no preregistration exists for this project: no candidate is sealed,
+# `PREREG_SEALED=N/A` in every V2 routing header, and Program v2 §1 routes the
+# first seal through a fresh GPT-6 Astra A2 challenge that has not happened.
+# Writing a placeholder reference would assert a contract that does not exist.
+# Absent is the honest encoding.
+
+# trial_accounting: `canonical_ref` required.
+#
+# The pointer is this project's four-object trial record. It is a VIEW, not a
+# competing total: for the Databento panel the authoritative dataset-level
+# record remains the carry study's frozen ledger
+# (`commodity-carry-research/preregistration/PREREGISTRATION.md` §10 +
+# `src/config.py:66`, N_trials = 14, verified 2026-09-07), and TSMOM-EXT's
+# contribution to it is 0. For the ETF panel no frozen convention exists; the
+# count is an open Aaron decision (`D-ETF-COUNT`), recorded with its options.
+prereg:
+  reference: "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
+  normative_references:
+    - "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
+    - "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md"
+
+trial_accounting:
+  canonical_ref: "research/extensions/TRIAL_LEDGER.md"
+  value_anchor: "databento panel: N_trials = 14 frozen at commodity-carry-research/preregistration/PREREGISTRATION.md sec 10, TSMOM-EXT contribution 0; ETF panel: UNKNOWN_PENDING_AARON_DECISION (D-ETF-COUNT)"
+
+# change_labels: none. No implementation or data fix has been applied; Wave 0
+# created governance artifacts and changed no strategy code, no data, and no
+# accepted architecture byte.
+change_labels: []
+
+# inputs: id, path, observed_revision, observed_sha256 all required.
+# `observed_revision: "WORKTREE"` is the uncommitted-basis sentinel
+# (freshness.py:52). Every path below is untracked in git at the time of
+# writing, so WORKTREE is the accurate basis -- see the repository note in
+# `session_log` below.
+inputs:
+  - id: "exposure_record"
+    path: "ops/EXPOSURE_LEDGER.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "b780b00daa1f66798472d4b7e279a23a3abef82a502d44e142bcdef3460a761e"
+  - id: "reviewer_exposure_log"
+    path: "ops/REVIEWER_EXPOSURE_LOG.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "ed7fd6052ea78b86c0152cde8cb594af9277d5f0941f26488bb7513326ccf5a0"
+  - id: "sample_reuse"
+    path: "research/extensions/SAMPLE_REUSE.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "e62013f9b2bbea232e4456a61bcfafcc1b260f5fdc0751f12359c1129c347064"
+  - id: "trial_ledger"
+    path: "research/extensions/TRIAL_LEDGER.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "e213c6a03903f91f3c52e5e4a3f729e93355e6ea82d1caaff378fa26af50fe59"
+  - id: "lockbox_procedure"
+    path: "research/extensions/LOCKBOX_PROCEDURE.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "5d786ad832a1507e4b82575ed1782076de3ce3ee78d98dd450ddbdcbec45d437"
+  - id: "data_inventory_spec"
+    path: "research/extensions/DATA_INVENTORY_SPEC.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "e55765299f7e3c52f0f07d0547f9316174528f6b73830681e6f62459b8692bfa"
+  - id: "wave0_verification_record"
+    path: "research/extensions/WAVE0_VERIFICATION_RECORD.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "b51c930c890aa40ef1e73323de3fc35df2c0cf1f7e8afed96533bfa4c155b30e"
+  - id: "architecture_map_v2"
+    path: "research/extensions/TSMOM_EXTENSION_RESEARCH_MAP_v2.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "e9555a0220b58fdf6dfaee40613c5b28b114ea02b2a94137b1a23c56a87dbace"
+  - id: "architecture_program_v2"
+    path: "research/extensions/TSMOM_EXTENSION_RESEARCH_PROGRAM_v2.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "e9555f561e302c4f937a05829bd23b2368c79765b4c275b788f8fe14264d46c2"
+  - id: "idea_registry_v2"
+    path: "research/extensions/idea_registry/IDEA_REGISTRY_v2.csv"
+    observed_revision: "WORKTREE"
+    observed_sha256: "7e3024edd1e553745c75f83f3f107df84d2814ae06be4876f53aae117108717c"
+  - id: "dashboard_v2"
+    path: "research/extensions/DASHBOARD_v2.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "951801bcea0281811b501ca19f63b26a3f3e488ef7cd4ca28a1f6641bf5e19b7"
+  - id: "astra_round2_provenance"
+    path: "research/extensions/review_history/ASTRA_ROUND2_CONVERGENCE_2026-09-08.md"
+    observed_revision: "WORKTREE"
+    observed_sha256: "0a89d43919813eee302863eb642571347370e374c7966c9a81303dc9e0579869"
+
+state_declared_at:
+  revision: "c63114a06275c782b5835f219b14c17f1b33cd80"
+  timestamp: "2026-09-07T20:40:00Z"
+
+# ---------------------------------------------------------- RECONSTRUCTIBLE --
+
+# cache: DELIBERATELY ABSENT.
+#
+# `cache.exposure_mirror` would cache an excerpt of `ops/EXPOSURE_LEDGER.md`.
+# The ledger is named in `inputs[]` with its hash and is authoritative; a cache
+# adds a second place for the same fact to live and a second place for it to go
+# stale. Nothing in Wave 0 needs one.
+
+# ------------------------------------------------------------- OPERATIONAL --
+
+# ops_events: EMPTY, and correctly so.
+#
+# [TBL-OPS-EVENT-TYPES]'s value set covers packet issuance and outcomes, gate
+# events, triggers, audits, escalations, disagreements, seat violations and
+# errata. Wave 0 issued no packet, opened no gate, matched no trigger, launched
+# no audit and violated no seat. There is no legal type for "governance
+# artifacts created", and none is invented.
+ops_events: []
+
+# human_decisions: EMPTY. See the header note -- §2.9 closes the `type`
+# vocabulary at DORMANT_ENTER, DORMANT_EXIT and REVIEW_ATTEMPT_EXCLUDED, none
+# of which is a Wave-0 authorization. Aaron's authorization is recorded
+# verbatim in this file's header and in every Wave-0 artifact's append log.
+human_decisions: []
+
+session_log:
+  - ts: "2026-09-07T20:40:00Z"
+    session_id: "wave0-governance-2026-09-07"
+    seat: "Claude Opus 5"
+    role: "governance builder / implementation owner"
+    gate: "none -- Wave 0 is governance bootstrap and releases no review gate"
+    produced: "qros-state.yaml; ops/EXPOSURE_LEDGER.md; ops/REVIEWER_EXPOSURE_LOG.md; research/extensions/{SAMPLE_REUSE,TRIAL_LEDGER,LOCKBOX_PROCEDURE,DATA_INVENTORY_SPEC,WAVE0_VERIFICATION_RECORD}.md; research/extensions/validate_wave0.py. Under AARON_DECISION=AUTHORIZE_WAVE_0_GOVERNANCE_EXECUTION. This session is the PRODUCER of these artifacts and must not certify them. No V2 architecture byte was modified; all four hashes re-verified MATCH after writing. No backtest, Sharpe, return series or strategy computation was run; no protected data was opened; no data was purchased; no strategy code was written. Repository note: every path in inputs[] was untracked in git at declaration time (the extensions tree was created after HEAD c63114a and Wave 0 created the rest), so observed_revision is the WORKTREE sentinel throughout; no commit was made."
+  - ts: "2026-09-07T23:30:00Z"
+    session_id: "wave1-research-2026-09-07"
+    seat: "Claude Opus 5"
+    role: "primary research builder (MEASUREMENT lane)"
+    gate: "none released -- Wave 1 opens no review gate and seals nothing"
+    produced: "research/extensions/wave1/{WAVE1_PREFLIGHT,DATABENTO_W1_INPUT_VERIFICATION}.md; research/extensions/diagnostics/EDGE_DIAGNOSTICS.md; research/extensions/x01/X01_PREREGISTRATION_DRAFT.md; supporting code and JSON under research/extensions/wave1 and research/extensions/diagnostics. Under AARON_DECISION=AUTHORIZE_WAVE_1_RESEARCH_EXECUTION_WITH_GATES. Transitions: A -> C on the EXPLORATORY chain, then lane declared MEASUREMENT at C (order verified against the runtime; MEASUREMENT has no stage A). measurement_materiality deliberately left UNKNOWN because 10.4 is itself unresolved, so F -> L stays HOLD -- which blocks nothing here, as no KB card is written. X07/X45/X46 executed on burned published streams and reconciled to them at 2.0e-05. Databento input verification PASS. X05 BLOCKED pending D3. X01 preregistration DRAFTED, NOT SEALED and NOT RUN. No candidate performance was computed, no protected data opened, no data purchased, no strategy constructed. This session is the PRODUCER of these artifacts and must not certify them, challenge them at A2, or verify them at Stage I."
+
+  - ts: "2026-09-08T03:35:00Z"
+    session_id: "wave1-fable-repair-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 bounded futures-infrastructure repair builder (MEASUREMENT lane)"
+    gate: "none released -- the repair opens no review gate and seals nothing"
+    produced: "research/extensions/wave1/{run_x02a_v3,run_x03_structural_v3}.py; {x02a_v3_results,x03_structural_v3}.json; FABLE_REPAIR_RECORD.md; edits to FUTURES_INFRA_TRUTH.md, panel_sanity.py, validate_wave0.py registry, X01_PREREGISTRATION_DRAFT.md, both ledgers. Repairs the single blocker of Fable audit b2ea769421108dae82e351d564b31e963dd653a4ddeb1d660b275592215f8acd (CONDITIONAL_PASS): costed dollar ledger with roll-cost legs; GROSS and NET reconciliations reported separately; end-to-end cost path divisor-corrected and sabotage-verified; MAP_v2 sign-agreement diagnostic computed; X03 rerun on the authoritative carry fixed_calendar_front_series comparator; ROLL_RULE_ECONOMIC_MATERIALITY recorded UNRESOLVED; OI publication lag reproduced from bytes; governance timestamp errata appended. This session PRODUCED the repair and must not certify it, challenge it at A2, or verify it at Stage I. commodity-carry-research was not modified. No Sharpe, no PnL, no wrapper comparison, no candidate or roll-rule selection; no protected data opened; no data purchased; X01 unsealed and unrun; Databento governed contribution 0 against the frozen N_trials = 14."
+
+  - ts: "2026-09-08T02:51:00Z"
+    session_id: "wave1-astra-cash-ledger-repair-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 bounded X02 cash-ledger repair builder (MEASUREMENT lane)"
+    gate: "none released -- the repair opens no review gate and seals nothing"
+    produced: "CORRECTION to the preceding session_log entry, plus this phase's work. CORRECTION: the entry timestamped 2026-09-08T03:35:00Z states a time that had NOT occurred when it was written -- this file was written at 02:24:51Z (observed mtime), so 03:35Z lay about 70 minutes in the future. That entry is left in place because session_log is an append-only operational record; this entry is its erratum. Observed timing for that phase, from artifact mtimes only: 02:15:45Z to 02:24:51Z, with both ledgers written 02:21:46Z; its START is UNKNOWN and bounded above by 02:15:45Z. No timestamp has been invented. THIS PHASE: repaired the one-contract cash ledger in research/extensions/wave1/run_x02a_v3.py after the fresh GPT-6 Astra delta verification returned OVERALL=FAIL on X02. The prior ledger charged both roll legs as percentages of the OLD notional, yielding 23.863636 USD for a CL 100->110 roll instead of the 25.00 that two fixed 12.50 sides cost, and it still reconciled at 1e-16 because chain_returns shares that convention. The ledger is now built from the frozen Sec 5 primitive cost_per_side_usd (tick_value + 2.50), price-independent, with explicit exit and entry legs; a synthetic literal-oracle regression pins 12.50 + 12.50 = 25.00 and rejects 23.863636; three scratch mutation tests confirm the oracle does not move when the shared percentage helper is corrupted. X03 was NOT rerun and its comparator is unchanged. commodity-carry-research was NOT modified. No Sharpe, no PnL, no wrapper comparison, no candidate or roll-rule selection; no protected data opened; no data purchased; X01 unsealed and unrun; X01 precondition 1 remains PENDING_INDEPENDENT_VERIFICATION; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it."
+
+  - ts: "2026-09-08T03:25:00Z"
+    session_id: "wave1-x02-production-cash-path-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 bounded X02 production-accounting repair builder (MEASUREMENT lane)"
+    gate: "none released -- the repair opens no review gate and seals nothing"
+    produced: "In-place repair of research/extensions/wave1/run_x02a_v3.py plus x02a_v3_results.json and documentation. The TSMOM PRODUCTION return path is now tsmom_chain_net_returns, a TSMOM-local cash-first chain: gross_usd = multiplier * qty * (p_t - p_prev) on the single held contract, cash_cost = qty * (C_exit + C_entry) on roll days only, denominator = multiplier * qty * p_prev, net_return = (gross_usd - cash_cost) / denominator. It no longer uses carry cost_per_side_pct, which is retained only as a labelled legacy reference. Production synthetic CL roll cost is 25.00 and the superseded 23.863636 is impossible; roll-day reconciliation against the independent primitive oracle is 1.18e-17 and non-roll 4.18e-17; event-semantics tests pass; the production divisor regression shows cash cost divisor-invariant while the cost rate scales 100x for ZC. Mutations A-D all detect their defects. The prior turn wrongly reported the roll-day divergence as an acceptable finding; that disposition is superseded and the defect is repaired. X03 was NOT rerun and its comparator, the panel gate and the OI field are unchanged. commodity-carry-research was NOT modified. No Sharpe, no PnL, no wrapper comparison, no candidate or roll-rule selection; no protected data opened; no data purchased; X01 unsealed and unrun; X01 precondition 1 remains PENDING_INDEPENDENT_VERIFICATION; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it."
+
+  - ts: "2026-09-08T07:15:05Z"
+    session_id: "wave1-doc-governance-closure-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 bounded documentation/governance closure builder (MEASUREMENT lane)"
+    gate: "none released -- the repair opens no review gate and seals nothing"
+    produced: "CORRECTION to the preceding session_log entry, plus this phase's documentation/governance work. No research computation was run and no implementation byte was changed. CORRECTION: the entry timestamped 2026-09-08T03:25:00Z states a time that had NOT occurred when it was written -- this file's observed mtime for that append is 03:05:18.759Z, so 03:25Z lay about 20 minutes in the future; the fresh GPT-6 Astra delta verification independently placed successful creation at approximately 03:05:06.990Z, consistent with the ledger mtimes of 03:05:06.514-03:05:06.515Z. The claimed start is wrong in the other direction: that phase's earliest artifact, run_x02a_v3.py, has mtime 03:02:16.046Z, which precedes 03:05Z. That entry is left in place because session_log is an append-only operational record; this entry is its erratum. Observed timing for that phase, from artifact mtimes only: 03:02:16.046Z (run_x02a_v3.py) through 03:05:18.759Z (this file), with x02a_v3_results.json 03:02:24.237Z and FUTURES_INFRA_TRUTH.md plus both ledgers 03:05:06.514-03:05:06.515Z; the phase START is UNKNOWN and bounded above by 03:02:16.046Z. No timestamp has been invented. This is the third occurrence of the projected-timestamp defect (after the 03:35Z and 01:00Z-03:00Z entries), and a standing convention is now recorded in ops/REVIEWER_EXPOSURE_LOG.md section 2A: a ts may hold only a clock value observed before the append, or an interval whose endpoints are already-observed artifact mtimes. THIS entry's ts is an observed clock read taken immediately before the append and is a lower bound on it, not a projection. THIS PHASE: repaired the second Astra blocker, LEGACY_CARRY_CONVENTION_REACHABLE_BY_X01=YES. The X01 preregistration draft's active construction instructions named carry cost_per_side_pct / chain_returns as the production cost path. A new binding section 3.4 now requires X01 production accounting to route through the independently accepted cash-first implementation research/extensions/wave1/run_x02a_v3.py::tsmom_chain_net_returns: fixed dollars per side, exit and entry legs charged independently, percentage derived from cash over the prior-held notional, no summing of percentages across different contract notionals, costs charged on an actual roll only, no splicing or back-adjustment. The section 3 cost row and section 3.2's divisor requirement are restated against that route. The legacy carry callables remain available and unmodified for historical reproduction and reconciliation reference but are NOT an authorized X01 production accounting path, so LEGACY_CARRY_CONVENTION_REACHABLE_BY_X01=NO from the active instructions. The finding LEGACY_CARRY_PERCENTAGE_CONVENTION != AUTHORITATIVE_TSMOM_CASH_LEDGER is preserved as history. commodity-carry-research was NOT modified. run_x02a_v3.py, run_x03_structural_v3.py, both results JSONs, panel_sanity.py and validate_wave0.py are byte-identical. X02 was not rerun and X03 was not rerun. No Sharpe, no PnL, no wrapper comparison, no candidate or roll-rule selection; no protected data opened; no data purchased; X01 unsealed and unrun; X01 precondition 1 remains PENDING_INDEPENDENT_VERIFICATION and is NOT marked MET; O-1 through O-6 remain unresolved; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it."
+
+  - ts: "2026-09-08T08:08:17Z"
+    session_id: "wave1-x01-stage-a2-repair-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 X01 Stage-A2 bounded preregistration repair builder (MEASUREMENT lane)"
+    gate: "none released -- the A2 gate is held by the A2 session, not by this one; nothing is sealed"
+    produced: "X01 Stage-A2 bounded preregistration repair. The fresh GPT-6 Astra X01 A2 review returned X01_A2_VERDICT=FAIL, X01_SEALABLE_NOW=NO; the verdict was accepted and the accepted futures infrastructure (X02/X03 PASS) was not reopened. Repaired research/extensions/x01/X01_PREREGISTRATION_DRAFT.md and created research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md. Primary estimand is now the scalar dS = Sharpe(F) - Sharpe(E), separated from the paired observations and from the difference series, with Sharpe/annualisation/raw-return/ddof/degenerate/minimum-observation conventions frozen and four substitutions forbidden. Decision endpoints frozen strict/strict/inclusive so the three states partition the line. O-3 resolved: paired stationary bootstrap, joint resampling, dS recomputed per replicate, expected block length 12 months justified from the signal's 12-month maximum formation lookback, 10000 replications, 95 percent percentile CI, SeedSequence(7).spawn(3) in fixed arm order, invalid replicates discarded and counted with a 9500 floor; carry's 21 trading days not transplanted. The expected-correlation-0.9 precision shortcut was deleted and replaced by a declared Jobson-Korkie/Memmel formula over a declared rho grid using no target-sample quantity. O-4 removed as an invalid open item and the PRIMARY/SECONDARY/DIAGNOSTIC hierarchy made explicit. O-5 fixed for X01 at AT_MOST_SUPPORTED_IN_T1_FOR_PAIRED_WRAPPER_PERFORMANCE with D9 left open and de-blockered, no weakest-tier inheritance. Sample repaired: the former 2010-07-31 start ignored the 12-month warm-up; data availability start 2010-06-06, first signal-eligible month-end 2011-06-30, first paired evaluation month 2011-07-31, historical end 2026-05-31, N=179, with deterministic missing/partial rules and no ETF-signal bridge and no shortened composite. Both sleeve return streams frozen element for element. S1 specified as a signal-input-only construction sensitivity with a causal forward ratio adjustment chosen on a causality property; S2 bound to commodity-carry-research/src/robustness.py::fixed_calendar_front_series. Crisis windows fixed to the pre-existing canonical config.py REGIMES COVID 2020 = 2020-02-01 to 2020-04-30 and CY2022. Trial accounting rewritten: contribution +3 conditional, the immutable 14->17 deleted, resulting total computed at execution; SHARED_DATABENTO_HOME_GATE=PRE_EXECUTION and no ledger created; a NEW consequence identified and NOT resolved - the ETF leg must be constructed, so the draft's claim that D-ETF-COUNT is untouched is false and E's ETF-panel trial classification must be settled pre-execution. EXPOSURE, recorded not minimised: this session read output/dd_sleeve_summary.csv, the published baseline's portfolio-scoped Commodity-sleeve summary statistics, which is adjacent to the E leg; exposure ledger row 27 is classified REVEALED_TARGET_METRIC for that reason. NO X01 target quantity was constructed or observed: no dS, no X01-window leg Sharpe, no paired series, no PnL, no bootstrap, no crisis statistic. No design value was chosen from any outcome and B was not chosen at all. A2 contribution recorded as material_design_contributor with the attribution caveat that the findings arrived through Aaron's relay; consequence: those elements must not rest on same-family Astra review as their sole independent certification. Gap G-7 records that the A2 artifact is not persisted on disk. commodity-carry-research NOT modified; V2 not modified; X02/X03 implementation and results bytes unchanged; validate_wave0.py unchanged. No protected data opened; no data purchased; no strategy construction; X01 unsealed and unrun; X01_A2_FINAL_CLOSURE=NOT_YET; O-1, O-2 and O-6's owner half remain OPEN as the only remaining blockers; D3 and D9 not resolved; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it, close the A2, or verify it at Stage I."
+
+  - ts: "2026-09-08T08:29:05Z"
+    session_id: "wave1-x01-o3-wording-closure-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 X01 O-3 statistical-wording closure builder (MEASUREMENT lane)"
+    gate: "none released -- nothing is sealed and no review gate is opened or closed"
+    produced: "X01 O-3 statistical-wording closure, bounded. Aaron accepted the Stage-A2 technical repair except for two over-strong statistical claims in the O-3 inference section; both are corrected in research/extensions/x01/X01_PREREGISTRATION_DRAFT.md and NO O-3 mechanic changed. Retained unaltered: stationary bootstrap, expected block length L = 12 months, paired monthly resampling, 10000 replicates, 95 percent percentile CI, master seed 7, SeedSequence spawn order, degenerate-replicate handling with the 9500 floor, and the multiplicity treatment. CORRECTION 1: the draft no longer states or implies that a 12-month signal formation window proves return dependence extends no further than 12 months. L = 12 is now stated as a PROSPECTIVELY CHOSEN DESIGN-BASED DEPENDENCE HORIZON anchored to the longest signal-formation window and sealed as an inference convention, explicitly not a theorem and not an empirical claim; a new row records that real dependence can extend beyond the formation window through persistent positions, volatility scaling, common market dependence and regime persistence, and that the stationary bootstrap's geometric blocks place mass at every length regardless. CORRECTION 2: the claim that longer block lengths necessarily or monotonically widen the confidence interval is deleted, and presumed CI monotonicity is no longer used as evidence that L = 12 cannot favour the claim. Unsteerability now rests on the value having been fixed before any outcome exists, from a structural property of the signal specification alone, with no target-sample quantity consulted and no alternative value computed or compared. CORRECTION 3: the Jobson-Korkie/Memmel prospective precision and reachability calculation is now explicitly a pre-outcome design approximation and diagnostic based on declared scenario assumptions, and is explicitly NOT an estimate of the actual X01 paired-stream correlation, NOT proof of stationary-bootstrap coverage, NOT a bound on the interval the sealed procedure will produce, NOT an input to B, and NOT a substitute for the sealed bootstrap inference - section 6.1 alone determines the outcome and the table is discarded if the two disagree. The same over-strong qualifier was corrected in the two places where section 15 O-2 quotes the table; no O-1, O-2 or O-6 option, candidate value, meaning, consequence figure or recommendation was changed. No target-data-dependent block selection was added and no bootstrap sensitivity family was created. NO computation of any kind was run this phase and no dataset, panel or results file was opened: no return, cost, residual, Sharpe, correlation, bootstrap or crisis statistic, and the precision table's numbers were not recomputed. TARGET_X01_OUTCOME_ACCESSED=NO. X02/X03 not reopened and their bytes unchanged; V2 unchanged; validate_wave0.py unchanged; commodity-carry-research NOT modified; no protected data opened; no data purchased; no strategy construction; X01 unsealed and unrun; X01 precondition 1 remains PENDING_INDEPENDENT_VERIFICATION; X01_A2_FINAL_CLOSURE=NOT_YET; O-1, O-2 and O-6 remain the only outstanding blockers and are Aaron's; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it."
+
+  - ts: "2026-09-08T08:43:49Z"
+    session_id: "wave1-x01-owner-decisions-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 X01 owner-decision incorporation builder (MEASUREMENT lane)"
+    gate: "none released -- nothing is sealed; the A2 delta closure is held by the A2 session"
+    produced: "X01 owner-decision incorporation. Aaron took the three outstanding owner decisions and this session wrote them into research/extensions/x01/X01_PREREGISTRATION_DRAFT.md, removing their OPEN/UNSET status. Text and design incorporation only; no redesign. O1_OWNER_DECISION=ADOPT_OPTION_B: the DBA agricultural leg maps to ZC ZS ZW LE HE GF at equal weight one sixth per root, monthly month-end rebalance, the drafted deterministic within-leg missing-contract treatment, roots' gross chained series equal-weighted into ONE agricultural proxy index carrying ONE signal; classified FIXED_PROXY_WITH_COMPOSITION_MISMATCH and not EXPOSURE_REPLICATION; Option A is not an evaluated X01 alternative and must not be computed as a sensitivity to compare results. O2_OWNER_DECISION=B_0.15: B = 0.15 annualised-Sharpe units, non-inferiority boundary -0.15, primary scalar estimand unchanged as dS = Sharpe(F) - Sharpe(E), the repaired strict/strict/inclusive endpoint convention applying exactly; recorded as an owner utility and economic tolerance, explicitly not selected from observed X01 performance, anticipated pass probability, the prospective precision table, observed paired correlation, bootstrap results or historical candidate optimisation; no fallback B, not alterable after outcomes are visible, and no alternative B reportable after execution as a competing pass/fail specification. O6_OWNER_DECISION=ADOPT_OPTION_1_SYMMETRIC_ZERO_CARRY: no cash or collateral yield credited to either leg, no futures margin financing credit or charge, no borrow or short-financing adjustment on either leg, ETF expense ratio embedded exactly once through the authoritative adjusted-close stream and never double-deducted, ETF trading cost at the accepted baseline 2.0 bps per unit turnover, futures trading and roll costs from the independently accepted X02 cash-first production accounting, both legs on the preregistered unit-capital common normalisation, NET primary and gross diagnostic; recorded as a symmetric research convention and explicitly NOT a claim that it reproduces full live-deployment economics, with NAV-specific and richer financing and deployment feasibility remaining outside X01; Option 2 may not be introduced after observing X01 nor reported as an alternative success route. All three decisions were taken and recorded PROSPECTIVELY, before any X01 paired return series, Sharpe(F), Sharpe(E), dS, bootstrap result or crisis statistic had been computed or opened; TARGET_X01_OUTCOME_ACCESSED=NO. Preserved unchanged: the complete O-3 repair including the paired stationary bootstrap, L = 12 months as a prospective design convention, the absence of any theorem that dependence ends after 12 months, the absence of any CI-width monotonicity claim, and the Jobson-Korkie/Memmel table as a diagnostic only; O-4 closed as invalid as an open choice; the T1 evidence ceiling; O-5 and the broader D9 unresolved outside the X01 seal. POST_HOC_ESCAPE_ROUTES_REMAINING=NONE - all seven registered routes are FROZEN or governed by a deterministic outcome-independent RULE, with the rejected alternatives retained only as labelled non-executable provenance. PLANNED_X01_CONTRIBUTION stays +3 conditional on exactly the three governed constructed series; no Option-A or Option-2 series, attempt row or trial is created; the resulting cumulative total is still computed at execution and not hard-coded to 17. SHARED_DATABENTO_HOME_GATE and D-ETF-COUNT both remain PRE_EXECUTION and neither is resolved by guess. The A2 provenance record gained a section 6A recording the owner decisions and their prospective timing, and two stale claims in it were corrected; the material_design_contributor classification, the attribution caveat, the Stage I same-family-certification obligation and the non-persistence gap all stand, and reviewer diversity is still not sample independence. NO computation of any kind was run this phase: no paired stream constructed, no Sharpe, no dS, no bootstrap, no crisis statistic, no A1/S1/S2 performance. X02/X03 not reopened and their bytes unchanged; V2 unchanged; validate_wave0.py unchanged; commodity-carry-research NOT modified; no protected data opened; no data purchased; no strategy construction. X01_PREREG_SEALED=NO; X01_FULL_PERFORMANCE_EXECUTED=NO; X01_A2_FINAL_CLOSURE=NOT_YET; X01 precondition 1 remains PENDING_INDEPENDENT_VERIFICATION; Databento governed contribution 0 against the frozen N_trials = 14. An owner design decision is NOT authorization to execute, and this session PRODUCED the incorporation and must not certify it, close the A2, or seal."
+
+  - ts: "2026-09-08T09:04:12Z"
+    session_id: "wave1-x01-four-defect-repair-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 X01 four-defect A2 preregistration repair builder (MEASUREMENT lane)"
+    gate: "none released -- the A2 delta closure is held by the A2 session; nothing is sealed"
+    produced: "X01 four-defect A2 repair. The same fresh GPT-6 Astra A2 reviewer returned X01_A2_DELTA_VERDICT=FAIL with 4 design blockers and 0 owner decisions outstanding; the review was accepted and the independently accepted infrastructure (X02, X03, panel, OI, cash-first primitive, V2) was NOT reopened. DEFECT 1, signal: the active construction instruction said mean of the 1/3/6/12-month total returns, contradicting frozen V2 and src/signals.py::signal_method_b, which specify the MEAN OF THE SIGNS. New section 3.7 reproduces it from source as s_t = [sign(R_1m)+sign(R_3m)+sign(R_6m)+sign(R_12m)]/4, with the zero convention np.sign(0)=0 READ FROM THE CODE and not invented, all four horizons required, combine=mean and not vote, and the three wrong expressions named and rejected. Section 3.7.1 adds a binding regression on a hand-built synthetic path whose horizon returns are exactly (+0.10,+0.10,+0.10,-0.01): the frozen implementation returns +0.500000, versus 0.0725 for mean-of-returns and +1.0 for sign-of-mean. DEFECT 2, portfolio trade cost: the rebalance instruction charged delta|position|, which is not a traded quantity - it returns 0 for a +1 to -1 reversal and 0 across a roll. New section 3.8 charges the absolute traded contract quantity per contract identity, sum over j of |q_j,t - q_j,t-1| times C_j, with the sizing-to-quantity map taken from the already authoritative convention q = w*K/(mult*P), quantities declared CONTINUOUS research quantities rather than integer live contracts, and the cost rate shown invariant to the capital base K. The accepted X02 primitive cost_per_side_usd = tick_value + 2.50 is NOT changed. Section 3.8.1 pins regressions A to E: no-trade 0, close 1, add 1, reversal 2 sides at 25.00 dollars, and a roll as two identities each charged one side. DEFECT 3, S1: the prose formed r = P_new/P_old and multiplied the running factor, which at 100 to 110 yields an adjusted roll level of 121 - a phantom jump at every roll. Corrected to one exact equation: k_new = k_old * P_old,tau / P_new,tau and P_adj,t = k_new * P_new,t for t >= tau, with tau defined as the A1 held-front change, which is the same date the cash legs are charged; both settlements taken at tau; the new factor applying AT tau; history never restated; successive factors compounding; and an explicit declared rule when the two contracts share no settlement at tau. The continuity regression pins 100 to 100 to 110 and rejects 121. S1 still changes only the signal input and PnL remains tsmom_chain_net_returns. DEFECT 4, secondary inference: BH-FDR was carried as a challengeable default rather than a decided rule, and a consequence was attached to an undefined material divergence. V2 was read first: Program v2 rule 5 requires only that the family's multiplicity treatment be STATED and carries BH-FDR as a challengeable default, and the family table gives F-X01 the scope one contract with secondaries declared, so no formal secondary inference is required. New section 8.3 freezes SECONDARY_INFERENCE_ROLE=DESCRIPTIVE_SENSITIVITY, BH_FDR_REQUIRED=NO, S1_S2_PROMOTION_POWER=NONE and SECONDARY_MATERIALITY_GATE=NONE with six prohibitions. The undefined condition was DELETED rather than thresholded: the signal-input construction is now declared a degree of freedom unconditionally via SIGNAL_INPUT_CONSTRUCTION_DOF=REQUIRED, mirroring ROLL_RULE_DOF=REQUIRED, which discharges MAP_v2 X03's conditional consequence with no threshold invented. Immateriality is therefore never claimed and ROLL_RULE_ECONOMIC_MATERIALITY stays UNRESOLVED. NON-BLOCKING: February 2020 month-end corrected from 2020-02-28 to 2020-02-29; the canonical config.py Feb-to-Apr 2020 COVID window and all crisis semantics are otherwise unchanged. The escape-route register now carries eleven routes, all FROZEN or governed by a deterministic outcome-independent RULE; POST_HOC_ESCAPE_ROUTES_REMAINING=NONE is asserted only after these four closures. Astra's delta result states CROSS_FAMILY_CERTIFICATION_REQUIRED_BEFORE_SEAL=NO, so NO Fable pre-seal gate was created; the broader obligation that adopted design elements must not rest on same-family review as their sole independent certification is preserved exactly, with no timing requirement invented. VERIFICATION WAS SYNTHETIC ONLY: a hand-built monthly price path and pure arithmetic. The frozen signal_method_b was executed on that synthetic path; no ETF or futures panel was loaded. NO X01 paired series, Sharpe(F), Sharpe(E), dS, bootstrap or crisis statistic was constructed or opened. TARGET_X01_OUTCOME_ACCESSED=NO. O-1, O-2 and O-6 unchanged; the primary estimand, the sample, and the O-3 bootstrap and its disclaimers unchanged; V2 unchanged; X02/X03 not reopened and bytes unchanged; validate_wave0.py unchanged; commodity-carry-research NOT modified; no protected data opened; no data purchased; no strategy construction. X01_PREREG_SEALED=NO; X01_FULL_PERFORMANCE_EXECUTED=NO; X01_A2_FINAL_CLOSURE=NOT_YET; precondition 1 remains PENDING_INDEPENDENT_VERIFICATION; Databento governed contribution 0 against the frozen N_trials = 14. This session PRODUCED the repair and must not certify it, close the A2, or seal."
+
+  - ts: "2026-09-08T09:21:32Z"
+    session_id: "wave1-x01-seal-attempt-2026-09-08"
+    seat: "Claude Opus 5"
+    role: "Wave-1 X01 preregistration seal executor (MEASUREMENT lane)"
+    gate: "none released -- THE SEAL DID NOT COMPLETE; nothing is sealed"
+    produced: "X01 seal attempt under Aaron's AARON_OWNER_DECISION = SEAL_X01_PREREGISTRATION. THE SEAL DID NOT COMPLETE. X01_PREREG_SEAL_STATUS = BLOCKED. BYTE-DRIFT CHECK RAN FIRST AND PASSED: research/extensions/x01/X01_PREREGISTRATION_DRAFT.md hashes to 9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743 and research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md to 173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe, both exactly matching the bytes Aaron pinned. There is NO BYTE_DRIFT and the independently reviewed scientific contract is intact. REASON FOR THE BLOCK, established from the authoritative QROS contract rather than guessed: the canonical seal is derived, never stored - qros_runtime/statefile.py refuses any stored seal_valid, seal_validity or seal_state field at any depth - and qros_runtime/eligibility.py::seal_state derives it by taking prereg.seal_revision, resolving it as a git revision via sweep.resolve, reading the preregistration blob at that revision and at HEAD with gitread.read_blob_at, and comparing them, per spec section 2.6(a) rule R03. The spec's section 2.4 form is seal_revision: <40-hex or tag>, null pre-seal. The preregistration exists in NO commit, NO branch and NO tag: git log --all on the path returns nothing, git cat-file -e HEAD:<path> reports the path exists on disk but not in HEAD, the repository has 0 tags, and the entire research/extensions tree together with ops/ and qros-state.yaml is untracked. Committing is forbidden by this turn's hard stops. Writing any non-resolving string into seal_revision would derive SEAL_UNVERIFIABLE rather than SEAL_VERIFIED, so it would have forced the seal rather than made it, and Aaron's instruction was to stop rather than force. This is the mechanism's own input, not a new prerequisite invented by this session. PRECONDITION STATUS, separately: all six of the contract's own section 12 preconditions are satisfied by the independently established facts Aaron supplied - X02a mechanical truth PASS, X03 PASS, WAVE1_FUTURES_INFRA_ACCEPTED YES, O-1 through O-6 resolved, the fresh Astra A2 delta verdict PASS with 0 design blockers and 0 owner decisions remaining, and Aaron's explicit seal authorization. The block is the seal MECHANISM's missing input, not an unsatisfied scientific precondition. WHAT WAS AND WAS NOT WRITTEN: the preregistration bytes were NOT modified, no seal marker was written into it, and no precondition status inside it was edited - it remains byte-identical to the reviewed and pinned state so it can be sealed unchanged the moment the mechanism has its input. The only substantive change is the canonical prereg pointer block added to this state file in its documented NULL PRE-SEAL form, naming the preregistration as reference and the section 5.2.1 A2 package as normative_references, with seal_revision deliberately ABSENT. MINIMAL UNBLOCK, for Aaron and not taken by this session: authorize one commit of the untracked governance and research tree, then set prereg.seal_revision to that commit; the runtime then derives SEAL_VERIFIED and post-seal byte drift becomes detectable. NOTHING ELSE CHANGED: no X01 paired series, Sharpe(F), Sharpe(E), dS, bootstrap or crisis statistic was constructed or opened; TARGET_X01_OUTCOME_ACCESSED=NO; X01_FULL_PERFORMANCE_EXECUTED=NO; PROTECTED_FORWARD_DATA_OPENED=NO; STRATEGY_BUILD_STARTED=NO; NEW_DATA_PURCHASED=NO; SHARED_DATABENTO_HOME_GATE and D_ETF_COUNT_GATE remain PRE_EXECUTION and were not resolved by guess; the shared ledger was not created; D3 remains non-blocking; V2, X02 and X03 bytes unchanged; commodity-carry-research NOT modified; planned X01 contribution stays +3 on A1, S1 and S2 with no VARIANT_ATTEMPT created by a seal. This session must not certify its own work."
+
+packets: []

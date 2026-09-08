@@ -1,0 +1,40 @@
+{
+  "generated_utc": "2026-09-07T22:32:16.370792+00:00",
+  "n_files_read": 5026,
+  "n_files_available": 5026,
+  "n_settlement_points": 9102076,
+  "n_oi_points": 4060735,
+  "n_outright_contracts": 1936,
+  "settle_shape": [
+    4902,
+    1936
+  ],
+  "oi_shape": [
+    4906,
+    1790
+  ],
+  "settle_first_date": "2010-06-06",
+  "settle_last_date": "2026-06-30",
+  "oi_first_date": "2010-06-06",
+  "oi_last_date": "2026-06-30",
+  "roots": [
+    "CL",
+    "HO",
+    "RB",
+    "NG",
+    "GC",
+    "SI",
+    "HG",
+    "PL",
+    "PA",
+    "ZC",
+    "ZS",
+    "ZW",
+    "ZM",
+    "ZL",
+    "KE",
+    "LE",
+    "HE",
+    "GF"
+  ]
+}

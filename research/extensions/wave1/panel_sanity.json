@@ -1,0 +1,217 @@
+{
+  "settle_shape": [
+    4902,
+    3335
+  ],
+  "oi_shape": [
+    4906,
+    3094
+  ],
+  "n_contracts": 3349,
+  "fragmentation_same_expiration": {
+    "n_groups": 14,
+    "groups": [
+      {
+        "asset": "HO",
+        "expiration": "2013-01-31",
+        "n_keys": 2
+      },
+      {
+        "asset": "HO",
+        "expiration": "2013-02-28",
+        "n_keys": 2
+      },
+      {
+        "asset": "RB",
+        "expiration": "2019-01-31",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZC",
+        "expiration": "2014-07-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZL",
+        "expiration": "2014-07-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZM",
+        "expiration": "2014-07-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZM",
+        "expiration": "2019-07-12",
+        "n_keys": 3
+      },
+      {
+        "asset": "ZM",
+        "expiration": "2019-10-14",
+        "n_keys": 3
+      },
+      {
+        "asset": "ZM",
+        "expiration": "2019-12-13",
+        "n_keys": 3
+      },
+      {
+        "asset": "ZS",
+        "expiration": "2014-07-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZW",
+        "expiration": "2012-09-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZW",
+        "expiration": "2012-12-14",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZW",
+        "expiration": "2013-07-12",
+        "n_keys": 2
+      },
+      {
+        "asset": "ZW",
+        "expiration": "2013-09-13",
+        "n_keys": 2
+      }
+    ],
+    "note": "one contract split across keys; NOT a collision. Verified never held: the held-front guard and X02a's roll series operate on the keys actually selected by A1."
+  },
+  "long_lived_contracts_reported": {
+    "threshold_days": 4200,
+    "n": 0,
+    "top": [],
+    "note": "reported for inspection, not a gate failure: CME lists deep curves years ahead, so a long observed life can be legitimate"
+  },
+  "panel_span_days": 5868,
+  "observed_life_days": {
+    "min": 0,
+    "max": 4030,
+    "median": 742.0,
+    "p99": 3880.959999999999
+  },
+  "non_positive_settlements": {
+    "n_negative": 4,
+    "n_zero": 8631,
+    "pct_of_observed_cells": 0.319,
+    "negatives": [
+      {
+        "date": "2016-03-07",
+        "contract": "109318__2019-07-12",
+        "value": -1.1
+      },
+      {
+        "date": "2016-03-07",
+        "contract": "129484__2019-12-13",
+        "value": -1.1
+      },
+      {
+        "date": "2016-03-07",
+        "contract": "837103__2019-10-14",
+        "value": -1.1
+      },
+      {
+        "date": "2020-04-20",
+        "contract": "22770__2020-04-21",
+        "value": -37.63
+      }
+    ],
+    "zeros_by_year": {
+      "2010": 926,
+      "2011": 1355,
+      "2012": 1226,
+      "2013": 1142,
+      "2014": 1251,
+      "2015": 1438,
+      "2016": 1288,
+      "2025": 5
+    },
+    "n_contracts_with_zeros": 1075,
+    "handling": "non-positive settlements are NOT sanitised away here; the held-front guard in run_x02a_v2 HALTS if any of them is ever the contract actually held"
+  },
+  "contracts_by_root": {
+    "CL": 320,
+    "GC": 227,
+    "GF": 141,
+    "HE": 141,
+    "HG": 241,
+    "HO": 237,
+    "KE": 78,
+    "LE": 107,
+    "NG": 342,
+    "PA": 207,
+    "PL": 207,
+    "RB": 236,
+    "SI": 224,
+    "ZC": 96,
+    "ZL": 153,
+    "ZM": 159,
+    "ZS": 133,
+    "ZW": 100
+  },
+  "distinct_expirations_by_root": {
+    "CL": 320,
+    "GC": 227,
+    "GF": 141,
+    "HE": 141,
+    "HG": 241,
+    "HO": 235,
+    "KE": 78,
+    "LE": 107,
+    "NG": 342,
+    "PA": 207,
+    "PL": 207,
+    "RB": 235,
+    "SI": 224,
+    "ZC": 95,
+    "ZL": 152,
+    "ZM": 152,
+    "ZS": 132,
+    "ZW": 96
+  },
+  "gc_june_contracts": {
+    "n_distinct_keys": 23,
+    "years": [
+      2010,
+      2011,
+      2012,
+      2013,
+      2014,
+      2015,
+      2016,
+      2017,
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025,
+      2026,
+      2027,
+      2028,
+      2029,
+      2030,
+      2031,
+      2032
+    ]
+  },
+  "alignment": {
+    "settle_cols": 3335,
+    "oi_cols": 3094,
+    "shared_cols": 3094,
+    "settle_only": 241,
+    "oi_only": 0
+  },
+  "n_checks": 10,
+  "n_failed": 0,
+  "PANEL_SANITY": "PASS"
+}

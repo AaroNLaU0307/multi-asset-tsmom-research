@@ -1,0 +1,629 @@
+{
+  "generated_utc": "2026-09-07T23:17:39.970747+00:00",
+  "calendar_lead_days": 5,
+  "scope": "STRUCTURAL ONLY: roll dates, roll counts, OI crossover timing, contract availability, and rule disagreement. No return, no Sharpe, no PnL, no performance comparison.",
+  "roots": {
+    "CL": {
+      "n_contracts": 214,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 88,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2022-09-19",
+        "days_to_expiry_at_roll_median": 3686.0,
+        "days_to_expiry_at_roll_min": 3260,
+        "days_to_expiry_at_roll_max": 3815,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 3,
+        "availability_pct": 99.9387380028589
+      },
+      "CALENDAR": {
+        "n_rolls": 81,
+        "roll_dates_first": "2019-05-28",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 3203,
+        "availability_pct": 34.59260771901164
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 87,
+        "median": 142.0,
+        "p90": 144.4,
+        "max": 147
+      },
+      "rule_disagreement_session_share": 0.999795793342863
+    },
+    "HO": {
+      "n_contracts": 120,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 114,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-11-14",
+        "days_to_expiry_at_roll_median": 3683.0,
+        "days_to_expiry_at_roll_min": 3540,
+        "days_to_expiry_at_roll_max": 3712,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 1798,
+        "availability_pct": 63.28364304676333
+      },
+      "CALENDAR": {
+        "n_rolls": 78,
+        "roll_dates_first": "2020-01-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 1972,
+        "availability_pct": 59.73044721257913
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 113,
+        "median": 142.0,
+        "p90": 144.0,
+        "max": 148
+      },
+      "rule_disagreement_session_share": 0.999795793342863
+    },
+    "RB": {
+      "n_contracts": 120,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 115,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-11-13",
+        "days_to_expiry_at_roll_median": 3684.0,
+        "days_to_expiry_at_roll_min": 3540,
+        "days_to_expiry_at_roll_max": 3688,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 1798,
+        "availability_pct": 63.28364304676333
+      },
+      "CALENDAR": {
+        "n_rolls": 78,
+        "roll_dates_first": "2020-01-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 1972,
+        "availability_pct": 59.73044721257913
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 114,
+        "median": 98.0,
+        "p90": 143.0,
+        "max": 148
+      },
+      "rule_disagreement_session_share": 0.999795793342863
+    },
+    "NG": {
+      "n_contracts": 282,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 42,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2024-03-12",
+        "days_to_expiry_at_roll_median": 3684.0,
+        "days_to_expiry_at_roll_min": 1039,
+        "days_to_expiry_at_roll_max": 3694,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 19,
+        "availability_pct": 99.61200735143966
+      },
+      "CALENDAR": {
+        "n_rolls": 133,
+        "roll_dates_first": "2015-06-26",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4897,
+        "held_contract_missing_settlement": 1,
+        "availability_pct": 99.9795793342863
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 41,
+        "median": 140.0,
+        "p90": 145.0,
+        "max": 149
+      },
+      "rule_disagreement_session_share": 0.999795793342863
+    },
+    "GC": {
+      "n_contracts": 120,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 3,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2010-12-01",
+        "days_to_expiry_at_roll_median": 3673.0,
+        "days_to_expiry_at_roll_min": 3022,
+        "days_to_expiry_at_roll_max": 7319,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2395,
+        "availability_pct": 51.08251633986929
+      },
+      "CALENDAR": {
+        "n_rolls": 89,
+        "roll_dates_first": "2018-08-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2471,
+        "availability_pct": 49.53022875816993
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 2,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997957516339869
+    },
+    "SI": {
+      "n_contracts": 120,
+      "sessions": 4895,
+      "A1": {
+        "n_rolls": 2,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2010-06-28",
+        "days_to_expiry_at_roll_median": 5172.0,
+        "days_to_expiry_at_roll_min": 3022,
+        "days_to_expiry_at_roll_max": 7322,
+        "sessions": 4895,
+        "held_contract_missing_settlement": 3032,
+        "availability_pct": 38.059244126659856
+      },
+      "CALENDAR": {
+        "n_rolls": 90,
+        "roll_dates_first": "2018-08-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4895,
+        "held_contract_missing_settlement": 1942,
+        "availability_pct": 60.32686414708886
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 1,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997957099080694
+    },
+    "HG": {
+      "n_contracts": 120,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 5,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2011-02-15",
+        "days_to_expiry_at_roll_median": 7336.0,
+        "days_to_expiry_at_roll_min": 3356,
+        "days_to_expiry_at_roll_max": 7339,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2955,
+        "availability_pct": 39.64460784313726
+      },
+      "CALENDAR": {
+        "n_rolls": 75,
+        "roll_dates_first": "2019-07-28",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2204,
+        "availability_pct": 54.98366013071896
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 4,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997957516339869
+    },
+    "PL": {
+      "n_contracts": 120,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 36,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2018-12-21",
+        "days_to_expiry_at_roll_median": 3675.0,
+        "days_to_expiry_at_roll_min": 2353,
+        "days_to_expiry_at_roll_max": 3679,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2134,
+        "availability_pct": 56.41339869281046
+      },
+      "CALENDAR": {
+        "n_rolls": 107,
+        "roll_dates_first": "2016-10-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 1902,
+        "availability_pct": 61.15196078431373
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 35,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997957516339869
+    },
+    "PA": {
+      "n_contracts": 120,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 36,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-02-24",
+        "days_to_expiry_at_roll_median": 3673.0,
+        "days_to_expiry_at_roll_min": 2322,
+        "days_to_expiry_at_roll_max": 3676,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 2132,
+        "availability_pct": 56.45424836601307
+      },
+      "CALENDAR": {
+        "n_rolls": 107,
+        "roll_dates_first": "2016-09-26",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4896,
+        "held_contract_missing_settlement": 1865,
+        "availability_pct": 61.907679738562095
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 35,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997957516339869
+    },
+    "ZC": {
+      "n_contracts": 50,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 39,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2018-12-10",
+        "days_to_expiry_at_roll_median": 3685.0,
+        "days_to_expiry_at_roll_min": 3203,
+        "days_to_expiry_at_roll_max": 3870,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1825,
+        "availability_pct": 62.73989383421805
+      },
+      "CALENDAR": {
+        "n_rolls": 36,
+        "roll_dates_first": "2019-02-24",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1982,
+        "availability_pct": 59.53450387913435
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 38,
+        "median": 0.0,
+        "p90": 144.3,
+        "max": 147
+      },
+      "rule_disagreement_session_share": 0.999795835034708
+    },
+    "ZS": {
+      "n_contracts": 70,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 42,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-06-16",
+        "days_to_expiry_at_roll_median": 3683.0,
+        "days_to_expiry_at_roll_min": 3144,
+        "days_to_expiry_at_roll_max": 3693,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1827,
+        "availability_pct": 62.69906084115966
+      },
+      "CALENDAR": {
+        "n_rolls": 51,
+        "roll_dates_first": "2018-12-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1957,
+        "availability_pct": 60.044916292364235
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 41,
+        "median": 0.0,
+        "p90": 143.0,
+        "max": 145
+      },
+      "rule_disagreement_session_share": 0.999795835034708
+    },
+    "ZW": {
+      "n_contracts": 50,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 40,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2018-04-11",
+        "days_to_expiry_at_roll_median": 3684.5,
+        "days_to_expiry_at_roll_min": 3022,
+        "days_to_expiry_at_roll_max": 3702,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 2133,
+        "availability_pct": 56.4516129032258
+      },
+      "CALENDAR": {
+        "n_rolls": 40,
+        "roll_dates_first": "2018-08-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1853,
+        "availability_pct": 62.16823193140058
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 39,
+        "median": 0.0,
+        "p90": 143.0,
+        "max": 147
+      },
+      "rule_disagreement_session_share": 0.999795835034708
+    },
+    "ZM": {
+      "n_contracts": 80,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 44,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-06-14",
+        "days_to_expiry_at_roll_median": 3684.0,
+        "days_to_expiry_at_roll_min": 3144,
+        "days_to_expiry_at_roll_max": 3689,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1825,
+        "availability_pct": 62.73989383421805
+      },
+      "CALENDAR": {
+        "n_rolls": 57,
+        "roll_dates_first": "2018-12-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1985,
+        "availability_pct": 59.47325438954676
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 43,
+        "median": 0.0,
+        "p90": 140.0,
+        "max": 144
+      },
+      "rule_disagreement_session_share": 0.999795835034708
+    },
+    "ZL": {
+      "n_contracts": 80,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 44,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2019-06-13",
+        "days_to_expiry_at_roll_median": 3684.5,
+        "days_to_expiry_at_roll_min": 3144,
+        "days_to_expiry_at_roll_max": 3690,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1825,
+        "availability_pct": 62.73989383421805
+      },
+      "CALENDAR": {
+        "n_rolls": 57,
+        "roll_dates_first": "2018-12-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4898,
+        "held_contract_missing_settlement": 1982,
+        "availability_pct": 59.53450387913435
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 43,
+        "median": 0.0,
+        "p90": 81.60000000000001,
+        "max": 144
+      },
+      "rule_disagreement_session_share": 0.999795835034708
+    },
+    "KE": {
+      "n_contracts": 50,
+      "sessions": 3818,
+      "A1": {
+        "n_rolls": 23,
+        "roll_dates_first": "2013-12-17",
+        "roll_dates_last": "2018-04-09",
+        "days_to_expiry_at_roll_median": 3684.0,
+        "days_to_expiry_at_roll_min": 1733,
+        "days_to_expiry_at_roll_max": 3692,
+        "sessions": 3818,
+        "held_contract_missing_settlement": 2134,
+        "availability_pct": 44.10686223153484
+      },
+      "CALENDAR": {
+        "n_rolls": 40,
+        "roll_dates_first": "2018-08-27",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 3818,
+        "held_contract_missing_settlement": 773,
+        "availability_pct": 79.75379779989524
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 22,
+        "median": 0.0,
+        "p90": 142.9,
+        "max": 145
+      },
+      "rule_disagreement_session_share": 0.9994761655316919
+    },
+    "LE": {
+      "n_contracts": 60,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 46,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2017-11-10",
+        "days_to_expiry_at_roll_median": 3686.0,
+        "days_to_expiry_at_roll_min": 2869,
+        "days_to_expiry_at_roll_max": 3690,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 2541,
+        "availability_pct": 48.01554828150573
+      },
+      "CALENDAR": {
+        "n_rolls": 50,
+        "roll_dates_first": "2018-03-27",
+        "roll_dates_last": "2026-05-27",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 1993,
+        "availability_pct": 59.226677577741405
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 45,
+        "median": 0.0,
+        "p90": 0.0,
+        "max": 0
+      },
+      "rule_disagreement_session_share": 0.9997954173486089
+    },
+    "HE": {
+      "n_contracts": 80,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 53,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2017-09-13",
+        "days_to_expiry_at_roll_median": 3686.0,
+        "days_to_expiry_at_roll_min": 2810,
+        "days_to_expiry_at_roll_max": 3700,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 2588,
+        "availability_pct": 47.05400981996727
+      },
+      "CALENDAR": {
+        "n_rolls": 69,
+        "roll_dates_first": "2018-01-28",
+        "roll_dates_last": "2026-06-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 1866,
+        "availability_pct": 61.82487725040917
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 52,
+        "median": 0.0,
+        "p90": 143.0,
+        "max": 151
+      },
+      "rule_disagreement_session_share": 0.9997954173486089
+    },
+    "GF": {
+      "n_contracts": 80,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 50,
+        "roll_dates_first": "2010-06-07",
+        "roll_dates_last": "2017-04-13",
+        "days_to_expiry_at_roll_median": 3679.0,
+        "days_to_expiry_at_roll_min": 2657,
+        "days_to_expiry_at_roll_max": 3695,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 2659,
+        "availability_pct": 45.60147299509002
+      },
+      "CALENDAR": {
+        "n_rolls": 71,
+        "roll_dates_first": "2017-08-27",
+        "roll_dates_last": "2026-04-26",
+        "days_to_expiry_at_roll_median": 19.0,
+        "days_to_expiry_at_roll_min": 18,
+        "days_to_expiry_at_roll_max": 19,
+        "sessions": 4888,
+        "held_contract_missing_settlement": 1906,
+        "availability_pct": 61.00654664484452
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 49,
+        "median": 0.0,
+        "p90": 100.20000000000002,
+        "max": 150
+      },
+      "rule_disagreement_session_share": 0.9997954173486089
+    }
+  },
+  "summary": {
+    "n_roots": 18,
+    "disagreement_share_mean": 0.9997779712536958,
+    "disagreement_share_min": 0.9994761655316919,
+    "disagreement_share_max": 0.999795835034708,
+    "total_rolls_A1": 822,
+    "total_rolls_CALENDAR": 1309,
+    "roots_with_disagreement_above_10pct": [
+      "CL",
+      "HO",
+      "RB",
+      "NG",
+      "GC",
+      "SI",
+      "HG",
+      "PL",
+      "PA",
+      "ZC",
+      "ZS",
+      "ZW",
+      "ZM",
+      "ZL",
+      "KE",
+      "LE",
+      "HE",
+      "GF"
+    ]
+  }
+}

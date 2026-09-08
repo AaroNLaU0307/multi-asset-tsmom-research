@@ -1,0 +1,46 @@
+{
+  "generated_utc": "2026-09-08T01:08:32.197760+00:00",
+  "contract_key_definition": "str(instrument_id) + '__' + expiration.date()",
+  "identity_source": "commodity-carry-research/src/pipeline.py::build_outright_panel",
+  "oi_stat_type": 9,
+  "oi_stat_type_note": "vendor StatType.OPEN_INTEREST=9; carry pipeline reads stat_type 6 = CLEARED_VOLUME into a column named 'oi' -- disclosed divergence",
+  "n_days_paired": 5026,
+  "n_definition_only_days": 5,
+  "n_statistics_only_days": 0,
+  "n_settlement_points": 2706911,
+  "n_oi_points": 1946760,
+  "n_persistent_contracts": 3349,
+  "n_non_outright_rows_dropped": 41455600,
+  "settle_shape": [
+    4902,
+    3335
+  ],
+  "oi_shape": [
+    4906,
+    3094
+  ],
+  "settle_first_date": "2010-06-06",
+  "settle_last_date": "2026-06-30",
+  "oi_first_date": "2010-06-06",
+  "oi_last_date": "2026-06-30",
+  "contracts_by_root": {
+    "CL": 320,
+    "GC": 227,
+    "GF": 141,
+    "HE": 141,
+    "HG": 241,
+    "HO": 237,
+    "KE": 78,
+    "LE": 107,
+    "NG": 342,
+    "PA": 207,
+    "PL": 207,
+    "RB": 236,
+    "SI": 224,
+    "ZC": 96,
+    "ZL": 153,
+    "ZM": 159,
+    "ZS": 133,
+    "ZW": 100
+  }
+}

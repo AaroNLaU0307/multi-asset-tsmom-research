@@ -1,0 +1,578 @@
+{
+  "generated_utc": "2026-09-08T01:10:54.989341+00:00",
+  "calendar_lead_days": 5,
+  "supersedes": "run_x03_structural.py (raw-symbol panels, INVALID)",
+  "scope": "STRUCTURAL ONLY: roll dates, counts, OI crossover timing, availability, rule disagreement. No return, no Sharpe, no PnL, no performance comparison, no roll-rule selection.",
+  "roots": {
+    "CL": {
+      "n_contracts": 320,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 136,
+        "days_to_expiry_at_roll_median": 9.0,
+        "days_to_expiry_at_roll_p10": 7.0,
+        "days_to_expiry_at_roll_p90": 12.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 136,
+        "median": 142.0,
+        "p90": 145.0
+      },
+      "rule_disagreement_session_share": 0.41025117418827856,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 4.222000995520159,
+        "max": 16
+      }
+    },
+    "HO": {
+      "n_contracts": 235,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 192,
+        "days_to_expiry_at_roll_median": 15.0,
+        "days_to_expiry_at_roll_p10": 12.0,
+        "days_to_expiry_at_roll_p90": 18.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 192,
+        "median": 142.0,
+        "p90": 144.0
+      },
+      "rule_disagreement_session_share": 0.32632223810496225,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.0112640801001251,
+        "max": 2
+      }
+    },
+    "RB": {
+      "n_contracts": 236,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 16.0,
+        "days_to_expiry_at_roll_p10": 13.0,
+        "days_to_expiry_at_roll_p90": 18.80000000000001,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 193,
+        "median": 134.0,
+        "p90": 144.0
+      },
+      "rule_disagreement_session_share": 0.3585868899326118,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.0056947608200455,
+        "max": 2
+      }
+    },
+    "NG": {
+      "n_contracts": 342,
+      "sessions": 4897,
+      "A1": {
+        "n_rolls": 127,
+        "days_to_expiry_at_roll_median": 14.0,
+        "days_to_expiry_at_roll_p10": 12.0,
+        "days_to_expiry_at_roll_p90": 18.0,
+        "held_missing_settlement": 1,
+        "availability": 0.999796
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 1,
+        "availability": 0.999796
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 127,
+        "median": 141.0,
+        "p90": 144.0
+      },
+      "rule_disagreement_session_share": 0.5550336940984276,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.2339955849889626,
+        "max": 4
+      }
+    },
+    "GC": {
+      "n_contracts": 227,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 34.0,
+        "days_to_expiry_at_roll_p10": 31.0,
+        "days_to_expiry_at_roll_p90": 40.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 81,
+        "median": 0.0,
+        "p90": 142.0
+      },
+      "rule_disagreement_session_share": 0.9838643790849673,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.8665144280672619,
+        "max": 5
+      }
+    },
+    "SI": {
+      "n_contracts": 224,
+      "sessions": 4895,
+      "A1": {
+        "n_rolls": 82,
+        "days_to_expiry_at_roll_median": 37.0,
+        "days_to_expiry_at_roll_p10": 33.1,
+        "days_to_expiry_at_roll_p90": 42.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 82,
+        "median": 0.0,
+        "p90": 143.0
+      },
+      "rule_disagreement_session_share": 0.9953013278855976,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.8392857142857142,
+        "max": 4
+      }
+    },
+    "HG": {
+      "n_contracts": 241,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 82,
+        "days_to_expiry_at_roll_median": 42.0,
+        "days_to_expiry_at_roll_p10": 38.0,
+        "days_to_expiry_at_roll_p90": 45.900000000000006,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 82,
+        "median": 0.0,
+        "p90": 0.0
+      },
+      "rule_disagreement_session_share": 0.9997957516339869,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.9787538304392236,
+        "max": 4
+      }
+    },
+    "PL": {
+      "n_contracts": 207,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 66,
+        "days_to_expiry_at_roll_median": 36.0,
+        "days_to_expiry_at_roll_p10": 33.0,
+        "days_to_expiry_at_roll_p90": 40.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 66,
+        "median": 0.0,
+        "p90": 0.0
+      },
+      "rule_disagreement_session_share": 0.9924428104575164,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 2.0343692117719696,
+        "max": 4
+      }
+    },
+    "PA": {
+      "n_contracts": 207,
+      "sessions": 4896,
+      "A1": {
+        "n_rolls": 65,
+        "days_to_expiry_at_roll_median": 34.0,
+        "days_to_expiry_at_roll_p10": 31.0,
+        "days_to_expiry_at_roll_p90": 38.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 193,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 65,
+        "median": 0.0,
+        "p90": 0.0
+      },
+      "rule_disagreement_session_share": 0.9838643790849673,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.998131617189122,
+        "max": 4
+      }
+    },
+    "ZC": {
+      "n_contracts": 96,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 69,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 37.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 50,
+        "availability": 0.989792
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 69,
+        "median": 0.0,
+        "p90": 144.2
+      },
+      "rule_disagreement_session_share": 0.458146182115149,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.1532976827094474,
+        "max": 3
+      }
+    },
+    "ZS": {
+      "n_contracts": 133,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 78,
+        "days_to_expiry_at_roll_median": 30.0,
+        "days_to_expiry_at_roll_p10": 23.7,
+        "days_to_expiry_at_roll_p90": 34.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 112,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 77,
+        "median": 0.0,
+        "p90": 142.4
+      },
+      "rule_disagreement_session_share": 0.5342997141690486,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.627435995414597,
+        "max": 5
+      }
+    },
+    "ZW": {
+      "n_contracts": 95,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 35.10000000000001,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 178,
+        "availability": 0.963659
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 80,
+        "median": 0.0,
+        "p90": 143.0
+      },
+      "rule_disagreement_session_share": 0.38873009391588403,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.1391806722689075,
+        "max": 4
+      }
+    },
+    "ZM": {
+      "n_contracts": 159,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 81,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 26.0,
+        "days_to_expiry_at_roll_p90": 36.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 128,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 126,
+        "availability": 0.974275
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 80,
+        "median": 0.0,
+        "p90": 140.0
+      },
+      "rule_disagreement_session_share": 0.6233156390363414,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 2.0049132001310186,
+        "max": 10
+      }
+    },
+    "ZL": {
+      "n_contracts": 153,
+      "sessions": 4898,
+      "A1": {
+        "n_rolls": 80,
+        "days_to_expiry_at_roll_median": 32.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 36.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 128,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 50,
+        "availability": 0.989792
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 79,
+        "median": 0.0,
+        "p90": 84.60000000000004
+      },
+      "rule_disagreement_session_share": 0.6331155573703553,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.8458561754272815,
+        "max": 6
+      }
+    },
+    "KE": {
+      "n_contracts": 73,
+      "sessions": 3818,
+      "A1": {
+        "n_rolls": 63,
+        "days_to_expiry_at_roll_median": 31.0,
+        "days_to_expiry_at_roll_p10": 28.2,
+        "days_to_expiry_at_roll_p90": 35.800000000000004,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 62,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 63,
+        "median": 0.0,
+        "p90": 142.0
+      },
+      "rule_disagreement_session_share": 0.3606600314300681,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.0,
+        "max": 1
+      }
+    },
+    "LE": {
+      "n_contracts": 107,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 97,
+        "days_to_expiry_at_roll_median": 49.0,
+        "days_to_expiry_at_roll_p10": 46.0,
+        "days_to_expiry_at_roll_p90": 50.400000000000006,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 97,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 97,
+        "median": 0.0,
+        "p90": 0.0
+      },
+      "rule_disagreement_session_share": 0.7135842880523732,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.0,
+        "max": 1
+      }
+    },
+    "HE": {
+      "n_contracts": 141,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 114,
+        "days_to_expiry_at_roll_median": 33.0,
+        "days_to_expiry_at_roll_p10": 30.0,
+        "days_to_expiry_at_roll_p90": 36.7,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 129,
+        "days_to_expiry_at_roll_median": 5.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 5.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 114,
+        "median": 0.0,
+        "p90": 143.0
+      },
+      "rule_disagreement_session_share": 0.617430441898527,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.1312127236580516,
+        "max": 2
+      }
+    },
+    "GF": {
+      "n_contracts": 139,
+      "sessions": 4888,
+      "A1": {
+        "n_rolls": 121,
+        "days_to_expiry_at_roll_median": 38.0,
+        "days_to_expiry_at_roll_p10": 28.0,
+        "days_to_expiry_at_roll_p90": 48.0,
+        "held_missing_settlement": 0,
+        "availability": 1.0
+      },
+      "CALENDAR": {
+        "n_rolls": 130,
+        "days_to_expiry_at_roll_median": 4.0,
+        "days_to_expiry_at_roll_p10": 4.0,
+        "days_to_expiry_at_roll_p90": 4.0,
+        "held_missing_settlement": 23,
+        "availability": 0.995295
+      },
+      "oi_crossover_to_roll_lag_days": {
+        "n": 121,
+        "median": 0.0,
+        "p90": 129.0
+      },
+      "rule_disagreement_session_share": 0.6344108019639935,
+      "expiry_sequence_gap_when_disagreeing": {
+        "mean": 1.2231538213479523,
+        "max": 3
+      }
+    }
+  },
+  "summary": {
+    "n_roots": 18,
+    "disagreement_share_mean": 0.6427308552457253,
+    "disagreement_share_median": 0.6203730404674341,
+    "disagreement_share_min": 0.32632223810496225,
+    "disagreement_share_max": 0.9997957516339869,
+    "total_rolls_A1": 1807,
+    "total_rolls_CALENDAR": 2683,
+    "roots_disagreeing_over_10pct_of_sessions": [
+      "CL",
+      "HO",
+      "RB",
+      "NG",
+      "GC",
+      "SI",
+      "HG",
+      "PL",
+      "PA",
+      "ZC",
+      "ZS",
+      "ZW",
+      "ZM",
+      "ZL",
+      "KE",
+      "LE",
+      "HE",
+      "GF"
+    ],
+    "min_availability_A1": 0.999796
+  }
+}

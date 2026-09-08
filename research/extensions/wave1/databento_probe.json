@@ -1,0 +1,416 @@
+{
+  "data_dir": "C:\\Users\\Aaron\\quant-data\\commodity-carry",
+  "generated_utc": "2026-09-07T22:12:54.276443+00:00",
+  "ohlcv_file": {
+    "path": "C:\\Users\\Aaron\\quant-data\\commodity-carry\\ohlcv-1d.dbn.zst",
+    "size_bytes": 107229003,
+    "sha256": "333095164e55c73a150949b654a0e4c9f15636cc01ee7c93bf625e5412c59539"
+  },
+  "metadata": {
+    "dataset": "GLBX.MDP3",
+    "schema": "ohlcv-1d",
+    "stype_in": "parent",
+    "stype_out": "instrument_id",
+    "start_utc": "2010-06-06 00:00:00+00:00",
+    "end_utc": "2026-07-01 00:00:00+00:00",
+    "symbols": [
+      "CL.FUT",
+      "HO.FUT",
+      "RB.FUT",
+      "NG.FUT",
+      "GC.FUT",
+      "SI.FUT",
+      "HG.FUT",
+      "PL.FUT",
+      "PA.FUT",
+      "ZC.FUT",
+      "ZS.FUT",
+      "ZW.FUT",
+      "ZM.FUT",
+      "ZL.FUT",
+      "KE.FUT",
+      "LE.FUT",
+      "HE.FUT",
+      "GF.FUT"
+    ]
+  },
+  "parent_roots": [
+    "CL",
+    "HO",
+    "RB",
+    "NG",
+    "GC",
+    "SI",
+    "HG",
+    "PL",
+    "PA",
+    "ZC",
+    "ZS",
+    "ZW",
+    "ZM",
+    "ZL",
+    "KE",
+    "LE",
+    "HE",
+    "GF"
+  ],
+  "n_records_total": 4505270,
+  "n_spread_records": 3563342,
+  "n_other_records": 0,
+  "other_symbol_examples": [],
+  "roots": {
+    "CL": {
+      "n_records": 107977,
+      "n_outright_contracts": 136,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 9.06,
+      "close_max": 126.99,
+      "n_zero_close": 0,
+      "n_neg_close": 1
+    },
+    "GC": {
+      "n_records": 52279,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 1050.4,
+      "close_max": 5957.7,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "GF": {
+      "n_records": 31429,
+      "n_outright_contracts": 80,
+      "first_date": "2010-06-07",
+      "last_date": "2026-06-30",
+      "close_min": 106.5,
+      "close_max": 381.95,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "HE": {
+      "n_records": 41205,
+      "n_outright_contracts": 80,
+      "first_date": "2010-06-07",
+      "last_date": "2026-06-30",
+      "close_min": 37.275,
+      "close_max": 133.875,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "HG": {
+      "n_records": 56606,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 1.9365,
+      "close_max": 7.0815,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "HO": {
+      "n_records": 79830,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 0.617,
+      "close_max": 4.944,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "KE": {
+      "n_records": 24367,
+      "n_outright_contracts": 50,
+      "first_date": "2013-12-16",
+      "last_date": "2026-06-30",
+      "close_min": 361.75,
+      "close_max": 1370.0,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "LE": {
+      "n_records": 35036,
+      "n_outright_contracts": 60,
+      "first_date": "2010-06-07",
+      "last_date": "2026-06-30",
+      "close_min": 79.85,
+      "close_max": 258.475,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "NG": {
+      "n_records": 134319,
+      "n_outright_contracts": 208,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 1.441,
+      "close_max": 10.013,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "PA": {
+      "n_records": 14214,
+      "n_outright_contracts": 106,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 423.0,
+      "close_max": 3289.0,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "PL": {
+      "n_records": 21363,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 595.1,
+      "close_max": 2806.5,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "RB": {
+      "n_records": 64075,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 0.44,
+      "close_max": 4.315,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "SI": {
+      "n_records": 39190,
+      "n_outright_contracts": 120,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 11.85,
+      "close_max": 127.1,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "ZC": {
+      "n_records": 49039,
+      "n_outright_contracts": 50,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 301.5,
+      "close_max": 837.75,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "ZL": {
+      "n_records": 50246,
+      "n_outright_contracts": 80,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 25.02,
+      "close_max": 90.56,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "ZM": {
+      "n_records": 51943,
+      "n_outright_contracts": 80,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 249.0,
+      "close_max": 550.0,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "ZS": {
+      "n_records": 50491,
+      "n_outright_contracts": 70,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 786.5,
+      "close_max": 1770.0,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    },
+    "ZW": {
+      "n_records": 38319,
+      "n_outright_contracts": 50,
+      "first_date": "2010-06-06",
+      "last_date": "2026-06-30",
+      "close_min": 362.75,
+      "close_max": 1311.25,
+      "n_zero_close": 0,
+      "n_neg_close": 0
+    }
+  },
+  "session_dates": {
+    "n_distinct": 4993,
+    "first": "2010-06-06",
+    "last": "2026-06-30",
+    "tail_10": [
+      [
+        "2026-06-19",
+        640
+      ],
+      [
+        "2026-06-21",
+        398
+      ],
+      [
+        "2026-06-22",
+        1282
+      ],
+      [
+        "2026-06-23",
+        1324
+      ],
+      [
+        "2026-06-24",
+        1397
+      ],
+      [
+        "2026-06-25",
+        1439
+      ],
+      [
+        "2026-06-26",
+        1385
+      ],
+      [
+        "2026-06-28",
+        310
+      ],
+      [
+        "2026-06-29",
+        1288
+      ],
+      [
+        "2026-06-30",
+        1339
+      ]
+    ]
+  },
+  "statistics": {
+    "n_files": 5026,
+    "first_file": "glbx-mdp3-20100606.statistics.dbn.zst",
+    "last_file": "glbx-mdp3-20260630.statistics.dbn.zst",
+    "total_bytes": 7166969133
+  },
+  "definition": {
+    "n_files": 5031,
+    "first_file": "glbx-mdp3-20100606.definition.dbn.zst",
+    "last_file": "glbx-mdp3-20260630.definition.dbn.zst",
+    "total_bytes": 2153223347
+  },
+  "carry_universe": [
+    "CL",
+    "HO",
+    "RB",
+    "NG",
+    "GC",
+    "SI",
+    "HG",
+    "PL",
+    "PA",
+    "ZC",
+    "ZS",
+    "ZW",
+    "ZM",
+    "ZL",
+    "KE",
+    "LE",
+    "HE",
+    "GF"
+  ],
+  "carry_sample_start": "2010-06-07",
+  "carry_sample_end": "2026-06-30",
+  "carry_specs": {
+    "CL": {
+      "multiplier": 1000,
+      "tick_size": 0.01,
+      "tick_value": 10.0
+    },
+    "HO": {
+      "multiplier": 42000,
+      "tick_size": 0.0001,
+      "tick_value": 4.2
+    },
+    "RB": {
+      "multiplier": 42000,
+      "tick_size": 0.0001,
+      "tick_value": 4.2
+    },
+    "NG": {
+      "multiplier": 10000,
+      "tick_size": 0.001,
+      "tick_value": 10.0
+    },
+    "GC": {
+      "multiplier": 100,
+      "tick_size": 0.1,
+      "tick_value": 10.0
+    },
+    "SI": {
+      "multiplier": 5000,
+      "tick_size": 0.005,
+      "tick_value": 25.0
+    },
+    "HG": {
+      "multiplier": 25000,
+      "tick_size": 0.0005,
+      "tick_value": 12.5
+    },
+    "PL": {
+      "multiplier": 50,
+      "tick_size": 0.1,
+      "tick_value": 5.0
+    },
+    "PA": {
+      "multiplier": 100,
+      "tick_size": 0.5,
+      "tick_value": 50.0
+    },
+    "ZC": {
+      "multiplier": 5000,
+      "tick_size": 0.0025,
+      "tick_value": 12.5
+    },
+    "ZS": {
+      "multiplier": 5000,
+      "tick_size": 0.0025,
+      "tick_value": 12.5
+    },
+    "ZW": {
+      "multiplier": 5000,
+      "tick_size": 0.0025,
+      "tick_value": 12.5
+    },
+    "ZM": {
+      "multiplier": 100,
+      "tick_size": 0.1,
+      "tick_value": 10.0
+    },
+    "ZL": {
+      "multiplier": 60000,
+      "tick_size": 0.0001,
+      "tick_value": 6.0
+    },
+    "KE": {
+      "multiplier": 5000,
+      "tick_size": 0.0025,
+      "tick_value": 12.5
+    },
+    "LE": {
+      "multiplier": 40000,
+      "tick_size": 0.00025,
+      "tick_value": 10.0
+    },
+    "HE": {
+      "multiplier": 40000,
+      "tick_size": 0.00025,
+      "tick_value": 10.0
+    },
+    "GF": {
+      "multiplier": 50000,
+      "tick_size": 0.00025,
+      "tick_value": 12.5
+    }
+  }
+}
