@@ -1106,6 +1106,16 @@ def check_cross_references():
 # and must NOT be added here -- it needs a sealed contract and Aaron's separate
 # strategy-build authorisation first.
 DECLARED_EXTENSION_MODULES = {
+    "research/extensions/x01/x01_runner.py":
+        "X01 execution manifest builder and preflight refusal gate. "
+        "PRE-EXECUTION ONLY: it hashes bytes and compares pins, parses no "
+        "price panel, and its `execute` subcommand refuses -- constructing "
+        "E, F, A1, S1 or S2 needs a separate Aaron authorization",
+    "research/extensions/x01/x01_contract_tests.py":
+        "X01 sealed-contract tests on SYNTHETIC data only; asserts the "
+        "sealed signal, cost-quantity, S1, S2, B, COVID and bootstrap "
+        "contracts and the runner's refusal behaviour. Loads no target "
+        "panel for a computation",
     "research/extensions/validate_wave0.py":
         "the Wave-0 governance checker itself",
     "research/extensions/diagnostics/run_edge_diagnostics.py":

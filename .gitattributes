@@ -1,0 +1,38 @@
+# Line-ending policy — minimal, and it exists for one concrete defect.
+#
+# `core.autocrlf = true` on the authoring machine. With no .gitattributes, a
+# FRESH CHECKOUT materialises CRLF in the working tree. The QROS state parser
+# requires an LF-only state file and refuses otherwise:
+#
+#     UNREADABLE  qros-state.yaml: CR byte present; the state file is LF-only
+#
+# That was reproduced on a real `git worktree` checkout of the seal-persistence
+# revision: the committed BLOB was LF-only and QROS derived SEAL = VERIFIED from
+# it, but the checked-out FILE carried 338 CR bytes and could not be read. The
+# seal pointer was durable in the object store and unusable from a fresh clone.
+#
+# Only the state file needs this. Every other pinned artifact is compared by
+# `sha256` of its GIT BLOB (see research/extensions/x01/x01_runner.py), which is
+# EOL-normalised by git and therefore platform-independent already; the parquet
+# panels and the ETF CSV are git-ignored and pinned by raw-file sha256. So the
+# rule is deliberately narrow rather than a repo-wide `* text=auto eol=lf`,
+# which would renormalise unrelated files on the next checkout.
+qros-state.yaml text eol=lf
+
+# Same root cause, wider blast radius than the state file alone.
+# `validate_wave0.py` pins its inputs by RAW working-tree sha256, which is not
+# EOL-stable. Reproduced on a fresh worktree of the runner-base revision: 19 of
+# its checks failed purely because .md/.csv materialised CRLF while the pins
+# were computed from LF bytes (e.g. the sealed preregistration read
+# d5ef963f... instead of 9c7b104f...). The validator's own logic is NOT touched
+# — the fix is to make the checkout deterministic.
+#
+# Still deliberately narrow: named text types, not `* text=auto eol=lf`, which
+# would sweep in unrelated binaries. These files are already LF in the working
+# tree, so this changes nothing here and only makes fresh checkouts agree.
+*.md   text eol=lf
+*.csv  text eol=lf
+*.py   text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml  text eol=lf

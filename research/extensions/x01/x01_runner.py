@@ -1,0 +1,614 @@
+"""X01 execution runner — PRE-EXECUTION SKELETON.
+
+SCOPE, and the line this file exists to hold
+--------------------------------------------
+This module builds and enforces the X01 **execution manifest**, and it separates
+two operations that must never be confused:
+
+* ``build-manifest`` / ``preflight`` — read metadata, hash bytes, compare
+  against the manifest. **Neither constructs a target series.** ``preflight``
+  never opens a price panel for computation; it hashes files as opaque bytes.
+* ``execute`` — would construct ``E``, ``F``, ``A1``, ``S1``, ``S2``, the paired
+  179-month sample and the sealed statistics. **It is not implemented and
+  refuses to run.** Its first line of real work would cross the target-execution
+  boundary, which needs a separate Aaron authorization.
+
+Building this file is not executing X01. No target series exists.
+
+Why a manifest at all
+---------------------
+The canonical QROS seal (``qros_runtime.eligibility.seal_state``) compares the
+preregistration **blob at ``seal_revision``** against the **blob at HEAD**. That
+detects a later *committed* change to the contract. It cannot detect an
+*uncommitted working-tree* edit, because neither blob moves. The manifest closes
+that residual by pinning every byte the runner will consume, and by refusing to
+proceed when any pin fails. It adds no governance concepts — it is a build-time
+input contract.
+
+Two revisions, and why neither is self-referential
+--------------------------------------------------
+``runner_base_revision`` (R1) is the immutable revision holding the runner and
+the execution-relevant code whose blobs are pinned. The manifest is bound to R1
+in a **later** commit (R2), because a commit cannot contain its own SHA. So
+execution runs from a HEAD at or after R2, and ``HEAD == R1`` is deliberately
+**not** required. What is verified instead:
+
+* every pinned blob **at the current HEAD** still equals the value pinned at R1
+  (a later *committed* edit to a pinned module therefore fails);
+* the manifest's worktree bytes equal its **blob at HEAD** (an *uncommitted*
+  edit to the manifest therefore fails);
+* no pinned execution input has an uncommitted edit;
+* only the narrowly role-validated governance changes are allowlisted.
+
+There is no manifest self-hash field. Manifest integrity comes from the binding
+commit plus the worktree-vs-HEAD refusal, not from hashing itself.
+
+Hash convention — ONE representation, stated explicitly
+-------------------------------------------------------
+``core.autocrlf = true`` on this machine, so a working-tree text file and its git
+blob can differ byte-for-byte while carrying identical content. Mixing the two
+would make pins platform-dependent. Therefore:
+
+* **tracked text** → ``sha256`` of the **git blob bytes at the declared
+  revision** (``git cat-file blob <rev>:<path>``). EOL-normalised by git, so it
+  is identical on every platform. Working-tree comparisons use ``lf_sha256``,
+  the LF-normalised counterpart, so a CRLF checkout compares equal to its blob.
+* **git-ignored data** (the parquet panels, the ETF CSV) → ``sha256`` of the
+  **raw file on disk**, because there is no blob to appeal to.
+
+Both are labelled per entry. The runner uses the same convention it wrote.
+"""
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import subprocess
+import sys
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
+CARRY = os.path.abspath(os.path.join(REPO, "..", "commodity-carry-research"))
+RUNTIME = os.path.abspath(os.path.join(REPO, "..", "qros-runtime", "qros.py"))
+MANIFEST = os.path.join(HERE, "X01_EXECUTION_MANIFEST.json")
+
+SEALED_PREREG = "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
+SEALED_PREREG_SHA256 = "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743"
+A2_RECORD = "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md"
+A2_RECORD_SHA256 = "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
+SEAL_REVISION = "df5b28ab7324c7ba789ab231431f077288c3fd84"
+
+BLOB = "sha256_of_git_blob_bytes_at_revision"
+RAW = "sha256_of_raw_file_on_disk"
+
+# The runner's own execution-relevant code, pinned at the runner-base revision.
+RUNNER_CODE = [
+    ("research/extensions/x01/x01_runner.py", "this runner"),
+    ("research/extensions/x01/x01_contract_tests.py",
+     "the synthetic contract gate; execution safety depends on it"),
+    ("research/extensions/validate_wave0.py", "the governance validator"),
+]
+
+# Tracked text the runner will materially consume. Pinned as BLOB hashes.
+TRACKED_INPUTS = [
+    (SEALED_PREREG, "the sealed scientific contract"),
+    (A2_RECORD, "the A2 provenance record"),
+    ("config.py", "frozen signal/sizing/cost/bootstrap constants"),
+    ("src/signals.py", "baseline mean-of-signs composite (sealed 3.7)"),
+    ("src/sizing.py", "per-asset vol targeting"),
+    ("src/portfolio.py", "equal-weight sleeve aggregation"),
+    ("src/performance.py", "the sealed Sharpe convention"),
+    ("research/extensions/wave1/run_x02a_v3.py",
+     "accepted X02 cash-first accounting (tsmom_chain_net_returns)"),
+]
+
+# git-ignored data. Pinned as RAW hashes; there is no blob for these.
+# `data/` and `*.parquet` are git-ignored (market-data licensing), so the frozen
+# ETF panel and the futures panels live here — which is also how the sealed
+# contract §3.6 pins the ETF panel, by raw-file sha256 `3d2a7a56...c3c31`.
+IGNORED_DATA_INPUTS = [
+    ("data/close_prices_raw.csv", "frozen ETF panel (sealed E source)"),
+    ("research/extensions/wave1/settle_v2.parquet", "settlement panel"),
+    ("research/extensions/wave1/oi_v2.parquet", "open-interest panel"),
+    ("research/extensions/wave1/contracts_meta.parquet", "contract definitions"),
+]
+
+# Present in the tree but NOT consumed by X01. Recorded so the inventory is
+# complete and auditable; deliberately NOT hash-pinned, since pinning a
+# non-input would imply that it is one.
+NOT_CONSUMED = [
+    ("research/extensions/wave1/settle_panel.parquet",
+     "superseded raw-symbol-keyed panel from the first extraction; INVALID "
+     "(CME one-digit years repeat on a 10-year cycle and merged two contracts "
+     "per column) and retained only as implementation-error lineage. The sealed "
+     "contract §3.6 names only the _v2 set, and no accepted implementation reads it"),
+    ("research/extensions/wave1/oi_panel.parquet",
+     "same superseded extraction; referenced neither by the sealed contract nor "
+     "by any accepted implementation"),
+    ("data/DGS3MO.csv",
+     "a risk-free series would be material only under O-6 Option 2 (full carry "
+     "accounting). Aaron adopted Option 1 SYMMETRIC_ZERO_CARRY, so no cash yield "
+     "enters either leg and this file is not consumed"),
+]
+
+# Cross-repository S2 dependency. Carry is READ ONLY and is never modified.
+CARRY_S2_PATH = "src/robustness.py"
+CARRY_S2_SYMBOL = "fixed_calendar_front_series"
+
+# The only tracked files whose in-flight modification the runner tolerates, and
+# only after validating the ROLE of the change. Everything else refuses.
+GOVERNANCE_APPEND_ONLY = (
+    "ops/EXPOSURE_LEDGER.md",
+    "ops/REVIEWER_EXPOSURE_LOG.md",
+    "research/extensions/TRIAL_LEDGER.md",
+)
+GOVERNANCE_STATE = "qros-state.yaml"
+
+# A ledger RECORD ROW: an exposure event (`| 2026-...` / `| UNKNOWN`) or a
+# reviewer seat row (`| S12 |`). These are what "append-only" protects.
+_RECORD_ROW = re.compile(r"^-\|\s*(?:20\d\d-|UNKNOWN|S\d+\s*\|)")
+
+
+# --------------------------------------------------------------------------- #
+# git helpers — metadata and bytes only, never a price computation
+# --------------------------------------------------------------------------- #
+def _git(repo, *args):
+    out = subprocess.run(["git", "-C", repo] + list(args), capture_output=True)
+    if out.returncode != 0:
+        raise RuntimeError("git %s failed in %s: %s"
+                           % (" ".join(args), repo, out.stderr.decode()[:200]))
+    return out.stdout
+
+
+def blob_sha256(repo, rev, path):
+    """sha256 of the git blob bytes at `rev`. None when the path is absent."""
+    try:
+        return hashlib.sha256(_git(repo, "cat-file", "blob",
+                                   "%s:%s" % (rev, path))).hexdigest()
+    except RuntimeError:
+        return None
+
+
+def raw_sha256(abspath):
+    """sha256 of the raw file, streamed. Never parses the file's contents."""
+    if not os.path.exists(abspath):
+        return None
+    h = hashlib.sha256()
+    with open(abspath, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def lf_sha256(abspath):
+    """sha256 of a text file normalised to LF — the working-tree counterpart of
+    a git blob hash, so a CRLF checkout compares equal to its blob."""
+    if not os.path.exists(abspath):
+        return None
+    with open(abspath, "rb") as fh:
+        return hashlib.sha256(fh.read().replace(b"\r\n", b"\n")).hexdigest()
+
+
+def head(repo):
+    return _git(repo, "rev-parse", "HEAD").decode().strip()
+
+
+def porcelain(repo):
+    """(modified_tracked, deleted_tracked) as sorted path lists."""
+    modified, deleted = [], []
+    for line in _git(repo, "status", "--porcelain",
+                     "--untracked-files=no").decode().splitlines():
+        code, path = line[:2], line[3:].strip().replace("\\", "/")
+        if "D" in code:
+            deleted.append(path)
+        elif code.strip():
+            modified.append(path)
+    return sorted(modified), sorted(deleted)
+
+
+def diff_only_adds(diff_lines):
+    """Pure predicate: does this unified diff delete or alter any line?"""
+    for line in diff_lines:
+        if line.startswith("---") or line.startswith("+++"):
+            continue
+        if line.startswith("-"):
+            return False
+    return True
+
+
+def diff_deletes_no_record_row(diff_lines):
+    """Pure predicate: does this diff remove or alter an append-only RECORD ROW?
+
+    The ledgers are append-only **in their rows**. Each also carries a derived
+    "Normalized values as of the last row below" summary, which the file itself
+    labels "a derived reading of the rows ... not a stored authority" and which
+    is necessarily rewritten whenever a row is appended. Demanding a literally
+    addition-only diff would refuse every legitimate append. This predicate
+    protects the rows and permits the derived summary to move.
+
+    Split out from the git call so the policy can be exercised on synthetic
+    diffs without mutating a real governance file.
+    """
+    for line in diff_lines:
+        if line.startswith("---") or line.startswith("+++"):
+            continue
+        if _RECORD_ROW.match(line):
+            return False
+    return True
+
+
+def diff_is_append_only(repo, path):
+    """True when the worktree diff against HEAD removes no record row."""
+    return diff_deletes_no_record_row(
+        _git(repo, "diff", "--unified=0", "--", path)
+        .decode("utf-8", "replace").splitlines())
+
+
+# --------------------------------------------------------------------------- #
+# seed identity
+# --------------------------------------------------------------------------- #
+def seed_protocol():
+    """Identify the three sealed child streams WITHOUT relying on `.entropy`.
+
+    `SeedSequence(7).spawn(3)` returns three children that all report
+    `entropy == 7` — the property does **not** distinguish them. What does is
+    the deterministic `spawn_key` (`(0,)`, `(1,)`, `(2,)`) plus the state each
+    child generates. Both are recorded, per arm, in the sealed arm order.
+
+    This changes no statistical protocol. It is a precise operational
+    representation of the already-sealed rule (see DEVIATIONS.md D-X01-1).
+    """
+    arms = ["primary", "S1", "S2"]
+    try:
+        import numpy as _np
+        children = _np.random.SeedSequence(7).spawn(3)
+        record = [{"arm": arm,
+                   "spawn_key": list(child.spawn_key),
+                   "master_entropy": 7,
+                   "state_fingerprint_u32x4":
+                       [int(v) for v in child.generate_state(4)]}
+                  for arm, child in zip(arms, children)]
+    except Exception:                      # numpy absent at manifest-build time
+        record = None
+    return {
+        "master_seed": 7,
+        "arm_order": arms,
+        "derivation": "numpy.random.SeedSequence(7).spawn(3)",
+        "identity_convention": (
+            "Child streams are identified by `spawn_key` plus a 4x uint32 "
+            "generated-state fingerprint. The `.entropy` property is NOT an "
+            "identifier: all three children report entropy == 7, so it cannot "
+            "distinguish them."),
+        "note": ("The sealed text says the spawned values are written into it at "
+                 "seal time; they are not. See DEVIATIONS.md D-X01-1. The streams "
+                 "are re-derived mechanically from the sealed rule and recorded "
+                 "here BEFORE any target output is read."),
+        "child_streams": record,
+    }
+
+
+# --------------------------------------------------------------------------- #
+# manifest
+# --------------------------------------------------------------------------- #
+def build_manifest():
+    """Pin every byte the future runner will consume. Reads no price data."""
+    tsmom_head = head(REPO)
+    carry_head = head(CARRY)
+
+    entries = []
+    for path, why in RUNNER_CODE:
+        entries.append({"path": path, "role": why, "kind": "runner_code",
+                        "hash_convention": BLOB, "revision": tsmom_head,
+                        "sha256": blob_sha256(REPO, tsmom_head, path)})
+    for path, why in TRACKED_INPUTS:
+        entries.append({"path": path, "role": why, "kind": "tracked_text",
+                        "hash_convention": BLOB, "revision": tsmom_head,
+                        "sha256": blob_sha256(REPO, tsmom_head, path)})
+    for path, why in IGNORED_DATA_INPUTS:
+        entries.append({"path": path, "role": why, "kind": "git_ignored_data",
+                        "hash_convention": RAW, "revision": None,
+                        "sha256": raw_sha256(os.path.join(REPO, path))})
+
+    return {
+        "manifest_version": 2,
+        "study": "X01 — commodity-sleeve futures transfer, matched-map arm",
+        "purpose": ("Prospective byte pin for X01 execution. Closes the residual "
+                    "that qros seal_state cannot see: an UNCOMMITTED working-tree "
+                    "edit to the sealed contract or to any runner input."),
+        "execution_authorized": False,
+        "execution_authorization_note": (
+            "A sealed preregistration and a FULL lane are NOT run authorization. "
+            "`execute` refuses until Aaron authorizes target execution separately."),
+        "hash_conventions": {
+            BLOB: ("sha256 of `git cat-file blob <revision>:<path>`. Used for all "
+                   "tracked text. EOL-normalised by git, so it is identical on "
+                   "every platform despite core.autocrlf=true."),
+            RAW: ("sha256 of the raw file on disk, streamed. Used for git-ignored "
+                  "data (parquet, and data/ which is git-ignored), which has no "
+                  "blob to appeal to."),
+        },
+        "sealed_contract": {
+            "seal_revision": SEAL_REVISION,
+            "prereg_path": SEALED_PREREG,
+            "prereg_sha256_blob_at_seal": blob_sha256(REPO, SEAL_REVISION, SEALED_PREREG),
+            "prereg_sha256_reviewed_pin": SEALED_PREREG_SHA256,
+            "a2_record_path": A2_RECORD,
+            "a2_record_sha256_blob_at_seal": blob_sha256(REPO, SEAL_REVISION, A2_RECORD),
+            "a2_record_sha256_reviewed_pin": A2_RECORD_SHA256,
+        },
+        "runner_base": {
+            "runner_base_revision": tsmom_head,
+            "meaning": (
+                "The immutable revision containing the runner and the "
+                "execution-relevant code whose blobs are pinned below. It is NOT "
+                "a claim that the later manifest-binding commit names itself: a "
+                "commit cannot contain its own 40-hex SHA, and no such self-hash "
+                "field exists here. Execution may run from a LATER HEAD (the "
+                "manifest-binding revision and beyond); what is verified is that "
+                "every pinned blob at the CURRENT HEAD still equals the value "
+                "pinned at this base revision."),
+            "manifest_self_hash": None,
+            "manifest_integrity": (
+                "protected by (1) the manifest-binding commit and (2) the "
+                "worktree-vs-HEAD refusal in preflight, not by a self-hash."),
+        },
+        "not_consumed_by_x01": [{"path": p, "reason": w} for p, w in NOT_CONSUMED],
+        "carry_s2_dependency": {
+            "repo": "commodity-carry-research",
+            "revision": carry_head,
+            "path": CARRY_S2_PATH,
+            "symbol": CARRY_S2_SYMBOL,
+            "hash_convention": BLOB,
+            "sha256": blob_sha256(CARRY, carry_head, CARRY_S2_PATH),
+            "note": "READ ONLY. carry is never modified by X01.",
+        },
+        "inputs": entries,
+        "dirty_worktree_policy": {
+            "refuse_if_any_pinned_path_modified_or_deleted": True,
+            "append_only_allowlist": list(GOVERNANCE_APPEND_ONLY),
+            "state_allowlist": [GOVERNANCE_STATE],
+            "rule": ("A modified tracked file refuses execution unless it is in "
+                     "an allowlist AND its role validates: the append-only "
+                     "governance ledgers must delete or alter no RECORD ROW "
+                     "(their derived normalisation summary may move); "
+                     "qros-state.yaml must keep its seal pointer, lane and sealed "
+                     "input pins unchanged against HEAD. There is no blanket "
+                     "'dirty tree is okay' rule, and this does not rely on QROS "
+                     "R10, which does not hold the target-execution edge."),
+        },
+        "seed_protocol": seed_protocol(),
+    }
+
+
+def cmd_build_manifest(_args):
+    m = build_manifest()
+    with open(MANIFEST, "w", encoding="utf-8", newline="\n") as fh:
+        json.dump(m, fh, indent=2, ensure_ascii=False)
+        fh.write("\n")
+    missing = [e["path"] for e in m["inputs"] if e["sha256"] is None]
+    print("manifest written: %s" % os.path.relpath(MANIFEST, REPO))
+    print("  runner base revision : %s" % m["runner_base"]["runner_base_revision"])
+    for kind in ("runner_code", "tracked_text", "git_ignored_data"):
+        print("  %-20s : %d" % (kind, sum(1 for e in m["inputs"] if e["kind"] == kind)))
+    print("  not consumed         : %d" % len(m["not_consumed_by_x01"]))
+    print("  carry S2 revision    : %s" % m["carry_s2_dependency"]["revision"][:12])
+    if missing:
+        print("  UNRESOLVED PINS      : %s" % ", ".join(missing))
+        return 1
+    return 0
+
+
+# --------------------------------------------------------------------------- #
+# preflight — the refusal gate. Constructs nothing.
+# --------------------------------------------------------------------------- #
+class Refusal(object):
+    def __init__(self):
+        self.reasons = []
+        self.checks = []
+
+    def check(self, name, ok, detail=""):
+        self.checks.append((name, bool(ok), detail))
+        if not ok:
+            self.reasons.append("%s%s" % (name, (" — " + detail) if detail else ""))
+
+    @property
+    def ok(self):
+        return not self.reasons
+
+
+def seal_state_from_runtime():
+    """Ask the CANONICAL runtime. No second sealing mechanism is implemented."""
+    if not os.path.exists(RUNTIME):
+        return None, "the qros runtime is not present at %s" % RUNTIME
+    out = subprocess.run(
+        [sys.executable, RUNTIME, "--state", os.path.join(REPO, "qros-state.yaml"),
+         "check"], capture_output=True)
+    text = (out.stdout + out.stderr).decode("utf-8", "replace")
+    for line in text.splitlines():
+        if "SEAL=" in line:
+            return line.split("SEAL=", 1)[1].split()[0].strip(), line.strip()
+    return None, "no SEAL= line in the runtime's output"
+
+
+def preflight(manifest=None, strict_state=True, status=None):
+    """Verify every manifest pin. Opens no price panel for computation.
+
+    `status` injects a `(modified, deleted)` pair instead of reading the live
+    worktree, so the dirty-tree policy can be exercised deterministically
+    without dirtying a real file.
+    """
+    r = Refusal()
+    if manifest is None:
+        if not os.path.exists(MANIFEST):
+            r.check("execution manifest exists", False, MANIFEST)
+            return r
+        with open(MANIFEST, encoding="utf-8") as fh:
+            manifest = json.load(fh)
+    now_head = head(REPO)
+
+    # A. the canonical seal, asked of the canonical runtime
+    if strict_state:
+        state, detail = seal_state_from_runtime()
+        r.check("canonical seal derives VERIFIED", state == "VERIFIED",
+                detail if state != "VERIFIED" else "")
+
+    # B. the sealed contract, as bytes on disk RIGHT NOW. This is the check
+    #    seal_state structurally cannot make.
+    sc = manifest["sealed_contract"]
+    live = lf_sha256(os.path.join(REPO, sc["prereg_path"]))
+    r.check("worktree preregistration matches the sealed contract",
+            live == sc["prereg_sha256_reviewed_pin"], "on disk %s" % (live or "MISSING"))
+    r.check("sealed prereg blob at seal_revision matches the reviewed pin",
+            sc["prereg_sha256_blob_at_seal"] == sc["prereg_sha256_reviewed_pin"])
+    r.check("A2 record blob at seal_revision matches the reviewed pin",
+            sc["a2_record_sha256_blob_at_seal"] == sc["a2_record_sha256_reviewed_pin"])
+
+    # C. runner base. Execution runs from a LATER HEAD than the base, so
+    #    HEAD == base is deliberately NOT required.
+    rb = manifest["runner_base"]
+    r.check("manifest names a runner base revision", bool(rb.get("runner_base_revision")),
+            "null — the runner's own bytes are not yet revision-addressable")
+    r.check("manifest declares no self-hash", rb.get("manifest_self_hash") is None)
+    if rb.get("runner_base_revision"):
+        r.check("runner base revision resolves in this repository",
+                blob_sha256(REPO, rb["runner_base_revision"],
+                            "research/extensions/x01/x01_runner.py") is not None)
+
+    # C2. the manifest itself must be committed and unedited.
+    man_rel = os.path.relpath(MANIFEST, REPO).replace("\\", "/")
+    man_head = blob_sha256(REPO, now_head, man_rel)
+    man_live = lf_sha256(MANIFEST)
+    r.check("execution manifest is committed at HEAD", man_head is not None,
+            "not committed — bind it before execution")
+    r.check("no uncommitted edit to the execution manifest",
+            man_head is None or man_head == man_live,
+            "worktree manifest differs from its blob at HEAD")
+
+    # C3. every pinned runner/implementation blob at the CURRENT HEAD still
+    #     equals the value pinned at the base. A later COMMITTED edit fails here.
+    for e in manifest["inputs"]:
+        if e["kind"] != "runner_code":
+            continue
+        now = blob_sha256(REPO, now_head, e["path"])
+        r.check("runner code blob unchanged since the base: %s" % e["path"],
+                now == e["sha256"],
+                "base %s HEAD %s" % (str(e["sha256"])[:12], str(now)[:12]))
+
+    # D/E. every pinned input, by its own declared convention
+    for e in manifest["inputs"]:
+        if e["kind"] == "runner_code":
+            continue
+        if e["hash_convention"] == BLOB:
+            now = blob_sha256(REPO, now_head, e["path"])
+        else:
+            now = raw_sha256(os.path.join(REPO, e["path"]))
+        r.check("pinned input unchanged: %s" % e["path"], now == e["sha256"],
+                "expected %s got %s" % (str(e["sha256"])[:12], str(now)[:12]))
+
+    # F. cross-repository S2 dependency
+    c = manifest["carry_s2_dependency"]
+    try:
+        carry_now_rev = head(CARRY)
+        carry_now = blob_sha256(CARRY, carry_now_rev, c["path"])
+    except RuntimeError as exc:
+        carry_now_rev, carry_now = None, None
+        r.check("carry repository readable", False, str(exc)[:120])
+    r.check("carry S2 revision unchanged", carry_now_rev == c["revision"],
+            "expected %s got %s" % (c["revision"][:12], str(carry_now_rev)[:12]))
+    r.check("carry S2 file unchanged", carry_now == c["sha256"])
+
+    # G. dirty-worktree policy — smallest allowlist, role-validated
+    modified, deleted = porcelain(REPO) if status is None else status
+    pinned = {e["path"] for e in manifest["inputs"]
+              if e["kind"] in ("tracked_text", "runner_code")} | {
+        sc["prereg_path"], sc["a2_record_path"], man_rel}
+    hit = sorted((set(modified) | set(deleted)) & pinned)
+    r.check("no pinned path is modified or deleted", not hit, ", ".join(hit))
+
+    allow = set(manifest["dirty_worktree_policy"]["append_only_allowlist"])
+    state_allow = set(manifest["dirty_worktree_policy"]["state_allowlist"])
+    unapproved = sorted(set(modified) - allow - state_allow)
+    r.check("no unapproved tracked modification", not unapproved, ", ".join(unapproved))
+    if status is None:                       # role validation needs the real tree
+        for path in sorted(set(modified) & allow):
+            r.check("append-only governance file keeps every record row: %s" % path,
+                    diff_is_append_only(REPO, path))
+        for path in sorted(set(modified) & state_allow):
+            r.check("qros-state seal pointer unchanged vs HEAD: %s" % path,
+                    _state_pointer_unchanged(path))
+    r.check("no tracked deletion", not deleted, ", ".join(deleted))
+    return r
+
+
+def _state_pointer_unchanged(path):
+    """The state file may move, but never its seal pointer, lane or sealed pins."""
+    import yaml
+    at_head = yaml.safe_load(_git(REPO, "show", "HEAD:%s" % path).decode("utf-8"))
+    now = yaml.safe_load(open(os.path.join(REPO, path), encoding="utf-8").read())
+    if at_head.get("prereg") != now.get("prereg"):
+        return False
+    if at_head.get("lane") != now.get("lane"):
+        return False
+    sealed_ids = {"x01_preregistration_sealed", "x01_a2_review_record"}
+    pick = lambda d: {i["id"]: i.get("observed_sha256")
+                      for i in (d.get("inputs") or []) if i["id"] in sealed_ids}
+    return pick(at_head) == pick(now)
+
+
+def cmd_preflight(args):
+    r = preflight(strict_state=not args.no_runtime)
+    width = max(len(n) for n, _, _ in r.checks)
+    for name, ok, detail in r.checks:
+        print("  %-*s %s%s" % (width, name, "PASS" if ok else "REFUSE",
+                               ("   " + detail) if detail and not ok else ""))
+    print()
+    if r.ok:
+        print("PRE_EXECUTION_PREFLIGHT = PASS — every manifest pin holds.")
+        print("This is NOT execution authorization.")
+        return 0
+    print("PRE_EXECUTION_PREFLIGHT = REFUSE (%d condition(s) failed)" % len(r.reasons))
+    for reason in r.reasons:
+        print("   " + reason)
+    return 1
+
+
+# --------------------------------------------------------------------------- #
+# execute — the boundary. Deliberately not implemented.
+# --------------------------------------------------------------------------- #
+def cmd_execute(_args):
+    print("X01 TARGET EXECUTION IS NOT AUTHORIZED AND IS NOT IMPLEMENTED.")
+    print()
+    print("Constructing E, F, A1, S1 or S2 — or the paired 179-month sample, or")
+    print("any Sharpe, delta-Sharpe, bootstrap or crisis statistic — crosses the")
+    print("target-execution boundary. A sealed preregistration and a FULL lane")
+    print("are NOT run authorization; a separate Aaron authorization is.")
+    print()
+    print("Before the first construction, the authorized runner must, IN ORDER:")
+    print("  1. pass preflight;")
+    print("  2. record the exposure event and the A1/S1/S2 attempt")
+    print("     classifications, plus E's prospective ETF +1;")
+    print("  3. read the then-current authoritative cumulative Databento state")
+    print("     (never hard-code 14 -> 17);")
+    print("  4. record the child seed streams by spawn_key and state fingerprint;")
+    print("  ONLY THEN construct anything, and only then read an output.")
+    return 2
+
+
+def main(argv=None):
+    p = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    sub = p.add_subparsers(dest="cmd", required=True)
+    sub.add_parser("build-manifest", help="pin every input byte").set_defaults(
+        func=cmd_build_manifest)
+    pf = sub.add_parser("preflight", help="verify pins; constructs nothing")
+    pf.add_argument("--no-runtime", action="store_true",
+                    help="skip the canonical qros seal query (offline checks only)")
+    pf.set_defaults(func=cmd_preflight)
+    sub.add_parser("execute", help="REFUSES — target execution is unauthorized"
+                   ).set_defaults(func=cmd_execute)
+    args = p.parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())
