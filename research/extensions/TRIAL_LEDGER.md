@@ -49,8 +49,8 @@ the ledgers named below; nothing here may diverge from them.
 
 | Axis | Authoritative file | Rows today | Normalized value |
 |---|---|---|---|
-| RESEARCH | `ops/EXPOSURE_LEDGER.md` event table | **31** (1–9 historical · 10–12 Wave 0 · 13–17 Wave 1 · 18–19 contract-identity repair · 21 Fable repair · 23 cash-ledger repair · 24 production cash-path repair · 26 documentation closure · 27 X01 Stage-A2 repair · 28 O-3 wording closure · 29 owner-decision incorporation · 30 four-defect A2 repair · **31 blocked seal attempt** · errata **20, 22, 25**) | `HISTORICAL_CUMULATIVE = TARGET_METRIC`; `CURRENT_REVIEW_SCOPE = TARGET_METRIC` |
-| SEAT | `ops/REVIEWER_EXPOSURE_LOG.md` §3 | **20** (S1–S6 Wave 0 · S7 the B2 erratum · S8 Wave 1 · S9/S11/S13/S14 repair seats · S16 X01 Stage-A2 seat · S17 O-3 wording closure · S18 owner-decision incorporation · S19 four-defect A2 repair · **S20 seal attempt** · timestamp errata **S10, S12, S15**) | *not aggregated into research exposure — burning a seat consumes no research degrees of freedom* |
+| RESEARCH | `ops/EXPOSURE_LEDGER.md` event table | **32** (1–9 historical · 10–12 Wave 0 · 13–17 Wave 1 · 18–19 contract-identity repair · 21 Fable repair · 23 cash-ledger repair · 24 production cash-path repair · 26 documentation closure · 27 X01 Stage-A2 repair · 28 O-3 wording closure · 29 owner-decision incorporation · 30 four-defect A2 repair · 31 blocked seal attempt · **32 seal completed** · errata **20, 22, 25**) | `HISTORICAL_CUMULATIVE = TARGET_METRIC`; `CURRENT_REVIEW_SCOPE = TARGET_METRIC` |
+| SEAT | `ops/REVIEWER_EXPOSURE_LOG.md` §3 | **21** (S1–S6 Wave 0 · S7 the B2 erratum · S8 Wave 1 · S9/S11/S13/S14 repair seats · S16 X01 Stage-A2 seat · S17 O-3 wording closure · S18 owner-decision incorporation · S19 four-defect A2 repair · S20 blocked seal attempt · **S21 seal completed** · timestamp errata **S10, S12, S15**) | *not aggregated into research exposure — burning a seat consumes no research degrees of freedom* |
 
 **Linked without double-counting:** `EXPOSURE_LEDGER.md` §5 cross-references the
 seat rows **as pointers carrying no classification and no scope**, so no seat
@@ -75,6 +75,26 @@ event can enter the research normalization.
 a Sharpe, a confidence interval or a return series is computed on this panel.
 A measurement-only pass must not become a back door.
 
+#### §3.1a Owner decisions at the X01 pre-execution gate (2026-09-09)
+
+Aaron adopted the **existing DISTRIBUTED accounting form**. **No new
+dataset-level file was created**, and in particular
+`quant-research-knowledge-base/registry/sample-trial-ledger.csv` was **not**
+created and **no new KB schema was invented**.
+
+| Field | Value |
+|---|---|
+| `SHARED_DATABENTO_HOME_GATE` | **`RESOLVED`** — the distributed form of §5.1 **is** the answer, not a placeholder for one |
+| Historical frozen anchor | **`N_trials = 14`**, unchanged, from the accepted carry record. `commodity-carry-research` is **not modified** by this decision |
+| Authoritative TSMOM prospective append view | **this file, §3.1 / §6.1** |
+| `TSMOM_TRIAL_LEDGER_CURATOR` | **the X01 executing / governance session** |
+| Other project views | remain **references**, not competing totals, and are **not silently rewritten** |
+| Current TSMOM contribution | **0** |
+| Planned X01 contribution | **+3**, for exactly **A1**, **S1**, **S2** |
+| Resulting cumulative | **`authoritative shared cumulative total read immediately before execution + 3`**, subject to no intervening contribution. **`14 → 17` is NOT hard-coded and must not be.** |
+| Read-at-execution obligation | the runner **must read the then-current authoritative cumulative Databento state immediately before the first governed construction**, and record what it read |
+| Standing prohibition | **correlation can NEVER delete attempts after results are visible** (§1.1 rule 1) |
+
 ---
 
 ### §3.2 `dataset.yfinance.multi-asset-etf-panel` — **NO FROZEN CONVENTION EXISTS**
@@ -89,7 +109,33 @@ A measurement-only pass must not become a back door.
 
 ---
 
-## §4 OPEN AARON DECISION — the ETF-panel historical trial count
+## §4 AARON DECISION — the ETF-panel trial count (historical OPEN · forward RESOLVED)
+
+> **Resolved at the X01 pre-execution gate, 2026-09-09.** The **historical**
+> count stays `UNKNOWN` and is **not** reconstructed or fabricated. What Aaron
+> resolved is the **forward** convention, prospectively and before any target
+> outcome exists.
+>
+> | Token | Value |
+> |---|---|
+> | `D_ETF_COUNT_HISTORICAL` | **`UNKNOWN`** — deliberately not reconstructed |
+> | `ETF_E_EXPOSURE_EVENT` | **`YES`** |
+> | `ETF_E_VARIANT_ATTEMPT_CONTRIBUTION` | **`+1`** (conservative) |
+> | `D_ETF_COUNT_FORWARD_CONVENTION` | **`E_COUNTS_AS_ONE_PROSPECTIVE_ATTEMPT`** |
+> | `D_ETF_COUNT_GATE` | **`RESOLVED_FOR_X01_EXECUTION`** |
+> | `D_ETF_COUNT_EFFECT_ON_DATABENTO_PLUS3` | **`NONE`** — the two samples are counted separately |
+>
+> **Reason, recorded as Aaron gave it:** `E` is a **newly constructed target
+> return stream**, even though its construction rules are frozen and it serves as
+> the *reference* leg. The `+1` is a **conservative governance count**. It does
+> **not** imply `E` is a new alpha hypothesis, and it is **separate from the
+> Databento futures count** — the planned `+3` for A1/S1/S2 is unaffected.
+>
+> **Ordering obligation:** before `E` is actually constructed in a later
+> authorized run, the exposure event and the attempt classification are recorded
+> **BEFORE the output is read**. `E` was **not** constructed in this gate.
+
+### §4.0 The historical question, as originally recorded (still OPEN)
 
 **Decision id:** `D-ETF-COUNT` (Map v2 §K decision **D4**'s embedded clause: *"record
 the ETF-panel historical trial-count convention as an open Aaron decision inside
@@ -191,7 +237,16 @@ records, never competing totals."*
 
 ### §5.2 What is NOT settled — recorded, not invented
 
-**`SHARED_LEDGER_PHYSICAL_HOME = UNKNOWN_PENDING_AARON_DECISION`.**
+> **RESOLVED 2026-09-09 — `SHARED_LEDGER_PHYSICAL_HOME = DISTRIBUTED_EXISTING_FORM`.**
+> Aaron adopted the arrangement already described in §5.1 rather than creating a
+> new physical file. The carry PREREGISTRATION §10 record remains the single
+> authoritative dataset-level anchor at `N_trials = 14`; this file §3.1/§6.1 is
+> the authoritative **TSMOM prospective append view**, curated by the X01
+> executing/governance session; the other project files remain **views**. **No
+> KB registry CSV was created and no KB schema was invented.** The paragraph
+> below is retained as the pre-decision record.
+
+**`SHARED_LEDGER_PHYSICAL_HOME = UNKNOWN_PENDING_AARON_DECISION`** *(superseded by the box above)*.
 
 No single physical file currently sits above all four projects. The authority is
 distributed: the carry preregistration holds the count, and each consumer holds a
@@ -225,6 +280,21 @@ a governance fact, never a merger of research families.
 | # | attempt | sample | design parent | family | `N_trials` contribution | convention cited |
 |---|---|---|---|---|---|---|
 | — | *(still empty after Wave 1)* | | | | | |
+
+**PLANNED, NOT CREATED (2026-09-09).** The X01 pre-execution gate declares
+what *will* be registered when execution is later authorized. **These rows do not
+exist yet and must not be created until each configuration is actually
+evaluated:**
+
+| planned attempt | sample | family | planned contribution |
+|---|---|---|---|
+| **A1** (primary) | `dataset.databento.commodity-futures-curves` | `F-X01` | +1 |
+| **S1** (construction sensitivity) | same | `F-X01` | +1 |
+| **S2** (roll-rule sensitivity) | same | `F-X01` | +1 |
+| **E** (ETF reference leg) | `dataset.yfinance.multi-asset-etf-panel` | `F-X01` | **+1** (§4, conservative; separate sample) |
+
+**Building the runner creates no attempt row.** An attempt row is created when a
+configuration is **evaluated**, and nothing has been evaluated.
 
 **No TSMOM-EXT variant attempt has been evaluated, including in Wave 1.** `X01`–`X46` are
 **proposed candidates**, not attempts: an attempt row is created when a
@@ -264,6 +334,8 @@ workload budget and explicitly not a multiplicity correction**; it never enters
 
 | Date (UTC) | Appended | By |
 |---|---|---|
+| 2026-09-09 | **X01 pre-execution gate — owner decisions recorded.** `SHARED_DATABENTO_HOME_GATE = RESOLVED` via the **existing distributed form** (§3.1a, §5.2); **no KB registry CSV created, no KB schema invented, carry not modified**. `TSMOM_TRIAL_LEDGER_CURATOR` = the X01 executing/governance session. `D-ETF-COUNT`: historical stays **`UNKNOWN`**, forward convention **`E_COUNTS_AS_ONE_PROSPECTIVE_ATTEMPT`**, gate **`RESOLVED_FOR_X01_EXECUTION`**, effect on the Databento `+3` **`NONE`** (§4). §6.1 now names the **planned** A1/S1/S2/E rows and states they **do not exist yet**. **Anchor still 14; TSMOM contribution still 0; planned +3 still conditional; the cumulative total is read at execution and is NOT hard-coded to 17. No attempt row was created and nothing was evaluated.** | X01 pre-execution gate session (Claude Opus 5) |
+| 2026-09-08 | **X01 preregistration SEALED** at seal-base revision `df5b28ab7324`. §2 index **32/21**. **A commit and a seal are not strategy-return attempts:** **no `VARIANT_ATTEMPT` was created by this operation**, and none may be. **Databento contribution remains 0; frozen reference remains 14; planned future X01 contribution remains +3** on A1, S1 and S2, still conditional on exactly those three governed constructions, with the resulting cumulative total computed **at execution** and not hard-coded to 17. Shared Databento home and `D-ETF-COUNT` remain `PRE_EXECUTION`, were **not** resolved, and **the shared ledger was not created** - the seal does not authorize any of that. | Wave-1 seal-execution session (Claude Opus 5) |
 | 2026-09-08 | **X01 seal attempt — BLOCKED.** §2 index **31/20**. **Nothing changed in trial accounting:** `PLANNED_X01_CONTRIBUTION` stays **+3** on A1, S1 and S2; **a seal creates no `VARIANT_ATTEMPT` and no trial**, and none was created here - nor would one have been had the seal completed. **Databento contribution remains 0; frozen reference remains 14**; the resulting cumulative total is still computed at execution and is not hard-coded to 17. Shared Databento home and `D-ETF-COUNT` remain `PRE_EXECUTION` and were **not** resolved; **the shared ledger was not created.** | Wave-1 seal-attempt session (Claude Opus 5) |
 | 2026-09-08 | **X01 four-defect A2 repair.** §2 index **30/19**. **No trial-accounting object changed:** `PLANNED_X01_CONTRIBUTION` stays **+3** on the same three governed series (primary A1, S1, S2); the repairs alter how those series are *constructed and costed*, not how many exist. No `VARIANT_ATTEMPT` row was created, deleted or merged. **Databento contribution remains 0; frozen reference remains 14.** Shared Databento home and `D-ETF-COUNT` remain `PRE_EXECUTION`. | Wave-1 four-defect A2 repair session (Claude Opus 5) |
 | 2026-09-08 | **X01 owner decisions O-1/O-2/O-6 incorporated.** §2 index **29/18**. `PLANNED_X01_CONTRIBUTION` stays **+3**, conditional on exactly the three governed constructed return series (primary A1, S1, S2) and no additional evaluated construction. **Aaron adopted O-1 Option B and O-6 Option 1, so O-1 Option A and O-6 Option 2 are NEVER constructed: no series, no `VARIANT_ATTEMPT` row and no trial for either, and neither may be computed later 'as a sensitivity to compare' — that would create the post-result choice the ex-ante adoption exists to remove.** The resulting cumulative total is still **computed at execution**, not hard-coded to 17. Shared Databento home and `D-ETF-COUNT` both remain **`PRE_EXECUTION`** and neither is resolved by guess. **Databento contribution remains 0; frozen reference remains 14; no attempt row was created, deleted or merged.** | Wave-1 owner-decision incorporation session (Claude Opus 5) |
