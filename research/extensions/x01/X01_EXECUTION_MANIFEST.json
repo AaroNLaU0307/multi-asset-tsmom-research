@@ -1,0 +1,235 @@
+{
+  "manifest_version": 2,
+  "study": "X01 — commodity-sleeve futures transfer, matched-map arm",
+  "purpose": "Prospective byte pin for X01 execution. Closes the residual that qros seal_state cannot see: an UNCOMMITTED working-tree edit to the sealed contract or to any runner input.",
+  "execution_authorized": false,
+  "execution_authorization_note": "A sealed preregistration and a FULL lane are NOT run authorization. `execute` refuses until Aaron authorizes target execution separately.",
+  "hash_conventions": {
+    "sha256_of_git_blob_bytes_at_revision": "sha256 of `git cat-file blob <revision>:<path>`. Used for all tracked text. EOL-normalised by git, so it is identical on every platform despite core.autocrlf=true.",
+    "sha256_of_raw_file_on_disk": "sha256 of the raw file on disk, streamed. Used for git-ignored data (parquet, and data/ which is git-ignored), which has no blob to appeal to."
+  },
+  "sealed_contract": {
+    "seal_revision": "df5b28ab7324c7ba789ab231431f077288c3fd84",
+    "prereg_path": "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md",
+    "prereg_sha256_blob_at_seal": "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743",
+    "prereg_sha256_reviewed_pin": "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743",
+    "a2_record_path": "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md",
+    "a2_record_sha256_blob_at_seal": "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe",
+    "a2_record_sha256_reviewed_pin": "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
+  },
+  "runner_base": {
+    "runner_base_revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+    "meaning": "The immutable revision containing the runner and the execution-relevant code whose blobs are pinned below. It is NOT a claim that the later manifest-binding commit names itself: a commit cannot contain its own 40-hex SHA, and no such self-hash field exists here. Execution may run from a LATER HEAD (the manifest-binding revision and beyond); what is verified is that every pinned blob at the CURRENT HEAD still equals the value pinned at this base revision.",
+    "manifest_self_hash": null,
+    "manifest_integrity": "protected by (1) the manifest-binding commit and (2) the worktree-vs-HEAD refusal in preflight, not by a self-hash."
+  },
+  "not_consumed_by_x01": [
+    {
+      "path": "research/extensions/wave1/settle_panel.parquet",
+      "reason": "superseded raw-symbol-keyed panel from the first extraction; INVALID (CME one-digit years repeat on a 10-year cycle and merged two contracts per column) and retained only as implementation-error lineage. The sealed contract §3.6 names only the _v2 set, and no accepted implementation reads it"
+    },
+    {
+      "path": "research/extensions/wave1/oi_panel.parquet",
+      "reason": "same superseded extraction; referenced neither by the sealed contract nor by any accepted implementation"
+    },
+    {
+      "path": "data/DGS3MO.csv",
+      "reason": "a risk-free series would be material only under O-6 Option 2 (full carry accounting). Aaron adopted Option 1 SYMMETRIC_ZERO_CARRY, so no cash yield enters either leg and this file is not consumed"
+    }
+  ],
+  "carry_s2_dependency": {
+    "repo": "commodity-carry-research",
+    "revision": "f0847d7c5bc04aa2048b64fa37a3e0c51347c2d3",
+    "path": "src/robustness.py",
+    "symbol": "fixed_calendar_front_series",
+    "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+    "sha256": "d00cab2942fcfd115933270ee327ee4dd5eadc9a97a0952889c5c5de8c996fac",
+    "note": "READ ONLY. carry is never modified by X01."
+  },
+  "inputs": [
+    {
+      "path": "research/extensions/x01/x01_runner.py",
+      "role": "this runner",
+      "kind": "runner_code",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "d8588e8c35dab57497c1e558b6cfe02fd41ffaf1cfa45f78295c69f77b368813"
+    },
+    {
+      "path": "research/extensions/x01/x01_contract_tests.py",
+      "role": "the synthetic contract gate; execution safety depends on it",
+      "kind": "runner_code",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "4739716497d1019581abef83a68509e44c11000f0286d404dcf019446b4e709d"
+    },
+    {
+      "path": "research/extensions/validate_wave0.py",
+      "role": "the governance validator",
+      "kind": "runner_code",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "dc6edc2e7ce279a57ed014188b3bb717d114cb479fac513adf33b06bccbb5c92"
+    },
+    {
+      "path": "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md",
+      "role": "the sealed scientific contract",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743"
+    },
+    {
+      "path": "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md",
+      "role": "the A2 provenance record",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
+    },
+    {
+      "path": "config.py",
+      "role": "frozen signal/sizing/cost/bootstrap constants",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "6c2d9820963cb5cc0bd1991b4697417d755333fc87f73081eaf403e45cba258f"
+    },
+    {
+      "path": "src/signals.py",
+      "role": "baseline mean-of-signs composite (sealed 3.7)",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "b5e8afcf1e5f5666eeaf503fc8c0bf3f45751edc92b14cb390b13ff712676c20"
+    },
+    {
+      "path": "src/sizing.py",
+      "role": "per-asset vol targeting",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "434ca65e40035b93421d91e3ee7aa15cb6719b23c53ce477f26fee3cff581081"
+    },
+    {
+      "path": "src/portfolio.py",
+      "role": "equal-weight sleeve aggregation",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "aa06eb1c5fcd69be57f911fab21b76e299f5e71ee727fd27aa138ddf52aa4479"
+    },
+    {
+      "path": "src/performance.py",
+      "role": "the sealed Sharpe convention",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "f96976fb2220319219cc75db4ee775f3d14fab1dedd27254704c6ee49a9285ba"
+    },
+    {
+      "path": "research/extensions/wave1/run_x02a_v3.py",
+      "role": "accepted X02 cash-first accounting (tsmom_chain_net_returns)",
+      "kind": "tracked_text",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "a07edec107743c76538ea9e1d546f5b73b51689b",
+      "sha256": "4dee3e61d841c02bb4bc1546133baa8b361640e45e18477e24baf7729194bbe0"
+    },
+    {
+      "path": "data/close_prices_raw.csv",
+      "role": "frozen ETF panel (sealed E source)",
+      "kind": "git_ignored_data",
+      "hash_convention": "sha256_of_raw_file_on_disk",
+      "revision": null,
+      "sha256": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31"
+    },
+    {
+      "path": "research/extensions/wave1/settle_v2.parquet",
+      "role": "settlement panel",
+      "kind": "git_ignored_data",
+      "hash_convention": "sha256_of_raw_file_on_disk",
+      "revision": null,
+      "sha256": "490cbba08c41d09b414a09ac138d8318fde42251e9c559a08c2e11ead8a1b57f"
+    },
+    {
+      "path": "research/extensions/wave1/oi_v2.parquet",
+      "role": "open-interest panel",
+      "kind": "git_ignored_data",
+      "hash_convention": "sha256_of_raw_file_on_disk",
+      "revision": null,
+      "sha256": "be70a5dd31748e60ddbe10cd86c7eeb73de5a6306f199565a2b2d2b1d436eacc"
+    },
+    {
+      "path": "research/extensions/wave1/contracts_meta.parquet",
+      "role": "contract definitions",
+      "kind": "git_ignored_data",
+      "hash_convention": "sha256_of_raw_file_on_disk",
+      "revision": null,
+      "sha256": "1fab7943ec5d416c21355f99178dfa9b98a473e0f9261158a6e28033f09a4149"
+    }
+  ],
+  "dirty_worktree_policy": {
+    "refuse_if_any_pinned_path_modified_or_deleted": true,
+    "append_only_allowlist": [
+      "ops/EXPOSURE_LEDGER.md",
+      "ops/REVIEWER_EXPOSURE_LOG.md",
+      "research/extensions/TRIAL_LEDGER.md"
+    ],
+    "state_allowlist": [
+      "qros-state.yaml"
+    ],
+    "rule": "A modified tracked file refuses execution unless it is in an allowlist AND its role validates: the append-only governance ledgers must delete or alter no RECORD ROW (their derived normalisation summary may move); qros-state.yaml must keep its seal pointer, lane and sealed input pins unchanged against HEAD. There is no blanket 'dirty tree is okay' rule, and this does not rely on QROS R10, which does not hold the target-execution edge."
+  },
+  "seed_protocol": {
+    "master_seed": 7,
+    "arm_order": [
+      "primary",
+      "S1",
+      "S2"
+    ],
+    "derivation": "numpy.random.SeedSequence(7).spawn(3)",
+    "identity_convention": "Child streams are identified by `spawn_key` plus a 4x uint32 generated-state fingerprint. The `.entropy` property is NOT an identifier: all three children report entropy == 7, so it cannot distinguish them.",
+    "note": "The sealed text says the spawned values are written into it at seal time; they are not. See DEVIATIONS.md D-X01-1. The streams are re-derived mechanically from the sealed rule and recorded here BEFORE any target output is read.",
+    "child_streams": [
+      {
+        "arm": "primary",
+        "spawn_key": [
+          0
+        ],
+        "master_entropy": 7,
+        "state_fingerprint_u32x4": [
+          1201125462,
+          788422957,
+          1855184853,
+          4093114059
+        ]
+      },
+      {
+        "arm": "S1",
+        "spawn_key": [
+          1
+        ],
+        "master_entropy": 7,
+        "state_fingerprint_u32x4": [
+          3618983171,
+          941218350,
+          283231612,
+          4209872184
+        ]
+      },
+      {
+        "arm": "S2",
+        "spawn_key": [
+          2
+        ],
+        "master_entropy": 7,
+        "state_fingerprint_u32x4": [
+          3831650445,
+          4088273801,
+          1611045428,
+          732922199
+        ]
+      }
+    ]
+  }
+}
