@@ -18,31 +18,87 @@
     "a2_record_sha256_reviewed_pin": "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
   },
   "runner_base": {
-    "runner_base_revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+    "runner_base_revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
     "meaning": "The immutable revision containing the runner and the execution-relevant code whose blobs are pinned below. It is NOT a claim that the later manifest-binding commit names itself: a commit cannot contain its own 40-hex SHA, and no such self-hash field exists here. Execution may run from a LATER HEAD (the manifest-binding revision and beyond); what is verified is that every pinned blob at the CURRENT HEAD still equals the value pinned at this base revision.",
     "manifest_self_hash": null,
     "manifest_integrity": "protected by (1) the manifest-binding commit and (2) the worktree-vs-HEAD refusal in preflight, not by a self-hash."
   },
+  "inference_binding": {
+    "accepted_implementation_revision": "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37",
+    "status": "BOUND",
+    "modules": [
+      {
+        "path": "research/extensions/x01/x01_inference.py",
+        "role": "sealed inference layer: Sharpe, ΔS, the paired joint stationary bootstrap, the percentile CI and the §5 classification, plus the S1/S2 descriptive arms, the sealed crisis windows and the §7 path diagnostics",
+        "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+        "sha256_at_freeze": "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06",
+        "accepted_review_pin": "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06"
+      },
+      {
+        "path": "research/extensions/x01/x01_inference_tests.py",
+        "role": "synthetic-only tests for the inference layer",
+        "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+        "sha256_at_freeze": "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c",
+        "accepted_review_pin": "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c"
+      }
+    ],
+    "live_worktree_sha256_lf": {
+      "research/extensions/x01/x01_inference.py": "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06",
+      "research/extensions/x01/x01_inference_tests.py": "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c"
+    },
+    "sha256_at_head": {
+      "research/extensions/x01/x01_inference.py": "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06",
+      "research/extensions/x01/x01_inference_tests.py": "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c"
+    },
+    "post_freeze_updated": [],
+    "post_freeze_updated_note": "Committed bytes that have moved since the freeze revision. A test module appears here legitimately: the binding it asserts does not exist until the binding commit, so it cannot have been frozen already asserting it. `sha256_at_freeze` vs `accepted_review_pin` is the check that the freeze reproduced what was reviewed, and it is unaffected.",
+    "meaning": "The revision at which the independently accepted sealed INFERENCE implementation was frozen. Same mechanism, same checks and the same freeze commit as the construction binding below; recorded as its own block because the sealed contract keeps construction and inference apart and preflight verifies them separately."
+  },
+  "superseded_freezes": [
+    {
+      "revision": "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70",
+      "scope": "target-construction only (no inference layer existed yet)",
+      "accepted_review_pins": {
+        "research/extensions/x01/x01_target_construction.py": "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34",
+        "research/extensions/x01/x01_construction_tests.py": "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27"
+      },
+      "superseded_by": "the authorized additive §7 diagnostic-interface delta, accepted together with the inference layer",
+      "still_true": "those blobs remain exactly those bytes at that revision"
+    }
+  ],
   "target_construction_binding": {
-    "target_construction_revision": "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70",
+    "accepted_implementation_revision": "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37",
     "status": "BOUND",
     "modules": [
       {
         "path": "research/extensions/x01/x01_target_construction.py",
-        "role": "sealed target-construction layer for E / A1 / S1 / S2",
+        "role": "sealed target-construction layer for E / A1 / S1 / S2, with the additive §7 diagnostic interface",
         "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-        "sha256_at_freeze": "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34",
-        "accepted_review_pin": "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34"
+        "sha256_at_freeze": "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83",
+        "accepted_review_pin": "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83"
       },
       {
         "path": "research/extensions/x01/x01_construction_tests.py",
         "role": "synthetic-only tests for the construction layer",
         "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-        "sha256_at_freeze": "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27",
-        "accepted_review_pin": "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27"
+        "sha256_at_freeze": "4e5cc510398c3b99eacb92ac23134c636d1a8bb2c9a1801e9bc382687245a90b",
+        "accepted_review_pin": "4e5cc510398c3b99eacb92ac23134c636d1a8bb2c9a1801e9bc382687245a90b"
       }
     ],
-    "meaning": "The revision at which the independently accepted target-construction implementation was frozen. `sha256_at_freeze` is read from git at that revision and must equal `accepted_review_pin`, the bytes the audit accepted — a freeze that does not reproduce the reviewed bytes is not a freeze. Current integrity is a separate matter and is carried by the runner_code pins below, which are compared both at HEAD and against the live worktree. BINDING IS NOT AUTHORIZATION: `execution_authorized` stays false and `execute` refuses unconditionally, without consulting preflight, the manifest or this block."
+    "live_worktree_sha256_lf": {
+      "research/extensions/x01/x01_target_construction.py": "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83",
+      "research/extensions/x01/x01_construction_tests.py": "d31855d239c4fe63db0895c6a08c5d36624bad41dd0096e49a6f338e8be6cc09"
+    },
+    "sha256_at_head": {
+      "research/extensions/x01/x01_target_construction.py": "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83",
+      "research/extensions/x01/x01_construction_tests.py": "d31855d239c4fe63db0895c6a08c5d36624bad41dd0096e49a6f338e8be6cc09"
+    },
+    "post_freeze_updated": [
+      "research/extensions/x01/x01_construction_tests.py"
+    ],
+    "post_freeze_updated_note": "Committed bytes that have moved since the freeze revision. A test module appears here legitimately: the binding it asserts does not exist until the binding commit, so it cannot have been frozen already asserting it. `sha256_at_freeze` vs `accepted_review_pin` is the check that the freeze reproduced what was reviewed, and it is unaffected.",
+    "meaning": "The revision at which the independently accepted target-construction implementation — including the additive §7 diagnostic interface — was frozen. `sha256_at_freeze` is read from git at that revision and must equal `accepted_review_pin`, the bytes the audit accepted: a freeze that does not reproduce the reviewed bytes is not a freeze. Current integrity is carried by the runner_code pins below, compared both at HEAD and against the live worktree. BINDING IS NOT AUTHORIZATION: `execution_authorized` stays false and `execute` refuses unconditionally, without consulting preflight, the manifest or this block.",
+    "target_construction_revision": "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37"
   },
   "not_consumed_by_x01": [
     {
@@ -74,47 +130,63 @@
       "role": "this runner",
       "kind": "runner_code",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
-      "sha256": "116da8aceabc091c1f33117e79954f51fd7e6d5d4c79f65d48cfcaa3b6e7de5f"
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "569518a51ead5558680b6616de8251de365972aa67162e49d15f7f119606fbe2"
     },
     {
       "path": "research/extensions/x01/x01_contract_tests.py",
       "role": "the synthetic contract gate; execution safety depends on it",
       "kind": "runner_code",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
-      "sha256": "08bb98ceb97e672d91ada143e6c1bd70e59b4df95cfd3c23139b3ae0675673c2"
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "e61b7b55b57d092743ff2154aece711d3db8665ede9015065f12dc10c69d54dc"
     },
     {
       "path": "research/extensions/validate_wave0.py",
       "role": "the governance validator",
       "kind": "runner_code",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
-      "sha256": "3104eb89f5e962b4f256b506801c94a031bccaea9d7a06f9e0a2270d19648e77"
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "581d762f241b160542cee182e5bbd6136d823c2265f660c1dfe02d007a825740"
     },
     {
       "path": "research/extensions/x01/x01_target_construction.py",
-      "role": "sealed target-construction layer for E / A1 / S1 / S2",
+      "role": "sealed target-construction layer for E / A1 / S1 / S2, with the additive §7 diagnostic interface",
       "kind": "runner_code",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
-      "sha256": "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34"
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83"
     },
     {
       "path": "research/extensions/x01/x01_construction_tests.py",
       "role": "synthetic-only tests for the construction layer",
       "kind": "runner_code",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
-      "sha256": "6dfc4f5b7534b9c58efb27ab7dca57cc2782b10c39b8f924aadb41431757e9bd"
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "d31855d239c4fe63db0895c6a08c5d36624bad41dd0096e49a6f338e8be6cc09"
+    },
+    {
+      "path": "research/extensions/x01/x01_inference.py",
+      "role": "sealed inference layer: Sharpe, ΔS, the paired joint stationary bootstrap, the percentile CI and the §5 classification, plus the S1/S2 descriptive arms, the sealed crisis windows and the §7 path diagnostics",
+      "kind": "runner_code",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06"
+    },
+    {
+      "path": "research/extensions/x01/x01_inference_tests.py",
+      "role": "synthetic-only tests for the inference layer",
+      "kind": "runner_code",
+      "hash_convention": "sha256_of_git_blob_bytes_at_revision",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
+      "sha256": "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c"
     },
     {
       "path": "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md",
       "role": "the sealed scientific contract",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743"
     },
     {
@@ -122,7 +194,7 @@
       "role": "the A2 provenance record",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
     },
     {
@@ -130,7 +202,7 @@
       "role": "frozen signal/sizing/cost/bootstrap constants",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "6c2d9820963cb5cc0bd1991b4697417d755333fc87f73081eaf403e45cba258f"
     },
     {
@@ -138,7 +210,7 @@
       "role": "baseline mean-of-signs composite (sealed 3.7)",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "b5e8afcf1e5f5666eeaf503fc8c0bf3f45751edc92b14cb390b13ff712676c20"
     },
     {
@@ -146,7 +218,7 @@
       "role": "per-asset vol targeting",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "434ca65e40035b93421d91e3ee7aa15cb6719b23c53ce477f26fee3cff581081"
     },
     {
@@ -154,7 +226,7 @@
       "role": "equal-weight sleeve aggregation",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "aa06eb1c5fcd69be57f911fab21b76e299f5e71ee727fd27aa138ddf52aa4479"
     },
     {
@@ -162,7 +234,7 @@
       "role": "the sealed Sharpe convention",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "f96976fb2220319219cc75db4ee775f3d14fab1dedd27254704c6ee49a9285ba"
     },
     {
@@ -170,7 +242,7 @@
       "role": "accepted X02 cash-first accounting (tsmom_chain_net_returns)",
       "kind": "tracked_text",
       "hash_convention": "sha256_of_git_blob_bytes_at_revision",
-      "revision": "c6f4ea127b3af91cd0ab541913d8b1ce4b50ab8e",
+      "revision": "52cd5b4108ff4a9d6247e1641df8f74b14cfc4d1",
       "sha256": "4dee3e61d841c02bb4bc1546133baa8b361640e45e18477e24baf7729194bbe0"
     },
     {

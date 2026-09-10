@@ -238,7 +238,7 @@ inputs:
   - id: "exposure_record"
     path: "ops/EXPOSURE_LEDGER.md"
     observed_revision: "WORKTREE"
-    observed_sha256: "29e6ceeacc5aeb65893850e986f8665a4d9133a92b90e3646965b7dbe25889fe"
+    observed_sha256: "426a8657aaf9b3d3ba9f7456133527ce66bd2fc0822ef87fa8dee8d777fbd2e0"
   - id: "reviewer_exposure_log"
     path: "ops/REVIEWER_EXPOSURE_LOG.md"
     observed_revision: "WORKTREE"
