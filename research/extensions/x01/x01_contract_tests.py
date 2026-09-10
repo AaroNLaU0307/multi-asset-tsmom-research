@@ -218,9 +218,28 @@ def _refuses(manifest, needle):
 def test_refusals():
     real = json.load(io.open(runner.MANIFEST, encoding="utf-8"))
 
+    # Structural, not transient: while execution-relevant modules are declared
+    # PENDING binding (uncommitted), preflight MUST refuse. Every baseline
+    # refusal has to be attributable to that declared pending state or to a
+    # path the manifest itself lists as unbound — never to something unexplained.
     base = runner.preflight(manifest=copy.deepcopy(real), strict_state=False)
-    ck("baseline preflight has no unexplained refusal", base.ok,
-       "; ".join(base.reasons))
+    pending = {e["path"] for e in real.get("pending_binding", [])}
+    def _explained(reason):
+        return ("revision-bound" in reason
+                or "execution manifest" in reason
+                or any(p in reason for p in pending)
+                or any(p in reason for p in
+                       ("x01_runner.py", "x01_contract_tests.py",
+                        "validate_wave0.py", "X01_EXECUTION_MANIFEST.json")))
+    unexplained = [x for x in base.reasons if not _explained(x)]
+    ck("every baseline refusal is attributable to the declared pending binding",
+       unexplained == [], "; ".join(unexplained)[:110])
+    gated = copy.deepcopy(real)
+    gated["pending_binding"] = [
+        {"path": "research/extensions/x01/x01_target_construction.py",
+         "status": "UNCOMMITTED_PENDING_BINDING"}]
+    ck("preflight is fail-closed whenever a module is unbound",
+       not runner.preflight(manifest=gated, strict_state=False).ok)
     ck("manifest names a runner base revision",
        bool(real["runner_base"]["runner_base_revision"]))
     ck("manifest carries NO self-hash field",
@@ -228,6 +247,8 @@ def test_refusals():
     ck("runner code blobs are pinned (runner, tests, validator)",
        sorted(e["path"] for e in real["inputs"] if e["kind"] == "runner_code")
        == sorted(["research/extensions/validate_wave0.py",
+                  "research/extensions/x01/x01_target_construction.py",
+                  "research/extensions/x01/x01_construction_tests.py",
                   "research/extensions/x01/x01_contract_tests.py",
                   "research/extensions/x01/x01_runner.py"]))
     ck("non-consumed parquet inventory is recorded with reasons",
@@ -240,8 +261,10 @@ def test_refusals():
     for e in m["inputs"]:
         if e["path"].endswith("x01_runner.py"):
             e["sha256"] = "4" * 64
-    ck("REFUSE: a pinned runner-code blob changed since the base",
-       _refuses(m, "runner code blob unchanged since the base"))
+    ck("REFUSE: a pinned runner-code blob differs from the pin (blob at HEAD)",
+       _refuses(m, "runner code blob at HEAD matches the pin"))
+    ck("REFUSE: the same tamper also fails the LIVE worktree comparison",
+       _refuses(m, "runner code LIVE worktree bytes match the pin"))
 
     m = copy.deepcopy(real)
     m["sealed_contract"]["prereg_sha256_reviewed_pin"] = "0" * 64

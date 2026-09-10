@@ -83,12 +83,33 @@ BLOB = "sha256_of_git_blob_bytes_at_revision"
 RAW = "sha256_of_raw_file_on_disk"
 
 # The runner's own execution-relevant code, pinned at the runner-base revision.
+# The target-construction layer, independently audited and accepted, then
+# frozen at 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70. From that revision it is
+# revision-addressable, so it is pinned exactly like the rest of the X01
+# machinery instead of being carried as unbound.
+TARGET_CONSTRUCTION_FREEZE_REVISION = "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70"
+TARGET_CONSTRUCTION = [
+    ("research/extensions/x01/x01_target_construction.py",
+     "sealed target-construction layer for E / A1 / S1 / S2"),
+    ("research/extensions/x01/x01_construction_tests.py",
+     "synthetic-only tests for the construction layer"),
+]
+
+# The bytes an independent audit accepted, recorded so the freeze can be checked
+# against what was actually reviewed rather than against itself.
+ACCEPTED_REVIEW_PINS = {
+    "research/extensions/x01/x01_target_construction.py":
+        "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34",
+    "research/extensions/x01/x01_construction_tests.py":
+        "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27",
+}
+
 RUNNER_CODE = [
     ("research/extensions/x01/x01_runner.py", "this runner"),
     ("research/extensions/x01/x01_contract_tests.py",
      "the synthetic contract gate; execution safety depends on it"),
     ("research/extensions/validate_wave0.py", "the governance validator"),
-]
+] + TARGET_CONSTRUCTION
 
 # Tracked text the runner will materially consume. Pinned as BLOB hashes.
 TRACKED_INPUTS = [
@@ -113,6 +134,12 @@ IGNORED_DATA_INPUTS = [
     ("research/extensions/wave1/oi_v2.parquet", "open-interest panel"),
     ("research/extensions/wave1/contracts_meta.parquet", "contract definitions"),
 ]
+
+# Execution-relevant modules that EXIST but are not yet revision-addressable.
+# EMPTY since the target-construction freeze: nothing is unbound. The list and
+# its unconditional preflight refusal are kept deliberately, so that any module
+# added here in future keeps production fail-closed until it too is bound.
+PENDING_BINDING = []
 
 # Present in the tree but NOT consumed by X01. Recorded so the inventory is
 # complete and auditable; deliberately NOT hash-pinned, since pinning a
@@ -353,7 +380,41 @@ def build_manifest():
                 "protected by (1) the manifest-binding commit and (2) the "
                 "worktree-vs-HEAD refusal in preflight, not by a self-hash."),
         },
+        "target_construction_binding": {
+            "target_construction_revision": TARGET_CONSTRUCTION_FREEZE_REVISION,
+            "status": "BOUND",
+            "modules": [
+                {"path": path, "role": why, "hash_convention": BLOB,
+                 "sha256_at_freeze": blob_sha256(
+                     REPO, TARGET_CONSTRUCTION_FREEZE_REVISION, path),
+                 "accepted_review_pin": ACCEPTED_REVIEW_PINS[path]}
+                for path, why in TARGET_CONSTRUCTION],
+            "meaning": (
+                "The revision at which the independently accepted "
+                "target-construction implementation was frozen. "
+                "`sha256_at_freeze` is read from git at that revision and must "
+                "equal `accepted_review_pin`, the bytes the audit accepted — a "
+                "freeze that does not reproduce the reviewed bytes is not a "
+                "freeze. Current integrity is a separate matter and is carried "
+                "by the runner_code pins below, which are compared both at HEAD "
+                "and against the live worktree. "
+                "BINDING IS NOT AUTHORIZATION: `execution_authorized` stays "
+                "false and `execute` refuses unconditionally, without consulting "
+                "preflight, the manifest or this block."),
+        },
         "not_consumed_by_x01": [{"path": p, "reason": w} for p, w in NOT_CONSUMED],
+        "pending_binding": [
+            {"path": path, "role": why,
+             "target_construction_revision": None,
+             "sha256_worktree_lf": lf_sha256(os.path.join(REPO, path)),
+             "status": "UNCOMMITTED_PENDING_BINDING",
+             "note": ("Present in the working tree and NOT revision-addressable. "
+                      "No git revision or blob pin is fabricated for it. Preflight "
+                      "REFUSES while this list is non-empty, so production stays "
+                      "fail-closed until a future authorized binding commit.")}
+            for path, why in PENDING_BINDING
+            if os.path.exists(os.path.join(REPO, path))
+        ],
         "carry_s2_dependency": {
             "repo": "commodity-carry-research",
             "revision": carry_head,
@@ -475,6 +536,35 @@ def preflight(manifest=None, strict_state=True, status=None):
                 blob_sha256(REPO, rb["runner_base_revision"],
                             "research/extensions/x01/x01_runner.py") is not None)
 
+    # C1b. anything execution-relevant that is not yet revision-addressable
+    #      keeps production fail-closed. No pin is fabricated for it.
+    for e in manifest.get("pending_binding", []):
+        r.check("execution-relevant module is revision-bound: %s" % e["path"], False,
+                e.get("status", "UNCOMMITTED_PENDING_BINDING"))
+
+    # C1c. the target-construction binding, verified against git rather than
+    #      taken on the manifest's word. The freeze must reproduce the bytes an
+    #      independent audit accepted; anything else is a rebind, not a freeze.
+    tcb = manifest.get("target_construction_binding")
+    r.check("manifest binds a target-construction revision",
+            bool(tcb and tcb.get("target_construction_revision")),
+            "absent or null — the implementation is not bound")
+    if tcb and tcb.get("target_construction_revision"):
+        rev = tcb["target_construction_revision"]
+        for mod in tcb.get("modules", []):
+            at_freeze = blob_sha256(REPO, rev, mod["path"])
+            r.check("bound blob resolves at the freeze revision: %s" % mod["path"],
+                    at_freeze is not None, "revision %s does not resolve" % rev[:12])
+            r.check("frozen blob equals the recorded freeze hash: %s" % mod["path"],
+                    at_freeze == mod.get("sha256_at_freeze"),
+                    "git %s recorded %s" % (str(at_freeze)[:12],
+                                            str(mod.get("sha256_at_freeze"))[:12]))
+            r.check("frozen blob equals the INDEPENDENTLY ACCEPTED bytes: %s"
+                    % mod["path"],
+                    at_freeze == mod.get("accepted_review_pin"),
+                    "git %s accepted %s" % (str(at_freeze)[:12],
+                                            str(mod.get("accepted_review_pin"))[:12]))
+
     # C2. the manifest itself must be committed and unedited.
     man_rel = os.path.relpath(MANIFEST, REPO).replace("\\", "/")
     man_head = blob_sha256(REPO, now_head, man_rel)
@@ -485,26 +575,32 @@ def preflight(manifest=None, strict_state=True, status=None):
             man_head is None or man_head == man_live,
             "worktree manifest differs from its blob at HEAD")
 
-    # C3. every pinned runner/implementation blob at the CURRENT HEAD still
-    #     equals the value pinned at the base. A later COMMITTED edit fails here.
+    # D/E. every pinned input, by its own declared convention.
+    #
+    # TWO INDEPENDENT comparisons for tracked text, deliberately:
+    #   * blob-at-HEAD  -> catches a later COMMITTED edit;
+    #   * live worktree -> catches an UNCOMMITTED edit, which the blob check
+    #     structurally CANNOT see because the blob does not move.
+    # The live side uses `lf_sha256`, the LF-normalised counterpart of a git blob
+    # hash; `.gitattributes` pins these paths to LF, so the two representations
+    # are the same bytes and the comparison is exact. This is defence in depth
+    # BESIDE the dirty-tree policy, never a replacement for it.
     for e in manifest["inputs"]:
-        if e["kind"] != "runner_code":
-            continue
-        now = blob_sha256(REPO, now_head, e["path"])
-        r.check("runner code blob unchanged since the base: %s" % e["path"],
-                now == e["sha256"],
-                "base %s HEAD %s" % (str(e["sha256"])[:12], str(now)[:12]))
-
-    # D/E. every pinned input, by its own declared convention
-    for e in manifest["inputs"]:
-        if e["kind"] == "runner_code":
-            continue
+        path = e["path"]
+        label = "runner code" if e["kind"] == "runner_code" else "pinned input"
         if e["hash_convention"] == BLOB:
-            now = blob_sha256(REPO, now_head, e["path"])
+            at_head = blob_sha256(REPO, now_head, path)
+            live = lf_sha256(os.path.join(REPO, path))
+            r.check("%s blob at HEAD matches the pin: %s" % (label, path),
+                    at_head == e["sha256"],
+                    "pinned %s HEAD %s" % (str(e["sha256"])[:12], str(at_head)[:12]))
+            r.check("%s LIVE worktree bytes match the pin: %s" % (label, path),
+                    live == e["sha256"],
+                    "pinned %s live %s" % (str(e["sha256"])[:12], str(live)[:12]))
         else:
-            now = raw_sha256(os.path.join(REPO, e["path"]))
-        r.check("pinned input unchanged: %s" % e["path"], now == e["sha256"],
-                "expected %s got %s" % (str(e["sha256"])[:12], str(now)[:12]))
+            now = raw_sha256(os.path.join(REPO, path))
+            r.check("pinned input unchanged: %s" % path, now == e["sha256"],
+                    "expected %s got %s" % (str(e["sha256"])[:12], str(now)[:12]))
 
     # F. cross-repository S2 dependency
     c = manifest["carry_s2_dependency"]

@@ -1106,6 +1106,15 @@ def check_cross_references():
 # and must NOT be added here -- it needs a sealed contract and Aaron's separate
 # strategy-build authorisation first.
 DECLARED_EXTENSION_MODULES = {
+    "research/extensions/x01/x01_target_construction.py":
+        "X01 sealed target-construction layer for E / A1 / S1 / S2. Pure "
+        "construction functions over EXPLICITLY SUPPLIED inputs: no "
+        "module-level file read, no target data loaded on import, and no "
+        "Sharpe, bootstrap, CI or crisis statistic anywhere in it",
+    "research/extensions/x01/x01_construction_tests.py":
+        "synthetic-only tests for the construction layer; hand-built price "
+        "frames, settlement/OI panels and position books. Opens no frozen "
+        "panel and produces no X01 outcome",
     "research/extensions/x01/x01_runner.py":
         "X01 execution manifest builder and preflight refusal gate. "
         "PRE-EXECUTION ONLY: it hashes bytes and compares pins, parses no "

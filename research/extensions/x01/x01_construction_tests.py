@@ -10,6 +10,7 @@ Scope: the construction layer of `x01_target_construction.py` — E, F/A1, S1, S
 the pairing rule — plus the runner's live tracked-text pin check.
 """
 
+import copy
 import importlib.util
 import io
 import json
@@ -1305,16 +1306,41 @@ def test_safety():
     man = json.load(io.open(runner.MANIFEST, encoding="utf-8"))
     ck("manifest still declares execution_authorized = false",
        man["execution_authorized"] is False)
-    ck("manifest declares the construction module as PENDING binding, not pinned",
-       any(e["path"].endswith("x01_target_construction.py")
-           and e["target_construction_revision"] is None
-           for e in man.get("pending_binding", [])))
-    r = runner.preflight(manifest=man, strict_state=False)
-    ck("preflight REFUSES while any execution module is unbound",
-       (not r.ok) and any("revision-bound" in x for x in r.reasons))
+    tcb = man.get("target_construction_binding") or {}
+    ck("manifest BINDS the construction module to a real revision, not a "
+       "placeholder",
+       bool(tcb.get("target_construction_revision"))
+       and tcb.get("target_construction_revision") != "null"
+       and len(str(tcb.get("target_construction_revision"))) == 40,
+       str(tcb.get("target_construction_revision")))
+    ck("the frozen blob is recorded as the INDEPENDENTLY ACCEPTED bytes",
+       any(m["path"].endswith("x01_target_construction.py")
+           and m["sha256_at_freeze"] == m["accepted_review_pin"]
+           for m in tcb.get("modules", [])))
+    ck("nothing is left declared PENDING binding",
+       man.get("pending_binding") == [])
+    # The unbound gate must survive binding: re-introduce one pending module
+    # into a COPY of the manifest and preflight must refuse again.
+    still_gated = copy.deepcopy(man)
+    still_gated["pending_binding"] = [
+        {"path": "research/extensions/x01/x01_target_construction.py",
+         "status": "UNCOMMITTED_PENDING_BINDING"}]
+    ck("the unbound-module gate still refuses if anything returns to pending",
+       not runner.preflight(manifest=still_gated, strict_state=False).ok)
+    # A binding that does not reproduce the accepted bytes must be refused.
+    forged = copy.deepcopy(man)
+    forged.setdefault("target_construction_binding", {}).setdefault(
+        "modules", [{}])[0]["accepted_review_pin"] = "0" * 64
+    fr = runner.preflight(manifest=forged, strict_state=False)
+    ck("a freeze that does not reproduce the accepted bytes is REFUSED",
+       any("INDEPENDENTLY ACCEPTED" in x for x in fr.reasons))
+    nulled = copy.deepcopy(man)
+    nulled.setdefault("target_construction_binding", {})["target_construction_revision"] = None
+    ck("a null target_construction_revision is REFUSED",
+       any("binds a target-construction revision" in x
+           for x in runner.preflight(manifest=nulled, strict_state=False).reasons))
 
     # LIVE tracked-text pin check — defence in depth beside the dirty-tree guard
-    import copy
     bad = copy.deepcopy(man)
     for e in bad["inputs"]:
         if e["path"] == "config.py":
