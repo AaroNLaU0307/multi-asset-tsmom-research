@@ -229,12 +229,31 @@ def test_refusals():
     # `target_construction_binding.status` and its live hashes. Attributing the
     # refusal to that declaration is the point; a hardcoded name whitelist would
     # have let an UNdeclared supersession pass as "explained".
-    tcb = real.get("target_construction_binding") or {}
-    live = tcb.get("live_worktree_sha256_lf") or {}
-    superseded = {m["path"] for m in tcb.get("modules", [])
-                  if live.get(m["path"]) != m.get("sha256_at_freeze")}
-    if superseded:
-        assert tcb.get("status", "").endswith("SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"),             "a superseded module is not declared as such in the manifest status"
+    # An UNCOMMITTED worktree delta on top of a binding is the thing that must
+    # be declared. That is `live != sha256_at_head` — not `live !=
+    # sha256_at_freeze`, which also fires for a bound file that legitimately
+    # moved after its own freeze (a test module cannot be frozen already
+    # asserting a binding that does not exist yet). Those moves are disclosed
+    # in `post_freeze_updated` and are not a supersession of the accepted bytes.
+    superseded = set()
+    for _key in ("target_construction_binding", "inference_binding"):
+        blk = real.get(_key) or {}
+        live = blk.get("live_worktree_sha256_lf") or {}
+        at_head = blk.get("sha256_at_head") or {}
+        dirty = {m["path"] for m in blk.get("modules", [])
+                 if live.get(m["path"]) != at_head.get(m["path"])}
+        superseded |= dirty
+        if dirty:
+            assert blk.get("status", "").endswith(
+                "SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"), (
+                "an uncommitted delta is not declared in the %s status" % _key)
+        else:
+            assert blk.get("status") == "BOUND", (
+                "%s has no uncommitted delta but does not report BOUND: %r"
+                % (_key, blk.get("status")))
+        for m in blk.get("modules", []):
+            assert m.get("sha256_at_freeze") == m.get("accepted_review_pin"), (
+                "%s: the freeze does not reproduce the accepted bytes" % m["path"])
 
     def _explained(reason):
         return ("revision-bound" in reason
