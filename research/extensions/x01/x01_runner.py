@@ -83,33 +83,73 @@ BLOB = "sha256_of_git_blob_bytes_at_revision"
 RAW = "sha256_of_raw_file_on_disk"
 
 # The runner's own execution-relevant code, pinned at the runner-base revision.
-# The target-construction layer, independently audited and accepted, then
-# frozen at 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70. From that revision it is
-# revision-addressable, so it is pinned exactly like the rest of the X01
-# machinery instead of being carried as unbound.
-TARGET_CONSTRUCTION_FREEZE_REVISION = "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70"
+# The accepted implementation, in the two halves the sealed contract keeps
+# apart: construction (E / A1 / S1 / S2, plus the additive §7 diagnostic
+# interface) and inference (Sharpe, ΔS, the paired bootstrap, the CI and the
+# classification). Both were audited and accepted together and are frozen at
+# bc6c80536cd0fefc2ed1f440ca65d1c73d270e37, so both are revision-addressable
+# and pinned exactly like the rest of the X01 machinery.
+ACCEPTED_IMPLEMENTATION_FREEZE_REVISION = "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37"
+
 TARGET_CONSTRUCTION = [
     ("research/extensions/x01/x01_target_construction.py",
-     "sealed target-construction layer for E / A1 / S1 / S2"),
+     "sealed target-construction layer for E / A1 / S1 / S2, with the additive "
+     "§7 diagnostic interface"),
     ("research/extensions/x01/x01_construction_tests.py",
      "synthetic-only tests for the construction layer"),
 ]
 
-# The bytes an independent audit accepted, recorded so the freeze can be checked
-# against what was actually reviewed rather than against itself.
+INFERENCE = [
+    ("research/extensions/x01/x01_inference.py",
+     "sealed inference layer: Sharpe, ΔS, the paired joint stationary "
+     "bootstrap, the percentile CI and the §5 classification, plus the S1/S2 "
+     "descriptive arms, the sealed crisis windows and the §7 path diagnostics"),
+    ("research/extensions/x01/x01_inference_tests.py",
+     "synthetic-only tests for the inference layer"),
+]
+
+# Backwards-compatible alias: the construction freeze revision and the
+# implementation freeze revision are the same commit now that both halves were
+# accepted and frozen together.
+TARGET_CONSTRUCTION_FREEZE_REVISION = ACCEPTED_IMPLEMENTATION_FREEZE_REVISION
+
+# The bytes an independent audit accepted, recorded so a freeze can be checked
+# against what was actually REVIEWED rather than against itself.
 ACCEPTED_REVIEW_PINS = {
     "research/extensions/x01/x01_target_construction.py":
-        "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34",
+        "262aac9adf013a13b535ea816cd9373e747130235384b4559d83f9ffe412eb83",
     "research/extensions/x01/x01_construction_tests.py":
-        "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27",
+        "4e5cc510398c3b99eacb92ac23134c636d1a8bb2c9a1801e9bc382687245a90b",
+    "research/extensions/x01/x01_inference.py":
+        "1ece832e4d5a872a5dead732ea4ce1f24b36be56e3ea2238ebc376505ec50b06",
+    "research/extensions/x01/x01_inference_tests.py":
+        "0437f9cd060b40bc4efde36473f01922342aca9fcff045ebc8b05db572c4c65c",
 }
+
+# Provenance, kept rather than overwritten. The first construction freeze is a
+# historical fact about a revision and stays true forever; it simply no longer
+# describes the accepted implementation, because a later authorized delta added
+# the §7 diagnostic interface and an audit accepted the result. Recording the
+# supersession is what stops the old hash from reading as current.
+SUPERSEDED_FREEZES = [
+    {"revision": "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70",
+     "scope": "target-construction only (no inference layer existed yet)",
+     "accepted_review_pins": {
+         "research/extensions/x01/x01_target_construction.py":
+             "787b27b1634b1262397816ac2e9127d1e1f037acaf06caaf496c032a2f579e34",
+         "research/extensions/x01/x01_construction_tests.py":
+             "0e3248abd04a672138877ea55eefa1ac9d22b4b90a3380f72ce4fd1df6216f27"},
+     "superseded_by": "the authorized additive §7 diagnostic-interface delta, "
+                      "accepted together with the inference layer",
+     "still_true": "those blobs remain exactly those bytes at that revision"},
+]
 
 RUNNER_CODE = [
     ("research/extensions/x01/x01_runner.py", "this runner"),
     ("research/extensions/x01/x01_contract_tests.py",
      "the synthetic contract gate; execution safety depends on it"),
     ("research/extensions/validate_wave0.py", "the governance validator"),
-] + TARGET_CONSTRUCTION
+] + TARGET_CONSTRUCTION + INFERENCE
 
 # Tracked text the runner will materially consume. Pinned as BLOB hashes.
 TRACKED_INPUTS = [
@@ -136,15 +176,10 @@ IGNORED_DATA_INPUTS = [
 ]
 
 # Execution-relevant modules that EXIST but are not yet revision-addressable.
-# The sealed INFERENCE layer is built and tested but deliberately uncommitted,
-# pending independent review, so it is declared here rather than given a
-# fabricated pin. Preflight refuses unconditionally for every entry.
-PENDING_BINDING = [
-    ("research/extensions/x01/x01_inference.py",
-     "sealed inference layer: Sharpe, delta-S, paired bootstrap, CI, classification"),
-    ("research/extensions/x01/x01_inference_tests.py",
-     "synthetic-only tests for the inference layer"),
-]
+# EMPTY: both accepted halves are now frozen and pinned. The list and its
+# unconditional preflight refusal are kept deliberately, so that any module
+# added here in future keeps production fail-closed until it too is bound.
+PENDING_BINDING = []
 
 # Present in the tree but NOT consumed by X01. Recorded so the inventory is
 # complete and auditable; deliberately NOT hash-pinned, since pinning a
@@ -323,6 +358,73 @@ def seed_protocol():
 # --------------------------------------------------------------------------- #
 # manifest
 # --------------------------------------------------------------------------- #
+def _binding_status(modules):
+    """DERIVED, never asserted. `BOUND` means two things, both checked.
+
+    1. the freeze REPRODUCED the reviewed bytes — every module's blob at the
+       freeze revision equals the hash an independent audit accepted;
+    2. the worktree matches what is COMMITTED — no uncommitted edit is sitting
+       on top of the binding.
+
+    The second clause is deliberately against HEAD and not against the freeze
+    revision. A test module legitimately changes after its own freeze, because
+    the binding it has to assert does not exist until the binding commit is
+    made; treating that as a supersession would report every correct binding as
+    broken. Which modules moved after the freeze is disclosed separately in
+    `post_freeze_updated`, so nothing is hidden by the distinction.
+    """
+    rev_head = head(REPO)
+    reviewed = all(
+        blob_sha256(REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path)
+        == ACCEPTED_REVIEW_PINS[path] for path, _w in modules)
+    if not reviewed:
+        return "FREEZE_DOES_NOT_REPRODUCE_ACCEPTED_BYTES"
+    committed = all(lf_sha256(os.path.join(REPO, path)) == blob_sha256(REPO, rev_head, path)
+                    for path, _w in modules)
+    if not committed:
+        return "BOUND_REVISION_SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"
+    return "BOUND"
+
+
+def _post_freeze_updated(modules):
+    """Modules whose committed bytes have moved since their own freeze.
+
+    Recorded, not smoothed over: a reader can see exactly which bound files are
+    no longer byte-identical to the freeze revision and why that is legitimate.
+    """
+    rev_head = head(REPO)
+    return [path for path, _w in modules
+            if blob_sha256(REPO, rev_head, path)
+            != blob_sha256(REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path)]
+
+
+def _binding_block(modules, meaning):
+    """One accepted-implementation binding, in the shape preflight verifies."""
+    return {
+        "accepted_implementation_revision": ACCEPTED_IMPLEMENTATION_FREEZE_REVISION,
+        "status": _binding_status(modules),
+        "modules": [
+            {"path": path, "role": why, "hash_convention": BLOB,
+             "sha256_at_freeze": blob_sha256(
+                 REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path),
+             "accepted_review_pin": ACCEPTED_REVIEW_PINS[path]}
+            for path, why in modules],
+        "live_worktree_sha256_lf": {
+            path: lf_sha256(os.path.join(REPO, path)) for path, _w in modules},
+        "sha256_at_head": {
+            path: blob_sha256(REPO, head(REPO), path) for path, _w in modules},
+        "post_freeze_updated": _post_freeze_updated(modules),
+        "post_freeze_updated_note": (
+            "Committed bytes that have moved since the freeze revision. A test "
+            "module appears here legitimately: the binding it asserts does not "
+            "exist until the binding commit, so it cannot have been frozen "
+            "already asserting it. `sha256_at_freeze` vs `accepted_review_pin` "
+            "is the check that the freeze reproduced what was reviewed, and it "
+            "is unaffected."),
+        "meaning": meaning,
+    }
+
+
 def build_manifest():
     """Pin every byte the future runner will consume. Reads no price data."""
     tsmom_head = head(REPO)
@@ -385,42 +487,34 @@ def build_manifest():
                 "protected by (1) the manifest-binding commit and (2) the "
                 "worktree-vs-HEAD refusal in preflight, not by a self-hash."),
         },
-        "target_construction_binding": {
-            "target_construction_revision": TARGET_CONSTRUCTION_FREEZE_REVISION,
-            # DERIVED, never asserted: the freeze record below is a historical
-            # fact about a revision and stays true forever, but it says nothing
-            # about the bytes on disk now. When an authorized delta is sitting
-            # uncommitted in the worktree, saying "BOUND" unqualified would let
-            # a reader take the freeze hash for a description of what would
-            # actually run. The live comparison is what decides the word.
-            "status": ("BOUND"
-                       if all(lf_sha256(os.path.join(REPO, path))
-                              == blob_sha256(REPO, TARGET_CONSTRUCTION_FREEZE_REVISION,
-                                             path)
-                              for path, _w in TARGET_CONSTRUCTION)
-                       else "BOUND_REVISION_SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"),
-            "live_worktree_sha256_lf": {
-                path: lf_sha256(os.path.join(REPO, path))
-                for path, _w in TARGET_CONSTRUCTION},
-            "modules": [
-                {"path": path, "role": why, "hash_convention": BLOB,
-                 "sha256_at_freeze": blob_sha256(
-                     REPO, TARGET_CONSTRUCTION_FREEZE_REVISION, path),
-                 "accepted_review_pin": ACCEPTED_REVIEW_PINS[path]}
-                for path, why in TARGET_CONSTRUCTION],
-            "meaning": (
+        "inference_binding": _binding_block(
+            INFERENCE,
+            "The revision at which the independently accepted sealed INFERENCE "
+            "implementation was frozen. Same mechanism, same checks and the same "
+            "freeze commit as the construction binding below; recorded as its "
+            "own block because the sealed contract keeps construction and "
+            "inference apart and preflight verifies them separately."),
+        "superseded_freezes": SUPERSEDED_FREEZES,
+        # Both halves go through the SAME builder, so the two blocks cannot
+        # drift apart in shape and preflight can verify them with one rule.
+        # `target_construction_revision` is kept as an alias of the accepted
+        # implementation revision, because that is the field name the audited
+        # contract already specifies.
+        "target_construction_binding": dict(
+            _binding_block(
+                TARGET_CONSTRUCTION,
                 "The revision at which the independently accepted "
-                "target-construction implementation was frozen. "
-                "`sha256_at_freeze` is read from git at that revision and must "
-                "equal `accepted_review_pin`, the bytes the audit accepted — a "
-                "freeze that does not reproduce the reviewed bytes is not a "
-                "freeze. Current integrity is a separate matter and is carried "
-                "by the runner_code pins below, which are compared both at HEAD "
-                "and against the live worktree. "
+                "target-construction implementation — including the additive §7 "
+                "diagnostic interface — was frozen. `sha256_at_freeze` is read "
+                "from git at that revision and must equal "
+                "`accepted_review_pin`, the bytes the audit accepted: a freeze "
+                "that does not reproduce the reviewed bytes is not a freeze. "
+                "Current integrity is carried by the runner_code pins below, "
+                "compared both at HEAD and against the live worktree. "
                 "BINDING IS NOT AUTHORIZATION: `execution_authorized` stays "
-                "false and `execute` refuses unconditionally, without consulting "
-                "preflight, the manifest or this block."),
-        },
+                "false and `execute` refuses unconditionally, without "
+                "consulting preflight, the manifest or this block."),
+            target_construction_revision=ACCEPTED_IMPLEMENTATION_FREEZE_REVISION),
         "not_consumed_by_x01": [{"path": p, "reason": w} for p, w in NOT_CONSUMED],
         "pending_binding": [
             {"path": path, "role": why,
@@ -564,13 +658,22 @@ def preflight(manifest=None, strict_state=True, status=None):
     # C1c. the target-construction binding, verified against git rather than
     #      taken on the manifest's word. The freeze must reproduce the bytes an
     #      independent audit accepted; anything else is a rebind, not a freeze.
+    for _label, _key, _revkey in (
+            ("target-construction", "target_construction_binding",
+             "target_construction_revision"),
+            ("inference", "inference_binding", "accepted_implementation_revision")):
+        _b = manifest.get(_key)
+        r.check("manifest binds an accepted %s revision" % _label,
+                bool(_b and _b.get(_revkey)),
+                "absent or null — that half of the implementation is not bound")
     tcb = manifest.get("target_construction_binding")
-    r.check("manifest binds a target-construction revision",
-            bool(tcb and tcb.get("target_construction_revision")),
-            "absent or null — the implementation is not bound")
-    if tcb and tcb.get("target_construction_revision"):
-        rev = tcb["target_construction_revision"]
-        for mod in tcb.get("modules", []):
+    infb = manifest.get("inference_binding")
+    for tag, blk, revkey in (("construction", tcb, "target_construction_revision"),
+                             ("inference", infb, "accepted_implementation_revision")):
+        if not (blk and blk.get(revkey)):
+            continue
+        rev = blk[revkey]
+        for mod in blk.get("modules", []):
             at_freeze = blob_sha256(REPO, rev, mod["path"])
             r.check("bound blob resolves at the freeze revision: %s" % mod["path"],
                     at_freeze is not None, "revision %s does not resolve" % rev[:12])
@@ -583,6 +686,7 @@ def preflight(manifest=None, strict_state=True, status=None):
                     at_freeze == mod.get("accepted_review_pin"),
                     "git %s accepted %s" % (str(at_freeze)[:12],
                                             str(mod.get("accepted_review_pin"))[:12]))
+        del tag
 
     # C2. the manifest itself must be committed and unedited.
     man_rel = os.path.relpath(MANIFEST, REPO).replace("\\", "/")

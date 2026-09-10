@@ -262,6 +262,8 @@ def test_refusals():
        == sorted(["research/extensions/validate_wave0.py",
                   "research/extensions/x01/x01_target_construction.py",
                   "research/extensions/x01/x01_construction_tests.py",
+                  "research/extensions/x01/x01_inference.py",
+                  "research/extensions/x01/x01_inference_tests.py",
                   "research/extensions/x01/x01_contract_tests.py",
                   "research/extensions/x01/x01_runner.py"]))
     ck("non-consumed parquet inventory is recorded with reasons",

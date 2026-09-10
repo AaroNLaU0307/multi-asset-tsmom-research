@@ -1725,14 +1725,28 @@ def test_safety():
            and m["sha256_at_freeze"] == m["accepted_review_pin"]
            for m in tcb.get("modules", [])))
     pend = {e["path"] for e in man.get("pending_binding", [])}
-    ck("every execution-relevant module that is NOT revision-addressable is "
-       "declared PENDING binding, and nothing else is",
-       pend == {"research/extensions/x01/x01_inference.py",
-                "research/extensions/x01/x01_inference_tests.py"},
-       str(sorted(pend)))
-    ck("the frozen construction module is still bound by revision, and its "
-       "binding status is DERIVED from the live bytes rather than asserted",
-       man["target_construction_binding"]["status"].startswith("BOUND"))
+    ck("nothing execution-relevant is left declared PENDING binding: both "
+       "accepted halves are frozen and pinned", pend == set(), str(sorted(pend)))
+    ck("BOTH halves are bound by revision, each status DERIVED from the live "
+       "bytes rather than asserted",
+       man["target_construction_binding"]["status"] == "BOUND"
+       and man["inference_binding"]["status"] == "BOUND",
+       "%s / %s" % (man["target_construction_binding"]["status"],
+                    man["inference_binding"]["status"]))
+    ck("both halves name the SAME accepted freeze revision, since they were "
+       "accepted together",
+       man["target_construction_binding"]["target_construction_revision"]
+       == man["inference_binding"]["accepted_implementation_revision"])
+    ck("every bound module's frozen blob IS the independently accepted bytes",
+       all(mod["sha256_at_freeze"] == mod["accepted_review_pin"]
+           for blk in ("target_construction_binding", "inference_binding")
+           for mod in man[blk]["modules"]))
+    ck("the superseded construction freeze is PRESERVED, not overwritten",
+       any(s["revision"] == "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70"
+           for s in man.get("superseded_freezes", [])))
+    ck("and it no longer claims to describe the accepted implementation",
+       man["target_construction_binding"]["target_construction_revision"]
+       != "851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70")
     # The unbound gate must survive binding: re-introduce one pending module
     # into a COPY of the manifest and preflight must refuse again.
     still_gated = copy.deepcopy(man)
@@ -1750,9 +1764,20 @@ def test_safety():
        any("INDEPENDENTLY ACCEPTED" in x for x in fr.reasons))
     nulled = copy.deepcopy(man)
     nulled.setdefault("target_construction_binding", {})["target_construction_revision"] = None
-    ck("a null target_construction_revision is REFUSED",
-       any("binds a target-construction revision" in x
+    ck("a null construction revision is REFUSED",
+       any("binds an accepted target-construction revision" in x
            for x in runner.preflight(manifest=nulled, strict_state=False).reasons))
+    nulled2 = copy.deepcopy(man)
+    nulled2.setdefault("inference_binding", {})["accepted_implementation_revision"] = None
+    ck("a null INFERENCE revision is refused by the same rule",
+       any("binds an accepted inference revision" in x
+           for x in runner.preflight(manifest=nulled2, strict_state=False).reasons))
+    forged_inf = copy.deepcopy(man)
+    forged_inf["inference_binding"]["modules"][0]["accepted_review_pin"] = "1" * 64
+    ck("an inference freeze that does not reproduce the accepted bytes is "
+       "REFUSED",
+       any("INDEPENDENTLY ACCEPTED" in x and "x01_inference.py" in x
+           for x in runner.preflight(manifest=forged_inf, strict_state=False).reasons))
 
     # LIVE tracked-text pin check — defence in depth beside the dirty-tree guard
     bad = copy.deepcopy(man)
