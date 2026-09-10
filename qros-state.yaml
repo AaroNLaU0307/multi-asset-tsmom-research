@@ -43,6 +43,27 @@
 # authorization is: `human_decisions[]` is a closed three-token vocabulary and
 # an authorization is none of those tokens.
 #
+# CORRECTION, authorized by Aaron on 2026-09-10: that D declaration was
+# PREMATURE and is withdrawn. Verbatim:
+#
+#   "Correct the authoritative workflow-stage declaration from D back to C,
+#    because the pre-evidence completeness check established that the
+#    statistics/inference portion of QROS Stage C = Build is materially
+#    incomplete."
+#
+# Reason code:
+# PREMATURE_STAGE_DECLARATION_CORRECTED_AFTER_BUILD_COMPLETENESS_CHECK
+#
+# What this is NOT: a methodology change, a hypothesis change, a
+# preregistration amendment, a scientific reset, a reopening of construction,
+# or any invalidation of the accepted construction implementation. The seal is
+# untouched and the frozen construction binding stands.
+#
+# No runtime transition edge was invented. The runtime specifies no `D -> C`
+# edge; `workflow_stage` is a DECLARED self-report, and per the note below it
+# is the working session's to state and Aaron's to correct. This is that
+# correction, not a transition.
+#
 # Per the ratified §10.2 the DECLARED partition is a non-authoritative
 # self-report -- canonical artifacts win in their domains, always -- and per
 # §2.1 the state file is edited only by working sessions of this project.
@@ -89,19 +110,38 @@ lane: "FULL"
 # `workflow_stage`, and 10.2 makes DECLARED a working-session self-report, so
 # it is mine to state and Aaron's to correct.
 #
-# D (mechanical verify), advanced from C on 2026-09-10 under Aaron's
-# explicit `QROS C -> D TRANSITION` authorization. The runtime reported
-# `C -> D = ELIGIBLE` immediately before the edit, and ELIGIBLE is not
-# authorization -- the authorization is Aaron's, above.
+# C (build). Declared D on 2026-09-10 under Aaron's explicit `QROS C -> D
+# TRANSITION` authorization, then CORRECTED BACK TO C on 2026-09-10 under
+# Aaron's explicit correction authorization, because a pre-evidence
+# completeness check run after that transition established that the
+# statistics/inference portion of Stage C had never been built.
+#
+# The transition was mechanically legal -- the runtime reported
+# `C -> D = ELIGIBLE` and state legality passed -- and it was still premature.
+# The runtime evaluates NO build-completeness precondition for `C -> D`
+# (`TBL-PRECONDITIONS` has no row for that edge and none of the three closed
+# sets in 2.6(c) contains it), so ELIGIBLE could not and did not mean the build
+# was finished. The producing session did not check that separately before
+# declaring D; this correction is the consequence.
 #
 # Per QROS §3 the stages mean: C = Build (pipeline, strategy, statistics,
 # tests); D = Mechanical verify (invariants, leakage, timestamps, train/test
 # separation, accounting identities, deterministic reproduction).
 #
-# The honest description of where the project is: the X01 target-construction
-# implementation is built, independently accepted, frozen at
-# 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70 and mechanically bound, so the build
-# stage is done and mechanical verification is the stage now due.
+# The honest description of where the project is: the CONSTRUCTION half of the
+# build is complete -- independently accepted, frozen at
+# 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70 and mechanically bound, and that
+# acceptance is NOT withdrawn by this correction. The STATISTICS half is not.
+# QROS 3 defines C as "Build -- pipeline, strategy, statistics, tests", and the
+# sealed inference layer (Sharpe(E)/Sharpe(F), dS, the paired joint stationary
+# bootstrap, invalid-replicate handling, the percentile CI, the classification
+# against -B, the S1/S2 descriptive arms, the crisis windows and the path
+# diagnostics) had no implementation at all. C is therefore the correct stage
+# and remains so until that build is complete and independently accepted.
+#
+# `workflow_stage` is a single scalar for the whole project, so it cannot say
+# "construction verified, inference unbuilt". Where the two halves disagree the
+# EARLIER stage is the truthful declaration.
 #
 # D IS NOT EVIDENCE. QROS §3 puts "run the preregistered study" at stage E, so
 # no X01 target series, Sharpe, delta-Sharpe, bootstrap or crisis statistic may
@@ -109,10 +149,11 @@ lane: "FULL"
 # refuses; this transition authorized neither.
 #
 # Recorded consequence, not hidden: §2.6(c) puts every edge whose tail stage is
-# at or after D in the OUTCOME-BEARING SET, so from here the NEXT edge is one
-# at which an outcome could be generated. That is precisely why it needs its
-# own Aaron authorization.
-workflow_stage: "D"
+# at or after D in the OUTCOME-BEARING SET. Declaring C rather than D therefore
+# does not merely relabel the project -- it moves it back out of the region
+# where the next edge could generate an outcome, which is the correct posture
+# while the study that would produce that outcome does not exist.
+workflow_stage: "C"
 
 # measurement_materiality: ORDINARY | MATERIAL | UNKNOWN | N_A
 # ([TBL-MATERIALITY], §2.8).
@@ -197,7 +238,7 @@ inputs:
   - id: "exposure_record"
     path: "ops/EXPOSURE_LEDGER.md"
     observed_revision: "WORKTREE"
-    observed_sha256: "2e67456fcc43af589b27cb259cb13cbaf6e66c8dfb15f6dd9009d4121daff343"
+    observed_sha256: "29e6ceeacc5aeb65893850e986f8665a4d9133a92b90e3646965b7dbe25889fe"
   - id: "reviewer_exposure_log"
     path: "ops/REVIEWER_EXPOSURE_LOG.md"
     observed_revision: "WORKTREE"
@@ -399,5 +440,12 @@ session_log:
     role: "working session performing an authorized workflow-stage transition"
     gate: "none released -- C -> D is not a review gate and no packet is issued"
     produced: "One DECLARED state change: workflow_stage C -> D, under AARON_DECISION=QROS_C_TO_D_TRANSITION. NO TARGET EXECUTION WAS AUTHORIZED AND NONE OCCURRED. Verified immediately before the edit and again after it: the runtime reported C -> D = ELIGIBLE; SEAL=VERIFIED at df5b28ab7324; the X01 target-construction implementation is independently accepted, frozen at 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70 and bound, with IMPLEMENTATION_BLOCKERS=0 and every binding check passing against git rather than against the manifest's own word; execution_authorized remains false and `execute` still exits non-zero without consulting preflight. No E, F, A1, S1 or S2 series was constructed on real data, the paired 179-month sample does not exist, and no Sharpe, delta-Sharpe, bootstrap, confidence interval or crisis statistic was computed or opened. No target data was parsed; the frozen panels were touched only as opaque bytes by raw-sha256 pins. Nothing else in this file was rewritten: lane, prereg pointer, seal_revision, measurement_materiality, outcome_exposure, inputs, ops_events, human_decisions and packets are unchanged. Deferred and NOT repaired here, per Aaron: the repository-wide CRLF-in-worktree condition that makes QROS report WORKTREE_BYTES_DIFFER_FROM_HEAD; it holds B -> C and I -> J only, touches no X01 pinned input, and the runtime does not report it against C -> D."
+
+  - ts: "2026-09-10T08:38:39Z"
+    session_id: "x01-stage-correction-d-to-c-2026-09-10"
+    seat: "Claude Opus 5"
+    role: "working session correcting its own premature stage declaration"
+    gate: "none released -- a declaration correction is not a transition and issues no packet"
+    produced: "One DECLARED state correction: workflow_stage D -> C, under AARON_DECISION=PREMATURE_STAGE_DECLARATION_CORRECTED_AFTER_BUILD_COMPLETENESS_CHECK. The D declaration made earlier the same day was mechanically legal and still premature: the runtime evaluates no build-completeness precondition for C -> D, so ELIGIBLE could not mean the build was finished, and this session did not check that separately before declaring D. A pre-evidence completeness check against the sealed contract then established SEALED_INFERENCE_IMPLEMENTATION=ABSENT with twelve concrete missing items, of which nine are sealed computations: Sharpe(E)/Sharpe(F) on the constructed streams, dS, the paired joint stationary bootstrap, invalid-replicate handling with the 9500 floor, the 95 percent percentile CI, the classification against -B, the S1/S2 descriptive arms, the sealed crisis windows, and the section 7 path diagnostics. UNSEALED_DOF=NO -- this is missing code, not a missing Owner choice. WHAT IS NOT WITHDRAWN: the construction implementation stays independently accepted, frozen at 851e9d3fd8d23c2f6802f796fcc32a21c5bd5a70 and bound, with every binding check still passing; the seal is untouched and still derives VERIFIED; no preregistration byte was read for amendment and none was changed. NO TARGET EXECUTION: execution_authorized remains false, cmd_execute still exits non-zero, no E/F/A1/S1/S2 series exists on real data, and no Sharpe, dS, bootstrap, CI or crisis statistic was computed or opened. Nothing else in this file was rewritten: lane, prereg pointer, seal_revision, measurement_materiality, outcome_exposure, inputs, ops_events, human_decisions and packets are unchanged. No runtime transition edge was invented -- the runtime specifies no D -> C edge, and workflow_stage is a DECLARED self-report that this file's own note makes the session's to state and Aaron's to correct."
 
 packets: []
