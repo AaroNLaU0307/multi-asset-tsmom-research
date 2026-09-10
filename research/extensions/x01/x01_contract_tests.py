@@ -224,10 +224,23 @@ def test_refusals():
     # path the manifest itself lists as unbound — never to something unexplained.
     base = runner.preflight(manifest=copy.deepcopy(real), strict_state=False)
     pending = {e["path"] for e in real.get("pending_binding", [])}
+    # A module whose live bytes no longer match the revision it was frozen at is
+    # ALSO a declared unbound state — the manifest says so itself, in
+    # `target_construction_binding.status` and its live hashes. Attributing the
+    # refusal to that declaration is the point; a hardcoded name whitelist would
+    # have let an UNdeclared supersession pass as "explained".
+    tcb = real.get("target_construction_binding") or {}
+    live = tcb.get("live_worktree_sha256_lf") or {}
+    superseded = {m["path"] for m in tcb.get("modules", [])
+                  if live.get(m["path"]) != m.get("sha256_at_freeze")}
+    if superseded:
+        assert tcb.get("status", "").endswith("SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"),             "a superseded module is not declared as such in the manifest status"
+
     def _explained(reason):
         return ("revision-bound" in reason
                 or "execution manifest" in reason
                 or any(p in reason for p in pending)
+                or any(p in reason for p in superseded)
                 or any(p in reason for p in
                        ("x01_runner.py", "x01_contract_tests.py",
                         "validate_wave0.py", "X01_EXECUTION_MANIFEST.json")))

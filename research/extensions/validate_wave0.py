@@ -1115,6 +1115,17 @@ DECLARED_EXTENSION_MODULES = {
         "synthetic-only tests for the construction layer; hand-built price "
         "frames, settlement/OI panels and position books. Opens no frozen "
         "panel and produces no X01 outcome",
+    "research/extensions/x01/x01_inference.py":
+        "X01 sealed INFERENCE layer: Sharpe, delta-S, the paired joint "
+        "stationary bootstrap, the percentile CI and the classification "
+        "against -B, plus the S1/S2 descriptive arms, the two sealed crisis "
+        "windows and the section 7 path diagnostics. Pure with respect to "
+        "data -- every series arrives as an argument, it opens no panel, "
+        "constructs nothing, writes no result and authorizes no execution",
+    "research/extensions/x01/x01_inference_tests.py":
+        "synthetic-only tests for the inference layer; hand-built monthly "
+        "series with closed-form oracles. Opens no frozen panel and produces "
+        "no X01 outcome",
     "research/extensions/x01/x01_runner.py":
         "X01 execution manifest builder and preflight refusal gate. "
         "PRE-EXECUTION ONLY: it hashes bytes and compares pins, parses no "

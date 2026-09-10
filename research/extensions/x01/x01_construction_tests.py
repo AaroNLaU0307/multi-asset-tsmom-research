@@ -35,6 +35,13 @@ def _load(name, path):
 tc = _load("x01_tc", os.path.join(HERE, "x01_target_construction.py"))
 runner = _load("x01_rn", os.path.join(HERE, "x01_runner.py"))
 
+# The console encoding is not guaranteed to cover the sealed contract's own
+# notation (cp1252 has no U+0394). Degrade the OUTPUT rather than the test.
+try:
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+except Exception:
+    pass
+
 _fails, _out = [], []
 
 
@@ -1099,6 +1106,406 @@ def test_roll_between_mark_and_event():
 
 
 # --------------------------------------------------------------------------- #
+# 2e. THE §7 DIAGNOSTIC INTERFACE — additive, authoritative, inert
+# --------------------------------------------------------------------------- #
+# Sealed §7 needs two per-exposure objects the legs build and then discard: the
+# monthly return frame per mapped pair, and the composite signal frame. They are
+# now surfaced on `ConstructionResult.diagnostics`.
+#
+# The tests below do not ask whether the numbers "look right". They ask whether
+# the exposed objects ARE the ones the construction actually used, which is a
+# closed-form question in both cases:
+#   * E's gross is `(positions × monthly_returns).sum()` by the accepted
+#     `portfolio_returns`, so the exposed frame must reproduce `res.gross`;
+#   * the composite is a function of the same monthly frame, so recomputing it
+#     from the exposed returns must reproduce the exposed signal.
+# A reconstruction that merely resembled the originals would fail both.
+def frames_match(a, b, min_finite):
+    """Frame equality that one-sided missingness cannot slip through.
+
+    The previous comparisons reduced a difference with `nanmax`, which ignores a
+    NaN on either side — so blanking a valid row on ONE side left every check
+    green. Index, columns and the MISSING-VALUE MASK are compared first, and only
+    then are the finite values compared. `min_finite` is required so an all-NaN
+    or mostly-NaN fixture cannot pass by having nothing to disagree about.
+
+    Returns `(ok, detail)`.
+    """
+    if list(a.columns) != list(b.columns):
+        return False, "columns differ: %s vs %s" % (list(a.columns), list(b.columns))
+    if not a.index.equals(b.index):
+        return False, "index differs (%d vs %d rows)" % (len(a.index), len(b.index))
+    ma, mb = a.isna(), b.isna()
+    if not ma.equals(mb):
+        n = int((ma != mb).to_numpy().sum())
+        return False, "missing-value masks differ in %d cell(s)" % n
+
+    # FINITE means `np.isfinite`, not "not null". `notna` counts ±inf as present,
+    # so a frame of 99 infinities and one real number satisfied a coverage
+    # requirement of 50 — and `inf - inf` is NaN, which `nanmax` then discards,
+    # so the value comparison saw nothing either. Both holes are closed here: an
+    # unexpected infinity in a finite-domain frame is rejected outright rather
+    # than counted, and coverage is counted over genuinely finite cells.
+    fa = np.isfinite(a.to_numpy(dtype="float64"))
+    fb = np.isfinite(b.to_numpy(dtype="float64"))
+    inf_a = int((~fa & ~ma.to_numpy()).sum())
+    inf_b = int((~fb & ~mb.to_numpy()).sum())
+    if inf_a or inf_b:
+        return False, ("unexpected non-finite value(s) in a finite-domain frame: "
+                       "%d on the left, %d on the right (±inf is not a missing "
+                       "value and is never treated as one)" % (inf_a, inf_b))
+    if not (fa == fb).all():
+        return False, ("finite masks differ in %d cell(s)"
+                       % int((fa != fb).sum()))
+
+    finite = int(fa.sum())
+    if finite < min_finite:
+        return False, ("only %d genuinely finite value(s) compared, below the "
+                       "required %d" % (finite, min_finite))
+    delta = np.abs(a.to_numpy(dtype="float64") - b.to_numpy(dtype="float64"))
+    worst = float(np.max(delta[fa])) if finite else 0.0
+    if worst != 0.0:
+        return False, "max |diff| = %.3e over %d finite values" % (worst, finite)
+    return True, "%d genuinely finite values, masks identical" % finite
+
+
+def test_finite_coverage_comparator():
+    """BLOCKER B — the frame comparator's coverage gate must mean `np.isfinite`.
+
+    `notna` treats ±inf as a present value, so a frame that is 99 parts infinity
+    and one part real number satisfied `min_finite = 50`; and because
+    `inf - inf` is NaN, the value comparison was then suppressed by `nanmax` as
+    well. Each adversarial frame below asserts the comparator's VERDICT, so a
+    revert to `notna` flips these assertions rather than hiding behind them.
+    """
+    idx = pd.date_range("2011-07-31", periods=100, freq="ME")
+
+    # A — 99 inf + 1 finite, identical on both sides
+    a = pd.DataFrame({"X": [np.inf] * 99 + [1.0]}, index=idx)
+    ok, detail = frames_match(a, a.copy(), min_finite=50)
+    ck("A  99 inf + 1 finite with min_finite=50 is REFUSED", not ok, detail)
+    ck("A  the fixture really has only ONE finite value, while `notna` counts "
+       "100 (so the case is discriminating)",
+       int(np.isfinite(a.to_numpy()).sum()) == 1
+       and int(a.notna().to_numpy().sum()) == 100)
+
+    # B — one side finite, the other inf, same NaN mask
+    b1 = pd.DataFrame({"X": [1.0] * 100}, index=idx)
+    b2 = b1.copy(); b2.iloc[7, 0] = np.inf
+    ok, detail = frames_match(b1, b2, min_finite=50)
+    ck("B  finite on one side, inf on the other is REFUSED", not ok, detail)
+    ck("B  and neither side is NaN there, so a mask check alone would miss it",
+       not bool(b1.isna().iloc[7, 0]) and not bool(b2.isna().iloc[7, 0]))
+
+    # C — +inf against -inf
+    c1 = b1.copy(); c1.iloc[3, 0] = np.inf
+    c2 = b1.copy(); c2.iloc[3, 0] = -np.inf
+    ok, detail = frames_match(c1, c2, min_finite=50)
+    ck("C  +inf against -inf is REFUSED", not ok, detail)
+    ck("C  their difference is NaN, which is exactly what nanmax used to "
+       "swallow", bool(np.isnan(np.inf - np.inf)))
+
+    # D — a genuinely finite frame above the threshold
+    r = np.random.default_rng(3)
+    d1 = pd.DataFrame({"X": r.normal(0.0, 1.0, 100)}, index=idx)
+    ok, detail = frames_match(d1, d1.copy(), min_finite=50)
+    ck("D  a valid finite frame above the threshold PASSES", ok, detail)
+    ok, detail = frames_match(d1, d1 + 1e-9, min_finite=50)
+    ck("D  and a real numeric difference in it is still caught", not ok, detail)
+
+    # E — matching NaN masks are legitimate (warm-up months) if enough remains
+    e1 = d1.copy(); e1.iloc[:20, 0] = np.nan
+    ok, detail = frames_match(e1, e1.copy(), min_finite=50)
+    ck("E  matching NaN masks with sufficient finite coverage PASSES", ok, detail)
+    ck("E  and the coverage counted is the finite remainder, not the row count",
+       "80 genuinely finite" in detail, detail)
+    e2 = e1.copy(); e2.iloc[25, 0] = np.nan
+    ok, detail = frames_match(e1, e2, min_finite=50)
+    ck("E  a one-sided extra NaN is still REFUSED by the mask check", not ok,
+       detail)
+
+    # non-vacuity: the threshold is actually consulted
+    ok, detail = frames_match(d1, d1.copy(), min_finite=101)
+    ck("the coverage threshold is really enforced (101 > 100 available)",
+       not ok, detail)
+    flush("2e. FINITE COVERAGE — ±inf is not a value, and never a missing one")
+
+
+def test_diagnostic_interface():
+    daily = synth_etf_daily()
+    res = tc.construct_E(daily)
+    d = res.diagnostics
+    ck("E exposes a diagnostics payload", d is not None)
+    ck("it declares the arm it came from", d.arm == "E")
+    ck("the exposures are the sealed four, in the declared order",
+       d.columns == list(tc.SEALED_ETFS), str(d.columns))
+    ck("the monthly return frame is indexed by month-end",
+       bool(d.monthly_returns.index.equals(tc.month_end_prices(daily).index)))
+
+    # IDENTITY 1 — the exposed frame is the one that earned E's gross.
+    rets = d.monthly_returns.reindex_like(res.positions)
+    regross = (res.positions * rets).sum(axis=1, min_count=1).dropna()
+    common = regross.index.intersection(res.gross.index)
+    worst = float(np.max(np.abs(regross.loc[common] - res.gross.loc[common])))
+    ck("the exposed monthly returns REPRODUCE E's gross exactly, so they are "
+       "the authoritative frame and not a reconstruction",
+       worst == 0.0 and len(common) == len(res.gross),
+       "max |diff| = %.3e over %d/%d months" % (worst, len(common), len(res.gross)))
+
+    # IDENTITY 2 — the exposed signal is the composite of that same frame.
+    recon = (1.0 + d.monthly_returns.fillna(0.0)).cumprod()
+    ok, detail = frames_match(d.composite_signal, tc.composite_signal(recon),
+                              min_finite=50)
+    ck("the exposed composite signal is the composite OF the exposed returns, "
+       "index, columns and MISSING MASK included", ok, detail)
+    ck("the signal lies on the sealed mean-of-signs grid",
+       set(np.unique(d.composite_signal.dropna(how="all").stack().round(10)))
+       <= {-1.0, -0.75, -0.5, -0.25, 0.0, 0.25, 0.5, 0.75, 1.0})
+
+    # NO LOOKAHEAD — truncating the input cannot change earlier diagnostics.
+    cut = daily.loc[:daily.index[int(len(daily) * 0.7)]]
+    dc = tc.construct_E(cut).diagnostics
+    ov = dc.monthly_returns.index.intersection(d.monthly_returns.index)[:-1]
+    ok, detail = frames_match(dc.monthly_returns.loc[ov],
+                              d.monthly_returns.loc[ov], min_finite=40)
+    ck("truncating the panel leaves earlier monthly returns unchanged "
+       "(no lookahead)", ok, detail)
+    ok, detail = frames_match(dc.composite_signal.loc[ov],
+                              d.composite_signal.loc[ov], min_finite=40)
+    ck("and leaves the earlier composite unchanged, mask included", ok, detail)
+
+    # MISSING DATA — the frame carries the ACCEPTED primitive's own treatment,
+    # whatever that is, rather than a treatment invented for the diagnostic.
+    # `monthly_asset_returns` is `pct_change()` with pandas' default pad, and E's
+    # gross already depends on exactly that; the hole itself is handled by the
+    # sealed §3.5 incomplete-sleeve rule, which drops the month from the
+    # evaluated stream. Asserting NaN here would have asserted a behaviour the
+    # accepted layer does not have.
+    holed = daily.copy()
+    hole = holed.index[(holed.index.year == 2019) & (holed.index.month == 6)]
+    holed.loc[hole, "DBA"] = np.nan
+    rh = tc.construct_E(holed)
+    dh = rh.diagnostics
+    want = tc.accepted()["performance"].monthly_asset_returns(
+        tc.month_end_prices(holed[list(tc.SEALED_ETFS)]))
+    ck("with a hole, the diagnostic frame is bit-identical to the accepted "
+       "primitive's own output",
+       bool(dh.monthly_returns.equals(want)))
+    # §3.5 drops the month the holed DECISION governs, not the holed month
+    # itself: positions are `weights.shift(1)`, so June's unusable decision
+    # removes JULY, while June keeps the position May decided.
+    rb = tc.construct_E(daily)
+    ck("§3.5 drops the month the holed decision GOVERNS (2019-07), not the "
+       "holed month itself (2019-06)",
+       pd.Timestamp("2019-07-31") not in rh.net.index
+       and pd.Timestamp("2019-06-30") in rh.net.index
+       and pd.Timestamp("2019-07-31") in rb.net.index,
+       "incomplete-sleeve drops %d -> %d"
+       % (rb.meta["months_dropped_incomplete_sleeve"],
+          rh.meta["months_dropped_incomplete_sleeve"]))
+
+    # DETERMINISM
+    ck("column ordering is deterministic across runs",
+       tc.construct_E(daily).diagnostics.columns == d.columns)
+
+    # every arm exposes it
+    # long enough that the 12-month composite is actually defined; a 7-month
+    # fixture leaves every composite NaN and the comparison below vacuous
+    days = pd.bdate_range("2011-03-01", periods=430)
+    s, o, m = multi_panel([dict(root="CL", base=100.0, step=0.25),
+                           dict(root="NG", base=4.0, step=0.01)], days)
+    mapping = {"USO": ["CL"], "UNG": ["NG"]}
+    for arm in ("A1", "S1", "S2"):
+        r = run_leg(s, o, m, mapping, WSEQ, arm=arm)
+        ck("arm %s exposes diagnostics tagged with its own arm" % arm,
+           r.diagnostics is not None and r.diagnostics.arm == arm)
+        ck("arm %s exposes the mapped exposures, not the roots" % arm,
+           r.diagnostics.columns == ["USO", "UNG"], str(r.diagnostics.columns))
+        rec = (1.0 + r.diagnostics.monthly_returns.fillna(0.0)).cumprod()
+        ok, detail = frames_match(r.diagnostics.composite_signal,
+                                  tc.composite_signal(rec), min_finite=10)
+        ck("arm %s composite matches the composite of its own returns, mask "
+           "included" % arm, ok, detail)
+    flush("2e. DIAGNOSTIC INTERFACE — authoritative objects, additive only")
+
+
+def test_identity_turnover():
+    """BLOCKER 4 — §7 turnover for a futures leg is an IDENTITY-trade quantity.
+
+    An equal-size roll moves the exposure weight by exactly zero while the §3.8
+    book exits one contract and enters another, and the cash ledger charges both
+    sides. A weight-difference turnover therefore reports 0 for a month in which
+    the leg demonstrably traded, which is why the diagnostic is taken from the
+    book itself.
+
+    Literal constants, typed out: CL multiplier 1000, per-side C = 12.50.
+    Flat prices keep `q = w·K/(mult·P)` constant, so the only trades are the ones
+    each case is about.
+    """
+    CLM, SIDE = 1000.0, 12.50
+    fdays = pd.bdate_range("2011-03-01", periods=120)
+    may = [d for d in fdays if d.month == 5]
+    q = 0.5 * 1e6 / (CLM * 100.0)          # = 5.0 contracts
+
+    def leg(seq, n_contracts=1, roll_at=None):
+        s, o, m = multi_panel([dict(root="CL", base=100.0, step=0.0,
+                                    n_contracts=n_contracts, roll_at=roll_at)], fdays)
+        return run_leg(s, o, m, {"USO": ["CL"]}, seq)
+
+    # A — no trade after the entry: constant decision, one contract
+    a = leg([0.5] * 12)
+    ta = a.diagnostics.identity_turnover
+    ck("A  constant decision: only the initial entry trades, exactly q",
+       abs(float(ta.sum()) - q) < 1e-12, "got %r want %r" % (float(ta.sum()), q))
+
+    # B — pure resize, no roll: 0.5 -> 0.75 changes q by half of itself
+    b = leg([0.5, 0.75] + [0.75] * 10)
+    q2 = 0.75 * 1e6 / (CLM * 100.0)
+    tb = b.diagnostics.identity_turnover
+    ck("B  pure resize: entry + |q2 - q|, literal oracle",
+       abs(float(tb.sum()) - (q + abs(q2 - q))) < 1e-12,
+       "got %r want %r" % (float(tb.sum()), q + abs(q2 - q)))
+
+    # C — sign reversal: +q -> -q trades 2q on the same identity
+    c = leg([0.5, -0.5] + [-0.5] * 10)
+    tc_ = c.diagnostics.identity_turnover
+    ck("C  sign reversal charges TWO sides on one identity",
+       abs(float(tc_.sum()) - (q + 2.0 * q)) < 1e-12,
+       "got %r want %r" % (float(tc_.sum()), 3.0 * q))
+
+    # D — the equal-size roll: THE case a weight difference cannot see
+    d = leg([0.5] * 12, n_contracts=2, roll_at=may[10])
+    td = d.diagnostics.identity_turnover
+    weight_turnover = float(pd.DataFrame(d.positions).diff().abs()
+                            .sum(axis=1, min_count=1).fillna(0.0).sum())
+    ck("D  equal-size roll: identity turnover = entry + two roll sides",
+       abs(float(td.sum()) - 3.0 * q) < 1e-12,
+       "got %r want %r" % (float(td.sum()), 3.0 * q))
+    ck("D  the roll month itself carries exactly two sides",
+       abs(float(td.loc[pd.Timestamp("2011-05-31")]) - 2.0 * q) < 1e-12,
+       "got %r" % float(td.loc[pd.Timestamp("2011-05-31")]))
+    ck("D  IDENTITY_ROLL_TURNOVER_COUNTED — the weight-difference proxy reports "
+       "ZERO for that same leg, which is the defect this replaces",
+       weight_turnover == 0.0 and float(td.sum()) > 0.0,
+       "weight proxy %r vs identity %r" % (weight_turnover, float(td.sum())))
+    ck("D  turnover reconciles with the realised cash cost at C = $12.50/side",
+       abs(float(d.cost.sum()) * 1e6 - float(td.sum()) * SIDE) < 1e-9,
+       "cost %r vs turnover*C %r"
+       % (float(d.cost.sum()) * 1e6, float(td.sum()) * SIDE))
+
+    # E — roll AND resize in the same window
+    e_ = leg([0.5, 0.5, 0.9] + [0.9] * 9, n_contracts=2, roll_at=may[10])
+    te = e_.diagnostics.identity_turnover
+    ck("E  roll + resize reconciles with its own cash cost",
+       abs(float(e_.cost.sum()) * 1e6 - float(te.sum()) * SIDE) < 1e-9)
+    ck("E  and it exceeds the equal-size roll's turnover (the resize is there)",
+       float(te.sum()) > float(td.sum()),
+       "roll+resize %r vs roll %r" % (float(te.sum()), float(td.sum())))
+
+    ck("the ETF leg exposes no identity turnover — it has no contract "
+       "identities, and its sealed turnover is already on the result",
+       tc.construct_E(synth_etf_daily()).diagnostics.identity_turnover is None)
+    ck("identity turnover shares the monthly index of the leg's own streams",
+       bool(td.index.equals(d.cost.index)))
+    flush("2e. IDENTITY TURNOVER (§7) — the unit that actually measures a roll")
+
+
+def test_diagnostics_are_inert():
+    """The payload cannot reach any economic or inferential output."""
+    inf = _load("x01_inf_wire", os.path.join(HERE, "x01_inference.py"))
+    # the futures fixture must span the SAME calendar as the ETF fixture, or the
+    # paired sample is empty and there is nothing to be invariant about
+    days = pd.bdate_range("2015-01-01", periods=430)
+    s, o, m = multi_panel([dict(root="CL", base=100.0, step=0.25),
+                           dict(root="NG", base=4.0, step=0.01)], days)
+    f = run_leg(s, o, m, {"USO": ["CL"], "UNG": ["NG"]}, WSEQ)
+    e = tc.construct_E(synth_etf_daily())
+
+    cfg = inf.BootstrapConfig(
+        family="stationary_bootstrap_politis_romano_1994",
+        expected_block_length_months=12, replications=120, ci_level=95,
+        ci_method="percentile", percentile_interpolation="linear", master_seed=7,
+        arm_order=["primary", "S1", "S2"], valid_replicate_floor=110,
+        min_distinct_months=24)
+    # the production boundary requires the sealed calendar, so the invariance
+    # check is run on a real one rather than on whatever the fixtures produced
+    sealed = pd.date_range("2011-07-31", "2026-05-31", freq="ME")
+    rr = np.random.default_rng(77)
+    e_net = pd.Series(rr.normal(0.005, 0.03, len(sealed)), index=sealed)
+    f_net = pd.Series(rr.normal(0.004, 0.03, len(sealed)), index=sealed)
+    before = inf.run_primary(e_net, f_net, cfg=cfg)
+
+    # corrupt the payload completely; the economics and the primary must not move
+    f.diagnostics.monthly_returns.iloc[:, :] = 999.0
+    f.diagnostics.composite_signal.iloc[:, :] = -1.0
+    f.diagnostics.identity_turnover.iloc[:] = 999.0
+    e.diagnostics.monthly_returns.iloc[:, :] = -999.0
+    after = inf.run_primary(e_net, f_net, cfg=cfg)
+    ck("DIAGNOSTICS_CAN_AFFECT_PRIMARY_VERDICT = NO — corrupting the payload "
+       "leaves ΔS, the interval and the classification bit-identical",
+       (before.delta_s == after.delta_s and before.ci == after.ci
+        and before.classification == after.classification
+        and before.counts == after.counts))
+    ck("the primary entry point takes only return series, so it cannot read a "
+       "payload at all",
+       set(__import__("inspect").signature(inf.run_primary).parameters)
+       == {"e", "f", "cfg", "boundary_b", "seed_sequence", "expected_index"})
+    ck("the corruption was real (the fixture is not vacuous)",
+       float(f.diagnostics.monthly_returns.to_numpy().max()) == 999.0)
+    flush("2e. DIAGNOSTICS ARE INERT — no path to a primary verdict")
+
+
+def test_diagnostic_wiring():
+    """Interface-compatibility proof only: no orchestration, no artifact."""
+    inf = _load("x01_inf_wire2", os.path.join(HERE, "x01_inference.py"))
+    days = pd.bdate_range("2015-01-01", periods=430)
+    s, o, m = multi_panel([dict(root="CL", base=100.0, step=0.25),
+                           dict(root="NG", base=4.0, step=0.01)], days)
+    f = run_leg(s, o, m, {"USO": ["CL"], "UNG": ["NG"]}, WSEQ)
+    e = tc.construct_E(synth_etf_daily())
+
+    ev0 = inf.align_pair(e.net, f.net)[0].index
+    corr = inf.pair_correlations(e.diagnostics.monthly_returns,
+                                 f.diagnostics.monthly_returns,
+                                 evaluation_index=ev0)
+    ck("PAIR_CORRELATION_WIRING — the two exposed frames feed pair_correlations "
+       "directly", sorted(corr) == ["UNG", "USO"], str(sorted(corr)))
+    ck("each mapped pair reports a finite correlation over shared months",
+       all(np.isfinite(v["correlation"]) and v["n_months"] > 1
+           for v in corr.values()), str(corr))
+
+    sa = inf.sign_agreement_rate(e.diagnostics.composite_signal["USO"],
+                                 f.diagnostics.composite_signal["USO"],
+                                 evaluation_index=ev0)
+    ck("SIGN_AGREEMENT_WIRING — the two exposed composites feed "
+       "sign_agreement_rate directly",
+       "sign_agreement_rate" in sa and sa["n_months"] > 0, str(sa)[:90])
+    ck("the rate is a proportion", 0.0 <= sa["sign_agreement_rate"] <= 1.0)
+
+    # the evaluated index is the paired one; every diagnostic is scoped to it
+    ev = inf.align_pair(e.net, f.net)[0].index
+    full = inf.path_diagnostics(
+        e.net, f.net,
+        etf_monthly=e.diagnostics.monthly_returns,
+        futures_monthly=f.diagnostics.monthly_returns,
+        signal_e=e.diagnostics.composite_signal["USO"],
+        signal_f=f.diagnostics.composite_signal["USO"],
+        turnover_e=e.turnover, turnover_f=f.diagnostics.identity_turnover,
+        cost_e=e.cost, cost_f=f.cost, evaluation_index=ev)
+    ck("the whole sealed §7 block assembles from construction outputs alone",
+       full.pair_correlations and full.sign_agreement
+       and np.isfinite(full.turnover_e) and np.isfinite(full.turnover_f)
+       and np.isfinite(full.realised_cost_e) and np.isfinite(full.realised_cost_f))
+    ck("F turnover is now reported, from the §3.8 IDENTITY book rather than a "
+       "weight difference",
+       np.isfinite(full.turnover_f) and full.turnover_f > 0)
+    ck("and it is not E's number", full.turnover_f != full.turnover_e)
+    ck("no evidence artifact was created by the wiring proof",
+       [x for x in os.listdir(HERE) if x.endswith((".parquet", ".csv"))] == [])
+    flush("2e. DIAGNOSTIC WIRING — construction output feeds inference unchanged")
+
+
+# --------------------------------------------------------------------------- #
 # 3. S1
 # --------------------------------------------------------------------------- #
 def test_S1():
@@ -1317,8 +1724,15 @@ def test_safety():
        any(m["path"].endswith("x01_target_construction.py")
            and m["sha256_at_freeze"] == m["accepted_review_pin"]
            for m in tcb.get("modules", [])))
-    ck("nothing is left declared PENDING binding",
-       man.get("pending_binding") == [])
+    pend = {e["path"] for e in man.get("pending_binding", [])}
+    ck("every execution-relevant module that is NOT revision-addressable is "
+       "declared PENDING binding, and nothing else is",
+       pend == {"research/extensions/x01/x01_inference.py",
+                "research/extensions/x01/x01_inference_tests.py"},
+       str(sorted(pend)))
+    ck("the frozen construction module is still bound by revision, and its "
+       "binding status is DERIVED from the live bytes rather than asserted",
+       man["target_construction_binding"]["status"].startswith("BOUND"))
     # The unbound gate must survive binding: re-introduce one pending module
     # into a COPY of the manifest and preflight must refuse again.
     still_gated = copy.deepcopy(man)
@@ -1366,6 +1780,10 @@ def main():
     test_book_gaps(); test_book_missing_root_month()
     test_root_specific_rebalance_timestamp(); test_decision_uses_the_panel_month_end()
     test_roll_between_mark_and_event()
+    test_diagnostic_interface(); test_identity_turnover()
+    test_finite_coverage_comparator()
+    test_diagnostics_are_inert()
+    test_diagnostic_wiring()
     test_pnl_route_reachability(); test_import_purity()
     test_S1(); test_S2(); test_sample(); test_safety()
     print("=" * 84)

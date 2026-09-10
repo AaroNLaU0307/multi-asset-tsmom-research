@@ -134,15 +134,66 @@ def accepted():
     return _ACCEPTED
 
 
+class ConstructionDiagnostics(object):
+    """The §7 DIAGNOSTIC-tier objects a leg already computes, surfaced.
+
+    Sealed §7 asks for a monthly return correlation PER MAPPED PAIR and a
+    sign-agreement rate between the ETF and futures COMPOSITES. Both need
+    per-exposure objects that the leg builds on its way to the portfolio-level
+    streams and then discards. This carrier hands back exactly those objects —
+    it recomputes nothing and decides nothing.
+
+    `monthly_returns` is produced by the accepted primitive
+    `src/performance.py::monthly_asset_returns`, which is the SAME call
+    `portfolio_returns` makes internally to earn E's gross, so the frame here is
+    the authoritative one rather than a reconstruction of it.
+
+    `composite_signal` is the leg's own `signal_method_b` output, unshifted —
+    matching the accepted MAP_v2 diagnostic in `run_x02a_v3.py::sign_agreement`,
+    which compares the two composites at the same month-end.
+
+    Both frames are the FULL month-end history. Restricting them to the paired
+    window here would bake a windowing decision into the construction layer; the
+    sealed pairing rule owns that, and the inference layer applies it.
+
+    §8.0 puts everything here in the tier that describes and never gates.
+    """
+
+    __slots__ = ("arm", "monthly_returns", "composite_signal", "columns",
+                 "identity_turnover", "source")
+
+    def __init__(self, arm, monthly_returns, composite_signal, source,
+                 identity_turnover=None):
+        self.arm = arm
+        self.monthly_returns = monthly_returns
+        self.composite_signal = composite_signal
+        self.columns = list(monthly_returns.columns)
+        # §7 turnover for a FUTURES leg, in the only unit that measures it:
+        # `Σ_j |q_j,t − q_j,t−1|` on the §3.8 contract-identity book, monthly.
+        # A weight difference is not a substitute — an equal-size roll moves the
+        # exposure weight by exactly zero while the book exits one contract and
+        # enters another, and the cash ledger charges both sides. `None` on the
+        # ETF leg, which has no contract identities and whose sealed turnover is
+        # the `|Δposition|` convention already returned as `ConstructionResult.turnover`.
+        self.identity_turnover = identity_turnover
+        self.source = source
+
+    def __repr__(self):
+        return ("<ConstructionDiagnostics arm=%s exposures=%s months=%d>"
+                % (self.arm, ",".join(self.columns), len(self.monthly_returns)))
+
+
 class ConstructionResult(object):
     """A construction output — return series plus deterministic metadata.
 
     Deliberately carries **no statistic**: no Sharpe, no interval, no verdict.
     """
 
-    __slots__ = ("arm", "net", "gross", "cost", "turnover", "positions", "meta")
+    __slots__ = ("arm", "net", "gross", "cost", "turnover", "positions", "meta",
+                 "diagnostics")
 
-    def __init__(self, arm, net, gross, cost, turnover=None, positions=None, meta=None):
+    def __init__(self, arm, net, gross, cost, turnover=None, positions=None,
+                 meta=None, diagnostics=None):
         self.arm = arm
         self.net = net
         self.gross = gross
@@ -150,6 +201,11 @@ class ConstructionResult(object):
         self.turnover = turnover
         self.positions = positions
         self.meta = dict(meta or {})
+        # ADDITIVE, and last: `net`, `gross`, `cost`, `turnover`, `positions`
+        # and `meta` keep their existing semantics untouched, and a caller that
+        # never passes `diagnostics` gets exactly the previous object with the
+        # field set to None. Nothing economic reads it.
+        self.diagnostics = diagnostics
 
     def __repr__(self):
         n = 0 if self.net is None else len(self.net)
@@ -248,6 +304,13 @@ def construct_E(daily_prices, tickers=None, cost_bps=None):
     return ConstructionResult(
         arm="E", net=frame["net"], gross=frame["gross"], cost=frame["cost"],
         turnover=frame["turnover"], positions=base,
+        diagnostics=ConstructionDiagnostics(
+            arm="E",
+            monthly_returns=acc["performance"].monthly_asset_returns(monthly),
+            composite_signal=signal,
+            source=("monthly_asset_returns(month_end_prices(daily[tickers])) and "
+                    "composite_signal of the same frame — the objects this "
+                    "function already built for portfolio_returns and sizing")),
         meta={"tickers": tickers, "cost_bps": cost_bps,
               "months_dropped_incomplete_sleeve": int((~complete).sum()),
               "months_dropped_undefined_turnover": n_undefined,
@@ -729,7 +792,7 @@ def construct_futures_leg(settle_raw, oi, meta, arm="A1", capital=1.0,
 
     # 3) B. the daily contract-identity book (§3.8)
     root_of_key, prev_book = {}, {}
-    gross_by_day, cost_by_day = {}, {}
+    gross_by_day, cost_by_day, traded_qty_by_day = {}, {}, {}
     struck, prev_struck = {}, {}     # (etf, root) -> quantity currently in force
     last_identity = {}               # (etf, root) -> last known held identity
     gap_carried = {}                 # "etf/root" -> sessions carried over a gap
@@ -803,11 +866,16 @@ def construct_futures_leg(settle_raw, oi, meta, arm="A1", capital=1.0,
         # special case: its next session is in its own month.
         traded = traded_quantity(prev_book, now)
         charge = cash_cost(traded, root_of_key, cost_multiplier)
+        qty = float(sum(traded.values()))
         earns_on = next_session.get(day)
         if earns_on is None:
             cost_never_earned += charge          # no session left to earn it
         else:
             cost_by_day[earns_on] = cost_by_day.get(earns_on, 0.0) + charge
+            # the SAME attribution the cash cost gets, so the §7 turnover and
+            # realised-cost diagnostics describe the same trades in the same
+            # month — which is also how E reports the pair
+            traded_qty_by_day[earns_on] = traded_qty_by_day.get(earns_on, 0.0) + qty
         gross_by_day[day] = gross_today
         prev_book = now
         prev_struck = dict(struck)
@@ -824,19 +892,35 @@ def construct_futures_leg(settle_raw, oi, meta, arm="A1", capital=1.0,
     # month was dropped by the incomplete-sleeve rule. Those are the same months
     # E drops, reached through the same one-month lag, rather than being covered
     # by carrying a stale position into them.
+    traded_d = pd.Series(traded_qty_by_day).sort_index()
+    traded_m = (traded_d.groupby(month_of.reindex(traded_d.index)).sum()
+                if len(traded_d) else pd.Series(dtype="float64"))
     cost_m = cost_m.reindex(gross_m.index, fill_value=0.0)
+    traded_m = traded_m.reindex(gross_m.index, fill_value=0.0)
     keep = [p for p in gross_m.index if p in governed]
     gross_m, cost_m = gross_m.loc[keep], cost_m.loc[keep]
+    traded_m = traded_m.loc[keep]
     if len(gross_m):
         idx = pd.PeriodIndex(gross_m.index).to_timestamp(how="end").normalize()
     else:
         idx = pd.DatetimeIndex([])
     gross_m.index, cost_m.index = idx, idx
+    traded_m.index = idx
     net_m = (gross_m - cost_m) / capital
 
     return ConstructionResult(
         arm=arm, net=net_m, gross=gross_m / capital, cost=cost_m / capital,
         turnover=None, positions=held_positions(decision_base),
+        diagnostics=ConstructionDiagnostics(
+            arm=arm,
+            monthly_returns=acc["performance"].monthly_asset_returns(monthly),
+            composite_signal=signal,
+            identity_turnover=traded_m,
+            source=("monthly_asset_returns(month_end_prices(daily_index)) and "
+                    "composite_signal of the same frame — the per-mapped-exposure "
+                    "objects this function already built to size the leg; "
+                    "identity_turnover is the §3.8 book's own traded quantity, "
+                    "summed daily and attributed exactly as its cash cost is")),
         meta={"arm_spec": arm_spec(arm), "mapping": mapping, "capital": capital,
               "signal_input_notes": notes,
               # `positions` is the HELD frame, label M = exposure held during

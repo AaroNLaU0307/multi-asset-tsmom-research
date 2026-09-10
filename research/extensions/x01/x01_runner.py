@@ -136,10 +136,15 @@ IGNORED_DATA_INPUTS = [
 ]
 
 # Execution-relevant modules that EXIST but are not yet revision-addressable.
-# EMPTY since the target-construction freeze: nothing is unbound. The list and
-# its unconditional preflight refusal are kept deliberately, so that any module
-# added here in future keeps production fail-closed until it too is bound.
-PENDING_BINDING = []
+# The sealed INFERENCE layer is built and tested but deliberately uncommitted,
+# pending independent review, so it is declared here rather than given a
+# fabricated pin. Preflight refuses unconditionally for every entry.
+PENDING_BINDING = [
+    ("research/extensions/x01/x01_inference.py",
+     "sealed inference layer: Sharpe, delta-S, paired bootstrap, CI, classification"),
+    ("research/extensions/x01/x01_inference_tests.py",
+     "synthetic-only tests for the inference layer"),
+]
 
 # Present in the tree but NOT consumed by X01. Recorded so the inventory is
 # complete and auditable; deliberately NOT hash-pinned, since pinning a
@@ -382,7 +387,21 @@ def build_manifest():
         },
         "target_construction_binding": {
             "target_construction_revision": TARGET_CONSTRUCTION_FREEZE_REVISION,
-            "status": "BOUND",
+            # DERIVED, never asserted: the freeze record below is a historical
+            # fact about a revision and stays true forever, but it says nothing
+            # about the bytes on disk now. When an authorized delta is sitting
+            # uncommitted in the worktree, saying "BOUND" unqualified would let
+            # a reader take the freeze hash for a description of what would
+            # actually run. The live comparison is what decides the word.
+            "status": ("BOUND"
+                       if all(lf_sha256(os.path.join(REPO, path))
+                              == blob_sha256(REPO, TARGET_CONSTRUCTION_FREEZE_REVISION,
+                                             path)
+                              for path, _w in TARGET_CONSTRUCTION)
+                       else "BOUND_REVISION_SUPERSEDED_BY_UNCOMMITTED_WORKTREE_DELTA"),
+            "live_worktree_sha256_lf": {
+                path: lf_sha256(os.path.join(REPO, path))
+                for path, _w in TARGET_CONSTRUCTION},
             "modules": [
                 {"path": path, "role": why, "hash_convention": BLOB,
                  "sha256_at_freeze": blob_sha256(
