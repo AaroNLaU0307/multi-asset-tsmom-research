@@ -215,7 +215,7 @@ outcome_exposure:
 # count is an open Aaron decision (`D-ETF-COUNT`), recorded with its options.
 prereg:
   reference: "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
-  seal_revision: "df5b28ab7324c7ba789ab231431f077288c3fd84"
+  seal_revision: "bc123fee7c8d847a6f883dd2187a9a2100f9c490"
   normative_references:
     - "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
     - "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md"
@@ -286,7 +286,7 @@ inputs:
   - id: "x01_preregistration_sealed"
     path: "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
     observed_revision: "WORKTREE"
-    observed_sha256: "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743"
+    observed_sha256: "4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5"
   - id: "x01_a2_review_record"
     path: "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md"
     observed_revision: "WORKTREE"

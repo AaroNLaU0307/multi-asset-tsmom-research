@@ -1,8 +1,16 @@
 # X01 — DEVIATIONS from the sealed preregistration
 
 **Sealed contract:** `research/extensions/x01/X01_PREREGISTRATION_DRAFT.md`
-**Sealed SHA256:** `9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743`
-**Seal revision:** `df5b28ab7324c7ba789ab231431f077288c3fd84`
+**Sealed SHA256:** `4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5`
+**Seal revision:** `bc123fee7c8d847a6f883dd2187a9a2100f9c490`
+
+> Aaron sealed X01 on 2026-09-13 (`SEAL X01 AS CURRENT PREREGISTRATION —
+> NO SCIENTIFIC AMENDMENT`). Persisting that decision moved the
+> preregistration's bytes, because its seal state is recorded inside the
+> file; the scientific content is byte-identical. The superseded pre-seal
+> identity was `9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743`
+> at `df5b28ab7324c7ba789ab231431f077288c3fd84`. That is a seal-state change,
+> not a deviation, so no D-row is opened for it.
 
 This file is the **post-seal** change-control record, in the sense the operating
 mode fixes: *"`DEVIATIONS.md` keeps its existing meaning — departures from an

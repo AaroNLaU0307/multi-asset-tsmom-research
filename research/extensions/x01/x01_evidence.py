@@ -68,7 +68,7 @@ SEALED_CLASSIFICATIONS = ("PRESERVATION_SUPPORTED", "MATERIAL_DEGRADATION_SUPPOR
 # without having to import and run the inference layer to find out.
 SEALED_EXPECTATIONS = {
     "research_id": "TSMOM-EXT-001",
-    "prereg_sha256": "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743",
+    "prereg_sha256": "4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5",
     "sample_first_month_end": "2011-07-31",
     "sample_last_month_end": "2026-05-31",
     "expected_n": 179,

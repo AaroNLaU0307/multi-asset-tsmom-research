@@ -75,10 +75,15 @@ RUNTIME = os.path.abspath(os.path.join(REPO, "..", "qros-runtime", "qros.py"))
 MANIFEST = os.path.join(HERE, "X01_EXECUTION_MANIFEST.json")
 
 SEALED_PREREG = "research/extensions/x01/X01_PREREGISTRATION_DRAFT.md"
-SEALED_PREREG_SHA256 = "9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743"
+SEALED_PREREG_SHA256 = "4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5"
 A2_RECORD = "research/extensions/review_history/X01_STAGE_A2_DESIGN_REVIEW_2026-09-08.md"
 A2_RECORD_SHA256 = "173d138e00642554d5e30be4c463b9156f504f00e6c5ef01471592c4030acebe"
-SEAL_REVISION = "df5b28ab7324c7ba789ab231431f077288c3fd84"
+# Aaron sealed X01 on 2026-09-13. The seal state lives inside the
+# preregistration, so persisting the decision necessarily moved its bytes;
+# the scientific content did not change. The superseded pre-seal identity
+# was 9c7b104f980fddb5613f02a3e8c1fab68ed9750b03b8161d42f92c3c96986743
+# at df5b28ab7324c7ba789ab231431f077288c3fd84.
+SEAL_REVISION = "bc123fee7c8d847a6f883dd2187a9a2100f9c490"
 
 BLOB = "sha256_of_git_blob_bytes_at_revision"
 RAW = "sha256_of_raw_file_on_disk"
