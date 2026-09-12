@@ -1,5 +1,23 @@
 # Multi-Asset Time-Series Momentum — a research project
 
+> **Workflow (cutover 2026-09-12).** This project runs under
+> [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md):
+> `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`.
+> Current **state** — never workflow authority — lives in
+> [`PROJECT_STATE.md`](PROJECT_STATE.md). Read that first.
+>
+> **Sealed research contracts stay authoritative** and may be stricter than
+> vNext where that is part of the research design — for X01 that is
+> [`research/extensions/x01/X01_PREREGISTRATION_DRAFT.md`](research/extensions/x01/X01_PREREGISTRATION_DRAFT.md),
+> sealed 2026-09-13 despite the historical `_DRAFT` filename.
+>
+> **The QROS / L6 material is history, not the default route.** The A–L stage
+> chain, `qros next` routing, Review Packets, standing reviewer seats,
+> review-of-review and closure/residual-verification packages are retired;
+> documents here that still use that vocabulary are provenance records, not
+> current instructions. `qros check` / `qros status` survive as **on-demand**
+> mechanical diagnostics, and a `qros` HOLD is information, not a gate.
+
 [![Tests](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml/badge.svg)](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml)
 
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)

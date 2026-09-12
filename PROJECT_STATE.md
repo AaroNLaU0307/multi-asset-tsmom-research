@@ -40,6 +40,12 @@ OUTCOME_EXPOSURE    = TARGET_METRIC / HISTORICAL_CUMULATIVE (ops/EXPOSURE_LEDGER
                       RETAINED: full-sample core, sleeve, robustness-grid, cost-sweep
                       and overlay results are already revealed, so exposure tracking
                       is materially required (vNext §11).
+TARGET_EXECUTION_AUTHORIZED = NO — zero authorization records exist in
+                      ops/EXECUTION_AUTHORIZATIONS.md. A seal is not authorization.
+TARGET_X01_OUTCOME_ACCESSED = NO — no real E, A1, S1, S2, Sharpe, ΔS, bootstrap,
+                      crisis slice, diagnostic or evidence artifact has been
+                      computed or opened.
+X01_FIRST_EXECUTION_EXPOSURE_CLASSIFICATION = GENERATED_NOT_SEEN (Owner-sealed)
 OPEN_MATERIAL_BLOCKERS = NONE recorded. The X01 draft reports
                       TECHNICAL_BLOCKERS = NONE and OWNER_DECISIONS_REMAINING = NONE.
 NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
@@ -71,10 +77,10 @@ So: run the mechanical prereg validators, take ChatGPT/Aaron acceptance, and the
 seal is Aaron's decision. A further Astra round needs a named material trigger
 (vNext §4) or Aaron asking — reassurance is not a trigger.
 
-Then finish S2 BUILD (statistics/inference) in the light loop → S3 RUN behind the
-mechanical gate plus Aaron's explicit X01 execution authorization → S4 VERDICT,
-where one Astra MEDIUM evidence-to-claim judgment is normal because the X01 claim
-is consequential and FULL-lane.
+S2 BUILD is complete. What remains is S3 RUN behind the mechanical gate plus
+Aaron's explicit X01 execution authorization, then S4 VERDICT — where one Astra
+MEDIUM evidence-to-claim judgment is normal, because the X01 claim is
+consequential and FULL-lane.
 
 ## What changed for this project at cutover
 
