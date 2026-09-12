@@ -25,12 +25,29 @@ S3 RUN              = EXECUTED 2026-09-12. One real sealed execution under Aaron
                       run_id X01-RUN-0001, outcome_state COMPLETED_EVIDENCE.
                       The authorization is CONSUMED and can never authorize another
                       run; a further real attempt needs a new Owner authorization.
-CURRENT_VNEXT_STAGE = S4 VERDICT — NOT STARTED
-TARGET_X01_OUTCOME_GENERATED = YES — the sealed artifact is durably stored at
-                      research/extensions/x01/X01_EVIDENCE.json.
-TARGET_X01_OUTCOME_SEEN = NO — the payload has not been opened, parsed,
-                      summarised or interpreted by anyone. Entering S4 (reveal /
-                      verdict) requires a separate explicit Owner decision.
+CURRENT_VNEXT_STAGE = S4 VERDICT — IN PROGRESS. Final Owner verdict NOT recorded.
+TARGET_X01_OUTCOME_GENERATED = YES — sealed artifact at
+                      research/extensions/x01/X01_EVIDENCE.json, sha256
+                      8a98af94c6eeb3067b041e53221d713c4281f8a0dd7e97eb00ac083046141d4f
+TARGET_X01_OUTCOME_ACCESSED = YES — revealed 2026-09-12 under Aaron's Owner
+                      decision AUTHORIZE REVEAL OF X01-RUN-0001 AND ENTER S4
+                      VERDICT. Exposure classification for X01-RUN-0001 moved
+                      GENERATED_NOT_SEEN -> REVEALED_TARGET_METRIC, recorded in
+                      ops/EXPOSURE_LEDGER.md. The reveal read the existing
+                      artifact only: no re-run, no recomputation from source
+                      panels, no new authorization.
+S4_DETERMINISTIC_EXTRACTION = DONE. Applying the sealed §5 rule to the stored
+                      95% CI for ΔS against the sealed boundary −B = −0.15, the
+                      interval spans the boundary, so
+                      PRIMARY_PREREG_RESULT = UNRESOLVED, matching the artifact's
+                      own stored classification
+                      UNRESOLVED_INSUFFICIENT_PRECISION. Evidence integrity PASS
+                      on every mechanical check.
+PROPOSED_VNEXT_VERDICT = INSUFFICIENT_EVIDENCE — a PROPOSAL from the
+                      deterministic extraction, not a decision. It is not written
+                      to the knowledge base. The final claim awaits one bounded
+                      Astra evidence-to-claim judgment and then Aaron's Owner
+                      verdict.
 ACTIVE_HYPOTHESIS   = X01 matched-map transfer; sealed contract at
                       research/extensions/x01/X01_PREREGISTRATION_DRAFT.md
 DATA_GRANT          = existing Databento + ETF panels only; the Databento ceiling
