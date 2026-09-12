@@ -3,8 +3,11 @@
 Append-only. The machine-readable authority for whether a real, outcome-bearing
 X01 execution may happen.
 
-**There are zero authorization records in this file.**
-`TARGET_EXECUTION_AUTHORIZED = NO`.
+**This file holds exactly one authorization record.**
+`TARGET_EXECUTION_AUTHORIZED = YES` for exactly one run — `X01-RUN-0001` under
+`X01-AUTH-0001` — and for nothing else. The scope is `ONE_SHOT`:
+once that run durably reaches step 2 the authorization is CONSUMED and can
+never authorize another run, another `run_id`, or a retry.
 
 ---
 
@@ -162,4 +165,41 @@ appears to contain.
 
 ## Records
 
-*(none — the section below is empty by design)*
+### X01-AUTH-0001 — Aaron, 2026-09-12T20:05:54Z
+
+Owner decision: **AUTHORIZE ONE REAL SEALED X01 EXECUTION UNDER
+GENERATED_NOT_SEEN.** No broader authority: no scientific amendment, no
+parameter change, no second run, no retry after consumption, and no
+authority to reveal the target outcome. The first-execution exposure
+classification is `GENERATED_NOT_SEEN` — the result may be generated and
+durably stored, and must not be opened, parsed or interpreted without a
+separate Owner decision.
+
+The seven bound identities below were derived mechanically from the live
+manifest and git via `x01_orchestrator.execution_identity`, which is the
+same function the run itself uses, so the grant is checked against the
+revision that would actually execute.
+
+```json
+{
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "x01-execution-authorization",
+    "version": 1
+  },
+  "authorization_id": "X01-AUTH-0001",
+  "owner": "Aaron",
+  "authorized_utc": "2026-09-12T20:05:54Z",
+  "status": "AUTHORIZED",
+  "scope": "ONE_SHOT_SINGLE_OUTCOME_BEARING_RUN",
+  "binding": {
+    "research_id": "TSMOM-EXT-001",
+    "run_id": "X01-RUN-0001",
+    "prereg_sha256": "4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5",
+    "execution_infrastructure_revision": "4cafd68d2cbb79c20fadbfb29a6b7c1a32b49ad9",
+    "construction_binding_revision": "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37",
+    "inference_binding_revision": "bc6c80536cd0fefc2ed1f440ca65d1c73d270e37",
+    "manifest_sha256": "b0fedeb3f972f7d0a2129cbe9f7a864d11cbf3ac04bef975ad9dba2c95c25572"
+  }
+}
+```
