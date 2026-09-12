@@ -203,3 +203,55 @@ revision that would actually execute.
   }
 }
 ```
+
+### LIFECYCLE — X01-AUTH-0001 — STEP2_ATTEMPT_STARTED
+
+```json
+{
+  "authorization_id": "X01-AUTH-0001",
+  "event": "STEP2_ATTEMPT_STARTED",
+  "event_utc": "2026-09-12T20:08:01Z",
+  "reason": "the authoritative step-2 exposure and trial commitment is about to be attempted; if this marker is never resolved the authorization is indeterminate and unusable (D6)",
+  "record_type": "LIFECYCLE",
+  "run_id": "X01-RUN-0001",
+  "schema": {
+    "name": "x01-execution-authorization",
+    "version": 1
+  }
+}
+```
+
+### LIFECYCLE — X01-AUTH-0001 — CONSUMED
+
+```json
+{
+  "authorization_id": "X01-AUTH-0001",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-12T20:08:01Z",
+  "evidence": {
+    "exposure_record_reference": {
+      "classification": "GENERATED_NOT_SEEN",
+      "exposure_row": "| 2026-09-12T20:08:01Z | CURRENT_REVIEW_SCOPE | GENERATED_NOT_SEEN | NONE | ops/...",
+      "journal": "ops/execution-journal/X01-RUN-0001.step2.json",
+      "trial_attempts": {
+        "attempts": [
+          "A1 (primary)",
+          "S1 (construction sensitivity)",
+          "S2 (roll-rule sensitivity)",
+          "E (ETF reference leg)"
+        ],
+        "first_row_number": 1,
+        "register": "research/extensions/TRIAL_LEDGER.md",
+        "rows_appended": 4
+      }
+    }
+  },
+  "reason": "STEP2_DURABLY_COMPLETED",
+  "record_type": "LIFECYCLE",
+  "run_id": "X01-RUN-0001",
+  "schema": {
+    "name": "x01-execution-authorization",
+    "version": 1
+  }
+}
+```

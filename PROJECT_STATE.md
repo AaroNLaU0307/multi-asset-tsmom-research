@@ -19,13 +19,18 @@ S1 DESIGN+SEAL      = COMPLETE — X01_PREREG_SEALED = YES. Aaron's Owner decisi
                       scientific content is byte-identical across the seal.
 S2 BUILD            = COMPLETE — execution infrastructure frozen and bound at
                       0b79a904cf8b3d9e27fe16cdbf22bf19cbe3f985.
-CURRENT_VNEXT_STAGE = S3 RUN
-S3_RUN_READY        = NOT_YET_RECHECKED. The minimal S3 readiness check must be
-                      rerun after repository housekeeping; the 2026-09-12 run of it
-                      refused on a modified README.md from the vNext cutover, which
-                      is untouched here to keep the seal independently reviewable.
-                      CURRENT_VNEXT_STAGE is a stage label, not a readiness claim,
-                      and PROJECT_STATE is not a gate.
+S3 RUN              = EXECUTED 2026-09-12. One real sealed execution under Aaron's
+                      Owner decision AUTHORIZE ONE REAL SEALED X01 EXECUTION UNDER
+                      GENERATED_NOT_SEEN. authorization_id X01-AUTH-0001,
+                      run_id X01-RUN-0001, outcome_state COMPLETED_EVIDENCE.
+                      The authorization is CONSUMED and can never authorize another
+                      run; a further real attempt needs a new Owner authorization.
+CURRENT_VNEXT_STAGE = S4 VERDICT — NOT STARTED
+TARGET_X01_OUTCOME_GENERATED = YES — the sealed artifact is durably stored at
+                      research/extensions/x01/X01_EVIDENCE.json.
+TARGET_X01_OUTCOME_SEEN = NO — the payload has not been opened, parsed,
+                      summarised or interpreted by anyone. Entering S4 (reveal /
+                      verdict) requires a separate explicit Owner decision.
 ACTIVE_HYPOTHESIS   = X01 matched-map transfer; sealed contract at
                       research/extensions/x01/X01_PREREGISTRATION_DRAFT.md
 DATA_GRANT          = existing Databento + ETF panels only; the Databento ceiling
@@ -40,11 +45,12 @@ OUTCOME_EXPOSURE    = TARGET_METRIC / HISTORICAL_CUMULATIVE (ops/EXPOSURE_LEDGER
                       RETAINED: full-sample core, sleeve, robustness-grid, cost-sweep
                       and overlay results are already revealed, so exposure tracking
                       is materially required (vNext §11).
-TARGET_EXECUTION_AUTHORIZED = NO — zero authorization records exist in
-                      ops/EXECUTION_AUTHORIZATIONS.md. A seal is not authorization.
-TARGET_X01_OUTCOME_ACCESSED = NO — no real E, A1, S1, S2, Sharpe, ΔS, bootstrap,
-                      crisis slice, diagnostic or evidence artifact has been
-                      computed or opened.
+TARGET_EXECUTION_AUTHORIZED = NO — the one grant on record is CONSUMED; there is
+                      no active authorization. A seal is not authorization, and a
+                      spent authorization is not a licence to run again.
+TARGET_X01_OUTCOME_ACCESSED = NO — the evidence artifact has been GENERATED and
+                      stored, and NOT seen. No Sharpe, ΔS, confidence interval,
+                      bootstrap statistic or verdict has been read by any session.
 X01_FIRST_EXECUTION_EXPOSURE_CLASSIFICATION = GENERATED_NOT_SEEN (Owner-sealed)
 OPEN_MATERIAL_BLOCKERS = NONE recorded. The X01 draft reports
                       TECHNICAL_BLOCKERS = NONE and OWNER_DECISIONS_REMAINING = NONE.

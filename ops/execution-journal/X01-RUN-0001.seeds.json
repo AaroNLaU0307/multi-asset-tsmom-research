@@ -1,0 +1,56 @@
+{
+  "recorded_utc": "2026-09-12T20:08:01Z",
+  "run_id": "X01-RUN-0001",
+  "seed_protocol": {
+    "arm_order": [
+      "primary",
+      "S1",
+      "S2"
+    ],
+    "child_streams": [
+      {
+        "arm": "primary",
+        "master_entropy": 7,
+        "spawn_key": [
+          0
+        ],
+        "state_fingerprint_u32x4": [
+          1201125462,
+          788422957,
+          1855184853,
+          4093114059
+        ]
+      },
+      {
+        "arm": "S1",
+        "master_entropy": 7,
+        "spawn_key": [
+          1
+        ],
+        "state_fingerprint_u32x4": [
+          3618983171,
+          941218350,
+          283231612,
+          4209872184
+        ]
+      },
+      {
+        "arm": "S2",
+        "master_entropy": 7,
+        "spawn_key": [
+          2
+        ],
+        "state_fingerprint_u32x4": [
+          3831650445,
+          4088273801,
+          1611045428,
+          732922199
+        ]
+      }
+    ],
+    "derivation": "numpy.random.SeedSequence(7).spawn(3)",
+    "identity_convention": "Child streams are identified by `spawn_key` plus a 4x uint32 generated-state fingerprint. The `.entropy` property is NOT an identifier: all three children report entropy == 7, so it cannot distinguish them.",
+    "master_seed": 7,
+    "note": "The sealed text says the spawned values are written into it at seal time; they are not. See DEVIATIONS.md D-X01-1. The streams are re-derived mechanically from the sealed rule and recorded here BEFORE any target output is read."
+  }
+}

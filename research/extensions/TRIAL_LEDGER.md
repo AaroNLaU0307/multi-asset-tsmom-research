@@ -280,6 +280,10 @@ a governance fact, never a merger of research families.
 | # | attempt | sample | design parent | family | `N_trials` contribution | convention cited |
 |---|---|---|---|---|---|---|
 | — | *(still empty after Wave 1)* | | | | | |
+| 1 | A1 (primary) | `dataset.databento.commodity-futures-curves` | X01 (sealed preregistration) | `F-X01` | +1 | carry PREREGISTRATION.md §10 - one trial per distinct constructed strategy-return series, diagnostics excluded; TRIAL_LEDGER §3.1; registered by run X01-RUN-0001 |
+| 2 | S1 (construction sensitivity) | `dataset.databento.commodity-futures-curves` | X01 A1 | `F-X01` | +1 | carry PREREGISTRATION.md §10 - one trial per distinct constructed strategy-return series, diagnostics excluded; TRIAL_LEDGER §3.1; registered by run X01-RUN-0001 |
+| 3 | S2 (roll-rule sensitivity) | `dataset.databento.commodity-futures-curves` | X01 A1 | `F-X01` | +1 | carry PREREGISTRATION.md §10 - one trial per distinct constructed strategy-return series, diagnostics excluded; TRIAL_LEDGER §3.1; registered by run X01-RUN-0001 |
+| 4 | E (ETF reference leg) | `dataset.yfinance.multi-asset-etf-panel` | X01 (sealed preregistration) | `F-X01` | +1 | TRIAL_LEDGER §6.1 planned register - §4 conservative, separate sample; the ETF panel has no frozen convention (§3.2); registered by run X01-RUN-0001 |
 
 **PLANNED, NOT CREATED (2026-09-09).** The X01 pre-execution gate declares
 what *will* be registered when execution is later authorized. **These rows do not
