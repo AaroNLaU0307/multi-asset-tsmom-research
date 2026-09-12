@@ -25,7 +25,39 @@ S3 RUN              = EXECUTED 2026-09-12. One real sealed execution under Aaron
                       run_id X01-RUN-0001, outcome_state COMPLETED_EVIDENCE.
                       The authorization is CONSUMED and can never authorize another
                       run; a further real attempt needs a new Owner authorization.
-CURRENT_VNEXT_STAGE = S4 VERDICT — IN PROGRESS. Final Owner verdict NOT recorded.
+S4 VERDICT          = COMPLETE. Final Owner verdict recorded 2026-09-13.
+CURRENT_VNEXT_STAGE = STOPPED — X01 is closed.
+X01_LIFECYCLE_STATUS = CLOSED
+FINAL_X01_VERDICT   = INSUFFICIENT_EVIDENCE (vNext S4 vocabulary)
+KB_RESEARCH_STATUS  = unresolved — the knowledge-base schema has no
+                      `insufficient_evidence` token, so both layers are recorded
+                      side by side rather than one being substituted for the
+                      other. No KB card exists for X01 and none was created here:
+                      the knowledge base is a separate repository and writing the
+                      first X01 card into it is a separate Owner decision.
+FINAL_X01_CLAIM     = The paired historical evidence is insufficient to determine
+                      whether the futures implementation preserved the ETF TSMOM
+                      wrapper's performance within the preregistered 0.15 Sharpe
+                      materiality tolerance. It establishes neither preservation
+                      within that tolerance nor degradation beyond it. The point
+                      estimate is negative and the 95% interval lies below zero,
+                      but zero was not the sealed boundary and does not replace
+                      -0.15 after the fact. Nothing here speaks to alpha
+                      confirmation or falsification, out-of-sample validation,
+                      deployment readiness, live profitability, causal mechanism,
+                      or futures implementations in general.
+INDEPENDENT_S4_JUDGMENT = ACCEPT_PROPOSED_VERDICT, MATERIAL_REASON = NONE.
+                      Completed before this recording; no further reviewer is
+                      required and none was called.
+VERDICT_RECORDED_HERE = This file is the authoritative home of the final X01
+                      verdict. research/extensions/DASHBOARD_v2.md still shows
+                      X01 as PROPOSED and was deliberately NOT updated: it is a
+                      frozen reviewed artifact whose hash is pinned both in
+                      qros-state.yaml and inside validate_wave0.py, which is
+                      itself pinned runner code, so editing it to write a status
+                      field would mean changing frozen execution infrastructure
+                      and rebuilding the execution manifest. Non-blocking and
+                      disclosed rather than forced.
 TARGET_X01_OUTCOME_GENERATED = YES — sealed artifact at
                       research/extensions/x01/X01_EVIDENCE.json, sha256
                       8a98af94c6eeb3067b041e53221d713c4281f8a0dd7e97eb00ac083046141d4f
@@ -43,11 +75,26 @@ S4_DETERMINISTIC_EXTRACTION = DONE. Applying the sealed §5 rule to the stored
                       own stored classification
                       UNRESOLVED_INSUFFICIENT_PRECISION. Evidence integrity PASS
                       on every mechanical check.
-PROPOSED_VNEXT_VERDICT = INSUFFICIENT_EVIDENCE — a PROPOSAL from the
-                      deterministic extraction, not a decision. It is not written
-                      to the knowledge base. The final claim awaits one bounded
-                      Astra evidence-to-claim judgment and then Aaron's Owner
-                      verdict.
+AUTHORITATIVE_EVIDENCE = run X01-RUN-0001, authorization X01-AUTH-0001,
+                      artifact research/extensions/x01/X01_EVIDENCE.json sha256
+                      8a98af94c6eeb3067b041e53221d713c4281f8a0dd7e97eb00ac083046141d4f
+                      against sealed preregistration
+                      4db18f6cc084bf4a4ba9260e7ba81489e658d74adf03818aa4169208a40f54c5.
+                      Sharpe(F) 0.4115061496832807, Sharpe(E) 0.6523207344790396,
+                      dS -0.2408145847957589, 95% CI
+                      [-0.4605709821173062, -0.0504890513489627] against the
+                      sealed boundary -0.15. The interval spans the boundary, so
+                      the sealed rule yields PRIMARY_PREREG_RESULT = UNRESOLVED.
+SECONDARIES         = A1 is the primary futures arm. S1 and S2 are
+                      DESCRIPTIVE_SENSITIVITY with S1_S2_PROMOTION_POWER = NONE
+                      and did not change the verdict. The turnover diagnostic was
+                      independently judged NON_BLOCKING and is not reopened.
+NO_FUTURE_X01_RUN   = X01-AUTH-0001 is CONSUMED and active_authorizations is 0.
+                      INSUFFICIENT_EVIDENCE is a legitimate terminal result, not
+                      an invitation to retune: no parameter change, boundary
+                      change, resampling, universe expansion, arm substitution or
+                      repackaging of X01 follows from it. Any further work needs a
+                      separate Owner decision and a genuinely new question.
 ACTIVE_HYPOTHESIS   = X01 matched-map transfer; sealed contract at
                       research/extensions/x01/X01_PREREGISTRATION_DRAFT.md
 DATA_GRANT          = existing Databento + ETF panels only; the Databento ceiling
