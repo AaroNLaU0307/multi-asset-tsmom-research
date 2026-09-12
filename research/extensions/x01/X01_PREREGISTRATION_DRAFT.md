@@ -1,10 +1,11 @@
-# X01 — PREREGISTRATION **DRAFT** (UNSEALED)
+# X01 — PREREGISTRATION (**SEALED**)
 
 ```
-X01_PREREG_SEALED = NO
+X01_PREREG_SEALED = YES
+X01_PREREG_SEAL_DECISION = AARON OWNER DECISION, 2026-09-13 — SEAL AS CURRENT PREREGISTRATION, NO SCIENTIFIC AMENDMENT
 X01_FULL_PERFORMANCE_EXECUTED = NO
 X01_A2_VERDICT = FAIL (accepted) -> bounded design repair applied
-X01_A2_FINAL_CLOSURE = NOT_YET
+X01_A2_FINAL_CLOSURE = NOT_PERFORMED — not required under QUANT_WORKFLOW_VNEXT §6 (a HOLD buys one bounded repair; a second round on the repaired delta is review-of-review). Recorded as it happened: the closure round was never run.
 O1 = RESOLVED_BY_OWNER (ADOPT_OPTION_B)
 O2 = RESOLVED_BY_OWNER (B = 0.15 annualised-Sharpe units)
 O6 = RESOLVED_BY_OWNER (ADOPT_OPTION_1_SYMMETRIC_ZERO_CARRY)
@@ -12,7 +13,7 @@ OWNER_DECISIONS_REMAINING = NONE
 TECHNICAL_BLOCKERS = NONE
 SECONDARY_INFERENCE_ROLE = DESCRIPTIVE_SENSITIVITY
 BH_FDR_REQUIRED = NO · S1_S2_PROMOTION_POWER = NONE · SECONDARY_MATERIALITY_GATE = NONE
-STATUS = COMPLETE DRAFT AWAITING GPT-6 ASTRA A2 DELTA CLOSURE, THEN AARON'S SEAL
+STATUS = SEALED. Aaron sealed this contract as-is on 2026-09-13; the scientific content below is frozen and unamended.
 ```
 
 **Candidate:** X01 — Commodity-sleeve futures transfer, matched-map arm
@@ -1452,17 +1453,18 @@ adopted one is the conservative-against-the-claim option.
 ---
 
 ```
-X01_PREREG_SEALED = NO · X01_FULL_PERFORMANCE_EXECUTED = NO
-X01_A2_VERDICT = FAIL (accepted) · X01_A2_FINAL_CLOSURE = NOT_YET
+X01_PREREG_SEALED = YES (Aaron, 2026-09-13) · X01_FULL_PERFORMANCE_EXECUTED = NO
+X01_A2_VERDICT = FAIL (accepted) · X01_A2_FINAL_CLOSURE = NOT_PERFORMED (not required under vNext §6)
 O1 = RESOLVED_BY_OWNER · O2 = RESOLVED_BY_OWNER · O6 = RESOLVED_BY_OWNER
 TECHNICAL_BLOCKERS_REMAINING = NONE
 OWNER_DECISIONS_REMAINING   = NONE
 POST_HOC_ESCAPE_ROUTES_REMAINING = NONE
 TARGET_X01_OUTCOME_ACCESSED = NO
 
-An owner design decision is NOT authorization to execute. This contract is
-complete but UNSEALED, and nothing may be run until the A2 delta closure and
-Aaron's explicit seal.
+A SEAL IS NOT AUTHORIZATION TO EXECUTE. This contract is complete and
+SEALED; the scientific content is frozen. Nothing may be run until Aaron
+separately authorizes one real X01 execution, and no such authorization
+record exists.
 
-NEXT GATE = SAME GPT-6 ASTRA X01 A2 DELTA CLOSURE
+NEXT GATE = AARON OWNER DECISION — AUTHORIZE ONE REAL SEALED X01 EXECUTION
 ```
