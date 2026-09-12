@@ -236,7 +236,8 @@ def test_refusals():
     # asserting a binding that does not exist yet). Those moves are disclosed
     # in `post_freeze_updated` and are not a supersession of the accepted bytes.
     superseded = set()
-    for _key in ("target_construction_binding", "inference_binding"):
+    for _key in ("target_construction_binding", "inference_binding",
+                 "execution_infrastructure_binding"):
         blk = real.get(_key) or {}
         live = blk.get("live_worktree_sha256_lf") or {}
         at_head = blk.get("sha256_at_head") or {}
@@ -276,7 +277,11 @@ def test_refusals():
        bool(real["runner_base"]["runner_base_revision"]))
     ck("manifest carries NO self-hash field",
        real["runner_base"]["manifest_self_hash"] is None)
-    ck("runner code blobs are pinned (runner, tests, validator)",
+    # Spelled out rather than derived from the runner: deriving it would make
+    # the check a tautology, and the point is that ADDING execution-relevant
+    # code to the pinned set stays a deliberate, reviewable act.
+    ck("runner code blobs are pinned (runner, tests, validator, and the bound "
+       "items 10-12 execution infrastructure)",
        sorted(e["path"] for e in real["inputs"] if e["kind"] == "runner_code")
        == sorted(["research/extensions/validate_wave0.py",
                   "research/extensions/x01/x01_target_construction.py",
@@ -284,7 +289,14 @@ def test_refusals():
                   "research/extensions/x01/x01_inference.py",
                   "research/extensions/x01/x01_inference_tests.py",
                   "research/extensions/x01/x01_contract_tests.py",
-                  "research/extensions/x01/x01_runner.py"]))
+                  "research/extensions/x01/x01_runner.py",
+                  "research/extensions/x01/x01_authorization.py",
+                  "research/extensions/x01/x01_evidence.py",
+                  "research/extensions/x01/x01_execution_tests.py",
+                  "research/extensions/x01/x01_orchestrator.py",
+                  "research/extensions/x01/x01_production.py"]),
+       str(sorted(e["path"] for e in real["inputs"]
+                  if e["kind"] == "runner_code"))[:110])
     ck("non-consumed parquet inventory is recorded with reasons",
        {e["path"] for e in real["not_consumed_by_x01"]} >=
        {"research/extensions/wave1/settle_panel.parquet",

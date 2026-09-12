@@ -145,12 +145,64 @@ SUPERSEDED_FREEZES = [
      "still_true": "those blobs remain exactly those bytes at that revision"},
 ]
 
+# The accepted items 10-12 execution infrastructure, frozen at its own
+# revision. It is a SEPARATE freeze from the construction/inference one because
+# it was accepted separately, by a separate audit, at a later revision — and
+# recording one revision for two different acceptances would make the earlier
+# one unverifiable.
+EXECUTION_INFRASTRUCTURE_FREEZE_REVISION = "699607a4f69156464886b46ddeddfd6dcc20863a"
+
+# Exactly the six paths `x01_authorization.EXECUTION_INFRASTRUCTURE_PATHS`
+# names. That list is what a D4 authorization binds, so the two must agree;
+# `build_manifest` checks that they do rather than trusting this copy.
+EXECUTION_INFRASTRUCTURE = [
+    ("research/extensions/x01/x01_authorization.py",
+     "item 12: the Owner D1-D6 execution-authorization mechanism"),
+    ("research/extensions/x01/x01_evidence.py",
+     "item 10: the evidence artifact schema and its validator"),
+    ("research/extensions/x01/x01_execution_tests.py",
+     "the synthetic-only execution-infrastructure suite"),
+    ("research/extensions/x01/x01_orchestrator.py",
+     "item 11: the ordered, fail-closed production execution path"),
+    ("research/extensions/x01/x01_production.py",
+     "the production adapters and the plan that wires them"),
+    ("research/extensions/x01/x01_runner.py",
+     "this runner, including the production `execute` entrypoint"),
+]
+
+# The bytes the independent audit accepted, recorded so the freeze can be
+# checked against what was REVIEWED rather than against itself.
+EXECUTION_INFRASTRUCTURE_REVIEW_PINS = {
+    "research/extensions/x01/x01_authorization.py":
+        "c11dee532a459b2f0899c9b3735a207a9319b9907ebfbba5b70acc3710f936b5",
+    "research/extensions/x01/x01_evidence.py":
+        "186605e67320d14805859961bb1c3c9846c8e3f563caf0dda0a844e4905163dc",
+    "research/extensions/x01/x01_execution_tests.py":
+        "37c4faf632d826ad60b10b04577752b0e370749973e4765247a6f44cff9e3e21",
+    "research/extensions/x01/x01_orchestrator.py":
+        "4d15528159610441ad96f0412ae212d3b1ee70a4b0397822d7f580022dcc92ea",
+    "research/extensions/x01/x01_production.py":
+        "307ea3b4f5394065143fd432d8628cf6fd78f5941359324b06d80671ee9dca74",
+    "research/extensions/x01/x01_runner.py":
+        "8ecb1b65dab68209060cf58f26d14ce6530ee08f7b08a68b2a281c85d2b4c77d",
+}
+
+# The authorization ledger is deliberately NOT pinned. It is append-only
+# governance state, not code: a future Aaron authorization ADDS a record to it,
+# and a hash pin would make every legitimate authorization break preflight. Its
+# integrity comes from the append-only discipline the authorization layer
+# enforces — a committed grant, committed records a strict prefix of the
+# worktree ones — not from a frozen hash.
+AUTHORIZATION_LEDGER = "ops/EXECUTION_AUTHORIZATIONS.md"
+
 RUNNER_CODE = [
     ("research/extensions/x01/x01_runner.py", "this runner"),
     ("research/extensions/x01/x01_contract_tests.py",
      "the synthetic contract gate; execution safety depends on it"),
     ("research/extensions/validate_wave0.py", "the governance validator"),
-] + TARGET_CONSTRUCTION + INFERENCE
+] + TARGET_CONSTRUCTION + INFERENCE + [
+    (path, why) for path, why in EXECUTION_INFRASTRUCTURE
+    if path != "research/extensions/x01/x01_runner.py"]
 
 # Tracked text the runner will materially consume. Pinned as BLOB hashes.
 TRACKED_INPUTS = [
@@ -359,7 +411,7 @@ def seed_protocol():
 # --------------------------------------------------------------------------- #
 # manifest
 # --------------------------------------------------------------------------- #
-def _binding_status(modules):
+def _binding_status(modules, revision=None, pins=None):
     """DERIVED, never asserted. `BOUND` means two things, both checked.
 
     1. the freeze REPRODUCED the reviewed bytes — every module's blob at the
@@ -374,10 +426,11 @@ def _binding_status(modules):
     broken. Which modules moved after the freeze is disclosed separately in
     `post_freeze_updated`, so nothing is hidden by the distinction.
     """
+    revision = revision or ACCEPTED_IMPLEMENTATION_FREEZE_REVISION
+    pins = pins if pins is not None else ACCEPTED_REVIEW_PINS
     rev_head = head(REPO)
-    reviewed = all(
-        blob_sha256(REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path)
-        == ACCEPTED_REVIEW_PINS[path] for path, _w in modules)
+    reviewed = all(blob_sha256(REPO, revision, path) == pins[path]
+                   for path, _w in modules)
     if not reviewed:
         return "FREEZE_DOES_NOT_REPRODUCE_ACCEPTED_BYTES"
     committed = all(lf_sha256(os.path.join(REPO, path)) == blob_sha256(REPO, rev_head, path)
@@ -387,34 +440,42 @@ def _binding_status(modules):
     return "BOUND"
 
 
-def _post_freeze_updated(modules):
+def _post_freeze_updated(modules, revision=None):
     """Modules whose committed bytes have moved since their own freeze.
 
     Recorded, not smoothed over: a reader can see exactly which bound files are
     no longer byte-identical to the freeze revision and why that is legitimate.
     """
+    revision = revision or ACCEPTED_IMPLEMENTATION_FREEZE_REVISION
     rev_head = head(REPO)
     return [path for path, _w in modules
             if blob_sha256(REPO, rev_head, path)
-            != blob_sha256(REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path)]
+            != blob_sha256(REPO, revision, path)]
 
 
-def _binding_block(modules, meaning):
-    """One accepted-implementation binding, in the shape preflight verifies."""
+def _binding_block(modules, meaning, revision=None, pins=None):
+    """One accepted-implementation binding, in the shape preflight verifies.
+
+    `revision` and `pins` are parameters because there is now more than one
+    accepted implementation: construction and inference were accepted together
+    at one revision, and the items 10-12 execution infrastructure at another.
+    One builder, three blocks, one rule preflight can verify them all with.
+    """
+    revision = revision or ACCEPTED_IMPLEMENTATION_FREEZE_REVISION
+    pins = pins if pins is not None else ACCEPTED_REVIEW_PINS
     return {
-        "accepted_implementation_revision": ACCEPTED_IMPLEMENTATION_FREEZE_REVISION,
-        "status": _binding_status(modules),
+        "accepted_implementation_revision": revision,
+        "status": _binding_status(modules, revision, pins),
         "modules": [
             {"path": path, "role": why, "hash_convention": BLOB,
-             "sha256_at_freeze": blob_sha256(
-                 REPO, ACCEPTED_IMPLEMENTATION_FREEZE_REVISION, path),
-             "accepted_review_pin": ACCEPTED_REVIEW_PINS[path]}
+             "sha256_at_freeze": blob_sha256(REPO, revision, path),
+             "accepted_review_pin": pins[path]}
             for path, why in modules],
         "live_worktree_sha256_lf": {
             path: lf_sha256(os.path.join(REPO, path)) for path, _w in modules},
         "sha256_at_head": {
             path: blob_sha256(REPO, head(REPO), path) for path, _w in modules},
-        "post_freeze_updated": _post_freeze_updated(modules),
+        "post_freeze_updated": _post_freeze_updated(modules, revision),
         "post_freeze_updated_note": (
             "Committed bytes that have moved since the freeze revision. A test "
             "module appears here legitimately: the binding it asserts does not "
@@ -424,6 +485,28 @@ def _binding_block(modules, meaning):
             "is unaffected."),
         "meaning": meaning,
     }
+
+
+def _execution_infrastructure_revision():
+    """The revision a D4 authorization binds, read from the authorization layer.
+
+    Deliberately delegated rather than reimplemented: the manifest must record
+    the value an authorization will actually be compared against, and two
+    implementations of one rule is how those drift apart.
+    """
+    import importlib.util as _ilu
+
+    spec = _ilu.spec_from_file_location(
+        "x01_auth_for_manifest", os.path.join(HERE, "x01_authorization.py"))
+    mod = _ilu.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    declared = [path for path, _w in EXECUTION_INFRASTRUCTURE]
+    if sorted(mod.EXECUTION_INFRASTRUCTURE_PATHS) != sorted(declared):
+        raise RuntimeError(
+            "the runner's EXECUTION_INFRASTRUCTURE and the authorization "
+            "layer's EXECUTION_INFRASTRUCTURE_PATHS disagree: %r vs %r"
+            % (declared, list(mod.EXECUTION_INFRASTRUCTURE_PATHS)))
+    return mod.execution_infrastructure_revision(REPO)
 
 
 def build_manifest():
@@ -495,6 +578,35 @@ def build_manifest():
             "freeze commit as the construction binding below; recorded as its "
             "own block because the sealed contract keeps construction and "
             "inference apart and preflight verifies them separately."),
+        "execution_infrastructure_binding": dict(
+            _binding_block(
+                EXECUTION_INFRASTRUCTURE,
+                "The revision at which the independently accepted items 10-12 "
+                "execution infrastructure was frozen. Same builder, same checks "
+                "and the same meaning as the two scientific bindings, at its "
+                "own revision because it was accepted by its own audit. These "
+                "six paths are also the boundary a D4 authorization binds: "
+                "changing any of them moves "
+                "`execution_infrastructure_revision` and invalidates every "
+                "authorization bound to the old one. BINDING IS NOT "
+                "AUTHORIZATION.",
+                revision=EXECUTION_INFRASTRUCTURE_FREEZE_REVISION,
+                pins=EXECUTION_INFRASTRUCTURE_REVIEW_PINS),
+            execution_infrastructure_revision=_execution_infrastructure_revision(),
+            boundary_paths=[path for path, _w in EXECUTION_INFRASTRUCTURE],
+            authorization_ledger={
+                "path": AUTHORIZATION_LEDGER,
+                "sha256_at_freeze": blob_sha256(
+                    REPO, EXECUTION_INFRASTRUCTURE_FREEZE_REVISION,
+                    AUTHORIZATION_LEDGER),
+                "pinned": False,
+                "why_not_pinned": (
+                    "Append-only governance state, not code. A future Aaron "
+                    "authorization adds a record; a hash pin would make every "
+                    "legitimate authorization break preflight. Integrity comes "
+                    "from the append-only discipline the authorization layer "
+                    "enforces, not from a frozen hash."),
+                "records_at_freeze": 0}),
         "superseded_freezes": SUPERSEDED_FREEZES,
         # Both halves go through the SAME builder, so the two blocks cannot
         # drift apart in shape and preflight can verify them with one rule.
@@ -662,15 +774,20 @@ def preflight(manifest=None, strict_state=True, status=None):
     for _label, _key, _revkey in (
             ("target-construction", "target_construction_binding",
              "target_construction_revision"),
-            ("inference", "inference_binding", "accepted_implementation_revision")):
+            ("inference", "inference_binding", "accepted_implementation_revision"),
+            ("execution-infrastructure", "execution_infrastructure_binding",
+             "accepted_implementation_revision")):
         _b = manifest.get(_key)
         r.check("manifest binds an accepted %s revision" % _label,
                 bool(_b and _b.get(_revkey)),
                 "absent or null — that half of the implementation is not bound")
     tcb = manifest.get("target_construction_binding")
     infb = manifest.get("inference_binding")
+    eib = manifest.get("execution_infrastructure_binding")
     for tag, blk, revkey in (("construction", tcb, "target_construction_revision"),
-                             ("inference", infb, "accepted_implementation_revision")):
+                             ("inference", infb, "accepted_implementation_revision"),
+                             ("execution-infrastructure", eib,
+                              "accepted_implementation_revision")):
         if not (blk and blk.get(revkey)):
             continue
         rev = blk[revkey]

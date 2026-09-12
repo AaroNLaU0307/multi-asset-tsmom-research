@@ -967,18 +967,25 @@ def test_safety():
        and st["target_execution_authorized"] is False,
        "committed=%d active=%d" % (st["committed_authorization_records"],
                                    st["active_authorizations"]))
-    ck("... and the real repository could not satisfy a record anyway: the "
-       "execution infrastructure is uncommitted, so its bound revision is an "
-       "unmatchable sentinel",
-       not re.match(r"^[0-9a-f]{40}$",
-                    st["execution_infrastructure_revision"] or ""),
-       st["execution_infrastructure_revision"][:70])
-    ck("the real repository's live execution identity carries that same "
-       "unmatchable revision",
-       not re.match(r"^[0-9a-f]{40}$",
-                    orch.execution_identity(
-                        orch.ExecutionPlan(run_id="SAFETY-PROBE")
-                    )["execution_infrastructure_revision"] or ""))
+    # Before the freeze this asserted the infrastructure was UNCOMMITTED, so
+    # its bound revision was an unmatchable sentinel and no record could ever
+    # bind it. Freezing changed that fact, and the honest post-freeze statement
+    # is the stronger one: the revision is now real and bindable, and the only
+    # thing between this repository and a real execution is that NOBODY HAS
+    # AUTHORIZED ONE.
+    infra = st["execution_infrastructure_revision"]
+    ck("the execution infrastructure is COMMITTED, so its bound revision is a "
+       "real revision an authorization could name",
+       bool(re.match(r"^[0-9a-f]{40}$", infra or "")), str(infra)[:50])
+    ck("the live execution identity reports that same revision, so the runtime "
+       "and the manifest cannot disagree about what would execute",
+       orch.execution_identity(orch.ExecutionPlan(run_id="SAFETY-PROBE"))
+       ["execution_infrastructure_revision"] == infra)
+    ck("and the refusal now rests on the LEDGER alone: a bindable revision "
+       "with zero authorization records is still not authorized",
+       st["committed_authorization_records"] == 0
+       and st["active_authorizations"] == 0
+       and st["target_execution_authorized"] is False)
     ck("cmd_execute STILL REFUSES without Owner authorization",
        runner.cmd_execute(None) == 2)
     man = json.load(io.open(runner.MANIFEST, encoding="utf-8"))
