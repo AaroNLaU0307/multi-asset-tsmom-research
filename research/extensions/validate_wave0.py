@@ -1126,11 +1126,48 @@ DECLARED_EXTENSION_MODULES = {
         "synthetic-only tests for the inference layer; hand-built monthly "
         "series with closed-form oracles. Opens no frozen panel and produces "
         "no X01 outcome",
+    "research/extensions/x01/x01_evidence.py":
+        "X01 evidence-artifact SCHEMA and validator: the record format the "
+        "sealed study writes into, plus the checks that refuse an internally "
+        "inconsistent record. Computes no statistic, reads no target data, and "
+        "keeps COMPLETED_EVIDENCE, INFERENCE_PROCEDURE_FAILURE, "
+        "EXECUTION_REFUSED and EXECUTION_MECHANICAL_FAILURE separate so a "
+        "mechanical problem can never be read as a research outcome",
+    "research/extensions/x01/x01_orchestrator.py":
+        "X01 production orchestration: the ordered, fail-closed path a future "
+        "AUTHORIZED run would take. It CALLS the bound construction and "
+        "inference layers and contains no scientific logic of its own. Every "
+        "boundary is an injected adapter and every default adapter REFUSES, so "
+        "there is no code path from here to the frozen panels; the Owner "
+        "authorization gate consults x01_authorization.py and opens only for a "
+        "committed, active, exactly-bound record",
+    "research/extensions/x01/x01_authorization.py":
+        "X01 execution-authorization mechanism under the Owner's sealed D1-D6 "
+        "policy: parses the append-only ops/EXECUTION_AUTHORIZATIONS.md ledger, "
+        "requires the grant to exist in COMMITTED git state, resolves the "
+        "one-shot lifecycle, compares exactly seven bound identities, and "
+        "records consumption around the durable step-2 boundary. It computes no "
+        "statistic, constructs nothing, reads no target data and appends to no "
+        "exposure or trial ledger",
+    "research/extensions/x01/x01_execution_tests.py":
+        "synthetic-only tests for the evidence schema and orchestration; "
+        "hand-built panels, injected adapters, scratch ledgers and call "
+        "counters. Opens no frozen panel and produces no X01 outcome",
+    "research/extensions/x01/x01_production.py":
+        "X01 production execution adapters: the sealed target-data boundary, "
+        "the governance recorder that writes the step-2 journal, the §10.1 "
+        "exposure row and the §6.1 VARIANT_ATTEMPT rows, "
+        "the read-at-execution cumulative Databento reader and the plan that "
+        "wires them to the accepted orchestrator. It computes no statistic and "
+        "constructs no target itself, it never writes to another project, and "
+        "its authorization provider is built from the committed ledger rather "
+        "than accepted from a caller",
     "research/extensions/x01/x01_runner.py":
-        "X01 execution manifest builder and preflight refusal gate. "
-        "PRE-EXECUTION ONLY: it hashes bytes and compares pins, parses no "
-        "price panel, and its `execute` subcommand refuses -- constructing "
-        "E, F, A1, S1 or S2 needs a separate Aaron authorization",
+        "X01 execution manifest builder, preflight gate and production "
+        "`execute` entrypoint. Preflight hashes bytes and compares pins and "
+        "parses no price panel; `execute` routes through the production plan "
+        "builder and the accepted orchestrator, and refuses unless a COMMITTED "
+        "Aaron authorization names the exact run",
     "research/extensions/x01/x01_contract_tests.py":
         "X01 sealed-contract tests on SYNTHETIC data only; asserts the "
         "sealed signal, cost-quantity, S1, S2, B, COVID and bootstrap "

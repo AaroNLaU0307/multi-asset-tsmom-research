@@ -61,6 +61,7 @@ Both are labelled per entry. The runner uses the same convention it wrote.
 
 import argparse
 import hashlib
+import importlib.util
 import json
 import os
 import re
@@ -793,25 +794,46 @@ def cmd_preflight(args):
 
 
 # --------------------------------------------------------------------------- #
-# execute — the boundary. Deliberately not implemented.
+# execute — the production entrypoint.
 # --------------------------------------------------------------------------- #
-def cmd_execute(_args):
-    print("X01 TARGET EXECUTION IS NOT AUTHORIZED AND IS NOT IMPLEMENTED.")
-    print()
-    print("Constructing E, F, A1, S1 or S2 — or the paired 179-month sample, or")
-    print("any Sharpe, delta-Sharpe, bootstrap or crisis statistic — crosses the")
-    print("target-execution boundary. A sealed preregistration and a FULL lane")
-    print("are NOT run authorization; a separate Aaron authorization is.")
-    print()
-    print("Before the first construction, the authorized runner must, IN ORDER:")
-    print("  1. pass preflight;")
-    print("  2. record the exposure event and the A1/S1/S2 attempt")
-    print("     classifications, plus E's prospective ETF +1;")
-    print("  3. read the then-current authoritative cumulative Databento state")
-    print("     (never hard-code 14 -> 17);")
-    print("  4. record the child seed streams by spawn_key and state fingerprint;")
-    print("  ONLY THEN construct anything, and only then read an output.")
-    return 2
+# It is complete. What stands between this command and a real X01 execution is
+# an AUTHORIZATION — a committed record in `ops/EXECUTION_AUTHORIZATIONS.md`
+# naming this exact run and binding the seven D4 identities — and two run-time
+# arguments. No further production code has to be written for an authorized run
+# to proceed, and none of it can be reached without the authorization.
+#
+# The path is `x01_production.build_plan` followed by `x01_orchestrator.run`,
+# and there is no second route. Every gate — preflight, committed authorization,
+# the atomic one-shot claim, the step-2 exposure and trial commitment, the
+# cumulative Databento read, the seed-stream record, the sealed sample — runs in
+# the authoritative order inside that one call.
+_PRODUCTION_MODULE = None
+
+
+def _production():
+    """Load the production adapters lazily, and exactly ONCE.
+
+    Lazy because importing them pulls in the orchestrator, which pulls in this
+    module again, and because `preflight` must stay usable where pandas is not
+    installed. Cached because a second copy of one file defines a second set of
+    exception classes, and an `except` clause in one copy does not catch what
+    the other raises.
+    """
+    global _PRODUCTION_MODULE
+    if _PRODUCTION_MODULE is None:
+        path = os.path.join(HERE, "x01_production.py")
+        spec = importlib.util.spec_from_file_location("x01_prod_entry", path)
+        mod = importlib.util.module_from_spec(spec)
+        sys.modules["x01_prod_entry"] = mod
+        spec.loader.exec_module(mod)
+        _PRODUCTION_MODULE = mod
+    return _PRODUCTION_MODULE
+
+
+def cmd_execute(args):
+    """Run X01. Refuses unless a committed Owner authorization permits it."""
+    _artifact, code = _production().execute(args)
+    return code
 
 
 def main(argv=None):
@@ -823,8 +845,22 @@ def main(argv=None):
     pf.add_argument("--no-runtime", action="store_true",
                     help="skip the canonical qros seal query (offline checks only)")
     pf.set_defaults(func=cmd_preflight)
-    sub.add_parser("execute", help="REFUSES — target execution is unauthorized"
-                   ).set_defaults(func=cmd_execute)
+    ex = sub.add_parser(
+        "execute", help="run X01 — refuses without a committed Owner "
+                        "authorization naming this run")
+    ex.add_argument("--authorization-id", dest="authorization_id",
+                    help="the committed Owner authorization to spend")
+    ex.add_argument("--run-id", dest="run_id",
+                    help="the unique run this authorization binds")
+    ex.add_argument("--artifact", dest="artifact",
+                    help="path to publish the evidence artifact to")
+    ex.add_argument("--exposure-classification", dest="exposure_classification",
+                    help="the ratified TBL-EXPOSURE-CLASSES token the step-2 "
+                         "event carries. Owner input; there is no default")
+    ex.add_argument("--no-runtime", action="store_true",
+                    help="INERT for execution: the canonical seal query is "
+                         "mandatory on every production path")
+    ex.set_defaults(func=cmd_execute)
     args = p.parse_args(argv)
     return args.func(args)
 
