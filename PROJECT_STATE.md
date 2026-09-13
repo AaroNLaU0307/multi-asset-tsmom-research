@@ -164,7 +164,16 @@ PC-1                = CLOSED from existing §J authority. The S_0-vs-frozen over
                       flips, over 402 decision months and 6,477 position cells, computed
                       strictly inside the frozen window ending 2026-06-12.
                       NO new daily-return tolerance was created.
-S2 BUILD            = NOT STARTED and NOT AUTHORIZED.
+S2 BUILD            = COMPLETE (build + synthetic validation only), under Aaron's
+                      C_A_S2_BUILD_AUTHORIZATION. Package at
+                      research/extensions/ca/prospective/ (11 modules + runbook).
+                      Forward engine reproduces src/ EXACTLY on the frozen panel
+                      (max abs diff 0.000e+00, identical NaN patterns). 22-class S2
+                      suite: 138 assertions, 0 failures, synthetic fixtures only.
+                      NOT LIVE: S_G_CREATED = NO, PIPELINE_GO_LIVE does not exist,
+                      no prospective position generated, no real post-seal data used,
+                      no Sharpe/PnL/return/drawdown/FM-1/crisis outcome computed.
+                      GO-LIVE REQUIRES A SEPARATE OWNER AUTHORIZATION.
 S3 RUN              = NOT AUTHORIZED. TARGET_RUN_AUTHORIZED = NO. No record exists in
                       ops/EXECUTION_AUTHORIZATIONS.md for C-A, and a seal is not
                       permission to execute.
@@ -176,9 +185,10 @@ PROSPECTIVE STATE   = T4_SEAL_EXISTS = YES, but the scoring stream has NOT start
 TARGET_OUTCOMES     = NONE COMPUTED, NONE REVEALED.
 SB-3                = OPEN -- blocks C_D_PASS ONLY. It never blocked the C-A S1 seal.
 C-B                 = PARKED.
-NEXT_OWNER_DECISION = S2 BUILD AUTHORIZATION for C-A (and, separately, C-D
-                      implementation authorization). Both are distinct gates that this
-                      seal did not consume.
+NEXT_OWNER_DECISION = C-A GO-LIVE AUTHORIZATION (acquire S_G, establish
+                      PIPELINE_GO_LIVE, begin accrual) and, separately, the C-D
+                      implementation authorization. Both remain distinct gates that
+                      neither the seal nor the S2 build authorization consumed.
 ```
 
 ### C-A sealed identity
