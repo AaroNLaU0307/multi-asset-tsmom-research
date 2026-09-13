@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T06:33:46Z",
+  "generated_utc": "2026-09-13T07:09:53Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -338,6 +338,130 @@
         "scientific_object_preserved": false,
         "why_not_adopted": "Single aggregate US corporate credit spread. Not an option-adjusted spread, and not separated into investment grade and high yield, so it cannot supply the two distinct LQD and HYG objects. Adopting it would answer a different question.",
         "sha256_of_raw_file_on_disk": "cc51b2747654e3ed003e0a6ce5500de054c1a8dcd3ec00bace1c6742416ab2eb"
+      }
+    ]
+  },
+  "credit_decision_frozen": {
+    "date": "2026-09-13",
+    "decision": "CREDIT_OBJECT = BAA10Y",
+    "mapping": "LQD included; HYG REMOVED_FROM_VALUE_UNIVERSE",
+    "permitted_description": "PUBLIC_CORPORATE_CREDIT_VALUATION_COMPONENT",
+    "forbidden_descriptions": [
+      "OAS",
+      "LQD/HYG Value",
+      "high-yield Value"
+    ],
+    "baa_minus_aaa": "NOT AN ACTIVE FALLBACK. BAA10Y is the primary and only credit object for this study. No signal-based object switching: any credit-vs-duration overlap diagnostic is predeclared and DIAGNOSTIC/CLAIM-INTERPRETATION ONLY, and may never trigger substitution, dropping credit, weight changes or retuning. Strong overlap is recorded as a limitation, not repaired.",
+    "status": "EXPLICIT SCIENTIFIC REDEFINITION, frozen, not to be reopened"
+  },
+  "phase_a_closure": {
+    "date": "2026-09-13",
+    "value_data_pit_readiness": "OWNER_DATA_ACTION_REQUIRED",
+    "intended_universe": [
+      "SPY",
+      "TLT",
+      "LQD",
+      "UUP",
+      "FXY"
+    ],
+    "objects": [
+      "equity valuation",
+      "duration / real-yield valuation",
+      "public corporate credit valuation",
+      "FX real valuation"
+    ],
+    "only_remaining_blocker": "Japan CPI",
+    "universe_not_shrunk": true,
+    "evaluation_window_note": "EUR (ECB) and SEK (SCB) both currently end 2025-12, verified independently. That is an EVALUATION-END parameter, not a blocker: an evaluation window ending on or before 2025-12 is fully supported by every acquired leg. It becomes an Owner decision about the evaluation end date, in the same class as the evaluation start.",
+    "series": [
+      {
+        "instrument": "LQD",
+        "object_name": "PUBLIC_CORPORATE_CREDIT_VALUATION_COMPONENT",
+        "frozen_decision": "CREDIT_OBJECT = BAA10Y",
+        "provider": "Federal Reserve Bank of St. Louis (FRED)",
+        "series_identifier": "BAA10Y",
+        "component_definition": "Moody's Seasoned Baa Corporate Bond Yield minus the 10-Year Treasury Constant Maturity yield (components archived alongside: BAA, DGS10).",
+        "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=BAA10Y&cosd=1900-01-01",
+        "raw_file": "data/value_raw/BAA10Y.csv",
+        "component_files": [
+          "data/value_raw/BAA.csv",
+          "data/value_raw/DGS10.csv"
+        ],
+        "first_observation": "1986-01-02",
+        "last_observation": "2026-09-10",
+        "observations": 10173,
+        "frequency": "business-daily",
+        "units": "percentage points (yield spread)",
+        "pit_classification": "PIT_READY",
+        "publication_timing_finding": "Determined from observed publication mechanics, not assumed. On Sunday 2026-09-13 the latest observation for both BAA10Y and DGS10 is Thursday 2026-09-10, with Friday 2026-09-11 - a business day - still absent. At least one business day of publication lag is therefore directly observable. Zero lag was NOT frozen.",
+        "declared_lag_recommendation": "At a month-end decision timestamp t, use the most recent observation dated on or before t minus one business day. Conservative, mechanically defensible, and independent of any outcome.",
+        "revision_behaviour": "Neither component is a revised statistic: Moody's seasoned Baa yields and the H.15 Treasury constant-maturity series are published as observed and not restated. No vintage problem arises, unlike the Shiller and Cleveland-Fed inputs.",
+        "legal_reproducibility": "Public FRED series, freely retrievable and retainable; no ICE/Bloomberg licence involved.",
+        "scientific_status": "EXPLICIT REDEFINITION. This is NOT an option-adjusted spread, NOT LQD/HYG Value and NOT high-yield Value. HYG is removed from the Value universe.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "375268efe0e3d880acfd04c42f9e2e454f90563de90f4f8ece129bcbee2c9574",
+        "component_sha256": {
+          "BAA.csv": "1019e4932d417002155b730ae5315bac40be6894704d1a6754c3eceef3aaabf2",
+          "DGS10.csv": "51cf02cc3952dd14161d22fd7aaba4dc54d1182c87692b034bb0a9d5aa476b4c"
+        }
+      },
+      {
+        "instrument": "UUP leg",
+        "economy": "Euro area (EUR)",
+        "provider": "European Central Bank, ECB Data Portal",
+        "series_identifier": "ICP.M.U2.N.000000.4.INX (HICP overall index, 2015=100)",
+        "source_url": "https://data-api.ecb.europa.eu/service/data/ICP/M.U2.N.000000.4.INX?format=csvdata",
+        "raw_file": "data/value_raw/euro_hicp_ecb_ICP_M_U2_N_000000_4_INX.csv",
+        "first_observation": "1996-01",
+        "last_observation": "2025-12",
+        "observations": 360,
+        "frequency": "monthly",
+        "units": "index (2015=100)",
+        "pit_classification": "PIT_FEASIBLE_WITH_DECLARED_LAG",
+        "resolution_note": "The earlier Eurostat parameter problem is resolved by going to the ECB Data Portal, which is the authoritative euro-area publisher. The latest observation is 2025-12 and this was confirmed INDEPENDENTLY two ways - ECB lastNObservations=2 on both the index and the annual rate, and Eurostat lastTimePeriod=6 - so 2025-12 is the true current end of euro-area HICP in these feeds, not an artefact of a stale index base or a wrong geo/unit code.",
+        "revision_policy": "HICP is occasionally revised and is rebased periodically; rebasing is a documented multiplicative change that can be mechanically re-based without altering the economic object.",
+        "legal_reproducibility": "ECB open data; free keyless programmatic access.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "9bfa365fe6dd664c75f90f271821011bfb8cc5a7e1d0b181850951529e225b88"
+      },
+      {
+        "instrument": "UUP leg",
+        "economy": "Sweden (SEK)",
+        "provider": "Statistics Sweden (SCB)",
+        "series_identifier": "PR/PR0101/PR0101A/KPItotM, ContentsCode 000004VU (CPI, Fixed Index numbers, 1980=100)",
+        "source_url": "https://api.scb.se/OV0104/v1/doris/en/ssd/PR/PR0101/PR0101A/KPItotM",
+        "raw_file": "data/value_raw/sweden_cpi_scb_KPItotM.json",
+        "first_observation": "1980M01",
+        "last_observation": "2025M12",
+        "observations": 552,
+        "frequency": "monthly",
+        "units": "index (1980=100)",
+        "pit_classification": "PIT_FEASIBLE_WITH_DECLARED_LAG",
+        "resolution_note": "The earlier HTTP 400 was my malformed POST body, not a source problem. Reading the table's own metadata gave five ContentsCode options; 000004VU is the fixed index-number series (the others are shadow index, annual change, monthly change and year-to-month index). The query now returns 552 observations.",
+        "revision_policy": "Swedish CPI fixed index numbers are not revised once published.",
+        "legal_reproducibility": "SCB open data; free keyless programmatic access.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "b1a4892b51f94a7bf7cb9e5ebdcf2041d82c88b6cc5fbc66a125a640c31533eb"
+      },
+      {
+        "instrument": "UUP/FXY leg",
+        "economy": "Japan (JPY)",
+        "provider": "Statistics Bureau of Japan / e-Stat",
+        "series_identifier": "national CPI, all items, monthly index - NOT ACQUIRED",
+        "raw_file": null,
+        "pit_classification": "PIT_NOT_RELIABLY_FEASIBLE",
+        "blocker": true,
+        "routes_attempted": [
+          "FRED OECD mirrors (JPNCPIALLMINMEI, JPNCPICORMINMEI, CPGRLE01JPM659N, JPNCPALTT01IXNBM, CPALCY01JPM661N) - all discontinued 2021-06/2022-04",
+          "OECD public SDMX API - HTTP 403 on both query forms",
+          "IMF IFS SDMX (dataservices.imf.org) - DNS failure; api.imf.org 404; datamapper 403",
+          "stat.go.jp English CPI pages - the only direct files are 2015/2020/2025base-list item-and-weight CLASSIFICATION lists and an errata reference table (r150626.xls), none of which is the index series",
+          "stat.go.jp Japanese CPI pages - zero data-file links",
+          "e-Stat file-search pages - JavaScript driven, expose no direct file links and no statInfId in the served HTML",
+          "e-Stat catalogue API - requires a free appId (account registration)"
+        ],
+        "owner_action_required": "EITHER register a free e-Stat appId at https://www.e-stat.go.jp/ and supply it, OR manually download the Japan national CPI all-items monthly INDEX series (2020-base or 2025-base, all Japan) from e-Stat and drop the file into data/value_raw/. Either route is free. I must not register an account on Aaron's behalf, and I did not scrape an unofficial mirror or substitute another country's or an OECD mirror series.",
+        "adopted": false
       }
     ]
   }
