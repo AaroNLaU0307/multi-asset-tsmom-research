@@ -11,8 +11,14 @@ STATUS = SEALED. The scientific content below is frozen. D1-D11 are Owner
          seal. Nothing below has been run.
 OWNER_DECISIONS_REMAINING = NONE
 ACCEPTED_DESIGN_REVISION = 4c31add4cd7f927952139715206029ae70fb4e3b
-                           (the bytes Aaron reviewed and accepted; this seal
-                           changes status metadata only)
+                           (the bytes Aaron reviewed and accepted; the original
+                           seal changed status metadata only)
+AMENDMENTS = VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (2026-09-13) — see §16.
+             ORIGINAL_SEAL_REVISION = ba5814d8dad2b81f28d45a0b6df7c010ef4c052f
+             ORIGINAL_SEALED_PREREG_SHA256 =
+               df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
+             The original seal is NOT erased; this document supersedes it and
+             its lineage is preserved above and in §16.
 ```
 
 **Research family:** `FINANCIAL_ASSET_TIME_SERIES_VALUE`
@@ -136,11 +142,11 @@ Raw snapshots live in `data/value_raw/` (git-ignored) and are pinned by
 | TLT real yield | FRED `DFII20` | 2004-07-27 → 2026-09-10 | `PIT_READY` |
 | LQD credit | FRED `BAA10Y` (+ `BAA`, `DGS10`) | 1986-01-02 → 2026-09-10 | `PIT_READY` |
 | US CPI | FRED **`CPIAUCNS`** (NSA) | 1913-01 → 2026-08 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
-| EUR CPI | Eurostat `prc_hicp_minr`, `coicop18=TOTAL`, `unit=I25` | 1996-01 → 2026-08 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
+| EUR CPI | Eurostat `prc_hicp_minr`, `coicop18=TOTAL`, `unit=I25` | **1999-12 → 2026-08, 321 numeric** (period labels run from 1996-01; see §16) | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | JPY CPI | e-Stat `statInfId=000040482943` (All items, code 0001) | 1970-01 → 2026-07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | GBP CPI | ONS `D7BT` | 1988-01 → 2026-07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | CAD CPI | StatCan `18-10-0004` | 1914-01 → current | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
-| SEK CPI | SCB `KPI2020M`, `00000808` | 1980M01 → 2026M07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
+| SEK CPI | SCB **two-table Fixed CPI** — `KPI2020M1980`/`000007T9` then `KPI2020M`/`00000808` (§16) | 1980-01 → 2026-07, **559 numeric** | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | CHF CPI | SNB `plkopr`, `LD2010100` | 1921-01 → 2026-07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | nominal FX ×6 | FRED `DEX*` | 1971/1999 → 2026-09 | `PIT_READY` |
 
@@ -211,7 +217,7 @@ seven economies.
 | Euro area | Eurostat `prc_hicp_minr`, `coicop18=TOTAL`, `unit=I25` | HICP overall index (ECOICOP v2) | **NSA** | 2025 = 100 | monthly |
 | UK | ONS `D7BT` | CPI INDEX 00: ALL ITEMS | **NSA** | 2015 = 100 | monthly |
 | Canada | StatCan `18-10-0004` | CPI, all-items, Canada | **NSA** | 2002 = 100 | monthly |
-| Sweden | SCB `KPI2020M`, `00000808` | CPI, total, fixed index numbers | **NSA** | 2020 = 100 | monthly |
+| Sweden | SCB `KPI2020M1980`/`000007T9` + `KPI2020M`/`00000808` (§16) | Fixed CPI, all items | **NSA** | 2020 = 100 | monthly |
 | Switzerland | SNB `plkopr`, `LD2010100` | Landesindex der Konsumentenpreise, total | **NSA** | Dec 2010 = 100 | monthly |
 | Japan | e-Stat `000040482943`, Group/Item `0001` | All items, Indices of Items, Japan | **NSA** | 2025 = 100 | monthly |
 
@@ -247,7 +253,7 @@ At month-end *t*, the admissible value of each raw series is:
 | e-Stat `000040482943` (JPY) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | ONS `D7BT` (GBP) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | StatCan `18-10-0004` (CAD) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
-| SCB `KPI2020M` (SEK) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
+| SCB two-table Fixed CPI (SEK) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | SNB `plkopr` (CHF) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | Shiller `ie_data.xls` CAPE | monthly, reference month *m* | *m* ≤ *t* − 3 months | 3 mo (D1) |
 
@@ -602,6 +608,60 @@ separate Owner decision and a genuinely new question.
 
 ---
 
+## 16. `VALUE_S1_DATA_IDENTITY_AMENDMENT_001`
+
+**Owner decision, 2026-09-13:** authorise the official SCB two-table Fixed-CPI
+join for Sweden, and correct the euro-area numeric-coverage statement. A narrow
+data-identity correction. No scientific choice is reopened.
+
+**1. The originally sealed Swedish source identity had insufficient numeric
+history.** `SCB KPI2020M` / `00000808` exposes 559 monthly period *labels* but
+carries only **7 numeric observations**, 2026M01–2026M07. Every earlier month is
+`".."`. The coverage recorded at seal — "1980M01 → 2026M07" — counted labels, not
+values.
+
+**2. S2 detected this before any target outcome was computed.** The build's data
+validation failed on this leg; no Value return, signal, Sharpe, correlation,
+combination outcome or verdict existed then or exists now.
+
+**3. The Swedish scientific object is unchanged:**
+`SWEDEN_ALL_ITEMS_FIXED_CPI_NSA`. **Shadow CPI is NOT used** — it is a different
+official object and was explicitly rejected.
+
+**4. The object is implemented through two official SCB Fixed-CPI tables across
+the reference-year transition**, because no single table spans it:
+
+| leg | table | code | description | numeric coverage |
+|---|---|---|---|---|
+| historical | `KPI2020M1980` | `000007T9` | Fixed CPI, index numbers 1980=100 rebased to 2020=100 | 1980-01 → 2025-12 (552) |
+| current | `KPI2020M` | `00000808` | CPI, fixed index numbers | 2026-01 → 2026-07 (7) |
+
+```
+COMPOSITION (strict concatenation, frozen):
+    month <= 2025-12  ->  KPI2020M1980 / 000007T9
+    month >= 2026-01  ->  KPI2020M     / 00000808
+```
+
+Verified mechanically: `OVERLAP_MONTHS = 0`, `GAP_MONTHS_AT_JUNCTION = 0`,
+`REFERENCE_BASE_MATCH = YES` (both 2020=100), `SEASONAL_ADJUSTMENT_MATCH = YES`
+(both NSA), `OBJECT_DEFINITION_MATCH = YES` (both all-items Fixed CPI), composed
+series contiguous 1980-01 → 2026-07 with 559 observations. The junction is
+`2025-12 = 124.42 → 2026-01 = 124.58` on one basis. **No leg was rescaled, no
+bridge factor estimated, nothing interpolated or averaged, and nothing spliced on
+observed price behaviour.** The composed object never hides its two-source
+provenance: both raw identities are pinned separately in the inventory.
+
+**5. The euro-area coverage statement is corrected** from "1996-01 → 2026-08" to
+its actual numeric coverage **1999-12 → 2026-08** (321 values across 368 period
+labels) — the same label-counting error. This is a factual correction only: the
+euro source, object, reference basis, lag, the real-FX formula and the evaluation
+window are all unchanged, and the leg is usable from 2000-02, far before the
+2014-07 start.
+
+**6–8. Nothing else changed.** No `D1`–`D11` value, no evaluation window, no
+signal, inference, portfolio, episode, C3 or verdict rule.
+
+```
 ```
 A SEAL IS NOT AUTHORIZATION TO EXECUTE. This contract is SEALED and its
 scientific content is frozen. S2 BUILD may implement it without changing it.
