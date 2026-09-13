@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T07:09:53Z",
+  "generated_utc": "2026-09-13T07:23:21Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -462,6 +462,65 @@
         ],
         "owner_action_required": "EITHER register a free e-Stat appId at https://www.e-stat.go.jp/ and supply it, OR manually download the Japan national CPI all-items monthly INDEX series (2020-base or 2025-base, all Japan) from e-Stat and drop the file into data/value_raw/. Either route is free. I must not register an account on Aaron's behalf, and I did not scrape an unofficial mirror or substitute another country's or an OECD mirror series.",
         "adopted": false
+      }
+    ]
+  },
+  "phase_a_correction": {
+    "date": "2026-09-13",
+    "value_data_pit_readiness": "PASS",
+    "evaluation_end_forced_to_2025_12": false,
+    "binding_evaluation_end_constraint": "2026-07 (earliest last-observation across the CPI legs)",
+    "what_was_wrong": "Three current-series identifications were wrong in the prior closure: euro area and Sweden were read from archived reference-base tables, and Japan was declared owner-blocked by inferring file-download access from catalogue-API access. All three are corrected here against currently maintained official series.",
+    "series": [
+      {
+        "economy": "Euro area (EUR)",
+        "provider": "Eurostat",
+        "series_identifier": "prc_hicp_minr (HICP, ECOICOP ver.2), geo=EA20, coicop18=TOTAL, unit=I25",
+        "note_base": "unit=I25 is 2025=100; the SAME dataset also serves unit=I15 (2015=100) over the identical 1996-01..2026-08 span, so linking/rebasing between bases is mechanical and needs no external splice.",
+        "raw_file": "data/value_raw/euro_hicp_eurostat_ecoicop2_I25.json",
+        "companion_file": "data/value_raw/euro_hicp_eurostat_ecoicop2_I15.json",
+        "first_observation": "1996-01",
+        "last_observation": "2026-08",
+        "observations": 368,
+        "frequency": "monthly",
+        "pit_classification": "PIT_FEASIBLE_WITH_DECLARED_LAG",
+        "supersedes": "ICP.M.U2.N.000000.4.INX / prc_hicp_midx, both archived at 2025-12",
+        "correction_note": "My earlier 'ends 2025-12' finding was wrong. I queried the ECOICOP v1 / 2015=100 datasets, which Eurostat labels '(1996-2025)', and treated agreement between ECB and Eurostat as independent confirmation when both were views of the same archived object. The live dataset is ECOICOP v2 prc_hicp_minr, whose dimension is coicop18 with code TOTAL (not coicop=CP00) - which is why the filtered queries returned HTTP 400.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "a0572ab8a8b8f96f788ab16f0af12dbeaf33ec07dadb607af980c7c1a6ee519d",
+        "companion_sha256": "9592f0d47abbd3fb171759fc02c7dbb97bc5ed64738dca620016bfe9aab49bb4"
+      },
+      {
+        "economy": "Sweden (SEK)",
+        "provider": "Statistics Sweden (SCB)",
+        "series_identifier": "PR0101A/KPI2020M, ContentsCode 00000808 (CPI, fixed index numbers, 2020=100)",
+        "raw_file": "data/value_raw/sweden_cpi_scb_KPI2020M.json",
+        "first_observation": "1980M01",
+        "last_observation": "2026M07",
+        "observations": 559,
+        "frequency": "monthly",
+        "pit_classification": "PIT_FEASIBLE_WITH_DECLARED_LAG",
+        "supersedes": "KPItotM (1980=100), which SCB itself labels 'no update after 2025M12'",
+        "note_base": "SCB carries the full 1980M01 history on the 2020=100 table, so no splice is required at all; the rebasing is already done by the agency.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "d42882277a19eb2c49a5feeed6beb7068d6a3253f5784a1bb19f1da1a09c55aa"
+      },
+      {
+        "economy": "Japan (JPY)",
+        "provider": "Statistics Bureau of Japan / e-Stat",
+        "series_identifier": "e-Stat statInfId=000040482943 fileKind=1 (CSV) - 2025-Base CPI, Time Series / Indices of Items / Japan / Monthly; all-items column is Group/Item code 0001 'All items'",
+        "source_url": "https://www.e-stat.go.jp/en/stat-search/file-download?statInfId=000040482943&fileKind=1",
+        "raw_file": "data/value_raw/japan_cpi_estat_000040482943.csv",
+        "first_observation": "197001",
+        "last_observation": "202607",
+        "observations": 679,
+        "frequency": "monthly",
+        "encoding": "cp932",
+        "pit_classification": "PIT_FEASIBLE_WITH_DECLARED_LAG",
+        "public_download_without_appid": true,
+        "correction_note": "My earlier OWNER_DATA_ACTION_REQUIRED was wrong. I inferred 'public file download needs an appId' from 'catalogue API needs an appId'. They are separate: the e-Stat datalist pages render server-side and expose direct file-download links, and this CSV was retrieved with no appId, no account and no mirror.",
+        "adopted": true,
+        "sha256_of_raw_file_on_disk": "7bf312e18cf8007411ac030ab073d09ffec2223eb3c0d6d054e23c9c9f4fcc45"
       }
     ]
   }

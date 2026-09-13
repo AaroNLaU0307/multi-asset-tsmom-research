@@ -125,7 +125,33 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## Path to the seal under vNext — TAKEN 2026-09-13
+## Time-Series Value — the next research question
+
+```
+RESEARCH_QUESTION   = Does fundamental cheapness relative to an asset's own prior
+                      history predict higher subsequent excess returns, and does a
+                      sleeve built on it add anything to the frozen TSMOM book?
+FAMILY · ANCHOR     = FINANCIAL_ASSET_TIME_SERIES_VALUE · EXPANDING_OWN_HISTORY
+S0 FRAME            = COMPLETE
+S1 DESIGN+SEAL      = IN_PROGRESS — draft at
+                      research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md,
+                      NOT sealed. 11 Owner decisions (D1-D11) open in its §12.
+S2 BUILD            = NOT_STARTED
+UNIVERSE            = SPY, TLT, LQD, UUP, FXY (five instruments, four objects:
+                      equity / duration / public corporate credit / FX real)
+CREDIT_OBJECT       = BAA10Y, LQD only; HYG REMOVED. Explicit redefinition, frozen;
+                      never to be described as an OAS or as high-yield Value.
+DATA                = VALUE_DATA_PIT_READINESS = PASS. All legs acquired from
+                      current official sources and pinned by sha256 in
+                      VALUE_DATA_INVENTORY.json.
+EVALUATION_END      = binding constraint 2026-07 (earliest CPI last-observation).
+                      NOT forced to 2025-12.
+TARGET_OUTCOMES     = NONE COMPUTED. No Value signal, no Sharpe, no TSMOM
+                      correlation, no combination result, no backtest.
+NEXT_OWNER_DECISION = resolve §12 D1-D11, then seal or amend.
+```
+
+## X01 — path to the seal under vNext — TAKEN 2026-09-13
 
 > Recorded for provenance. Aaron sealed X01 on 2026-09-13 without a further Astra
 > round, exactly as the reasoning below anticipated. The section is kept as the
