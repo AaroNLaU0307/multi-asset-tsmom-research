@@ -139,15 +139,49 @@ S1 DESIGN+SEAL      = COMPLETE. SEALED 2026-09-13 under Aaron's Owner decision
                       (historical _DRAFT filename retained to avoid reference
                       churn; the document reads SEALED).
                       sealed sha256
-                      bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
-                      at seal revision 5812997229eafe2184fe68193856bea2fa41eeae,
+                      844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
+                      at seal revision 9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548,
                       carrying VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (Sweden
-                      two-table Fixed CPI; EUR coverage fact). The original seal
-                      df142f83...b3278cf at ba5814d8... is SUPERSEDED, not
-                      erased. D1-D11 frozen; OWNER_DECISIONS_REMAINING = NONE.
-S2 BUILD            = COMPLETE — implementation, tests and all gates green.
-                      UUP and FXY both 143/143 over the sealed window. No target
-                      outcome computed; the S3 entry point refuses.
+                      two-table Fixed CPI; EUR coverage fact) and
+                      VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002 (§17, the frozen
+                      TSMOM comparator identity). LINEAGE = original seal
+                      df142f83...b3278cf at ba5814d8... -> _001
+                      bc841ea8...a67a099 at 58129972... -> _002. Every prior seal
+                      is SUPERSEDED, none erased. D1-D11 frozen and byte-identical
+                      across all three seals; OWNER_DECISIONS_REMAINING = NONE.
+COMPARATOR          = CANONICAL_17_ETF_TSMOM_BASELINE (§17). MAP_v2 §A.1 frozen
+                      mechanism; signal per X01 §3.7 (SEALED); recomputed from the
+                      X01-pinned panel 3d2a7a56... by the hash-pinned canonical
+                      modules. NOT X01's E arm, which is four commodity ETFs with
+                      the portfolio vol target and gross cap removed.
+                      output/monthly_returns.csv is git-ignored and unhashed and is
+                      NOT authority; it agrees with the recomputation at the
+                      precision it was written to, as a diagnostic only.
+S2 BUILD            = COMPLETE — orchestration, single-use authorization guard,
+                      evidence schema, 25-check synthetic rehearsal over 11 cases,
+                      119 S2 checks, 14 pre-S3 dry gates. No target outcome
+                      computed; the S3 entry point refuses without an authorization.
+S3 RUN              = NOT_STARTED. The 2026-09-13 authorization attempt was
+                      HALTED at the run gate before any authorization object was
+                      created; it is NOT an execution attempt.
+                      AUTHORIZATION_CREATED = NO, AUTHORIZATION_CONSUMED = NO,
+                      TARGET_CALCULATIONS_EXECUTED = NONE.
+CURRENT_BLOCKER     = C3_STRUCTURAL_REACHABILITY = FAIL. On the real signal path
+                      (§11 defines episodes from that path alone — no return,
+                      Sharpe or correlation) FXY carries ONE constant-sign episode
+                      spanning all 143 months, UUP 141, SPY 129. The sealed k = 3
+                      selection therefore leaves 0, 2 and 14 months, all below the
+                      24-distinct-month floor, so every leave-one-episode-out case
+                      is invalid, C3 FAILS and candidacy is foreclosed whatever the
+                      returns are. Confirmed with deliberately excellent synthetic
+                      returns: C1 and C2 pass, C3 still fails. §13's reachability
+                      check tests threshold algebra against hypothetical jackknife
+                      inputs and never touches the signal path, so it could not
+                      have caught this. Object A (standalone edge) remains
+                      adjudicable; Object B (diversification candidacy) does not.
+                      NOT repaired — k, the episode definition, the ranking, the
+                      deletion operator and the distinct-month floor are all
+                      sealed. Resolving this is an Owner decision.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
@@ -162,9 +196,14 @@ SHILLER_VINTAGE     = RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATIO
                       The 3-month publication lag fixes release timing only and
                       does NOT cure historical revision; no positive result may be
                       called strict vintage-PIT confirmation.
-TARGET_OUTCOMES     = NONE COMPUTED. No Value signal, no Sharpe, no TSMOM
-                      correlation, no combination result, no backtest.
-NEXT_OWNER_DECISION = resolve §12 D1-D11, then seal or amend.
+TARGET_OUTCOMES     = NONE COMPUTED. No Value return series, no Sharpe, no TSMOM
+                      correlation, no combination result, no backtest. The signal
+                      PATH has been computed (episode structure only), which §11
+                      defines independently of any return.
+NEXT_OWNER_DECISION = the C3 reachability blocker above: accept that Object B is
+                      unadjudicable under the sealed design and run for Object A
+                      alone, or amend the sealed episode machinery. Not an agent
+                      decision.
 ```
 
 ## X01 — path to the seal under vNext — TAKEN 2026-09-13
