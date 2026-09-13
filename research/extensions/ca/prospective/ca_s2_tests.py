@@ -18,6 +18,8 @@ import sys
 import tempfile
 import warnings
 
+import base64
+
 import numpy as np
 import pandas as pd
 
@@ -135,6 +137,10 @@ ck("2", "assert_frozen_panel_intact passes", ca_store.assert_frozen_panel_intact
 # 3/4. append-only snapshot semantics + hash identity
 # ==========================================================================  #
 d_abs, d_rel = tmpdirs()
+# SYNTHETIC protected store + session. This is a temp store, never the production one.
+syn_store = tempfile.mkdtemp(prefix="ca_s2_blindstore_")
+_syn_state = ca_blind.initialize_blind_store(syn_store, note="SYNTHETIC TEST STORE")
+session = ca_blind.unlock_store(syn_store)
 reg = ca_store.SnapshotRegistry(d_rel + "/registry.jsonl", d_rel + "/snapshots")
 p1 = synth_panel(400, seed=1)
 row1 = reg.register_snapshot("SNAP_0001", p1, kind="MONTHLY")
@@ -156,7 +162,7 @@ ck("4", "tampered snapshot bytes are refused on load",
 # ==========================================================================  #
 # 5/6. write-once position ledger + duplicate rejection
 # ==========================================================================  #
-led = ca_ledger.PositionLedger(d_rel + "/positions.jsonl")
+led = ca_ledger.PositionLedger(d_rel + "/positions.jsonl", session=session)
 panel = synth_panel(800, seed=3)
 dm = ca_engine.build_book(panel)["port_weight"].dropna(how="all").index[-2]
 dec = ca_engine.decision_vector(panel, dm)
@@ -349,7 +355,7 @@ ck("18", "a smuggled position vector is refused",
 # ==========================================================================  #
 # 19. protected outcome layer / reveal authorization absent by default
 # ==========================================================================  #
-store = ca_protected.ProtectedOutcomeStore(d_rel + "/protected", d_rel + "/protected_index.jsonl")
+store = ca_protected.ProtectedOutcomeStore(tempfile.mkdtemp(prefix="ca_s2_out_"), session=session)
 ident = store.store("SYNTHETIC_OUTCOME_0001", {"synthetic_statistic": 0.123, "note": "fixture only"})
 ck("19", "protected payload can be produced and stored", len(ident["sha256"]) == 64)
 ck("19", "store() returns identity only, never content", "synthetic_statistic" not in json.dumps(ident))
@@ -445,8 +451,7 @@ ck("22", "sealed inference constants intact",
 # ==========================================================================  #
 # 23. BLINDNESS ACCESS BOUNDARY (go-live preflight)
 # ==========================================================================  #
-import tempfile as _tf  # noqa: E402
-_store = _tf.mkdtemp(prefix="ca_s2_store_")
+_store = tempfile.mkdtemp(prefix="ca_s2_store_")
 _ledraw = io.open(os.path.join(d_abs, "positions.jsonl"), encoding="utf-8").read()
 _needle = repr(max((v for v in dec["weights"].values() if v is not None), key=abs))[:14]
 ck("23", "ledger file on disk contains no 'weights' key", '"weights"' not in _ledraw)
@@ -454,16 +459,16 @@ ck("23", "ledger file on disk contains no weight value", _needle not in _ledraw)
 ck("23", "private _rows() no longer exposes weights", "weights" not in led._rows()[0])
 ck("23", "machine read without a capability is refused",
    raises(ca_blind.CapabilityRequired, led.machine_read_position, "2026-02", None))
-_cap = ca_blind.MachineCapability("TURNOVER_PRIOR_POSITION")
+_cap = session.capability("TURNOVER_PRIOR_POSITION")
 ck("23", "machine read WITH a capability returns the vector",
    led.machine_read_position("2026-02", _cap)["weights"] == dec["weights"])
 ck("23", "position identity is reproducible without decrypting",
    led.position_identity("2026-02")["position_plaintext_sha256"]
    == rec["protected_position"]["plaintext_sha256"])
 ck("23", "an unsupported capability purpose is refused",
-   raises(ca_blind.CapabilityRequired, ca_blind.MachineCapability, "BROWSE_FOR_FUN"))
+   raises(ca_blind.CapabilityRequired, session.capability, "BROWSE_FOR_FUN"))
 
-_ps = ca_protected.ProtectedOutcomeStore(_store)
+_ps = ca_protected.ProtectedOutcomeStore(_store, session=session)
 _ident = _ps.store("SYN_BOUNDARY", {"synthetic_value": 0.7770707707})
 _praw = io.open(os.path.join(_store, "SYN_BOUNDARY.sealed.json"), encoding="utf-8").read()
 ck("23", "protected payload on disk is ciphertext", "0.7770707707" not in _praw)
@@ -475,17 +480,117 @@ ck("23", "envelope cannot be opened without a capability",
           json.load(io.open(os.path.join(_store, "SYN_BOUNDARY.sealed.json"), encoding="utf-8")), None))
 ck("23", "a protected store inside the repo is refused",
    raises(ca_blind.ProtectedStoreMisconfigured, ca_protected.ProtectedOutcomeStore,
-          os.path.join(K.REPO, "research", "should_not_exist")))
+          os.path.join(K.REPO, "research", "should_not_exist"), None, session))
 ck("23", "key file lives outside the repository",
-   ca_blind.boundary_report()["key_file_outside_repo"])
+   ca_blind.boundary_report(syn_store)["key_file_outside_repo"])
 ck("23", "protected store lives outside the repository",
-   ca_blind.boundary_report()["protected_store_outside_repo"])
+   ca_blind.boundary_report(syn_store)["protected_store_outside_repo"])
 ck("23", "describe() reports encrypted-at-rest and outside-repo",
    _ps.describe()["all_encrypted_at_rest"] and _ps.describe()["store_outside_repo"])
 ck("23", "tampered ciphertext is rejected by the MAC",
    raises(ca_blind.EnvelopeTampered, ca_blind.open_envelope,
-          {**ca_blind.seal_envelope(b"abc"), "ciphertext": "AAAA"}, _cap))
+          {**session.seal(b"abc", {"record_type": "T"}), "ciphertext": base64.b64encode(b"AAAA").decode()}, _cap))
 shutil.rmtree(_store, ignore_errors=True)
+
+# ==========================================================================  #
+# 24. BLINDNESS PRODUCTION HARDENING (vetted AEAD + key lifecycle)
+# ==========================================================================  #
+import cryptography as _cryptolib  # noqa: E402
+
+ck("24", "vetted AEAD in use (AES-256-GCM)", ca_blind.AEAD_NAME == "AES-256-GCM")
+ck("24", "cryptography library pinned in the runtime",
+   K.PINNED_RUNTIME.get("cryptography") == _cryptolib.__version__)
+_src = io.open(ca_blind.__file__, encoding="utf-8").read()
+ck("24", "no home-grown keystream remains", "_keystream" not in _src)
+ck("24", "no home-grown MAC composition remains",
+   "hmac.new" not in _src and "encrypt-then-MAC" not in _src.split('"""')[2] if _src.count('"""') > 2 else True)
+ck("24", "AESGCM is the encryption primitive", "AESGCM" in _src)
+ck("24", "no ambient key loader exists",
+   not hasattr(ca_blind, "ensure_key") and not hasattr(ca_blind, "seal_envelope"))
+ck("24", "nonce is 96-bit and per-object", ca_blind.NONCE_BYTES == 12)
+
+# --- explicit initialization / no silent regeneration ------------------- #
+_fresh = tempfile.mkdtemp(prefix="ca_s2_fresh_")
+shutil.rmtree(_fresh, ignore_errors=True)          # a path that does NOT yet exist
+ck("24", "unlocking an uninitialized store refuses (no auto-create)",
+   raises(ca_blind.ProtectedStoreNotInitialized, ca_blind.unlock_store, _fresh))
+ck("24", "no key was created by the failed unlock",
+   not os.path.exists(os.path.join(_fresh, "blind.key")))
+_st = ca_blind.initialize_blind_store(_fresh, note="SYNTHETIC")
+ck("24", "explicit initialization creates the store", ca_blind.is_initialized(_fresh))
+ck("24", "fingerprint recorded, key material is NOT",
+   len(_st["key_fingerprint_sha256"]) == 64 and "key" not in _st.get("note", "").lower()
+   and not any(k for k in _st if k.endswith("_key")))
+ck("24", "re-initialization is refused",
+   raises(ca_blind.ProtectedStoreHold, ca_blind.initialize_blind_store, _fresh))
+_sess = ca_blind.unlock_store(_fresh)
+ck("24", "session repr never leaks key material",
+   "key" not in repr(_sess).lower().replace("fingerprint", ""))
+
+_env = _sess.seal(b'{"synthetic": 1}', {"record_type": "T", "record_id": "R1"})
+_cap24 = _sess.capability("SYNTHETIC_TEST")
+ck("24", "machine path returns the exact payload",
+   ca_blind.open_envelope(_env, _cap24) == b'{"synthetic": 1}')
+
+# --- ordinary operator cannot conjure a capability ---------------------- #
+ck("24", "MachineCapability cannot be constructed directly",
+   raises(ca_blind.CapabilityRequired, ca_blind.MachineCapability, "SYNTHETIC_TEST"))
+ck("24", "capability repr never leaks key material", "_key" not in repr(_cap24))
+
+# --- wrong key / tamper / transplant ------------------------------------ #
+_other = tempfile.mkdtemp(prefix="ca_s2_other_")
+shutil.rmtree(_other, ignore_errors=True)
+ca_blind.initialize_blind_store(_other, note="SYNTHETIC OTHER")
+_osess = ca_blind.unlock_store(_other)
+_ocap = _osess.capability("SYNTHETIC_TEST")
+ck("24", "WRONG KEY -> authenticated failure / hard hold",
+   raises((ca_blind.EnvelopeTampered, ca_blind.ProtectedStoreHold),
+          ca_blind.open_envelope, {**_env, "key_fingerprint_sha256": None}, _ocap))
+ck("24", "TAMPERED ciphertext -> authenticated failure",
+   raises(ca_blind.EnvelopeTampered, ca_blind.open_envelope,
+          {**_env, "ciphertext": base64.b64encode(bytes(40)).decode()}, _cap24))
+_env2 = _sess.seal(b'{"synthetic": 2}', {"record_type": "T", "record_id": "R2"})
+ck("24", "SWAPPED ciphertext between records -> AAD failure",
+   raises(ca_blind.EnvelopeTampered, ca_blind.open_envelope,
+          {**_env, "ciphertext": _env2["ciphertext"], "nonce": _env2["nonce"]}, _cap24))
+ck("24", "ALTERED AAD -> authenticated failure",
+   raises(ca_blind.EnvelopeTampered, ca_blind.open_envelope,
+          {**_env, "aad": {"record_type": "T", "record_id": "SOMETHING_ELSE"}}, _cap24))
+ck("24", "AAD carries identity, never an outcome value",
+   set(_env["aad"]) <= {"record_type", "record_id", "holding_month", "decision_month_end",
+                        "source_snapshot_id", "source_snapshot_sha256",
+                        "sealed_prereg_sha256", "schema"})
+
+# --- key missing / changed / fingerprint mismatch -> HARD HOLD ---------- #
+_kf = os.path.join(_fresh, "blind.key")
+_backup = io.open(_kf, "rb").read()
+os.remove(_kf)
+ck("24", "KEY MISSING after init -> HARD HOLD",
+   raises(ca_blind.ProtectedStoreHold, ca_blind.unlock_store, _fresh))
+ck("24", "no key was regenerated by the failed unlock", not os.path.exists(_kf))
+io.open(_kf, "wb").write(base64.b64encode(os.urandom(32)))
+ck("24", "CHANGED key -> HARD HOLD (fingerprint mismatch)",
+   raises(ca_blind.ProtectedStoreHold, ca_blind.unlock_store, _fresh))
+io.open(_kf, "wb").write(b"not-a-valid-key")
+ck("24", "UNREADABLE / malformed key -> HARD HOLD",
+   raises(ca_blind.ProtectedStoreHold, ca_blind.unlock_store, _fresh))
+io.open(_kf, "wb").write(_backup)
+ck("24", "restoring the ORIGINAL key unlocks again",
+   ca_blind.unlock_store(_fresh).state["key_fingerprint_sha256"] == _st["key_fingerprint_sha256"])
+
+# --- permissions -------------------------------------------------------- #
+_perm = ca_blind.permissions_report(_kf)
+ck("24", "key file permissions checked", _perm["checked"])
+ck("24", "no broad/shared principal on the key file",
+   not _perm.get("broad_readable"), str(_perm.get("broad_principals")))
+_bp = ca_blind.boundary_report(_fresh)
+ck("24", "boundary report states the honest threat limit",
+   "NOT secrecy against" in _bp["threat_boundary"])
+ck("24", "boundary report exposes no key material",
+   "blind.key" in _bp["key_file"] and _bp.get("key") is None)
+
+shutil.rmtree(_fresh, ignore_errors=True)
+shutil.rmtree(_other, ignore_errors=True)
 
 # ==========================================================================  #
 # seal immutability + cleanup
@@ -495,6 +600,7 @@ ck("1", "sealed prereg sha256 unchanged by the whole suite",
 ck("2", "frozen panel sha256 unchanged by the whole suite",
    K.sha256_file(K.FROZEN_PANEL) == K.FROZEN_PANEL_SHA256)
 shutil.rmtree(d_abs, ignore_errors=True)
+shutil.rmtree(syn_store, ignore_errors=True)
 
 print("\nper-class results:")
 for c in sorted(CLASSES, key=lambda x: int(x)):

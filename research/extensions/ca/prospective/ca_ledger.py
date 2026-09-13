@@ -42,8 +42,12 @@ class LedgerRewriteRefused(Exception):
 
 
 class PositionLedger:
-    def __init__(self, path: str):
+    def __init__(self, path: str, session=None):
+        # `session` is an unlocked ca_blind.BlindSession. It is REQUIRED to append
+        # (sealing needs the key) and to read a position. Operator-safe views
+        # (public_summary, position_identity) work without one.
         self.path = path
+        self.session = session
 
     # -- reading (machine-only) -------------------------------------------- #
     def _rows(self) -> list:
@@ -90,13 +94,30 @@ class PositionLedger:
         # leverage values) is sealed; the clear half carries identity, bindings and
         # §T.2 invariant BOOLEANS so operator monitoring stays rich without ever
         # exposing a vector. Sealed §T.3: positions are outcomes by another name.
+        if self.session is None:
+            raise ca_blind.ProtectedStoreNotInitialized(
+                "REFUSED: appending a position record seals protected content and "
+                "requires an unlocked BlindSession (ca_blind.unlock_store).")
         protected_plain = json.dumps({
             "weights": decision["weights"],
             "gross": decision["gross"],
             "net": decision["net"],
             "leverage": decision["leverage"],
         }, sort_keys=True).encode("utf-8")
-        sealed_block = ca_blind.seal_envelope(protected_plain)
+        # AAD binds the ciphertext to THIS record's immutable identity, so a
+        # ciphertext cannot be silently transplanted into another record. No
+        # scientific outcome value appears in AAD.
+        aad = {
+            "record_type": "CA_POSITION_RECORD",
+            "record_id": "%s|%s" % (holding_month, decision["decision_month_end"]),
+            "holding_month": holding_month,
+            "decision_month_end": decision["decision_month_end"],
+            "source_snapshot_id": snapshot_row["snapshot_id"],
+            "source_snapshot_sha256": snapshot_row["sha256"],
+            "sealed_prereg_sha256": K.SEALED_PREREG_SHA256,
+            "schema": "CA_POSITION_LEDGER_V2_BLIND",
+        }
+        sealed_block = self.session.seal(protected_plain, aad)
         g, w = decision["gross"], [v for v in decision["weights"].values() if v is not None]
 
         rec = {

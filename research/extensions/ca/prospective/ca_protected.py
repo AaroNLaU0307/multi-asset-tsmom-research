@@ -85,11 +85,15 @@ class RevealAuthorization:
 class ProtectedOutcomeStore:
     """Outcomes may be produced and stored. They may not be seen."""
 
-    def __init__(self, store_dir=None, index_path=None):
+    def __init__(self, store_dir=None, index_path=None, session=None):
         # The protected store lives OUTSIDE the repository working tree. A path
         # inside the repo is refused, so a future caller cannot quietly move
         # protected payloads back under git / grep / editor reach.
-        self.store_dir = ca_blind.ensure_store(store_dir)
+        # `session` is an unlocked ca_blind.BlindSession, required to store or reveal.
+        self.session = session
+        self.store_dir = ca_blind.assert_outside_repo(
+            store_dir or ca_blind.default_store_dir(), "protected store")
+        os.makedirs(self.store_dir, exist_ok=True)
         self.index_path = ca_blind.assert_outside_repo(
             index_path or os.path.join(self.store_dir, "protected_index.jsonl"),
             "protected index")
@@ -116,8 +120,20 @@ class ProtectedOutcomeStore:
             raise ca_store.SnapshotOverwriteRefused(
                 "REFUSED: protected outcome %s already exists; the store is write-once"
                 % outcome_id)
+        if self.session is None:
+            raise ca_blind.ProtectedStoreNotInitialized(
+                "REFUSED: storing a protected outcome seals content and requires an "
+                "unlocked BlindSession (ca_blind.unlock_store).")
         plain = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
-        envelope = ca_blind.seal_envelope(plain)
+        # AAD binds the ciphertext to this outcome's immutable identity. No
+        # scientific outcome value appears in AAD.
+        aad = {
+            "record_type": "CA_PROTECTED_OUTCOME",
+            "record_id": outcome_id,
+            "sealed_prereg_sha256": K.SEALED_PREREG_SHA256,
+            "schema": "CA_PROTECTED_OUTCOME_V2",
+        }
+        envelope = self.session.seal(plain, aad)
         data = (json.dumps(envelope, sort_keys=True, indent=2) + "\n").encode("utf-8")
         os.makedirs(os.path.dirname(full), exist_ok=True)
         with io.open(full, "wb") as fh:
@@ -147,6 +163,7 @@ class ProtectedOutcomeStore:
             "all_generated_not_seen": all(r["classification"] == "GENERATED_NOT_SEEN" for r in rows),
             "payload_hashes": {r["outcome_id"]: r.get("payload_plaintext_sha256") for r in rows},
             "all_encrypted_at_rest": all(r.get("encrypted_at_rest") for r in rows),
+            "aead": ca_blind.AEAD_NAME,
             "store_outside_repo": not ca_blind._inside_repo(self.store_dir),
             "reveal_authorization_present": False,
             "content_visible": False,
@@ -169,7 +186,11 @@ class ProtectedOutcomeStore:
             raise KeyError(outcome_id)
         with io.open(row["path"], encoding="utf-8") as fh:
             envelope = json.load(fh)
-        cap = ca_blind.MachineCapability("TERMINAL_REVEAL")
+        if self.session is None:
+            raise RevealNotAuthorized(
+                "REFUSED: revealing requires an unlocked BlindSession in addition to "
+                "the Owner authorization.")
+        cap = self.session.capability("TERMINAL_REVEAL")
         payload = json.loads(ca_blind.open_envelope(envelope, cap))
         authorization.consumed = True
         return payload

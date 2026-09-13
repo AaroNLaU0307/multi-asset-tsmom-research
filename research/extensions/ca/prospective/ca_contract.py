@@ -99,7 +99,8 @@ SECTION_J_POSITION_TOLERANCE = 0.01
 # --------------------------------------------------------------------------- #
 # Runtime pin (§I.4)
 # --------------------------------------------------------------------------- #
-PINNED_RUNTIME = {"python": "3.13.14", "pandas": "2.3.3", "numpy": "2.5.0"}
+PINNED_RUNTIME = {"python": "3.13.14", "pandas": "2.3.3", "numpy": "2.5.0",
+                  "cryptography": "50.0.1"}   # AEAD for the blindness boundary
 
 
 def sha256_file(path: str) -> str:
@@ -121,9 +122,15 @@ def assert_seal_intact() -> str:
 
 
 def current_runtime() -> dict:
+    try:
+        import cryptography as _c
+        cv = _c.__version__
+    except Exception:
+        cv = "ABSENT"
     return {"python": sys.version.split()[0],
             "pandas": pd.__version__,
-            "numpy": np.__version__}
+            "numpy": np.__version__,
+            "cryptography": cv}
 
 
 def runtime_matches() -> bool:

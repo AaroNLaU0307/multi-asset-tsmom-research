@@ -11,3 +11,7 @@ numpy>=1.24
 scipy>=1.10
 matplotlib>=3.7
 pytest>=7.4
+
+# Authenticated encryption for the C-A prospective blindness boundary
+# (AES-256-GCM). Pinned in research/extensions/ca/prospective/ca_contract.py.
+cryptography>=43

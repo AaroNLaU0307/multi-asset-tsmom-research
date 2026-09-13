@@ -26,7 +26,9 @@ SEALED CONTRACT   = ../CA_PREREGISTRATION_DRAFT.md  (SEALED 2026-09-13T17:42:06Z
 | 3 | Runtime matches the pin (py 3.13.14 / pandas 2.3.3 / numpy 2.5.0) | `ca_contract.assert_runtime()` |
 | 4 | S2 test suite green | `python research/extensions/ca/prospective/ca_s2_tests.py` |
 | 5 | Instrument registry present, 17 objects, §K SATISFIED | `ca_identity.load_registry()` |
-| 6 | **Owner go-live authorization** | `GoLiveAuthorization(owner="Aaron", …)` |
+| 6 | Off-repository **key backup destination chosen** (§5A) | operational decision at go-live |
+| 7 | Protected store **explicitly initialized** — `initialize_blind_store()`; not done yet | `ca_blind` |
+| 8 | **Owner go-live authorization** | `GoLiveAuthorization(owner="Aaron", …)` |
 
 `C_D_PASS` is **not** a go-live prerequisite. It is required before the first
 *reveal*, not before accrual (sealed §S). `SB-3` blocks `C_D_PASS` only.
@@ -106,41 +108,92 @@ booleans and hashes only. `ca_integrity._enforce` raises
 
 ## 5A. The blindness boundary — where it actually lives
 
-Blindness is **not** enforced by operators choosing the polite API. A go-live
-preflight probe showed that the first build's protected files were plaintext JSON
-in the working tree, so `cat`, an editor, a repo grep or a one-line `json.load`
-exposed a position vector and an outcome payload with no authorization. Three
-mechanisms now close that, and `ca_blind` owns all three:
+Blindness is **not** enforced by operators choosing the polite API. A go-live probe
+showed the first build's protected files were plaintext JSON in the working tree,
+so `cat`, an editor, a repo grep or a one-line `json.load` exposed a position
+vector and an outcome payload with no authorization. `ca_blind` closes that.
 
-1. **Protected content lives OUTSIDE the repository.** Default
-   `%LOCALAPPDATA%\ca_prospective_store` (override with `CA_PROSPECTIVE_STORE`).
-   A store path inside the repo is **refused**, so git, grep, diff, editors and
-   code review can never surface protected content.
-2. **Encrypted at rest.** Bytes on disk are ciphertext (encrypt-then-MAC,
-   domain-separated subkeys, HMAC-SHA256 counter-mode keystream — stdlib, because
-   no AEAD library is installed here). `cat` yields nothing.
-3. **The key lives outside the repository and is never committed.** Default
-   `<store>/blind.key` (override with `CA_PROSPECTIVE_KEY_FILE`).
+**Protection.** **AES-256-GCM** from `cryptography` (pyca), a fresh 96-bit nonce per
+object from `os.urandom`, and **associated data** binding each ciphertext to its own
+immutable identity — record type, record id, holding month, snapshot identity,
+sealed prereg hash, schema — so ciphertext cannot be silently transplanted between
+records. No scientific outcome value ever goes in AAD. Authentication failure
+**hard-fails**; there is no unauthenticated decryption path. Plaintext is never
+written to disk: sealing happens in memory and only the envelope is written.
 
-**Honest limit, stated plainly.** Aaron owns this machine and the key file, so this
-is *not* secrecy against the Owner and never can be. What it provides is the
-standard the contract requires: the sealed blindness rule no longer depends only on
-voluntary API discipline. Ordinary operational use cannot expose a position vector
-or an outcome; circumventing it now requires deliberately locating the key and
-calling a decryption path, which is a knowing act rather than an accident.
+An earlier interim build used a hand-rolled encrypt-then-MAC construction. For a
+study that must hold ~10 years that is not acceptable, and it has been **removed
+entirely** — no home-grown cipher, no home-grown MAC composition, no ambient key
+loader. `cryptography` is pinned in `ca_contract.PINNED_RUNTIME` and in
+`requirements.txt`, and a runtime mismatch refuses to run.
 
-**Reproducibility is not weakened.** The SHA-256 of the *plaintext* is recorded in
-the clear inside every envelope, so record identity stays verifiable without
-decrypting. `PositionLedger.position_identity()` returns it and is operator-safe.
+**Location.** Protected content and the key live **outside the repository**
+(default `%LOCALAPPDATA%\ca_prospective_store`; override with
+`CA_PROSPECTIVE_STORE` / `CA_PROSPECTIVE_KEY_FILE`). A store path inside the repo is
+**refused**, so git, grep, diff, editors and code review can never surface it.
 
-**The supported machine path.** `ca_blind.MachineCapability` names the purpose —
-`TURNOVER_PRIOR_POSITION`, `LOCKED_VS_RECOMPUTED_DIAGNOSTIC`, `TERMINAL_REVEAL` —
-and `PositionLedger.machine_read_position()` requires one. No operator-facing
-report constructs a capability. An unsupported purpose is refused.
+### Key lifecycle — explicit, and never automatic
 
-**Key custody at go-live.** The key is created on first use if absent. Back it up
-**outside the repository**: losing it makes protected outcomes unrecoverable, and
-committing it would silently undo the whole boundary. It must never enter git.
+`initialize_blind_store()` is the **only** thing that may create a key, and it
+refuses if the store is already initialized or if an unidentified key is already
+present. Nothing else creates key material.
+
+Once a store is initialized, each of these is a **HARD HOLD**:
+
+| condition | behaviour |
+|---|---|
+| key file missing | `ProtectedStoreHold`. **No key is generated.** |
+| key unreadable / malformed | `ProtectedStoreHold`. No key is generated. |
+| key fingerprint changed | `ProtectedStoreHold`. Continuing would orphan every record. |
+
+`unlock_store()` **never** generates a new key, continues with a different key,
+overwrites the stored identity, or creates a second key. The non-secret fingerprint
+`SHA256(master_key)` is recorded in the store's own state file — S2 operational
+state, **never** in the sealed S1 preregistration — and is verified on every unlock.
+
+### The capability is not decorative
+
+A `MachineCapability` **cannot be constructed by ordinary code**; it is issued only
+by an unlocked `BlindSession` and carries the key. Since there is no ambient key
+loader, code that has not explicitly unlocked a fingerprint-verified store cannot
+decrypt anything. Purposes are limited to `TURNOVER_PRIOR_POSITION`,
+`LOCKED_VS_RECOMPUTED_DIAGNOSTIC`, `TERMINAL_REVEAL`, `SYNTHETIC_TEST`. No
+operator-facing report unlocks a store.
+
+### Honest threat boundary
+
+Aaron owns this machine, the key file and the repository. This is **not** secrecy
+against the Owner or a machine administrator, and nothing here pretends otherwise.
+The property delivered is the one the contract needs: **accidental or normal
+supported operator actions cannot decrypt protected content.** Deliberate
+Owner/admin circumvention is outside the threat model.
+
+Local permissions are hardened as far as the OS cheaply allows — `icacls`
+inheritance removed and access granted to the current user on Windows, `chmod 0600`
+elsewhere — and `permissions_report()` verifies no broad principal (Everyone,
+Users, Authenticated Users) can read the store or key.
+
+### Key custody and backup — REQUIRED BEFORE GO-LIVE
+
+- **Losing the only key makes every protected record permanently unrecoverable.**
+- The key must **never** be committed to the repository.
+- The backup must live **outside the repository**.
+- Restoration must verify the **same** key fingerprint recorded in the store state.
+- **Restoring a different key is forbidden** — it is a HARD HOLD, not a recovery.
+
+This project has **no existing secure-backup destination**, and none is invented
+here. **A secure off-repository backup location must be chosen as part of the later
+go-live operation**, before the first protected record is written. That is an
+operational requirement, not a scientific decision.
+
+**No production key exists today.** `initialize_blind_store()` has not been run
+against the production store; that happens during the authorized go-live procedure.
+
+### Reproducibility is not weakened
+
+The SHA-256 of the *plaintext* is recorded in the clear inside every envelope, so
+record identity stays verifiable without decrypting.
+`PositionLedger.position_identity()` returns it on an operator-safe path.
 
 ---
 
