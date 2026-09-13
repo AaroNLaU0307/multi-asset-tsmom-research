@@ -11,8 +11,8 @@ FIRST_ELIGIBLE_SCORED_MONTH       = 2026-10
 N_scored          = 0
 SEALED CONTRACT   = ../CA_PREREGISTRATION_DRAFT.md  (SEALED 2026-09-13T17:42:06Z)
 TERMINAL_REVEAL_AUTHORIZED = NO
-S3_OPERATIONAL_STATUS      = HOLD BEFORE FIRST PROTECTED RECORD
-                             (no verified OFF-MACHINE key backup; see §5B)
+S3_OPERATIONAL_STATUS      = READY FOR PASSIVE ACCRUAL
+NEXT SCHEDULED EVENT       = 2026-10-07 snapshot cycle (decision 2026-09-30, holding 2026-10)
 MONITORING ENTRY POINT     = python research/extensions/ca/prospective/ca_monitor.py
 ```
 
@@ -207,45 +207,35 @@ record identity stays verifiable without decrypting.
 
 ---
 
-## 5B. Off-machine key backup — the one open operational prerequisite
+## 5B. Off-machine key backup — CLOSED
 
 ```
-OFF_MACHINE_KEY_BACKUP = HOLD - NO ACCEPTABLE EXISTING DESTINATION
+OFF_MACHINE_KEY_BACKUP = VERIFIED
 ```
 
-**The pipeline is LIVE but will write NO protected position until this is closed.**
-`ca_pipeline.preflight()` returns HOLD and `ca_pipeline.monthly_cycle()` raises
-`OperationalHold` before touching anything. This is a run-safety prerequisite, not
-a scientific rule.
+The key is backed up to a **removable USB device — a genuinely separate physical
+failure domain** from the live key.
 
-**Why.** This machine has **one physical disk** (NVMe Disk 0), one data volume
-(`C:`), no removable media, no network drives and no mapped shares. The existing
-backup at `%LOCALAPPDATA%/ca_prospective_key_backup` is in the **same failure
-domain** as the live key: it protects against accidental deletion of the store, not
-against disk or machine loss. OneDrive is present but is a cloud-sync destination
-and is **excluded without a separate Owner decision**.
+| field | value |
+|---|---|
+| device | Kingston DataTraveler 3.0, **physical Disk 1**, BusType USB |
+| volume | label `KINGSTON`, serial `2D3700FA`, FAT32, DriveType 2 (Removable) |
+| backup path | `CA_KEY_BACKUP/blind.key.backup` on that device |
+| fingerprint | matches the live key exactly (`9c6d2c48…`) |
+| restore test | **PASS** — isolated copy, fingerprint verified, synthetic AES-GCM envelope decrypted, temporary artifacts destroyed, live key never replaced |
+| contents | **only** the key backup and its manifest — no ledger, no protected outcome, no snapshot, no repository file, no target data |
 
-**Minimum Owner action** — any one of:
+**Honest limitation.** FAT32 cannot store Windows ACLs, so **no per-user permission
+is enforced on the device**. Anyone with physical possession of the pendrive can
+read the key file. **Physical custody is the control, and it is Aaron's
+responsibility** — store the pendrive somewhere safe and separate from the machine.
 
-1. attach an already-owned **removable/USB device** or a **second physical disk**;
-2. make an already-reachable **NAS or other machine** available;
-3. make an **explicit Owner decision** naming a cloud-sync destination as acceptable
-   for this key.
-
-Then re-run the backup and the restore test, and record the result with
-`ca_blind.record_off_machine_backup(verified=True, ...)`. The pipeline clears the
-HOLD automatically on the next preflight.
-
-**Deadline.** Before the first protected record — the decision cycle for
-**2026-09-30**, with the snapshot due **2026-10-07**.
-
-**The restore mechanism is already proven** (isolated copy, fingerprint verified,
-synthetic AES-GCM envelope decrypted, live key untouched). What is missing is the
-destination, not the procedure.
+**Restoring a different key remains forbidden.** Recovery must verify this exact
+fingerprint; a mismatch is a HARD HOLD, not a recovery.
 
 ---
 
-## 6. Failure and hold branches
+## 6. Failure and hold branches## 6. Failure and hold branches
 
 | condition | branch |
 |---|---|
