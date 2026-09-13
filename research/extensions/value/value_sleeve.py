@@ -41,6 +41,13 @@ import value_portfolio as VP        # noqa: E402
 import value_signal as VS           # noqa: E402
 
 
+RECONCILIATION_TOLERANCE = 1e-10
+
+# §11.1 timing map, FROZEN: positions = weights.shift(1), so a signal at
+# month-end m is held through month m+1 and its contribution lands there.
+SIGNAL_TO_CONTRIBUTION_LAG_MONTHS = 1
+
+
 class SleeveError(RuntimeError):
     """The sleeve could not be built as sealed. Never repaired silently."""
 
@@ -140,6 +147,23 @@ def build_sleeve(months=None, sources=None, panel=None):
     rets = perf.portfolio_returns(positions, monthly_px,
                                   cost_bps=config.TRANSACTION_COST_BPS)
 
+    # --- §11.1 contribution ledger, on the ORIGINAL capital basis -----------
+    # portfolio_returns forms net = Σ_i pos_i·r_i − (Σ_i |Δpos_i|)·rate. Both
+    # terms are plain sums over instruments, so each instrument's direct net
+    # contribution is attributable with no allocation convention invented:
+    #     c_i,t = pos_i,t · r_i,t − |pos_i,t − pos_i,t−1| · rate
+    # Anything that fails to reconcile stays in the shared term a_t rather than
+    # being forced into an instrument.
+    asset_rets = perf.monthly_asset_returns(monthly_px).reindex_like(positions)
+    pos_delta = positions.diff().abs()
+    cost_rate = float(config.TRANSACTION_COST_BPS) / 1e4
+    contrib_df = {}
+    for inst in C.UNIVERSE:
+        gross_i = (positions[inst] * asset_rets[inst]).fillna(0.0)
+        cost_i = pos_delta[inst].fillna(0.0) * cost_rate
+        contrib_df[inst] = gross_i - cost_i
+    contrib_df = pd.DataFrame(contrib_df, index=positions.index)
+
     by_month = {_month_key(ts): float(v) for ts, v in rets["net"].items()}
     missing = [m for m in window_months if m not in by_month]
     if missing:
@@ -149,6 +173,43 @@ def build_sleeve(months=None, sources=None, panel=None):
     net = [by_month[m] for m in window_months]
     if any((not np.isfinite(v)) for v in net):
         raise SleeveError("the Value sleeve has a non-finite month")
+
+    contrib_by_month = {
+        inst: {_month_key(ts): float(v)
+               for ts, v in contrib_df[inst].items()}
+        for inst in C.UNIVERSE}
+    contributions = {inst: [contrib_by_month[inst].get(m, 0.0)
+                            for m in window_months]
+                     for inst in C.UNIVERSE}
+    shared = [net[j] - sum(contributions[inst][j] for inst in C.UNIVERSE)
+              for j in range(len(window_months))]
+    max_resid = max(abs(a) for a in shared) if shared else 0.0
+    ledger = {
+        "months": list(window_months),
+        "contributions": contributions,
+        "shared": shared,
+        "identity": "V_t = a_t + sum_i c_i,t",
+        "contribution_definition": (
+            "c_i,t = position_i,t * r_i,t - |position_i,t - position_i,t-1| * "
+            "(TRANSACTION_COST_BPS / 1e4), on the ORIGINAL portfolio capital "
+            "basis; positions are never re-derived"),
+        "shared_term_policy": (
+            "no allocation convention is invented; any term that is not "
+            "uniquely attributable remains in a_t"),
+        "tolerance": RECONCILIATION_TOLERANCE,
+        "max_abs_residual": max_resid,
+        "reconciles": max_resid <= RECONCILIATION_TOLERANCE,
+        "signal_to_contribution_month": SIGNAL_TO_CONTRIBUTION_LAG_MONTHS,
+        "timing_map": (
+            "the signal at month-end m sets the weight held through month m+1 "
+            "(positions = weights.shift(1)), so signal month m maps to "
+            "contribution month m+1"),
+    }
+    if not ledger["reconciles"]:
+        raise SleeveError(
+            "the contribution decomposition does not reconstruct the sealed "
+            "Value series: max |a_t| = %.3e exceeds the tolerance %.3e"
+            % (max_resid, RECONCILIATION_TOLERANCE))
 
     diagnostics = {
         "object_history_start": start,
@@ -164,7 +225,7 @@ def build_sleeve(months=None, sources=None, panel=None):
         "portfolio_risk_source": "src/portfolio.py::leverage",
         "cost_source": "src/performance.py::portfolio_returns",
     }
-    return window_months, net, diagnostics
+    return window_months, net, diagnostics, ledger
 
 
 def signals_on(months=None, sources=None):
@@ -178,3 +239,43 @@ def signals_on(months=None, sources=None):
     keep = set(window_months)
     return {inst: [(m, s) for m, s in pairs if m in keep]
             for inst, pairs in full.items()}
+
+
+# --------------------------------------------------------------------------- #
+# §11.1 the ablation operator — AMENDMENT_003
+# --------------------------------------------------------------------------- #
+def contribution_months(episode, window_months):
+    """The contribution months an episode's signal months map to.
+
+    Frozen mapping, read from the sealed timing convention and never decided
+    from PnL: signal month m -> contribution month m+1, intersected with the
+    sealed evaluation window.
+    """
+    keep = set(window_months)
+    out = []
+    for m in episode.months:
+        c = D.m_shift(m, SIGNAL_TO_CONTRIBUTION_LAG_MONTHS)
+        if c in keep:
+            out.append(c)
+    return sorted(set(out), key=D.m_key)
+
+
+def ablate(window_months, net, ledger, episode):
+    """V_t^(-e): remove instrument i(e)'s attributed net contribution in the
+    mapped contribution months, and nothing else.
+
+    Every calendar month is retained. Other instruments are untouched. Shared
+    terms are untouched. No weight is re-derived, no volatility re-targeted, no
+    gross re-scaled, no capital redistributed. Positive and negative
+    contributions are removed alike. Ablations are never cumulative: each case
+    starts from the ORIGINAL series.
+    """
+    inst = episode.instrument
+    if inst not in ledger["contributions"]:
+        raise SleeveError("no contribution ledger for %s" % inst)
+    ablated = set(contribution_months(episode, window_months))
+    c = ledger["contributions"][inst]
+    out = []
+    for j, m in enumerate(window_months):
+        out.append(float(net[j] - c[j]) if m in ablated else float(net[j]))
+    return out, sorted(ablated, key=D.m_key)

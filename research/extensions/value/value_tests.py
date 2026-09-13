@@ -191,13 +191,25 @@ def test_episodes():
     sel = S.select_episodes({"SPY": sig}, k=3)
     ck("T14 exactly k episodes are selected", len(sel) == 3)
 
+    # T15 — AMENDMENT_003: the sealed operator ABLATES A CONTRIBUTION and
+    # deletes no calendar month. Signal month m maps to contribution month m+1.
+    import value_sleeve as SLV
     months = ["2020-%02d" % m for m in range(1, 13)]
-    remaining = S.delete_months(months, eps[0])
-    ck("T15 the operator deletes the episode's CALENDAR MONTHS",
-       remaining == ["2020-%02d" % m for m in range(4, 13)],
-       "%d of %d remain" % (len(remaining), len(months)))
-    ck("T15 deletion removes those months for EVERY instrument, not one",
-       set(eps[0].months).isdisjoint(remaining))
+    mapped = SLV.contribution_months(eps[0], months)
+    ck("T15 signal months map to contribution months m+1",
+       mapped == ["2020-%02d" % m for m in range(2, 5)],
+       "%s -> %s" % (eps[0].months, mapped))
+    led = {"contributions": {i: [1.0] * len(months) for i in C.UNIVERSE},
+           "shared": [0.0] * len(months)}
+    net = [10.0] * len(months)
+    abl, am = SLV.ablate(months, net, led, eps[0])
+    ck("T15 every calendar month is retained", len(abl) == len(months))
+    ck("T15 only the mapped contribution months change",
+       [j for j in range(len(months)) if abl[j] != net[j]]
+       == [months.index(m) for m in mapped])
+    ck("T15 the whole attributed contribution is removed",
+       all(abs(net[months.index(m)] - abl[months.index(m)] - 1.0) < 1e-12
+           for m in mapped))
     flush("4. valuation episodes, ties and the deletion operator")
 
 
@@ -272,26 +284,27 @@ def test_candidacy():
     ck("T26 excess dependence blocks candidacy via C2 alone",
        not r["candidate"] and r["c1"] and not r["c2"])
 
-    # run_c3 drives the real deletion operator over synthetic episodes
+    # run_c3_ablation drives the sealed operator over synthetic episodes
     months = ["2020-%02d" % m for m in range(1, 13)]
     eps = [S.Episode("SPY", months[0:3], 1), S.Episode("TLT", months[4:6], -1),
            S.Episode("LQD", months[8:10], 1)]
     seen = []
 
-    def recompute(remaining):
-        seen.append(len(remaining))
+    def adjudicate(e):
+        seen.append(e.instrument)
         return {"c1": True, "c2": True}
-    cases = I.run_c3(months, eps, recompute)
-    ck("T27 run_c3 applies the operator once per episode", len(cases) == 3)
-    ck("T27 each case really shrank the sample", seen == [9, 10, 10], str(seen))
+    cases = I.run_c3_ablation(months, eps, adjudicate)
+    ck("T27 the operator is applied once per episode", len(cases) == 3)
+    ck("T27 each selected episode is adjudicated separately",
+       seen == ["SPY", "TLT", "LQD"], str(seen))
     ck("T27 all-pass cases give C3 PASS", I.c3_pass(cases))
 
-    def recompute_invalid(remaining):
+    def adjudicate_invalid(e):
         raise I.InferenceInvalid("floor not met")
-    cases = I.run_c3(months, eps, recompute_invalid)
+    cases = I.run_c3_ablation(months, eps, adjudicate_invalid)
     ck("T28 an InferenceInvalid case is recorded invalid and C3 FAILS",
        all(c["invalid"] for c in cases) and not I.c3_pass(cases))
-    flush("6. candidacy C1/C2/C3 and the leave-one-episode-out rule")
+    flush("6. candidacy C1/C2/C3 and the contribution-ablation rule")
 
 
 # --------------------------------------------------------------------------- #

@@ -200,25 +200,30 @@ def candidacy(standalone_state, rho_upper, jackknife_cases):
     return {"c1": c1, "c2": c2, "c3": c3, "candidate": bool(c1 and c2 and c3)}
 
 
-def run_c3(months, episodes, recompute, k=K_EPISODES):
-    """Apply the sealed deletion operator to each selected episode.
+def run_c3_ablation(window_months, episodes, adjudicate, k=K_EPISODES):
+    """Apply the sealed CONTRIBUTION-ABLATION operator to each selected episode.
 
-    `recompute(remaining_months)` must return {"c1": bool, "c2": bool} or raise
+    VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003. The prior operator deleted an
+    episode's whole calendar months from the paired sample, which on the real
+    signal path removed almost the entire window and made C3 unadjudicable. The
+    sealed operator now removes only the episode instrument's own attributed net
+    contribution in the mapped contribution months, retaining every calendar
+    month, every other instrument and all shared terms.
+
+    `adjudicate(episode)` returns {"c1": bool, "c2": bool, ...} or raises
     InferenceInvalid, which is recorded as an invalid case and therefore a FAIL.
+    Each case starts from the ORIGINAL series: ablations are never cumulative.
     """
-    from value_signal import delete_months
     cases = []
     for e in episodes[:k]:
-        remaining = delete_months(months, e)
         try:
-            r = recompute(remaining)
-            cases.append({"episode": repr(e), "months_deleted": len(e.months),
-                          "months_remaining": len(remaining),
-                          "c1": bool(r["c1"]), "c2": bool(r["c2"]),
-                          "invalid": False})
+            r = adjudicate(e)
+            case = dict(r)
+            case.update({"c1": bool(r["c1"]), "c2": bool(r["c2"]),
+                         "invalid": False})
         except InferenceInvalid as exc:
-            cases.append({"episode": repr(e), "months_deleted": len(e.months),
-                          "months_remaining": len(remaining),
-                          "c1": False, "c2": False, "invalid": True,
-                          "reason": str(exc)})
+            case = {"c1": False, "c2": False, "invalid": True,
+                    "reason": str(exc)}
+        case["episode"] = repr(e)
+        cases.append(case)
     return cases

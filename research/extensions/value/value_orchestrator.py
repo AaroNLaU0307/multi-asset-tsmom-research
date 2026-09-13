@@ -49,11 +49,6 @@ def _ci_public(ci):
             "level": ci["level"], "n_valid": ci["n_valid"]}
 
 
-def _subset(months, values, keep):
-    keep = set(keep)
-    return [v for m, v in zip(months, values) if m in keep]
-
-
 def run_study(run_id=None, authorization_id=None, sources=None, panel=None,
               fixtures=None, outcome_exposure_state="GENERATED_NOT_SEEN"):
     """Execute the sealed study once and return the evidence artifact."""
@@ -80,9 +75,11 @@ def run_study(run_id=None, authorization_id=None, sources=None, panel=None,
         value_net = list(fixtures["value_net"])
         signals = fixtures["signals"]
         sleeve_diag = dict(fixtures.get("sleeve_diagnostics", {}))
+        ledger = fixtures.get("ledger")
     else:
         months = D.m_range(C.EVAL_START, C.EVAL_END)
-        months, value_net, sleeve_diag = SL.build_sleeve(months, sources, panel)
+        months, value_net, sleeve_diag, ledger = SL.build_sleeve(
+            months, sources, panel)
         signals = SL.signals_on(months, sources)
     diagnostics["sleeve"] = sleeve_diag
 
@@ -120,51 +117,71 @@ def run_study(run_id=None, authorization_id=None, sources=None, panel=None,
             "only %d episodes exist; the contract seals k = %d"
             % (len(episodes), C.K_EPISODES))
 
-    # -- 14-15. every leave-one-episode-out case, then C3 -------------------
-    case_detail = {}
+    # -- 14-15. contribution ablation per episode, then C3 ------------------
+    # AMENDMENT_003: remove the episode instrument's own attributed net
+    # contribution in the mapped contribution months. Every calendar month is
+    # retained, every other instrument is untouched, nothing is re-sized,
+    # re-targeted, re-scaled or redistributed, and each case starts from the
+    # ORIGINAL series.
+    if ledger is None:
+        raise StudyError("C3 requires the contribution ledger")
+    if not ledger.get("reconciles"):
+        raise StudyError("the contribution ledger does not reconcile")
 
-    def recompute(remaining):
-        """C1 and C2 on the reduced sample, same engine, same seed policy."""
-        v = _subset(months, value_net, remaining)
-        t = _subset(months, comp_net, remaining)
-        r_sa = I.standalone_ci(v, months=remaining)
+    def adjudicate(episode):
+        ablated, ablated_months = SL.ablate(months, value_net, ledger, episode)
+        r_sa = I.standalone_ci(ablated, months=months)
         r_state = I.standalone_verdict(r_sa["lower"], r_sa["upper"])
-        r_cc = I.correlation_ci(v, t, months=remaining)
-        detail = {
+        r_cc = I.correlation_ci(ablated, comp_net, months=months)
+        return {
+            "c1": I.c1_pass(r_state),
+            "c2": I.c2_pass(r_cc["upper"]),
+            "ablated_contribution_months": ablated_months,
             "standalone_ci": _ci_public(r_sa),
             "standalone_state": r_state,
+            "correlation_point_estimate": I.pearson(ablated, comp_net),
             "correlation_ci": _ci_public(r_cc),
             "bootstrap_counts": {"standalone": dict(r_sa["counts"]),
                                  "correlation": dict(r_cc["counts"])},
         }
-        case_detail[tuple(remaining)] = detail
-        return {"c1": I.c1_pass(r_state), "c2": I.c2_pass(r_cc["upper"])}
 
-    raw_cases = I.run_c3(months, episodes, recompute, k=C.K_EPISODES)
+    raw_cases = I.run_c3_ablation(months, episodes, adjudicate,
+                                  k=C.K_EPISODES)
 
     c3_cases = []
     for episode, case in zip(episodes[:C.K_EPISODES], raw_cases):
-        remaining = VS.delete_months(months, episode)
-        detail = case_detail.get(tuple(remaining), {})
+        mapped = SL.contribution_months(episode, months)
         entry = {
+            "EPISODE_IDENTITY": repr(episode),
+            "INSTRUMENT": episode.instrument,
+            "EPISODE_SIGNAL_MONTHS": list(episode.months),
+            "ABLATED_CONTRIBUTION_MONTHS": case.get(
+                "ablated_contribution_months", mapped),
+            "CONTRIBUTION_ACCOUNTING_IDENTITY": ledger["identity"],
+            "C1_RESULT": bool(case["c1"]),
+            "CORRELATION_STATISTIC": case.get("correlation_point_estimate"),
+            "CORRELATION_CI": case.get("correlation_ci"),
+            "C2_RESULT": bool(case["c2"]),
+            "INFERENCE_VALIDITY": ("VALID" if not case.get("invalid")
+                                   else "INVALID"),
+            # retained for continuity with the rest of the artifact
             "episode": repr(episode),
             "instrument": episode.instrument,
             "start": episode.start,
             "end": episode.end,
             "sign": int(episode.sign),
-            "omitted_months": list(episode.months),
-            "months_remaining": case["months_remaining"],
-            "standalone_ci": detail.get("standalone_ci"),
-            "standalone_state": detail.get("standalone_state"),
+            "months_retained": len(months),
+            "standalone_ci": case.get("standalone_ci"),
+            "standalone_state": case.get("standalone_state"),
             "c1": bool(case["c1"]),
-            "correlation_ci": detail.get("correlation_ci"),
+            "correlation_ci": case.get("correlation_ci"),
             "c2": bool(case["c2"]),
             "valid": not case.get("invalid", False),
         }
         if case.get("invalid"):
             entry["invalid_reason"] = case.get("reason")
         else:
-            for arm, c in (detail.get("bootstrap_counts") or {}).items():
+            for arm, c in (case.get("bootstrap_counts") or {}).items():
                 counts["c3_%s_%s_%s"
                        % (episode.instrument, episode.start, arm)] = c
         c3_cases.append(entry)
@@ -246,6 +263,26 @@ def run_study(run_id=None, authorization_id=None, sources=None, panel=None,
         "CORRELATION_CI": _ci_public(cc),
         "C2": bool(c2),
 
+        "C3_INTERPRETATION": C.C3_INTERPRETATION,
+        "C3_OPERATOR": C.C3_OPERATOR,
+        "C3_PERMITTED_CLAIM": C.C3_PERMITTED_CLAIM,
+        "C3_FORBIDDEN_CLAIM": C.C3_FORBIDDEN_CLAIM,
+        "C3_KNOWN_LIMITATION": C.C3_KNOWN_LIMITATION,
+        "CONTRIBUTION_LEDGER": {
+            "identity": ledger["identity"],
+            "contribution_definition": ledger["contribution_definition"],
+            "shared_term_policy": ledger["shared_term_policy"],
+            "signal_to_contribution_month": ledger[
+                "signal_to_contribution_month"],
+            "timing_map": ledger["timing_map"],
+            "tolerance": ledger["tolerance"],
+            "max_abs_residual": ledger["max_abs_residual"],
+            "reconciles": ledger["reconciles"],
+            "weight_redistribution": False,
+            "vol_retarget_after_ablation": False,
+            "gross_rescale_after_ablation": False,
+            "ablations_cumulative": False,
+        },
         "SELECTED_EPISODES": [
             {"instrument": e.instrument, "start": e.start, "end": e.end,
              "months": len(e.months), "sign": int(e.sign)}

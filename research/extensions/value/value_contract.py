@@ -7,9 +7,9 @@ document, and `conformance()` re-reads that document and refuses to agree with
 itself: each constant must be found in the sealed bytes.
 
     sealed prereg : research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md
-    sha256 (LF)   : 844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
+    sha256 (LF)   : f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee
     seal revision : see SEAL_REVISION below
-    amendment     : VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002
+    amendment     : VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003
 
 lineage, never erased - each seal is superseded, none is deleted:
 
@@ -17,7 +17,9 @@ lineage, never erased - each seal is superseded, none is deleted:
                df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
     _001       5812997229eafe2184fe68193856bea2fa41eeae /
                bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
-    _002       the seal revision above / the sha256 above
+    _002       9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548 /
+               844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
+    _003       the seal revision above / the sha256 above
 """
 import hashlib
 import io
@@ -28,15 +30,16 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
 SEALED_PREREG_RELPATH = "research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md"
-SEALED_PREREG_SHA256 = ("844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0"
-                        "dfb1a91a9948d1cb")
-SEAL_REVISION = "9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548"
+SEALED_PREREG_SHA256 = ("f5f377b195d3ba2081e772b675d251d3adc036511133a461"
+                        "a823f72ddd6582ee")
+SEAL_REVISION = "PENDING_SEAL_REVISION"
 OWNER_DECISION = "SEAL TIME-SERIES VALUE S1"
 
 # --- amendment lineage, oldest first. No seal is ever erased. ---------------
 AMENDMENT_ID_001 = "VALUE_S1_DATA_IDENTITY_AMENDMENT_001"
 AMENDMENT_ID_002 = "VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002"
-AMENDMENT_ID = AMENDMENT_ID_002          # the amendment this module implements
+AMENDMENT_ID_003 = "VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003"
+AMENDMENT_ID = AMENDMENT_ID_003          # the amendment this module implements
 
 ORIGINAL_SEAL_REVISION = "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f"
 ORIGINAL_SEALED_PREREG_SHA256 = ("df142f83d82996f1df87d7953c1480397e4d128c8b32"
@@ -44,10 +47,28 @@ ORIGINAL_SEALED_PREREG_SHA256 = ("df142f83d82996f1df87d7953c1480397e4d128c8b32"
 AMENDMENT_001_SEAL_REVISION = "5812997229eafe2184fe68193856bea2fa41eeae"
 AMENDMENT_001_SEALED_PREREG_SHA256 = ("bc841ea80dd1afd521d8ecd2dc656b3e608396f4"
                                       "dd6546eab9c7b809ca67a099")
+AMENDMENT_002_SEAL_REVISION = "9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548"
+AMENDMENT_002_SEALED_PREREG_SHA256 = ("844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a1"
+                                      "5b4f0cd0dfb1a91a9948d1cb")
+ASTRA_ROLE = "material_design_contributor"
 
 # --- §17 comparator identity ------------------------------------------------
 TSMOM_COMPARATOR = "CANONICAL_17_ETF_TSMOM_BASELINE"
 COMPARATOR_IS_X01_E_ARM = False
+
+# --- §11.1 C3, as amended by _003 ------------------------------------------
+C3_INTERPRETATION = "CONTRIBUTION_SENSITIVITY_ROBUSTNESS"
+C3_OPERATOR = "INDIVIDUAL_SELECTED_EPISODE_CONTRIBUTION_ABLATION"
+C3_PERMITTED_CLAIM = (
+    "Diversification candidacy survives removal of each of the three "
+    "prespecified longest instrument-episode direct net contributions.")
+C3_FORBIDDEN_CLAIM = (
+    "Value is robust across independent valuation regimes. C3 does NOT test "
+    "TEMPORAL_REGIME_ROBUSTNESS and does NOT test performance outside the "
+    "episode's calendar regime.")
+C3_KNOWN_LIMITATION = (
+    "Shared-regime dependence may remain, because the other instruments "
+    "continue to contribute during the same calendar regime.")
 
 # --- §2 universe and objects -----------------------------------------------
 UNIVERSE = ("SPY", "TLT", "LQD", "UUP", "FXY")
@@ -223,9 +244,41 @@ def conformance():
        has("1999-12 → 2026-08, 321 numeric"))
     ck("Shiller vintage limitation is frozen", has(SHILLER_VINTAGE_STATUS))
     ck("evidence ceiling frozen", has(EVIDENCE_CEILING))
-    ck("C3 requires C1 and C2 in each jackknife",
-       has("C1(sample " + chr(92) + " M(e)) = PASS  AND  C2(sample "
-           + chr(92) + " M(e)) = PASS"))
+    ck("C3 requires C1 and C2 in each ablation case",
+       has("C1(V^(-e)) = PASS  AND  C2(V^(-e), TSMOM) = PASS"))
+    ck("amendment 003 is recorded and the full lineage preserved",
+       has(AMENDMENT_ID_003, AMENDMENT_002_SEAL_REVISION,
+           AMENDMENT_002_SEALED_PREREG_SHA256,
+           "LINEAGE = original seal → AMENDMENT_001 → "
+           "AMENDMENT_002 → AMENDMENT_003"))
+    ck("C3 is contribution sensitivity, not temporal-regime robustness",
+       has("C3_INTERPRETATION = " + C3_INTERPRETATION,
+           "does **not** test `TEMPORAL_REGIME_ROBUSTNESS`"))
+    ck("the permitted claim language is frozen",
+       has("Diversification candidacy survives removal of each of the three "
+           "prespecified longest instrument-episode direct net contributions."))
+    ck("the forbidden claim language is named",
+       has("Value is robust across independent valuation regimes."))
+    ck("the shared-regime limitation is recorded",
+       has("shared-regime dependence may remain"))
+    ck("the ablation is on the ORIGINAL basis and never cumulative",
+       has("ORIGINAL** sealed portfolio capital basis",
+           "ablations are never cumulative"))
+    ck("the operator forbids resizing, retargeting and redistribution",
+       has("re-run sizing; redistribute the removed capital; re-target "
+           "portfolio volatility; re-scale portfolio gross"))
+    ck("shared terms stay in a_t, no allocation rule invented",
+       has("stays in `a_t`",
+           "no discretionary allocation rule may be invented to force "
+           "additivity"))
+    ck("retaining calendar months does not imply validity",
+       has("Retaining every calendar month does not imply automatic validity"))
+    ck("the superseded operator is preserved, not erased",
+       has("SUPERSEDED (original §11.1, whole-calendar deletion)"))
+    ck("Astra is a design contributor, not a certifier",
+       has(ASTRA_ROLE, "**not** independent certification"))
+    ck("k = 3 itself is unchanged by the amendment",
+       has("`k = 3` itself is unchanged"))
     ck("no owner decisions remaining", has("OWNER_DECISIONS_REMAINING = NONE"))
 
     return all(c for _l, c, _d in checks), checks

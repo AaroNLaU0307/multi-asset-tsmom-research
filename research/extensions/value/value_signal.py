@@ -118,7 +118,13 @@ def select_episodes(signals, k=K_EPISODES):
 
 
 def delete_months(sample_months, episode):
-    """The sealed deletion operator (§11.1): drop the episode's calendar months
-    from the ENTIRE paired sample, not merely from its own instrument."""
+    """SUPERSEDED by VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003 — NOT the
+    sealed C3 operator any more.
+
+    Whole-calendar deletion: drop the episode's calendar months from the entire
+    paired sample. On the real signal path this removed 129-143 of 143 months
+    and left C3 unadjudicable, which is why the operator was amended. Retained
+    only as a plain utility; the sealed operator is
+    `value_sleeve.ablate` driven by `value_inference.run_c3_ablation`."""
     drop = set(episode.months)
     return [m for m in sample_months if m not in drop]

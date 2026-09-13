@@ -66,16 +66,24 @@ def main():
         gate("COMPARATOR_REPRODUCIBILITY", False, str(exc)[:50])
 
     # 4 / 5 / 7 — the synthetic rehearsal ------------------------------------
-    code, out = _script("value_rehearsal.py")
-    gate("SYNTHETIC_END_TO_END", code == 0 and "SYNTHETIC_END_TO_END = PASS" in out,
-         out.strip().splitlines()[-3].strip() if out.strip() else "")
+    reh_code, reh = _script("value_rehearsal.py")
+    gate("SYNTHETIC_END_TO_END",
+         reh_code == 0 and "SYNTHETIC_END_TO_END = PASS" in reh,
+         reh.strip().splitlines()[-3].strip() if reh.strip() else "")
     gate("CONDITIONAL_FULL_BRANCHING",
-         code == 0 and out.count("FULL never computed") >= 3
-         and "schema rejects FULL fields on a refused branch" in out,
+         reh_code == 0 and reh.count("FULL never computed") >= 3
+         and "schema rejects FULL fields on a refused branch" in reh,
          "3 refusal branches + 3 FULL verdicts")
     gate("AUTHORIZATION_SINGLE_USE_TEST",
-         code == 0 and "consumed authorization refuses reuse" in out
-         and "absent authorization refuses" in out)
+         reh_code == 0 and "consumed authorization refuses reuse" in reh
+         and "absent authorization refuses" in reh)
+    gate("LONG_EPISODE_ADJUDICABILITY_TEST",
+         reh_code == 0
+         and "the whole-window episode is the top selection" in reh
+         and "it remains a VALID, adjudicable inference" in reh
+         and "FAIL" not in "".join(
+             l for l in reh.splitlines() if l.strip().startswith("11 ")),
+         "a 143-month episode stays adjudicable under the ablation operator")
 
     # 6 — evidence schema ----------------------------------------------------
     bad_cases = [
@@ -146,13 +154,12 @@ def main():
          all(got == want for got, want in boundary) and rho_edge,
          "strict +E/-F/+delta/zero; rho_max %.2f passes on equality" % C.RHO_MAX)
 
-    # 12b — C3 structural reachability on the REAL signal path --------------
-    # §13's reachability check proves C3 *can* pass against hypothetical
-    # jackknife inputs. It never asks whether the actual episode structure
-    # leaves a sample large enough to adjudicate on. §11 defines episodes from
-    # the signal path alone — no return, Sharpe or correlation — so this is
-    # answerable before the run, and it must be, because an unreachable C3
-    # forecloses candidacy no matter what the returns turn out to be.
+    # 12b — C3 structural ADJUDICABILITY on the REAL signal path -----------
+    # AMENDMENT_003 replaces the obsolete whole-calendar reachability gate.
+    # This asks only whether C3 CAN be adjudicated, never whether it passes,
+    # and it uses no target outcome value: episodes come from the signal path,
+    # which §11 defines independently of any return, and the rest are
+    # invariants of the operator itself.
     try:
         import value_data as D
         import value_signal as VS
@@ -160,17 +167,45 @@ def main():
         ms = D.m_range(C.EVAL_START, C.EVAL_END)
         sig = SL.signals_on(ms)
         sel = VS.select_episodes(sig, k=C.K_EPISODES)
-        remaining = [(e, len(VS.delete_months(ms, e))) for e in sel]
-        worst = min(r for _e, r in remaining) if remaining else 0
-        detail = "; ".join("%s %d->%d" % (e.instrument, len(e.months), r)
-                           for e, r in remaining)
-        gate("C3_STRUCTURAL_REACHABILITY",
-             len(sel) == C.K_EPISODES
-             and worst >= C.MIN_DISTINCT_MONTHS,
-             "smallest reduced sample %d months (floor %d) | %s"
-             % (worst, C.MIN_DISTINCT_MONTHS, detail))
+
+        mapped = [(e, SL.contribution_months(e, ms)) for e in sel]
+        all_mapped = all(len(cm) > 0 for _e, cm in mapped)
+        in_window = all(set(cm) <= set(ms) for _e, cm in mapped)
+        deterministic = all(
+            SL.contribution_months(e, ms) == cm for e, cm in mapped)
+
+        # The operator retains every calendar month by construction. Proven on
+        # a neutral series so no real return is touched.
+        probe_net = [0.0] * len(ms)
+        probe_led = {"contributions": {i: [0.0] * len(ms) for i in C.UNIVERSE},
+                     "shared": [0.0] * len(ms)}
+        lengths, no_deletion = [], True
+        for e, _cm in mapped:
+            abl, _am = SL.ablate(ms, probe_net, probe_led, e)
+            lengths.append(len(abl))
+            if len(abl) != len(ms):
+                no_deletion = False
+        can_evaluate = all(n >= C.MIN_DISTINCT_MONTHS for n in lengths)
+
+        gate("C3_STRUCTURAL_ADJUDICABILITY",
+             len(sel) == C.K_EPISODES and all_mapped and in_window
+             and deterministic and no_deletion and can_evaluate,
+             "3 episodes map to %s contribution months; %d calendar months "
+             "retained in every case (floor %d)"
+             % ("/".join(str(len(cm)) for _e, cm in mapped),
+                lengths[0] if lengths else 0, C.MIN_DISTINCT_MONTHS))
     except Exception as exc:                       # noqa: BLE001
-        gate("C3_STRUCTURAL_REACHABILITY", False, str(exc)[:60])
+        gate("C3_STRUCTURAL_ADJUDICABILITY", False, str(exc)[:60])
+
+    # 12c — contribution accounting reconciles ------------------------------
+    # Proven on the REAL sleeve code path driven by synthetic inputs. Running
+    # it on the real inputs would compute the Value return series, which is a
+    # target outcome and is forbidden before the authorized run.
+    _recon = [l for l in reh.splitlines()
+              if "decomposition reconstructs the sealed series" in l]
+    gate("CONTRIBUTION_ACCOUNTING_RECONCILIATION",
+         reh_code == 0 and len(_recon) == 1 and "PASS" in _recon[0],
+         "V_t = a_t + sum_i c_i,t on the real code path, synthetic inputs")
 
     # 13 — real-run safety ---------------------------------------------------
     auth = A.load()

@@ -15,6 +15,7 @@ ACCEPTED_DESIGN_REVISION = 4c31add4cd7f927952139715206029ae70fb4e3b
                            seal changed status metadata only)
 AMENDMENTS = VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (2026-09-13) — see §16.
              VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002 (2026-09-13) — see §17.
+             VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003 (2026-09-13) — see §18.
              ORIGINAL_SEAL_REVISION = ba5814d8dad2b81f28d45a0b6df7c010ef4c052f
              ORIGINAL_SEALED_PREREG_SHA256 =
                df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
@@ -22,9 +23,14 @@ AMENDMENTS = VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (2026-09-13) — see §16.
                5812997229eafe2184fe68193856bea2fa41eeae
              AMENDMENT_001_SEALED_PREREG_SHA256 =
                bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
-             LINEAGE = original seal → AMENDMENT_001 → AMENDMENT_002
+             AMENDMENT_002_SEAL_REVISION =
+               9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548
+             AMENDMENT_002_SEALED_PREREG_SHA256 =
+               844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
+             LINEAGE = original seal → AMENDMENT_001 → AMENDMENT_002 →
+                       AMENDMENT_003
              The original seal is NOT erased; this document supersedes it and
-             its lineage is preserved above and in §16 and §17.
+             its lineage is preserved above and in §16, §17 and §18.
 ```
 
 **Research family:** `FINANCIAL_ASSET_TIME_SERIES_VALUE`
@@ -511,25 +517,70 @@ earlier start month, then (2) instrument name in the fixed order
 `SPY, TLT, LQD, UUP, FXY`. That ordering is total, so the three largest episodes
 are uniquely determined with no discretion.
 
-### 11.1 The deletion operator — exactly one, FROZEN
+### 11.1 The contribution-ablation operator — exactly one, FROZEN
 
-For a selected episode *e*:
+*Amended by `VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003` (§18). The superseded
+whole-calendar deletion operator is reproduced there; it is not erased.*
 
-1. take `M(e)` = the set of calendar months belonging to *e*;
-2. **delete those calendar months from the entire paired evaluation sample** —
-   the Value sleeve series, the frozen TSMOM series (**§17**), and the
-   combined series alike, so every statistic is recomputed on the *same*
-   reduced set of common months;
-3. recompute **C1** (the §7 standalone adjudication) and **C2** (the §8
-   `ρ_upper ≤ 0.40` test) on the remaining months, using the §9.1 bootstrap
-   unchanged;
-4. the reduced sample must still satisfy the §9.1 validity floor; a jackknife
-   case that cannot produce a valid interval counts as **FAIL**, never as a pass
-   by default.
+For a selected episode *e* on instrument *i(e)*:
 
-This operator does **not**: remove only the contributing instrument while keeping
-the portfolio sample; replace an instrument; reweight the sleeve; redraw episode
-boundaries; or use returns to define an episode. There is exactly one operator.
+1. take `M(e)` = the set of **signal** months belonging to *e*;
+2. map them to **contribution months** by the already-sealed timing convention:
+   the signal at month-end *m* sets the weight held through month *m+1*
+   (`positions = weights.shift(1)`), so signal month *m* maps to contribution
+   month *m+1*, intersected with the evaluation window. This mapping is FROZEN.
+   It is never decided from PnL behaviour and episode boundaries are never
+   shifted;
+3. form `V^(−e)` by subtracting instrument *i(e)*'s **own attributed net
+   contribution** in those contribution months, on the **ORIGINAL** sealed
+   portfolio capital basis:
+
+```
+V_t        = a_t + Σ_i c_i,t
+c_i,t      = position_i,t · r_i,t  −  |position_i,t − position_i,t−1| · (2.0 bps)
+V_t^(−e)   = V_t  −  1{ t ∈ contribution months of e } · c_i(e),t
+```
+
+   The decomposition must reconstruct the sealed Value series exactly up to a
+   declared numerical tolerance. Any term that is genuinely shared and not
+   uniquely attributable **stays in `a_t`**; no discretionary allocation rule may
+   be invented to force additivity;
+4. recompute **C1** (the §7 standalone adjudication) and **C2** (the §8
+   `ρ_upper ≤ 0.40` test) on the paired series `(V^(−e)`, frozen TSMOM §17`)`
+   over **every** calendar month, using the §9.1 bootstrap unchanged;
+5. the sample must still satisfy the §9.1 validity floor. **Retaining every
+   calendar month does not imply automatic validity**; a case that cannot
+   produce a valid interval counts as **FAIL**, never as a pass by default.
+
+This operator does **not**: delete calendar months; remove, replace or alter any
+other instrument's contribution; alter the shared term `a_t`; re-run sizing;
+redistribute the removed capital; re-target portfolio volatility; re-scale
+portfolio gross; reweight the sleeve; re-rank, redraw or shift episode
+boundaries; redefine episodes inside bootstrap samples; or use returns to define
+an episode. The **whole** attributed contribution is removed, whether positive or
+negative. Each of the three cases starts from the ORIGINAL portfolio —
+**ablations are never cumulative**. There is exactly one operator.
+
+`V^(−e)` is an **accounting sensitivity series, not a separately investable
+strategy**.
+
+**What C3 tests, FROZEN:**
+
+```
+C3_INTERPRETATION = CONTRIBUTION_SENSITIVITY_ROBUSTNESS
+```
+
+**Permitted interpretation, exact language:** "Diversification candidacy
+survives removal of each of the three prespecified longest instrument-episode
+direct net contributions."
+
+**Forbidden interpretation:** "Value is robust across independent valuation
+regimes." C3 does **not** test `TEMPORAL_REGIME_ROBUSTNESS` and does **not**
+test performance outside the episode's calendar regime.
+
+**Known limitation, recorded now and carried into every claim:** shared-regime
+dependence may remain, because the other instruments continue to contribute
+during the same calendar regime.
 
 *Previously this section said C3 passed iff the primary point estimate's sign was
 unchanged. That was weaker than the accepted structure — it adjudicated on a sign
@@ -541,7 +592,7 @@ adjudicating power.*
 
 ```
 C3 = PASS  iff  for every e in the 3 selected episodes:
-                C1(sample \ M(e)) = PASS  AND  C2(sample \ M(e)) = PASS
+                C1(V^(-e)) = PASS  AND  C2(V^(-e), TSMOM) = PASS
 ```
 
 **Descriptive only, no adjudication power:** the sign of the primary point
@@ -565,7 +616,7 @@ algebra or existing programme convention. **No target outcome was inspected.**
 | **D8** | `ρ_max` and basis | **0.40, on the CI upper bound** | the upper bound is conservative — it refuses candidacy when dependence is merely plausibly high |
 | **D9** | Trend/Value risk split | **75 / 25** | TSMOM is the incumbent with far stronger evidence; a minority Value allocation is the conservative single shot |
 | **D10** | incremental margin `+δ` | **+0.10** | must exceed plausible estimation noise on a paired difference yet stay attainable (§13) |
-| **D11** | episodes `k`, C3 rule | **k = 3; C3 passes iff C1 ∧ C2 both pass in all three leave-one-episode-out samples** (§11.1) | prevents one valuation episode from carrying the premise, tested on the conditions that actually gate the combination |
+| **D11** | episodes `k`, C3 rule | **k = 3; C3 passes iff C1 ∧ C2 both pass in all three contribution-ablation cases** (§11.1, amended §18; `k = 3` itself unchanged) | prevents one valuation episode's direct net contribution from carrying the premise, tested on the conditions that actually gate the combination |
 
 ```
 OWNER_DECISIONS_REMAINING = NONE
@@ -758,6 +809,74 @@ to is recorded as a corroborating diagnostic only.
 (`2014-07 → 2026-05`, `N = 143`), no source, no lag, no Value object, signal,
 staleness, portfolio, cost, episode, bootstrap, C1/C2/C3, candidacy or verdict
 rule, and no claim ceiling.
+
+```
+
+## 18. `VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003`
+
+**Owner decision, 2026-09-13:** `ACCEPT ASTRA'S C3 AMENDMENT RECOMMENDATION`.
+Replace the C3 operator. Nothing else is reopened.
+
+**1. The defect.** The superseded §11.1 operator deleted an episode's whole
+calendar months from the entire paired sample. On the real signal path the three
+selected episodes span **143, 141 and 129** of the 143 evaluation months, so the
+operator left **0, 2 and 14** months — all below the §9.1 twenty-four-distinct-
+month floor. Every case was therefore invalid, C3 could not pass, and candidacy
+was foreclosed **whatever the returns turned out to be**. A screen that cannot
+return PASS carries no information, so its failure was never evidence against
+Value. §13's reachability check tested threshold algebra against hypothetical
+jackknife inputs and never touched the signal path, so it could not have caught
+this.
+
+**2. The superseded operator, preserved verbatim and NOT erased:**
+
+```
+SUPERSEDED (original §11.1, whole-calendar deletion):
+  1. take M(e) = the set of calendar months belonging to e;
+  2. delete those calendar months from the entire paired evaluation sample;
+  3. recompute C1 and C2 on the remaining months;
+  4. the reduced sample must still satisfy the §9.1 validity floor.
+  C3 = PASS iff for every e:  C1(sample \ M(e)) = PASS AND C2(sample \ M(e)) = PASS
+```
+
+**3. The replacement** is the individual selected-episode **contribution
+ablation** now written into §11.1. It retains every calendar month and removes
+only the episode instrument's own attributed net contribution in the mapped
+contribution months, on the original portfolio capital basis.
+
+**4. What changed, exhaustively:** the §11.1 operator, its frozen
+interpretation and claim language, the §12 D11 *textual* C3 semantics, and this
+lineage record. **`k = 3` itself is unchanged.**
+
+**5. What did NOT change.** The Value universe, the valuation objects and factor
+definitions, the anchor, the §17 comparator, `D1`–`D10`, every numerical
+threshold (`+E = +0.15`, `−F = −0.15`, `ρ_max = 0.40`, `+δ = +0.10`, the 75/25
+split), the episode definition, pooling, ranking and tie-breaks, C1, C2, the
+correlation and standalone inference, the bootstrap specification, the
+**24-distinct-month** validity floor, the evaluation window
+(`2014-07 → 2026-05`, `N = 143`), and the claim ceiling.
+
+**6. Outcome blindness at the moment of amendment.** This amendment was made
+after observing **only** the predictor/signal path, structural episode lengths
+and structural sample reachability — all of which §11 defines independently of
+any return. It was made **before** observing any Value return series, Value
+Sharpe, Value/TSMOM correlation, combination performance or target verdict:
+
+```
+VALUE_TARGET_RETURNS_COMPUTED     = NO
+VALUE_SHARPE_COMPUTED             = NO
+VALUE_TSMOM_CORRELATION_COMPUTED  = NO
+COMBINATION_OUTCOME_COMPUTED      = NO
+S3_AUTHORIZATION_CREATED          = NO
+S3_AUTHORIZATION_CONSUMED         = NO
+EVIDENCE_ARTIFACT_EXISTS          = NO
+```
+
+**7. Attribution.** GPT-6 Astra (fresh xHigh challenge) is recorded as
+`material_design_contributor` for the contribution-ablation repair. That is a
+design contribution, **not** independent certification of the amended contract
+or of any artifact produced under it. Aaron's acceptance is adjudication, never
+independent evidence.
 
 ```
 ```

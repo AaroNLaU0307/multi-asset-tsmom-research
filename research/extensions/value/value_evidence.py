@@ -29,6 +29,8 @@ REQUIRED = (
     "VALUE_STANDALONE_STATE", "C1",
     "VALUE_TSMOM_CORRELATION", "CORRELATION_CI", "C2",
     "SELECTED_EPISODES", "C3_CASES", "C3", "CANDIDACY",
+    "C3_INTERPRETATION", "C3_OPERATOR", "C3_PERMITTED_CLAIM",
+    "C3_FORBIDDEN_CLAIM", "C3_KNOWN_LIMITATION", "CONTRIBUTION_LEDGER",
     "FULL_EXECUTED",
     "BOOTSTRAP_COUNTS", "DIAGNOSTICS",
     "SHILLER_VINTAGE_LIMITATION", "EVIDENCE_CEILING",
@@ -38,8 +40,16 @@ REQUIRED = (
 FULL_FIELDS = ("FULL_STATISTICS", "FULL_CI", "FULL_STATE")
 
 CI_FIELDS = ("lower", "upper", "level", "n_valid")
-CASE_FIELDS = ("episode", "omitted_months", "months_remaining",
-               "standalone_ci", "c1", "correlation_ci", "c2", "valid")
+# §10 of the amendment: the minimum each C3 case must carry.
+CASE_FIELDS = ("EPISODE_IDENTITY", "INSTRUMENT", "EPISODE_SIGNAL_MONTHS",
+               "ABLATED_CONTRIBUTION_MONTHS",
+               "CONTRIBUTION_ACCOUNTING_IDENTITY", "C1_RESULT",
+               "CORRELATION_STATISTIC", "CORRELATION_CI", "C2_RESULT",
+               "INFERENCE_VALIDITY")
+
+C3_INTERPRETATION_REQUIRED = "CONTRIBUTION_SENSITIVITY_ROBUSTNESS"
+FORBIDDEN_C3_LANGUAGE = ("TEMPORAL_REGIME_ROBUSTNESS",
+                         "robust across independent valuation regimes")
 
 STANDALONE_STATES = ("SUPPORTED_POSITIVE_EDGE", "MATERIALLY_ADVERSE",
                      "UNRESOLVED_EDGE")
@@ -109,9 +119,20 @@ def validate(ev):
             for k in CASE_FIELDS:
                 if k not in case:
                     bad("C3_CASES[%d] missing %s" % (i, k))
-            if not isinstance(case.get("omitted_months"), list):
-                bad("C3_CASES[%d].omitted_months must list the calendar months"
+            if not isinstance(case.get("EPISODE_SIGNAL_MONTHS"), list):
+                bad("C3_CASES[%d].EPISODE_SIGNAL_MONTHS must list the months"
                     % i)
+            if not isinstance(case.get("ABLATED_CONTRIBUTION_MONTHS"), list):
+                bad("C3_CASES[%d].ABLATED_CONTRIBUTION_MONTHS must list the "
+                    "mapped contribution months" % i)
+            if case.get("INFERENCE_VALIDITY") not in ("VALID", "INVALID"):
+                bad("C3_CASES[%d].INFERENCE_VALIDITY must be VALID or INVALID"
+                    % i)
+            # The ablation retains every calendar month; a case that reports a
+            # reduced sample is running the superseded deletion operator.
+            if "months_remaining" in case:
+                bad("C3_CASES[%d] reports months_remaining — the sealed "
+                    "operator ablates a contribution and deletes no month" % i)
             # An invalid case legitimately has no intervals; a valid one must
             # show both, because that is what it was adjudicated on.
             if case.get("valid"):
@@ -160,6 +181,29 @@ def validate(ev):
             for k in ("attempted", "valid", "discarded"):
                 if k not in c:
                     bad("BOOTSTRAP_COUNTS[%s] missing %s" % (arm, k))
+
+    # --- the frozen C3 interpretation --------------------------------------
+    if ev.get("C3_INTERPRETATION") != C3_INTERPRETATION_REQUIRED:
+        bad("C3_INTERPRETATION must be %r" % C3_INTERPRETATION_REQUIRED)
+    permitted = str(ev.get("C3_PERMITTED_CLAIM", ""))
+    for phrase in FORBIDDEN_C3_LANGUAGE:
+        if phrase.lower() in permitted.lower():
+            bad("C3_PERMITTED_CLAIM contains forbidden language: %r" % phrase)
+    if not ev.get("C3_KNOWN_LIMITATION"):
+        bad("the shared-regime limitation must survive into the artifact")
+
+    led = ev.get("CONTRIBUTION_LEDGER")
+    if not isinstance(led, dict):
+        bad("CONTRIBUTION_LEDGER must be an object")
+    else:
+        if not led.get("reconciles"):
+            bad("CONTRIBUTION_LEDGER does not reconcile V_t = a_t + sum_i c_i,t")
+        for k, want in (("weight_redistribution", False),
+                        ("vol_retarget_after_ablation", False),
+                        ("gross_rescale_after_ablation", False),
+                        ("ablations_cumulative", False)):
+            if led.get(k) is not want:
+                bad("CONTRIBUTION_LEDGER.%s must be %r" % (k, want))
 
     if not ev.get("SHILLER_VINTAGE_LIMITATION"):
         bad("the Shiller vintage limitation must survive into the artifact")
