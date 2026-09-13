@@ -75,13 +75,49 @@ Verified on synthetic values (`S=100→120`, `P_US=110`, `P_f=100` gives
 - **UUP** is long USD ⇒ object `= −R_USD,basket` (higher ⇒ USD cheaper).
 - **FXY** is long JPY ⇒ object `= +R_USD,JPY` (USD rich ⇔ JPY cheap).
 
-`R_USD,basket` uses the **fixed USDX weights of the traded proxy** — EUR 0.576,
-JPY 0.136, GBP 0.119, CAD 0.091, SEK 0.042, CHF 0.036 (sum 1.000) — as a
-weighted geometric mean of the six bilateral `R_USD,f`. A changing-weight BIS
-effective index is **forbidden**: it is a different economic object.
+#### 2.2.1 Exact formulae — FROZEN, no implementation discretion
 
-`DEXUSEU` and `DEXUSUK` are quoted USD-per-foreign and **must be inverted**;
-`DEXJPUS`, `DEXCAUS`, `DEXSDUS`, `DEXSZUS` are already foreign-per-USD.
+At month-end *t*, with the §3.2 cut-offs applied (FX at *t* − 1 business day,
+price levels at reference month *t* − 2):
+
+**Nominal orientation.** Let `q_f(t)` be the quoted FRED rate. Then
+
+```
+S_f(t) = q_f(t)                      for DEXJPUS, DEXCAUS, DEXSDUS, DEXSZUS
+                                     (already foreign units per USD)
+S_f(t) = 1 / q_f(t)                  for DEXUSEU, DEXUSUK
+                                     (quoted USD per foreign unit -> inverted)
+```
+
+**Bilateral real USD rate, in logs:**
+
+```
+r_f(t) = log S_f(t) + log P_US(t−2) − log P_f(t−2)
+```
+
+**Basket aggregation — weighted geometric mean, i.e. a weighted mean of logs:**
+
+```
+r_basket(t) = Σ_f  w_f · r_f(t)
+w = { EUR 0.576, JPY 0.136, GBP 0.119, CAD 0.091, SEK 0.042, CHF 0.036 },  Σ w_f = 1
+```
+
+This matches the geometric construction of the USDX the traded proxy follows. A
+changing-weight BIS effective index is **forbidden**: it is a different economic
+object.
+
+**The two Value objects:**
+
+```
+x_UUP(t) = − r_basket(t)          (long USD  -> higher = USD cheaper)
+x_FXY(t) = + r_JPY(t)             (long JPY  -> USD rich <=> JPY cheap)
+```
+
+**Why logs.** A reference-base change multiplies a price index by a constant over
+its whole history, which is an *additive* constant in logs. The expanding
+*z*-score subtracts its own mean, so a uniform additive shift cancels exactly and
+the base becomes irrelevant. Levels would not have this property. The seven
+economies therefore need no base harmonisation beyond §3.
 
 ## 3. Sources, provenance and PIT status — FROZEN
 
@@ -93,7 +129,7 @@ Raw snapshots live in `data/value_raw/` (git-ignored) and are pinned by
 | SPY CAPE | Shiller `shillerdata.com` `ie_data.xls` | 1871.01 → 2026.09 | `PIT_DATA_ACQUIRED_BUT_LIMITED` |
 | TLT real yield | FRED `DFII20` | 2004-07-27 → 2026-09-10 | `PIT_READY` |
 | LQD credit | FRED `BAA10Y` (+ `BAA`, `DGS10`) | 1986-01-02 → 2026-09-10 | `PIT_READY` |
-| US CPI | FRED `CPIAUCSL` | 1947-01 → 2026-08 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
+| US CPI | FRED **`CPIAUCNS`** (NSA) | 1913-01 → 2026-08 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | EUR CPI | Eurostat `prc_hicp_minr`, `coicop18=TOTAL`, `unit=I25` | 1996-01 → 2026-08 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | JPY CPI | e-Stat `statInfId=000040482943` (All items, code 0001) | 1970-01 → 2026-07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
 | GBP CPI | ONS `D7BT` | 1988-01 → 2026-07 | `PIT_FEASIBLE_WITH_DECLARED_LAG` |
@@ -150,6 +186,43 @@ archive is distributed.
 5. CPI series are also revised and rebased; the same distinction applies to them,
    though their effect enters only through ratios (§3).
 
+### 3.0 Seasonal-adjustment policy — FROZEN
+
+```
+CPI_SEASONAL_ADJUSTMENT_POLICY =
+  ALL-ITEMS NOT-SEASONALLY-ADJUSTED PRICE INDEX FOR EVERY ECONOMY
+```
+
+A real exchange rate is a **ratio** of two price levels. Mixing a seasonally
+adjusted numerator with a non-seasonally-adjusted denominator injects a spurious
+seasonal cycle into the object itself, which the expanding *z*-score would then
+treat as genuine valuation variation. One treatment is therefore used for all
+seven economies.
+
+| economy | series | all-items definition | SA / NSA | reference base | freq |
+|---|---|---|---|---|---|
+| US | FRED `CPIAUCNS` | CPI-U, All Items, U.S. city average | **NSA** | 1982-84 = 100 | monthly |
+| Euro area | Eurostat `prc_hicp_minr`, `coicop18=TOTAL`, `unit=I25` | HICP overall index (ECOICOP v2) | **NSA** | 2025 = 100 | monthly |
+| UK | ONS `D7BT` | CPI INDEX 00: ALL ITEMS | **NSA** | 2015 = 100 | monthly |
+| Canada | StatCan `18-10-0004` | CPI, all-items, Canada | **NSA** | 2002 = 100 | monthly |
+| Sweden | SCB `KPI2020M`, `00000808` | CPI, total, fixed index numbers | **NSA** | 2020 = 100 | monthly |
+| Switzerland | SNB `plkopr`, `LD2010100` | Landesindex der Konsumentenpreise, total | **NSA** | Dec 2010 = 100 | monthly |
+| Japan | e-Stat `000040482943`, Group/Item `0001` | All items, Indices of Items, Japan | **NSA** | 2025 = 100 | monthly |
+
+**The US series was corrected.** The previous inventory used `CPIAUCSL`, which is
+seasonally adjusted and was the only SA series among the seven. It is replaced by
+its official NSA counterpart `CPIAUCNS` (1913-01 → 2026-08, so no coverage is
+lost; the US CPI leg never bound the evaluation window). The SA/NSA status was
+established **mechanically**, not from the ticker convention alone: over
+1990-2026 the month-of-year dispersion of month-on-month log changes is 0.00633
+for `CPIAUCNS` against 0.00133 for `CPIAUCSL`, a factor of 4.7.
+
+Japan's file comes from the *Indices of Items* time series, which is the NSA
+series; e-Stat publishes its seasonally adjusted tables separately as 16-1 and
+16-2, and those are **not** used. This correction is a measurement-consistency
+decision made before any Value signal, return or performance quantity existed,
+and was **not** chosen by inspecting signal behaviour.
+
 ### 3.2 Month-end information cut-off — one causal rule per raw series, FROZEN
 
 The **observation date** and the **date the observation may enter a signal** are
@@ -163,7 +236,7 @@ At month-end *t*, the admissible value of each raw series is:
 | `DFII20` | business-daily quote | last quote dated ≤ *t* − 1 business day | 1 bd |
 | `BAA10Y` (and `BAA`, `DGS10`) | business-daily quote | last quote dated ≤ *t* − 1 business day | 1 bd |
 | `DEXUSEU`, `DEXJPUS`, `DEXUSUK`, `DEXCAUS`, `DEXSDUS`, `DEXSZUS` | business-daily quote | last quote dated ≤ *t* − 1 business day | 1 bd |
-| `CPIAUCSL` (US) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
+| `CPIAUCNS` (US) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | Eurostat `prc_hicp_minr` (EUR) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | e-Stat `000040482943` (JPY) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
 | ONS `D7BT` (GBP) | monthly, reference month *m* | *m* ≤ *t* − 2 months | 2 mo |
@@ -251,14 +324,19 @@ is *not* shortened to recover sample length, nor is the TLT construction switche
 to the longer `DGS20 − EXPINF20YR` route, whose second leg is model-based and
 revised.
 
-**The end is bound by the ETF price panel, not by CPI timing.** Under §3.2 the
-last month-end at which all five objects are formable is 2026-09, which would
-support a return month as late as 2026-10. The binding constraint is
-`data/close_prices_raw.csv`, which ends **2026-06-12** — June 2026 has only 10
-trading days and is incomplete. The last *complete* return month is therefore
-**2026-05** (20 trading days). The earlier suggestion of 2026-07 is **not**
+**The end is bound by the ETF price panel, not by CPI timing.** The binding
+constraint is `data/close_prices_raw.csv`, which ends **2026-06-12** — June 2026
+has only 10 trading days and is incomplete, so the last *complete* return month
+is **2026-05** (20 trading days). The earlier suggestion of 2026-07 is **not**
 evaluable and is discarded; the end date is derived, not chosen for convenience.
 All five tickers (`SPY`, `TLT`, `LQD`, `UUP`, `FXY`) are present in that panel.
+
+For completeness, and stated **prospectively rather than as a current fact**: the
+fundamental legs held today would, under §3.2, permit signals to be formed at
+month-ends beyond the evaluation end. That is a statement about the fundamental
+inputs already in hand, not a claim that any future month's ETF prices exist. It
+changes nothing: the evaluation end is frozen at **2026-05**, and the panel is
+deliberately **not** refreshed to extend the sample.
 
 Monthly frequency; every decision at month-end *t*; the return is measured over
 month *t* + 1.
@@ -300,7 +378,11 @@ Three screens, all evaluated before any combination is computed:
   than the point estimate is the conservative choice: it refuses candidacy when
   dependence is merely *plausibly* high. The comparison is `≤`, so
   `ρ_upper = 0.40` exactly **passes**.
-- **C3** — the episode-robustness rule of §11 passes.
+- **C3** — the **premise conditions survive** the preregistered
+  leave-one-valuation-episode-out rule of §11: for each of the `k = 3`
+  preregistered episodes, both **C1 and C2 are recomputed on the sample with
+  that episode's calendar months deleted, and both must PASS**. C3 passes iff
+  C1 ∧ C2 hold in **all three** jackknife cases.
 
 If C1 ∧ C2 ∧ C3 hold, **exactly one** fixed-split combination test (§9) is
 permitted. `UNRESOLVED_EDGE` **may** proceed. Passing candidacy never changes the
@@ -404,16 +486,48 @@ alone and never from returns.
 The definition uses **only** the frozen signal path. It may not use future
 returns, PnL, Sharpe, drawdowns, or any later discretionary regime label.
 
-**Leave-one-episode-out, deterministic.** Episodes are pooled across the five
+**Episode selection, deterministic.** Episodes are pooled across the five
 instruments and ranked by month count, **descending**, with ties broken by (1)
 earlier start month, then (2) instrument name in the fixed order
-`SPY, TLT, LQD, UUP, FXY`. That ordering is total, so the "three largest" are
-uniquely determined with no discretion. The primary statistic is recomputed
-`k = 3` times, each omitting exactly one of those three episodes' months.
+`SPY, TLT, LQD, UUP, FXY`. That ordering is total, so the three largest episodes
+are uniquely determined with no discretion.
 
-**C3 pass rule (D11):** C3 passes iff the sign of the primary point estimate is
-unchanged in all three recomputations. This is a bounded diagnostic, not a regime
-framework; it is a gate only through C3.
+### 11.1 The deletion operator — exactly one, FROZEN
+
+For a selected episode *e*:
+
+1. take `M(e)` = the set of calendar months belonging to *e*;
+2. **delete those calendar months from the entire paired evaluation sample** —
+   the Value sleeve series, the frozen TSMOM series, and the combined series
+   alike, so every statistic is recomputed on the *same* reduced set of common
+   months;
+3. recompute **C1** (the §7 standalone adjudication) and **C2** (the §8
+   `ρ_upper ≤ 0.40` test) on the remaining months, using the §9.1 bootstrap
+   unchanged;
+4. the reduced sample must still satisfy the §9.1 validity floor; a jackknife
+   case that cannot produce a valid interval counts as **FAIL**, never as a pass
+   by default.
+
+This operator does **not**: remove only the contributing instrument while keeping
+the portfolio sample; replace an instrument; reweight the sleeve; redraw episode
+boundaries; or use returns to define an episode. There is exactly one operator.
+
+*Previously this section said C3 passed iff the primary point estimate's sign was
+unchanged. That was weaker than the accepted structure — it adjudicated on a sign
+rather than on whether the premise conditions survive — and it is replaced. The
+sign-stability observation is retained below as a description with no
+adjudicating power.*
+
+**C3 pass rule (D11), FROZEN:**
+
+```
+C3 = PASS  iff  for every e in the 3 selected episodes:
+                C1(sample \ M(e)) = PASS  AND  C2(sample \ M(e)) = PASS
+```
+
+**Descriptive only, no adjudication power:** the sign of the primary point
+estimate in each jackknife case may be reported alongside, purely as commentary.
+It cannot pass, fail, or modify C3.
 
 ## 12. Owner decisions — FROZEN
 
@@ -432,7 +546,7 @@ algebra or existing programme convention. **No target outcome was inspected.**
 | **D8** | `ρ_max` and basis | **0.40, on the CI upper bound** | the upper bound is conservative — it refuses candidacy when dependence is merely plausibly high |
 | **D9** | Trend/Value risk split | **75 / 25** | TSMOM is the incumbent with far stronger evidence; a minority Value allocation is the conservative single shot |
 | **D10** | incremental margin `+δ` | **+0.10** | must exceed plausible estimation noise on a paired difference yet stay attainable (§13) |
-| **D11** | episodes `k`, C3 rule | **k = 3; C3 passes iff the primary sign is unchanged in all three** | prevents one episode carrying the conclusion without becoming a regime model |
+| **D11** | episodes `k`, C3 rule | **k = 3; C3 passes iff C1 ∧ C2 both pass in all three leave-one-episode-out samples** (§11.1) | prevents one valuation episode from carrying the premise, tested on the conditions that actually gate the combination |
 
 ```
 OWNER_DECISIONS_REMAINING = NONE

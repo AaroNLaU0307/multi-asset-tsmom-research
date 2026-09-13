@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T07:23:21Z",
+  "generated_utc": "2026-09-13T07:44:53Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -523,5 +523,34 @@
         "sha256_of_raw_file_on_disk": "7bf312e18cf8007411ac030ab073d09ffec2223eb3c0d6d054e23c9c9f4fcc45"
       }
     ]
+  },
+  "s1_final_repair": {
+    "date": "2026-09-13",
+    "cpi_seasonal_adjustment_policy": "ALL-ITEMS NOT-SEASONALLY-ADJUSTED PRICE INDEX FOR EVERY ECONOMY",
+    "why": "A real exchange rate is a ratio of two price levels. A seasonally adjusted numerator over non-seasonally-adjusted denominators injects a spurious seasonal into the object, which the expanding z-score would treat as genuine valuation variation.",
+    "us_cpi_corrected": {
+      "from": "CPIAUCSL (seasonally adjusted) - the ONLY SA series among the seven",
+      "to": "CPIAUCNS (not seasonally adjusted)",
+      "raw_file": "data/value_raw/CPIAUCNS.csv",
+      "sha256_of_raw_file_on_disk": "f79e3a78837142293449cee4a1a9b1da7be677fb3e989ffb2ef48e8e7cf4cdd7",
+      "first_observation": "1913-01",
+      "last_observation": "2026-08",
+      "observations": 1363,
+      "source_url": "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCNS&cosd=1900-01-01",
+      "evidence": "SA/NSA established mechanically rather than from the ticker convention alone: over 1990-2026 the month-of-year dispersion of month-on-month log changes is 0.00633 for CPIAUCNS against 0.00133 for CPIAUCSL, a factor of 4.7.",
+      "window_impact": "NONE. CPIAUCNS starts 1913-01 (earlier than CPIAUCSL's 1947-01) and ends on the same month; the US CPI leg never bound the evaluation window, which stays 2014-07..2026-05, N=143.",
+      "chosen_by": "measurement consistency only; no signal, return or performance quantity existed or was inspected."
+    },
+    "all_seven_nsa": {
+      "US": "CPIAUCNS",
+      "Euro area": "prc_hicp_minr coicop18=TOTAL",
+      "UK": "ONS D7BT",
+      "Canada": "StatCan 18-10-0004",
+      "Sweden": "SCB KPI2020M 00000808",
+      "Switzerland": "SNB plkopr LD2010100",
+      "Japan": "e-Stat 000040482943 Group/Item 0001 (Indices of Items; the SA tables 16-1/16-2 are NOT used)"
+    },
+    "c3_semantics_restored": "C3 now requires C1 AND C2 to pass in each of the k=3 leave-one-episode-out samples. The previous 'primary sign unchanged' rule was weaker than the accepted structure and is demoted to a description with no adjudicating power. Exactly one deletion operator is frozen (prereg 11.1): delete the episode's calendar months from the ENTIRE paired sample and recompute both conditions on the remaining common months.",
+    "real_fx_formula_specified": true
   }
 }

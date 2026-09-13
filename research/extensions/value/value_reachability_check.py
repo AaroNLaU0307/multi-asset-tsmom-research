@@ -72,25 +72,63 @@ print()
 print("== 3. candidacy is reachable in both directions ==")
 
 
-def candidacy(state, rho_upper, episodes_stable):
-    c1 = state != "MATERIALLY_ADVERSE"
-    c2 = rho_upper <= RHO_MAX
-    c3 = episodes_stable
+def c1_of(state):
+    """C1 - the standalone adjudication is not MATERIALLY_ADVERSE."""
+    return state != "MATERIALLY_ADVERSE"
+
+
+def c2_of(rho_upper):
+    """C2 - dependence bound, adjudicated on the CI UPPER bound. `<=` passes."""
+    return rho_upper <= RHO_MAX
+
+
+def c3_of(jackknife):
+    """C3 - the PREMISE CONDITIONS survive every leave-one-episode-out sample.
+
+    `jackknife` is a list of exactly k=3 (state, rho_upper) pairs, one per
+    deleted episode. C3 passes iff C1 AND C2 both hold in ALL THREE. A case that
+    cannot produce a valid interval is passed in as a FAIL, never as a default
+    pass. Sign stability plays no part: it is descriptive only.
+    """
+    if len(jackknife) != K_EPISODES:
+        return False
+    return all(c1_of(s) and c2_of(r) for s, r in jackknife)
+
+
+def candidacy(state, rho_upper, jackknife):
+    c1 = c1_of(state)
+    c2 = c2_of(rho_upper)
+    c3 = c3_of(jackknife)
     return c1 and c2 and c3, (c1, c2, c3)
 
 
-p, c = candidacy("UNRESOLVED_EDGE", 0.25, True)
+# convenience shorthands for the probes below
+def JK_OK(state="UNRESOLVED_EDGE", rho=0.25):
+    return [(state, rho)] * K_EPISODES
+
+
+def JK_FAIL_C1():
+    return [("UNRESOLVED_EDGE", 0.25), ("MATERIALLY_ADVERSE", 0.25),
+            ("UNRESOLVED_EDGE", 0.25)]
+
+
+def JK_FAIL_C2():
+    return [("UNRESOLVED_EDGE", 0.25), ("UNRESOLVED_EDGE", 0.72),
+            ("UNRESOLVED_EDGE", 0.25)]
+
+
+p, c = candidacy("UNRESOLVED_EDGE", 0.25, JK_OK())
 ck("premise PASS reachable from an UNRESOLVED standalone edge", p, str(c))
-p, c = candidacy("SUPPORTED_POSITIVE_EDGE", 0.10, True)
+p, c = candidacy("SUPPORTED_POSITIVE_EDGE", 0.10, JK_OK())
 ck("premise PASS reachable from a SUPPORTED standalone edge", p, str(c))
-p, c = candidacy("MATERIALLY_ADVERSE", 0.10, True)
+p, c = candidacy("MATERIALLY_ADVERSE", 0.10, JK_OK())
 ck("premise FAIL reachable via C1", not p and not c[0], str(c))
-p, c = candidacy("UNRESOLVED_EDGE", 0.65, True)
+p, c = candidacy("UNRESOLVED_EDGE", 0.65, JK_OK())
 ck("premise FAIL reachable via C2 (dependence too high)", not p and not c[1], str(c))
-p, c = candidacy("UNRESOLVED_EDGE", 0.25, False)
+p, c = candidacy("UNRESOLVED_EDGE", 0.25, JK_FAIL_C1())
 ck("premise FAIL reachable via C3 (episode instability)", not p and not c[2], str(c))
 ck("an UNRESOLVED standalone edge CAN qualify as a candidate",
-   candidacy("UNRESOLVED_EDGE", 0.30, True)[0])
+   candidacy("UNRESOLVED_EDGE", 0.30, JK_OK())[0])
 
 print()
 print("== 4. every FULL branch is reachable, and the two negatives are distinct ==")
@@ -127,7 +165,7 @@ ck("episode diagnostic k is small and fixed in advance",
 print()
 print("== 6. the path an UNRESOLVED edge takes to a FULL verdict exists ==")
 state = standalone(-0.10, 0.12)
-passed, _ = candidacy(state, 0.30, True)
+passed, _ = candidacy(state, 0.30, JK_OK())
 final = combo(0.14, 0.35) if passed else "STOPPED"
 ck("UNRESOLVED edge -> candidacy PASS -> FULL supported is a reachable path",
    state == "UNRESOLVED_EDGE" and passed
@@ -140,14 +178,14 @@ print()
 print("== 7. the six required reachability flags ==")
 flags = {
     "PREMISE_PASS_REACHABLE":
-        candidacy("UNRESOLVED_EDGE", 0.25, True)[0],
+        candidacy("UNRESOLVED_EDGE", 0.25, JK_OK())[0],
     "PREMISE_FAIL_REACHABLE":
-        (not candidacy("MATERIALLY_ADVERSE", 0.10, True)[0]
-         and not candidacy("UNRESOLVED_EDGE", 0.65, True)[0]
-         and not candidacy("UNRESOLVED_EDGE", 0.25, False)[0]),
+        (not candidacy("MATERIALLY_ADVERSE", 0.10, JK_OK())[0]
+         and not candidacy("UNRESOLVED_EDGE", 0.65, JK_OK())[0]
+         and not candidacy("UNRESOLVED_EDGE", 0.25, JK_FAIL_C1())[0]),
     "UNRESOLVED_EDGE_CAN_QUALIFY":
         standalone(-0.10, 0.12) == "UNRESOLVED_EDGE"
-        and candidacy("UNRESOLVED_EDGE", 0.30, True)[0],
+        and candidacy("UNRESOLVED_EDGE", 0.30, JK_OK())[0],
     "FULL_SUPPORTED_REACHABLE":
         combo(0.15, 0.40) == "SUPPORTED_INCREMENTAL_BENEFIT",
     "FULL_NON_SUPPORTED_REACHABLE":
@@ -157,6 +195,22 @@ flags = {
 }
 for k, v in flags.items():
     ck(k, v, "YES" if v else "NO")
+
+print()
+print("== 7b. C3 requires C1 AND C2 in EVERY jackknife case ==")
+ck("C3 PASSES when C1 and C2 hold in all three", c3_of(JK_OK()))
+ck("C3 FAILS if C1 fails in any one case", not c3_of(JK_FAIL_C1()))
+ck("C3 FAILS if C2 fails in any one case", not c3_of(JK_FAIL_C2()))
+ck("C3 FAILS if a jackknife case is missing/invalid",
+   not c3_of([("UNRESOLVED_EDGE", 0.25)] * 2), "an invalid case is never a default pass")
+ck("C3_REQUIRES_C1_AND_C2_IN_EACH_JACKKNIFE = YES",
+   c3_of(JK_OK()) and not c3_of(JK_FAIL_C1()) and not c3_of(JK_FAIL_C2()))
+ck("sign stability has NO adjudicating power in C3",
+   c3_of(JK_OK()) is True and c3_of(JK_FAIL_C1()) is False,
+   "C3 is a function of (state, rho) only")
+ck("candidacy FAIL reachable via C3 alone",
+   not candidacy("UNRESOLVED_EDGE", 0.25, JK_FAIL_C2())[0]
+   and candidacy("UNRESOLVED_EDGE", 0.25, JK_FAIL_C2())[1][:2] == (True, True))
 
 print()
 print("== 8. frozen boundary-touch treatment is predetermined ==")
