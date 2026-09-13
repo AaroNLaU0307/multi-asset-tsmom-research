@@ -1,0 +1,108 @@
+{
+ "schema": "VALUE_PROVENANCE_CORRECTION_V1",
+ "correction_id": "VALUE_EVIDENCE_PROVENANCE_CORRECTION_001",
+ "created_utc": "2026-09-13T10:16:05Z",
+ "CORRECTION_TYPE": "PROVENANCE_METADATA_CORRECTION",
+ "SCIENTIFIC_RESULT_CHANGED": "NO",
+ "REAL_RUN_REEXECUTED": "NO",
+ "ORIGINAL_EVIDENCE_ARTIFACT": "research/extensions/value/VALUE_EVIDENCE.json",
+ "ORIGINAL_EVIDENCE_SHA256": "c8b37d513489344d8e8012963a894ea11f007249354410bf83f8129bc0d11b8b",
+ "AUTHORIZATION_ARTIFACT_SHA256": "0d043be5294bbfad52924b9b3044052ad9da56649e3266bccec1370164dd85c3",
+ "AUTHORIZATION_ID": "VALUE_S3_AUTH_60e4ad292aa74bce",
+ "RUN_ID": "VALUE_S3_RUN_60e4ad292aa74bce",
+ "ACTIVE_PREREG_SHA256": "f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee",
+ "ACTIVE_SEAL_REVISION": "0ed9bfff2205a61ad048aca1ef3607991ddef460",
+ "TARGET_OUTCOME_EXPOSURE": "GENERATED_NOT_SEEN",
+ "observed_defect": {
+  "field": "AMENDMENT_LINEAGE",
+  "recorded_entry_count": 3,
+  "authoritative_entry_count": 4,
+  "description": "The terminal lineage entry carries the authentic AMENDMENT_003 seal revision 0ed9bfff2205a61ad048aca1ef3607991ddef460 and the authentic AMENDMENT_003 sealed sha256 f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee, but is LABELLED VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002. The genuine VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002 row (seal revision 9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548, sealed sha256 844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb) is absent from the artifact.",
+  "recorded_lineage_as_found": [
+   {
+    "index": 0,
+    "amendment_label": "ORIGINAL_SEAL",
+    "seal_revision": "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f",
+    "sealed_prereg_sha256": "df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf",
+    "label_consistent_with_identities": true
+   },
+   {
+    "index": 1,
+    "amendment_label": "VALUE_S1_DATA_IDENTITY_AMENDMENT_001",
+    "seal_revision": "5812997229eafe2184fe68193856bea2fa41eeae",
+    "sealed_prereg_sha256": "bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099",
+    "label_consistent_with_identities": true
+   },
+   {
+    "index": 2,
+    "amendment_label": "VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002",
+    "seal_revision": "0ed9bfff2205a61ad048aca1ef3607991ddef460",
+    "sealed_prereg_sha256": "f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee",
+    "label_consistent_with_identities": false,
+    "identities_actually_belong_to": "VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003"
+   }
+  ],
+  "no_fabricated_identities": "Every (seal_revision, sealed_prereg_sha256) pair recorded in the artifact is itself authentic and was verified against git. The defect is a wrong label plus one absent row, never an invented value."
+ },
+ "corrected_lineage": {
+  "note": "This is the authoritative lineage that the artifact's AMENDMENT_LINEAGE field should be read as.",
+  "entries": [
+   {
+    "order": 1,
+    "amendment": "ORIGINAL_SEAL",
+    "seal_revision": "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f",
+    "sealed_prereg_sha256": "df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf",
+    "status": "PRESENT_AND_CORRECT"
+   },
+   {
+    "order": 2,
+    "amendment": "VALUE_S1_DATA_IDENTITY_AMENDMENT_001",
+    "seal_revision": "5812997229eafe2184fe68193856bea2fa41eeae",
+    "sealed_prereg_sha256": "bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099",
+    "status": "PRESENT_AND_CORRECT"
+   },
+   {
+    "order": 3,
+    "amendment": "VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002",
+    "seal_revision": "9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548",
+    "sealed_prereg_sha256": "844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb",
+    "status": "ABSENT_FROM_ARTIFACT - supplied here"
+   },
+   {
+    "order": 4,
+    "amendment": "VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003",
+    "seal_revision": "0ed9bfff2205a61ad048aca1ef3607991ddef460",
+    "sealed_prereg_sha256": "f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee",
+    "status": "PRESENT_IN_ARTIFACT_BUT_MISLABELLED_AS_002",
+    "is_the_seal_the_run_executed_against": true
+   }
+  ]
+ },
+ "derivation_of_corrected_lineage": {
+  "method": "Each claimed seal revision was read out of git and the sealed preregistration at that commit was hashed (LF-normalised sha256). Every revision/sha binding reproduced exactly. No value in this sidecar was assumed from a request text or invented.",
+  "independent_corroboration": "The sealed preregistration's own AMENDMENTS header block - inside the sealed bytes f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee - records the identical lineage: ORIGINAL -> _001 -> _002 -> _003.",
+  "authoritative_sources": [
+   "git history of research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md at revisions ba5814d8, 58129972, 9c9dd4c2, 0ed9bfff",
+   "the AMENDMENTS header block inside the active sealed preregistration",
+   "research/extensions/value/value_contract.py lineage constants",
+   "research/extensions/value/VALUE_DATA_INVENTORY.json blocks s1_seal, s1_amendment_001, s1_amendment_002, s1_amendment_003"
+  ]
+ },
+ "cause": {
+  "mechanically_established": true,
+  "location": "research/extensions/value/value_orchestrator.py, the AMENDMENT_LINEAGE literal, terminal entry",
+  "code_identity_at_run": "dca9967e34605a13d0d57809e44bdf450fe18ca003efb5a25c53622ea6557901",
+  "code_identity_unchanged_since_run": true,
+  "explanation": "The terminal lineage entry pairs the HARDCODED label C.AMENDMENT_ID_002 with the LIVE constants C.SEAL_REVISION and C.SEALED_PREREG_SHA256. The literal was authored while _002 was the current amendment, when that pairing was correct. When _003 was sealed the live constants advanced correctly but the hardcoded label did not, and no fourth row was appended. The evidence schema required AMENDMENT_LINEAGE to be present but not internally consistent, so no gate rejected it.",
+  "introduced_by": "the AMENDMENT_003 build (S2), not by the S3 run",
+  "remediation_for_future_runs": "NOT performed under this authorization, which is provenance-only: the orchestrator literal should derive the lineage from the contract's own constants and the schema should require internal consistency. Recorded here as an open item for a separate Owner decision."
+ },
+ "scope_statement": "This correction affects PROVENANCE METADATA ONLY. It does not replace, modify, recompute, reinterpret or adjudicate any scientific result. No target quantity was read, evaluated or exposed in producing it, and no statistic, branch outcome, candidacy result, FULL execution status or verdict is contained in or inferable from this file.",
+ "authoritative_artifact_statement": "research/extensions/value/VALUE_EVIDENCE.json remains the IMMUTABLE authoritative real-run evidence artifact, unmodified, at its original sha256 c8b37d513489344d8e8012963a894ea11f007249354410bf83f8129bc0d11b8b. This sidecar annotates that artifact and never supersedes or replaces it.",
+ "binding_unaffected": {
+  "note": "The two fields that bind the run to a contract are correct in the original artifact and were verified independently of the AMENDMENT_LINEAGE field.",
+  "evidence_SEALED_PREREG_SHA256_equals_active_seal": true,
+  "evidence_SEAL_REVISION_equals_active_seal": true,
+  "in_run_contract_conformance": "the orchestrator re-read the sealed bytes and passed all 53 conformance checks against the _003 contract before computing anything"
+ }
+}

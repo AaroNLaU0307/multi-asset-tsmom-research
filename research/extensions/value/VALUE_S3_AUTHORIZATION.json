@@ -1,0 +1,12 @@
+{
+ "authorization_id": "VALUE_S3_AUTH_60e4ad292aa74bce",
+ "consumed_utc": "2026-09-13T10:07:58Z",
+ "issued_utc": "2026-09-13T10:07:36Z",
+ "owner_decision": "AARON OWNER DECISION - AUTHORIZE EXACTLY ONE SEALED S3 REAL RUN FOR TIME-SERIES VALUE",
+ "run_id": "VALUE_S3_RUN_60e4ad292aa74bce",
+ "schema": "VALUE_S3_AUTHORIZATION_V1",
+ "seal_revision": "0ed9bfff2205a61ad048aca1ef3607991ddef460",
+ "sealed_prereg_sha256": "f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee",
+ "single_use": true,
+ "status": "CONSUMED"
+}

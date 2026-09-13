@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## Time-Series Value — the next research question
+## Time-Series Value — CLOSED 2026-09-13
 
 ```
 RESEARCH_QUESTION   = Does fundamental cheapness relative to an asset's own prior
@@ -178,18 +178,88 @@ S2 BUILD            = COMPLETE — orchestration, contribution ledger, ablation
                       46-check synthetic rehearsal over 12 cases, 119 S2 checks,
                       16 pre-S3 dry gates, all green. No target outcome computed;
                       the S3 entry point refuses without an authorization.
-S3 RUN              = NOT_STARTED. The 2026-09-13 authorization attempt was
-                      HALTED at the run gate before any authorization object was
-                      created; it is NOT an execution attempt.
-                      AUTHORIZATION_CREATED = NO, AUTHORIZATION_CONSUMED = NO,
-                      TARGET_CALCULATIONS_EXECUTED = NONE.
-CURRENT_BLOCKER     = NONE. The C3 structural blocker recorded on 2026-09-13
-                      (whole-calendar deletion left 0/2/14 of 143 months and made
-                      C3 unadjudicable) is RESOLVED by AMENDMENT_003. The
-                      replacement gate C3_STRUCTURAL_ADJUDICABILITY = PASS: the
-                      three real episodes map to 142/140/129 contribution months
-                      with all 143 calendar months retained in every case. The
-                      gate requires C3 to be ADJUDICABLE, never to PASS.
+S3 RUN              = COMPLETE. Exactly ONE real sealed execution, 2026-09-13,
+                      under a single-use Owner authorization.
+                      AUTHORIZATION_ID = VALUE_S3_AUTH_60e4ad292aa74bce
+                      RUN_ID           = VALUE_S3_RUN_60e4ad292aa74bce
+                      AUTHORIZATION_CONSUMED = YES. No rerun, no retry, no second
+                      authorization, no retuning, no data refresh.
+S4 VERDICT          = COMPLETE. Reveal and deterministic adjudication 2026-09-13;
+                      every verdict recomputed from the stored interval bounds and
+                      agreeing with the stored labels.
+VALUE_LIFECYCLE_STATUS = CLOSED
+FINAL_VALUE_VERDICT = MATERIALLY_ADVERSE UNDER THE SEALED CONSTRUCTION;
+                      DIVERSIFICATION CANDIDACY FAILED; FULL NOT EXECUTED.
+                      Aaron's final Owner verdict, recorded 2026-09-13. This file
+                      is the authoritative home of that verdict.
+AUTHORITATIVE_EVIDENCE = research/extensions/value/VALUE_EVIDENCE.json
+                      sha256 c8b37d513489344d8e8012963a894ea11f007249354410bf83f8129bc0d11b8b
+                      IMMUTABLE. Never edited.
+PROVENANCE_CORRECTION = research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json
+                      sha256 fbe793c40feffc0a6555fb4af0b54abcb71fa1399f004e441550632ba340b311
+                      Provenance metadata only; SCIENTIFIC_RESULT_CHANGED = NO.
+S4_EVIDENCE         = VALUE_SHARPE = -1.030455,
+                      CI95 = [-1.559647, -0.545022]  (10000/10000 valid)
+                      STANDALONE_VALUE_STATE = MATERIALLY_ADVERSE
+                      C1 = FAIL
+                      VALUE_TSMOM_PEARSON_RHO = -0.217239,
+                      CI95 = [-0.383617, -0.059500]  (10000/10000 valid)
+                      C2 = PASS  (rho_upper -0.0595 <= 0.40)
+                      C3 = FAIL  (0 of 3 contribution-ablation cases pass)
+                      DIVERSIFICATION_CANDIDACY = FAIL
+                      FULL_EXECUTED = NO — the sealed conditional branch stopped
+                      at candidacy, so NO combination statistic exists. FULL is
+                      recorded as NOT EXECUTED, never as adverse and never as
+                      not-established.
+C3_RECORD           = CONTRIBUTION_SENSITIVITY_ROBUSTNESS via INDIVIDUAL
+                      INSTRUMENT-EPISODE CONTRIBUTION ABLATION. All three cases
+                      were VALID and retained all 143 evaluation months; all three
+                      remained MATERIALLY_ADVERSE, failed C1, passed C2 and failed
+                      their individual case. Episodes: FXY 2014-07..2026-05 (143
+                      signal months, 142 contribution months), UUP 2014-09..2026-05
+                      (141/140), SPY 2014-07..2025-03 (129/129). This is NOT
+                      temporal-regime robustness, NOT temporal-regime replication,
+                      NOT independent episode replication and NOT independent
+                      valuation-regime confirmation. The very long FXY and UUP
+                      episodes remain an explicit limitation.
+DECISIVENESS        = The standalone 95% interval lies WHOLLY below the
+                      preregistered -0.15 adverse floor, so the adverse margin is
+                      reliably excluded. This is a decisive negative for the tested
+                      construction — distinct from UNRESOLVED_EDGE, from
+                      insufficient power, from a non-adjudicable branch, and from a
+                      simple failure to exceed a positive threshold.
+SCOPE_OF_VERDICT    = The ONE frozen construction actually tested. NOT evidence
+                      that Time-Series Value is disproven generally, that Value has
+                      no economic mechanism, that all Value implementations fail,
+                      that every Value subcomponent independently lacks edge, or
+                      anything about an untested allocation, universe,
+                      normalisation or signal definition.
+KB_RESEARCH_STATUS  = not_promoted (strategy) / not_promoted (finding), the
+                      registry's existing vocabulary. `falsified` is reserved by
+                      the KB convention for negatives established via multiple
+                      independent decisive tests with nothing material left
+                      untried; this is one sealed construction, so `not_promoted`
+                      with the declared margin is correct.
+KB_CARDS            = strat.tsmom.time-series-value-sleeve
+                      finding.tsmom-time-series-value.materially-adverse
+                      plus 3 relationship rows (tested_on,
+                      must_not_be_retested_on_same_sample, benchmarked_against).
+CURRENT_BLOCKER     = NONE.
+MAINTENANCE_ITEM    = NON-SCIENTIFIC, OPEN. value_orchestrator.py emitted
+                      AMENDMENT_LINEAGE using a stale hardcoded AMENDMENT_002
+                      label paired with the live seal constants, so the terminal
+                      row carried the correct _003 identities under the wrong
+                      label and the genuine _002 row was absent; and the evidence
+                      schema checked that AMENDMENT_LINEAGE was present but not
+                      that it was internally consistent. Bounded and corrected by
+                      the immutable sidecar above. It did NOT invalidate the real
+                      run: the two fields that bind the run to a contract
+                      (SEALED_PREREG_SHA256, SEAL_REVISION) were correct, and the
+                      in-run conformance check passed 53/53 against the _003
+                      contract. NOT repaired here — a code fix is out of scope for
+                      a documentation closure, and under no circumstances may it
+                      trigger another run, authorization, evidence regeneration or
+                      recomputation.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
@@ -204,13 +274,20 @@ SHILLER_VINTAGE     = RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATIO
                       The 3-month publication lag fixes release timing only and
                       does NOT cure historical revision; no positive result may be
                       called strict vintage-PIT confirmation.
-TARGET_OUTCOMES     = NONE COMPUTED. No Value return series, no Sharpe, no TSMOM
-                      correlation, no combination result, no backtest. The signal
-                      PATH has been computed (episode structure only), which §11
-                      defines independently of any return.
-NEXT_OWNER_DECISION = authorize exactly one sealed S3 real run under
-                      GENERATED_NOT_SEEN. All 16 pre-S3 gates pass and both
-                      research objects are adjudicable.
+TARGET_OUTCOMES     = COMPUTED ONCE and REVEALED_FOR_S4 under Aaron's explicit
+                      S4 authorization. Recorded above and in the immutable
+                      evidence artifact.
+EVIDENCE_CEILING    = T0 / POST-EXPOSURE / AT MOST SUPPORTED. This study is never
+                      CONFIRMED and never INDEPENDENTLY_CONFIRMED.
+ASTRA               = NOT CALLED. The inherited rule attaches an Astra xHigh
+                      evidence-to-claim challenge to a consequential FULL result;
+                      FULL never executed, so there is no consequential FULL claim
+                      and no review round was manufactured.
+NEXT_OWNER_DECISION = NONE. The lineage is CLOSED. Any alternative horizon,
+                      warm-up, universe, threshold, CPI source, credit object, FX
+                      basket, risk split, sizing, episode definition or evaluation
+                      window would be a NEW research question requiring a fresh
+                      S0 -> S1 lineage, and none is opened here.
 ```
 
 ## X01 — path to the seal under vNext — TAKEN 2026-09-13
