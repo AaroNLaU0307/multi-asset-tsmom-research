@@ -133,15 +133,20 @@ RESEARCH_QUESTION   = Does fundamental cheapness relative to an asset's own prio
                       sleeve built on it add anything to the frozen TSMOM book?
 FAMILY · ANCHOR     = FINANCIAL_ASSET_TIME_SERIES_VALUE · EXPANDING_OWN_HISTORY
 S0 FRAME            = COMPLETE
-S1 DESIGN+SEAL      = IN_PROGRESS, design COMPLETE. Draft at
-                      research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md,
-                      READY_FOR_OWNER_SEAL but NOT sealed.
-                      D1-D11 are FROZEN as Owner decisions;
-                      OWNER_DECISIONS_REMAINING = NONE.
+S1 DESIGN+SEAL      = COMPLETE. SEALED 2026-09-13 under Aaron's Owner decision
+                      SEAL TIME-SERIES VALUE S1. Sealed contract at
+                      research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md
+                      (historical _DRAFT filename retained to avoid reference
+                      churn; the document reads SEALED).
+                      sealed sha256
+                      df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
+                      at seal revision ba5814d8dad2b81f28d45a0b6df7c010ef4c052f.
+                      D1-D11 frozen; OWNER_DECISIONS_REMAINING = NONE.
+S2 BUILD            = READY_TO_START — implement the sealed contract without
+                      changing it. Not started.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
-S2 BUILD            = NOT_STARTED
 UNIVERSE            = SPY, TLT, LQD, UUP, FXY (five instruments, four objects:
                       equity / duration / public corporate credit / FX real)
 CREDIT_OBJECT       = BAA10Y, LQD only; HYG REMOVED. Explicit redefinition, frozen;

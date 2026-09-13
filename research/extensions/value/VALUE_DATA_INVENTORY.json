@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T07:44:53Z",
+  "generated_utc": "2026-09-13T07:55:11Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -552,5 +552,43 @@
     },
     "c3_semantics_restored": "C3 now requires C1 AND C2 to pass in each of the k=3 leave-one-episode-out samples. The previous 'primary sign unchanged' rule was weaker than the accepted structure and is demoted to a description with no adjudicating power. Exactly one deletion operator is frozen (prereg 11.1): delete the episode's calendar months from the ENTIRE paired sample and recompute both conditions on the remaining common months.",
     "real_fx_formula_specified": true
+  },
+  "s1_seal": {
+    "value_prereg_sealed": true,
+    "owner_decision": "AARON OWNER DECISION, 2026-09-13 — SEAL TIME-SERIES VALUE S1",
+    "seal_utc": "2026-09-13T07:55:11Z",
+    "sealed_prereg_path": "research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md",
+    "sealed_prereg_sha256_lf": "df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf",
+    "seal_revision": "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f",
+    "accepted_design_revision": "4c31add4cd7f927952139715206029ae70fb4e3b",
+    "pre_seal_prereg_sha256_lf": "9f73b6c601387b536c509134871cbeac4306f9e774bf9d1ab57dcc67a60166a3",
+    "hash_convention": "sha256 of the LF-normalised file bytes; identical to the git blob hash at the seal revision",
+    "scientific_content_unchanged_across_seal": true,
+    "scientific_body_sha256_prefix": "f9cae0ff93f533bc",
+    "filename_note": "The historical _DRAFT suffix is retained deliberately to avoid reference churn; the heading and status block read SEALED. Same convention as X01.",
+    "pre_seal_gates": {
+      "PREREG_MECHANICAL_VALIDATION": "PASS",
+      "DATA_PROVENANCE_VALIDATION": "PASS",
+      "BRANCH_REACHABILITY": "PASS",
+      "C3_REQUIRES_C1_AND_C2_IN_EACH_JACKKNIFE": "YES",
+      "C3_DELETION_OPERATOR_UNAMBIGUOUS": "YES",
+      "CPI_SEASONAL_ADJUSTMENT_CONSISTENT": "YES",
+      "REAL_FX_FORMULA_FULLY_SPECIFIED": "YES",
+      "OWNER_DECISIONS_REMAINING": "NONE"
+    },
+    "evaluation_window": {
+      "start": "2014-07",
+      "end": "2026-05",
+      "n_months": 143
+    },
+    "safety_at_seal": {
+      "VALUE_TARGET_RETURNS_COMPUTED": false,
+      "VALUE_SHARPE_COMPUTED": false,
+      "VALUE_TSMOM_CORRELATION_COMPUTED": false,
+      "COMBINATION_OUTCOME_COMPUTED": false,
+      "TARGET_BACKTEST_RUN": false,
+      "EXECUTION_AUTHORIZATION_EXISTS": false
+    },
+    "note": "A SEAL IS NOT AUTHORIZATION TO EXECUTE. S2 BUILD may implement this contract without changing it; running it needs a separate Owner authorization that does not exist."
   }
 }
