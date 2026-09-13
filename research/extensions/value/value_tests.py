@@ -539,12 +539,132 @@ def test_contract_and_safety():
        code == R.EXIT_REFUSED, "exit=%s" % code)
     ck("T49 a consumed authorization can never be revived",
        "create" in dir(A) and A.AuthorizationError is not None)
-    ck("T50 no evidence artifact exists anywhere in the Value directory",
-       not any(f.lower().endswith(".json") and "evidence" in f.lower()
-               for f in os.listdir(HERE)))
+    # T50 asserted "no evidence artifact exists" while S3 was still closed.
+    # The lineage is now CLOSED and exactly one immutable artifact legitimately
+    # exists, so the guard is restated rather than dropped: whatever is there
+    # must be the authoritative artifact at its recorded bytes, and no further
+    # run may be openable.
+    _ev = os.path.join(HERE, "VALUE_EVIDENCE.json")
+    _EV_SHA = ("c8b37d513489344d8e8012963a894ea11f007249354410bf83f8129b"
+               "c0d11b8b")
+    if os.path.exists(_ev):
+        import hashlib
+        with open(_ev, "rb") as _fh:
+            _got = hashlib.sha256(_fh.read()).hexdigest()
+        ck("T50 the immutable evidence artifact is unmodified",
+           _got == _EV_SHA, _got[:16])
+        ck("T50 exactly one evidence artifact exists",
+           len([f for f in os.listdir(HERE) if f.endswith(".json")
+                and f.upper().startswith("VALUE_EVIDENCE")
+                and "CORRECTION" not in f.upper()]) == 1)
+    else:
+        ck("T50 no evidence artifact exists anywhere in the Value directory",
+           not any(f.lower().endswith(".json") and "evidence" in f.lower()
+                   for f in os.listdir(HERE)))
     ck("T50 the sealed prereg was not modified by the build",
        C.sealed_sha256() == C.SEALED_PREREG_SHA256)
     flush("10. sealed-contract conformance and the closed S3 boundary")
+
+
+def test_amendment_lineage():
+    """The 2026-09-13 artifact carried a stale AMENDMENT_002 label on a row whose
+    identities were really _003, and omitted the genuine _002 row. Presence was
+    all the schema then required. These four cases pin that shut."""
+    import copy
+    import value_evidence as EV
+
+    def skeleton(lineage):
+        ci = {"lower": -1.0, "upper": -0.5, "level": 95, "n_valid": 10000}
+        case = {"EPISODE_IDENTITY": "e", "INSTRUMENT": "SPY",
+                "EPISODE_SIGNAL_MONTHS": ["2020-01"],
+                "ABLATED_CONTRIBUTION_MONTHS": ["2020-02"],
+                "CONTRIBUTION_ACCOUNTING_IDENTITY": "V_t = a_t + sum_i c_i,t",
+                "C1_RESULT": False, "CORRELATION_STATISTIC": -0.2,
+                "CORRELATION_CI": ci, "C2_RESULT": True,
+                "INFERENCE_VALIDITY": "VALID", "valid": True,
+                "standalone_ci": ci, "correlation_ci": ci,
+                "months_retained": 143}
+        return {
+            "schema": EV.SCHEMA, "RUN_ID": "R", "AUTHORIZATION_ID": "A",
+            "SEALED_PREREG_SHA256": C.SEALED_PREREG_SHA256,
+            "SEAL_REVISION": C.SEAL_REVISION,
+            "AMENDMENT_LINEAGE": lineage,
+            "CODE_IDENTITY": {}, "INPUT_PROVENANCE": {},
+            "EVALUATION_START": "2014-07", "EVALUATION_END": "2026-05",
+            "N": 143,
+            "VALUE_STANDALONE_STATISTICS": {}, "VALUE_STANDALONE_CI": ci,
+            "VALUE_STANDALONE_STATE": "MATERIALLY_ADVERSE", "C1": False,
+            "VALUE_TSMOM_CORRELATION": {}, "CORRELATION_CI": ci, "C2": True,
+            "SELECTED_EPISODES": [{"instrument": "SPY"}],
+            "C3_CASES": [case], "C3": False,
+            "CANDIDACY": {"candidate": False},
+            "C3_INTERPRETATION": C.C3_INTERPRETATION,
+            "C3_OPERATOR": C.C3_OPERATOR,
+            "C3_PERMITTED_CLAIM": C.C3_PERMITTED_CLAIM,
+            "C3_FORBIDDEN_CLAIM": "x", "C3_KNOWN_LIMITATION": "x",
+            "CONTRIBUTION_LEDGER": {
+                "reconciles": True, "weight_redistribution": False,
+                "vol_retarget_after_ablation": False,
+                "gross_rescale_after_ablation": False,
+                "ablations_cumulative": False},
+            "FULL_EXECUTED": False,
+            "BOOTSTRAP_COUNTS": {"standalone": {"attempted": 10000,
+                                                "valid": 10000,
+                                                "discarded": 0}},
+            "DIAGNOSTICS": {},
+            "SHILLER_VINTAGE_LIMITATION": C.SHILLER_VINTAGE_STATUS,
+            "EVIDENCE_CEILING": C.EVIDENCE_CEILING,
+            "OUTCOME_EXPOSURE_STATE": "SYNTHETIC"}
+
+    def lineage_problems(lineage):
+        _ok, probs = EV.validate(skeleton(lineage))
+        return [p for p in probs if "AMENDMENT_LINEAGE" in p]
+
+    good = C.lineage_records()
+    ck("T51 the correct four-entry _003 lineage passes",
+       lineage_problems(good) == [], "%d entries" % len(good))
+    ck("T51 the emitter derives the lineage from the contract",
+       [e["amendment"] for e in good]
+       == ["ORIGINAL_SEAL", C.AMENDMENT_ID_001, C.AMENDMENT_ID_002,
+           C.AMENDMENT_ID_003])
+    ck("T51 the terminal entry is the ACTIVE seal",
+       good[-1]["seal_revision"] == C.SEAL_REVISION
+       and good[-1]["sealed_prereg_sha256"] == C.SEALED_PREREG_SHA256)
+
+    # (2) the historical stale-label shape: three rows, terminal labelled _002
+    #     but carrying _003 identities, genuine _002 absent.
+    stale = [dict(good[0]), dict(good[1]),
+             {"amendment": C.AMENDMENT_ID_002,
+              "seal_revision": C.SEAL_REVISION,
+              "sealed_prereg_sha256": C.SEALED_PREREG_SHA256}]
+    ck("T51 the historical stale-label shape is REJECTED",
+       lineage_problems(stale) != [],
+       "%d lineage problem(s)" % len(lineage_problems(stale)))
+
+    # (3) omission of the genuine _002 row
+    missing = [dict(good[0]), dict(good[1]), dict(good[3])]
+    ck("T51 omitting the genuine _002 row is REJECTED",
+       lineage_problems(missing) != [],
+       "%d lineage problem(s)" % len(lineage_problems(missing)))
+
+    # (4) right label, wrong revision/sha pairing
+    swapped = copy.deepcopy(good)
+    swapped[2]["seal_revision"] = good[1]["seal_revision"]
+    ck("T51 a wrong revision paired to a correct label is REJECTED",
+       lineage_problems(swapped) != [])
+    swapped2 = copy.deepcopy(good)
+    swapped2[2]["sealed_prereg_sha256"] = good[1]["sealed_prereg_sha256"]
+    ck("T51 a wrong sealed sha paired to a correct label is REJECTED",
+       lineage_problems(swapped2) != [])
+
+    # (5) duplicates and order
+    dup = copy.deepcopy(good)
+    dup[3]["amendment"] = C.AMENDMENT_ID_002
+    ck("T51 a duplicate amendment label is REJECTED",
+       lineage_problems(dup) != [])
+    shuffled = [good[1], good[0], good[2], good[3]]
+    ck("T51 out-of-order lineage is REJECTED", lineage_problems(shuffled) != [])
+    flush("11. amendment-lineage emission and validation")
 
 
 def main():
@@ -552,7 +672,8 @@ def main():
     failed = 0
     for fn in (test_time_and_availability, test_real_fx, test_signal,
                test_episodes, test_verdicts, test_candidacy, test_bootstrap,
-               test_portfolio, test_objects_synthetic, test_contract_and_safety):
+               test_portfolio, test_objects_synthetic, test_contract_and_safety,
+               test_amendment_lineage):
         _checks = []
         fn()
         failed += sum(1 for _l, c, _d in _checks if not c)

@@ -227,17 +227,10 @@ def run_study(run_id=None, authorization_id=None, sources=None, panel=None,
         "AUTHORIZATION_ID": authorization_id,
         "SEALED_PREREG_SHA256": C.SEALED_PREREG_SHA256,
         "SEAL_REVISION": C.SEAL_REVISION,
-        "AMENDMENT_LINEAGE": [
-            {"amendment": "ORIGINAL_SEAL",
-             "seal_revision": C.ORIGINAL_SEAL_REVISION,
-             "sealed_prereg_sha256": C.ORIGINAL_SEALED_PREREG_SHA256},
-            {"amendment": C.AMENDMENT_ID_001,
-             "seal_revision": C.AMENDMENT_001_SEAL_REVISION,
-             "sealed_prereg_sha256": C.AMENDMENT_001_SEALED_PREREG_SHA256},
-            {"amendment": C.AMENDMENT_ID_002,
-             "seal_revision": C.SEAL_REVISION,
-             "sealed_prereg_sha256": C.SEALED_PREREG_SHA256},
-        ],
+        # Derived from the contract's single authoritative definition. Never
+        # hand-assembled: pairing a hardcoded label with live seal constants is
+        # what produced the stale-_002 row in the 2026-09-13 artifact.
+        "AMENDMENT_LINEAGE": C.lineage_records(),
         "CODE_IDENTITY": _code_identity(),
         "INPUT_PROVENANCE": _input_provenance(synthetic=fixtures is not None),
         "EVALUATION_START": months[0],

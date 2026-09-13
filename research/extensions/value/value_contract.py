@@ -52,6 +52,25 @@ AMENDMENT_002_SEALED_PREREG_SHA256 = ("844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a1"
                                       "5b4f0cd0dfb1a91a9948d1cb")
 ASTRA_ROLE = "material_design_contributor"
 
+# The authoritative amendment lineage, oldest first, defined ONCE here so the
+# evidence emitter and the evidence validator cannot drift apart. The terminal
+# entry is always the ACTIVE seal. A hardcoded label paired with live seal
+# constants is exactly the defect this replaces.
+AMENDMENT_LINEAGE = (
+    ("ORIGINAL_SEAL", ORIGINAL_SEAL_REVISION, ORIGINAL_SEALED_PREREG_SHA256),
+    (AMENDMENT_ID_001, AMENDMENT_001_SEAL_REVISION,
+     AMENDMENT_001_SEALED_PREREG_SHA256),
+    (AMENDMENT_ID_002, AMENDMENT_002_SEAL_REVISION,
+     AMENDMENT_002_SEALED_PREREG_SHA256),
+    (AMENDMENT_ID_003, SEAL_REVISION, SEALED_PREREG_SHA256),
+)
+
+
+def lineage_records():
+    """The lineage as the evidence artifact carries it."""
+    return [{"amendment": a, "seal_revision": r, "sealed_prereg_sha256": s}
+            for a, r, s in AMENDMENT_LINEAGE]
+
 # --- §17 comparator identity ------------------------------------------------
 TSMOM_COMPARATOR = "CANONICAL_17_ETF_TSMOM_BASELINE"
 COMPARATOR_IS_X01_E_ARM = False

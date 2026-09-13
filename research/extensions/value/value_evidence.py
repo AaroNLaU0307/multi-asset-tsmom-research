@@ -15,6 +15,14 @@ Two asymmetries are deliberate:
 """
 import io
 import json
+import os
+import sys
+
+_HERE = os.path.dirname(os.path.abspath(__file__))
+if _HERE not in sys.path:
+    sys.path.insert(0, _HERE)
+
+import value_contract as _C          # noqa: E402
 
 SCHEMA = "VALUE_S3_EVIDENCE_V1"
 
@@ -181,6 +189,50 @@ def validate(ev):
             for k in ("attempted", "valid", "discarded"):
                 if k not in c:
                     bad("BOOTSTRAP_COUNTS[%s] missing %s" % (arm, k))
+
+    # --- amendment lineage, checked against the contract's own definition ---
+    # The 2026-09-13 artifact carried a stale AMENDMENT_002 label on a row whose
+    # identities were actually _003, and omitted the genuine _002 row. Presence
+    # alone was all the schema then required, so nothing rejected it.
+    lin = ev.get("AMENDMENT_LINEAGE")
+    want = list(_C.AMENDMENT_LINEAGE)
+    if not isinstance(lin, list):
+        bad("AMENDMENT_LINEAGE must be a list")
+    else:
+        if len(lin) != len(want):
+            bad("AMENDMENT_LINEAGE has %d entries, the contract defines %d"
+                % (len(lin), len(want)))
+        labels = [e.get("amendment") for e in lin if isinstance(e, dict)]
+        if len(set(labels)) != len(labels):
+            bad("AMENDMENT_LINEAGE contains a duplicate amendment label")
+        for i, (w_id, w_rev, w_sha) in enumerate(want):
+            if i >= len(lin):
+                bad("AMENDMENT_LINEAGE is missing the entry for %s" % w_id)
+                continue
+            e = lin[i]
+            if not isinstance(e, dict):
+                bad("AMENDMENT_LINEAGE[%d] is not an object" % i)
+                continue
+            if e.get("amendment") != w_id:
+                bad("AMENDMENT_LINEAGE[%d] is labelled %r; the contract has %r "
+                    "at that position" % (i, e.get("amendment"), w_id))
+            if e.get("seal_revision") != w_rev:
+                bad("AMENDMENT_LINEAGE[%d] (%s) records seal revision %r, the "
+                    "contract pins %r"
+                    % (i, w_id, e.get("seal_revision"), w_rev))
+            if e.get("sealed_prereg_sha256") != w_sha:
+                bad("AMENDMENT_LINEAGE[%d] (%s) records sealed sha256 %r, the "
+                    "contract pins %r"
+                    % (i, w_id, e.get("sealed_prereg_sha256"), w_sha))
+        missing = [w[0] for w in want if w[0] not in labels]
+        if missing:
+            bad("AMENDMENT_LINEAGE omits %s" % ", ".join(missing))
+        if lin and isinstance(lin[-1], dict):
+            if (lin[-1].get("seal_revision") != _C.SEAL_REVISION
+                    or lin[-1].get("sealed_prereg_sha256")
+                    != _C.SEALED_PREREG_SHA256):
+                bad("the terminal AMENDMENT_LINEAGE entry must be the ACTIVE "
+                    "seal")
 
     # --- the frozen C3 interpretation --------------------------------------
     if ev.get("C3_INTERPRETATION") != C3_INTERPRETATION_REQUIRED:

@@ -245,7 +245,7 @@ KB_CARDS            = strat.tsmom.time-series-value-sleeve
                       plus 3 relationship rows (tested_on,
                       must_not_be_retested_on_same_sample, benchmarked_against).
 CURRENT_BLOCKER     = NONE.
-MAINTENANCE_ITEM    = NON-SCIENTIFIC, OPEN. value_orchestrator.py emitted
+MAINTENANCE_ITEM    = NON-SCIENTIFIC, RESOLVED 2026-09-13 (post-closure). value_orchestrator.py emitted
                       AMENDMENT_LINEAGE using a stale hardcoded AMENDMENT_002
                       label paired with the live seal constants, so the terminal
                       row carried the correct _003 identities under the wrong
@@ -256,11 +256,19 @@ MAINTENANCE_ITEM    = NON-SCIENTIFIC, OPEN. value_orchestrator.py emitted
                       run: the two fields that bind the run to a contract
                       (SEALED_PREREG_SHA256, SEAL_REVISION) were correct, and the
                       in-run conformance check passed 53/53 against the _003
-                      contract. NOT repaired here — a code fix is out of scope for
-                      a documentation closure, and under no circumstances may it
-                      trigger another run, authorization, evidence regeneration or
-                      recomputation.
-MAINTENANCE_ITEM_2  = NON-SCIENTIFIC, OPEN. The Value run artifacts were written
+                      contract. REPAIRED for FUTURE evidence only: the lineage
+                      is now defined once as value_contract.AMENDMENT_LINEAGE and
+                      emitted via lineage_records(), never hand-assembled, and
+                      value_evidence.validate() now rejects a wrong entry count, a
+                      duplicate or mislabelled amendment, a label paired with the
+                      wrong seal revision or sealed sha256, a non-active terminal
+                      entry and out-of-order lineage. Verified non-vacuous: the
+                      historical artifact is rejected by the new validator with 5
+                      lineage problems. The historical artifact was NOT rewritten
+                      and NOT regenerated; it remains authoritative, bounded by the
+                      correction sidecar. No run, authorization, evidence
+                      regeneration or recomputation was triggered.
+MAINTENANCE_ITEM_2  = NON-SCIENTIFIC, RESOLVED 2026-09-13 (post-closure). The Value run artifacts were written
                       with platform line endings, so on disk they are CRLF while
                       git stores LF (.gitattributes covers *.md/*.csv/*.py, not
                       *.json; core.autocrlf = true). The recorded SHA256s are of
@@ -270,8 +278,21 @@ MAINTENANCE_ITEM_2  = NON-SCIENTIFIC, OPEN. The Value run artifacts were written
                       blob. The artifacts were deliberately NOT rewritten — the
                       Owner decision forbids editing them, and normalising them
                       now would change the very hashes this record, the sidecar
-                      and the KB cards all cite. Recorded so any future verifier
-                      knows which bytes the hashes refer to.
+                      and the KB cards all cite. RESOLVED by exact-byte
+                      retention instead: .gitattributes now carries `-text` for
+                      exactly those three paths, and they were re-indexed from the
+                      already-authoritative working-copy bytes. The git blob is now
+                      byte-identical to the working copy for all three, so the
+                      recorded SHA256s are reproduced by any checkout regardless of
+                      the user's core.autocrlf. Verified on a fresh detached
+                      worktree: all three hashes REPRODUCED. The artifacts
+                      themselves were never edited — only how git stores them — so
+                      every recorded hash still means the bytes the real run
+                      produced. Repo-wide JSON policy unchanged.
+ARTIFACT_BYTE_CONVENTION = The three immutable Value run artifacts are retained
+                      EXACT-BYTE: working-copy bytes == git blob bytes, and the
+                      recorded SHA256 is of those bytes. This is the unambiguous
+                      identity for any future verifier.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
