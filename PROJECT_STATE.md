@@ -139,16 +139,32 @@ S1 DESIGN+SEAL      = COMPLETE. SEALED 2026-09-13 under Aaron's Owner decision
                       (historical _DRAFT filename retained to avoid reference
                       churn; the document reads SEALED).
                       sealed sha256
-                      844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
-                      at seal revision 9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548,
+                      f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee
+                      at seal revision 0ed9bfff2205a61ad048aca1ef3607991ddef460,
                       carrying VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (Sweden
                       two-table Fixed CPI; EUR coverage fact) and
                       VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002 (§17, the frozen
-                      TSMOM comparator identity). LINEAGE = original seal
+                      TSMOM comparator identity) and
+                      VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003 (§18, the C3
+                      contribution-ablation operator). LINEAGE = original seal
                       df142f83...b3278cf at ba5814d8... -> _001
-                      bc841ea8...a67a099 at 58129972... -> _002. Every prior seal
-                      is SUPERSEDED, none erased. D1-D11 frozen and byte-identical
-                      across all three seals; OWNER_DECISIONS_REMAINING = NONE.
+                      bc841ea8...a67a099 at 58129972... -> _002
+                      844fea84...9948d1cb at 9c9dd4c2... -> _003. Every prior seal
+                      is SUPERSEDED, none erased. D1-D10 byte-identical across all
+                      four seals; D11 carries the authorized textual C3 operator
+                      change with k = 3 itself unchanged; every numerical threshold
+                      unchanged. OWNER_DECISIONS_REMAINING = NONE.
+C3                  = CONTRIBUTION_SENSITIVITY_ROBUSTNESS via individual
+                      selected-episode contribution ablation (§11.1 as amended).
+                      V_t = a_t + sum_i c_i,t on the ORIGINAL portfolio capital
+                      basis; V^(-e) removes instrument i(e)'s own attributed net
+                      contribution in the mapped contribution months (signal month
+                      m -> contribution month m+1). Every calendar month is
+                      retained; no resizing, vol re-targeting, gross re-scaling or
+                      capital redistribution; ablations are never cumulative.
+                      It does NOT test TEMPORAL_REGIME_ROBUSTNESS, and
+                      shared-regime dependence may remain because the other
+                      instruments keep contributing in the same calendar regime.
 COMPARATOR          = CANONICAL_17_ETF_TSMOM_BASELINE (§17). MAP_v2 §A.1 frozen
                       mechanism; signal per X01 §3.7 (SEALED); recomputed from the
                       X01-pinned panel 3d2a7a56... by the hash-pinned canonical
@@ -157,31 +173,23 @@ COMPARATOR          = CANONICAL_17_ETF_TSMOM_BASELINE (§17). MAP_v2 §A.1 froze
                       output/monthly_returns.csv is git-ignored and unhashed and is
                       NOT authority; it agrees with the recomputation at the
                       precision it was written to, as a diagnostic only.
-S2 BUILD            = COMPLETE — orchestration, single-use authorization guard,
-                      evidence schema, 25-check synthetic rehearsal over 11 cases,
-                      119 S2 checks, 14 pre-S3 dry gates. No target outcome
-                      computed; the S3 entry point refuses without an authorization.
+S2 BUILD            = COMPLETE — orchestration, contribution ledger, ablation
+                      operator, single-use authorization guard, evidence schema,
+                      46-check synthetic rehearsal over 12 cases, 119 S2 checks,
+                      16 pre-S3 dry gates, all green. No target outcome computed;
+                      the S3 entry point refuses without an authorization.
 S3 RUN              = NOT_STARTED. The 2026-09-13 authorization attempt was
                       HALTED at the run gate before any authorization object was
                       created; it is NOT an execution attempt.
                       AUTHORIZATION_CREATED = NO, AUTHORIZATION_CONSUMED = NO,
                       TARGET_CALCULATIONS_EXECUTED = NONE.
-CURRENT_BLOCKER     = C3_STRUCTURAL_REACHABILITY = FAIL. On the real signal path
-                      (§11 defines episodes from that path alone — no return,
-                      Sharpe or correlation) FXY carries ONE constant-sign episode
-                      spanning all 143 months, UUP 141, SPY 129. The sealed k = 3
-                      selection therefore leaves 0, 2 and 14 months, all below the
-                      24-distinct-month floor, so every leave-one-episode-out case
-                      is invalid, C3 FAILS and candidacy is foreclosed whatever the
-                      returns are. Confirmed with deliberately excellent synthetic
-                      returns: C1 and C2 pass, C3 still fails. §13's reachability
-                      check tests threshold algebra against hypothetical jackknife
-                      inputs and never touches the signal path, so it could not
-                      have caught this. Object A (standalone edge) remains
-                      adjudicable; Object B (diversification candidacy) does not.
-                      NOT repaired — k, the episode definition, the ranking, the
-                      deletion operator and the distinct-month floor are all
-                      sealed. Resolving this is an Owner decision.
+CURRENT_BLOCKER     = NONE. The C3 structural blocker recorded on 2026-09-13
+                      (whole-calendar deletion left 0/2/14 of 143 months and made
+                      C3 unadjudicable) is RESOLVED by AMENDMENT_003. The
+                      replacement gate C3_STRUCTURAL_ADJUDICABILITY = PASS: the
+                      three real episodes map to 142/140/129 contribution months
+                      with all 143 calendar months retained in every case. The
+                      gate requires C3 to be ADJUDICABLE, never to PASS.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
@@ -200,10 +208,9 @@ TARGET_OUTCOMES     = NONE COMPUTED. No Value return series, no Sharpe, no TSMOM
                       correlation, no combination result, no backtest. The signal
                       PATH has been computed (episode structure only), which §11
                       defines independently of any return.
-NEXT_OWNER_DECISION = the C3 reachability blocker above: accept that Object B is
-                      unadjudicable under the sealed design and run for Object A
-                      alone, or amend the sealed episode machinery. Not an agent
-                      decision.
+NEXT_OWNER_DECISION = authorize exactly one sealed S3 real run under
+                      GENERATED_NOT_SEEN. All 16 pre-S3 gates pass and both
+                      research objects are adjudicable.
 ```
 
 ## X01 — path to the seal under vNext — TAKEN 2026-09-13

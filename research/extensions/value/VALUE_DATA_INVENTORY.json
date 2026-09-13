@@ -851,5 +851,78 @@
    "repaired": false,
    "reason_not_repaired": "k, the episode definition, the ranking, the deletion operator and the floor are sealed"
   }
+ },
+ "s1_amendment_003": {
+  "amendment_id": "VALUE_S1_EPISODE_REACHABILITY_AMENDMENT_003",
+  "date": "2026-09-13",
+  "owner_decision": "ACCEPT ASTRA'S C3 AMENDMENT RECOMMENDATION",
+  "scope": "the C3 operator, its frozen interpretation and claim language, the D11 textual semantics, and lineage. Nothing else.",
+  "sealed_prereg_sha256_before": "844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb",
+  "sealed_prereg_sha256_after": "f5f377b195d3ba2081e772b675d251d3adc036511133a461a823f72ddd6582ee",
+  "seal_revision": "0ed9bfff2205a61ad048aca1ef3607991ddef460",
+  "defect_repaired": "whole-calendar deletion removed 143/141/129 of 143 months for the three selected episodes, leaving 0/2/14 - all below the 24-distinct-month floor. C3 could not return PASS, so its failure was never evidence against Value.",
+  "new_operator": "INDIVIDUAL_SELECTED_EPISODE_CONTRIBUTION_ABLATION",
+  "c3_interpretation": "CONTRIBUTION_SENSITIVITY_ROBUSTNESS",
+  "c3_does_not_test": "TEMPORAL_REGIME_ROBUSTNESS",
+  "known_limitation": "shared-regime dependence may remain: the other instruments continue to contribute during the same calendar regime",
+  "contribution_identity": "V_t = a_t + sum_i c_i,t",
+  "contribution_definition": "c_i,t = position_i,t * r_i,t - |position_i,t - position_i,t-1| * (TRANSACTION_COST_BPS / 1e4), on the ORIGINAL portfolio capital basis",
+  "shared_term_policy": "no allocation convention invented; anything not uniquely attributable stays in a_t",
+  "reconciliation_tolerance": 1e-10,
+  "reconciliation_measured_max_abs_residual": 1.39e-17,
+  "reconciliation_evidence": "the real sleeve code path driven by synthetic inputs; running it on real inputs would compute the Value return series, a target outcome",
+  "signal_to_contribution_month_map": "signal month m -> contribution month m+1, from positions = weights.shift(1); frozen, never decided from PnL",
+  "weight_redistribution": false,
+  "vol_retarget_after_ablation": false,
+  "gross_rescale_after_ablation": false,
+  "ablations_cumulative": false,
+  "unchanged": [
+   "universe",
+   "valuation objects",
+   "anchor",
+   "comparator",
+   "D1-D10 (byte-identical)",
+   "k = 3",
+   "episode definition",
+   "episode pooling",
+   "episode ranking",
+   "episode tie-breaks",
+   "C1",
+   "C2",
+   "rho_max",
+   "correlation inference",
+   "standalone inference",
+   "bootstrap specification",
+   "24-distinct-month floor",
+   "75/25 FULL allocation",
+   "FULL delta",
+   "evaluation window",
+   "evidence ceiling"
+  ],
+  "superseded_operator_preserved": true,
+  "astra_role": "material_design_contributor",
+  "astra_is_independent_certification": false,
+  "observed_before_amendment": [
+   "predictor / signal path",
+   "structural episode lengths",
+   "structural sample reachability"
+  ],
+  "not_observed_before_amendment": [
+   "Value returns",
+   "Value Sharpe",
+   "Value/TSMOM correlation",
+   "combination performance",
+   "any target verdict"
+  ],
+  "c3_structural_adjudicability": "PASS",
+  "c3_contribution_months_mapped": [
+   142,
+   140,
+   129
+  ],
+  "calendar_months_retained": 143,
+  "pre_s3_gates": "16/16 PASS",
+  "s3_authorization_created": false,
+  "s3_authorization_consumed": false
  }
 }
