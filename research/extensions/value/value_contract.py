@@ -30,7 +30,7 @@ REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 SEALED_PREREG_RELPATH = "research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md"
 SEALED_PREREG_SHA256 = ("844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0"
                         "dfb1a91a9948d1cb")
-SEAL_REVISION = "PENDING_SEAL_REVISION"
+SEAL_REVISION = "9c9dd4c2fd400719ebd69925b8ef96c2a4bf6548"
 OWNER_DECISION = "SEAL TIME-SERIES VALUE S1"
 
 # --- amendment lineage, oldest first. No seal is ever erased. ---------------

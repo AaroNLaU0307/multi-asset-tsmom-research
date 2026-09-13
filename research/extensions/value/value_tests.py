@@ -513,12 +513,19 @@ def test_contract_and_safety():
     ck("T48 Shiller is never relabelled PIT_READY",
        "PIT_READY" not in C.SHILLER_VINTAGE_STATUS)
 
+    import value_authorization as A
     import value_runner as R
-    ck("T49 no Value execution authorization exists",
-       R.VALUE_EXECUTION_AUTHORIZED is False)
-    code = R.cmd_execute(type("A", (), {"run_id": "SYNTHETIC-NOT-A-RUN"})())
+    _auth = A.load()
+    ck("T49 no ACTIVE Value execution authorization exists",
+       _auth is None or _auth.get("status") != A.STATUS_ACTIVE,
+       A.status_line())
+    args = type("A", (), {"run_id": "SYNTHETIC-NOT-A-RUN", "out": None,
+                          "exposure_state": "SYNTHETIC"})()
+    code = R.cmd_execute(args)
     ck("T49 the S3 entry point REFUSES and returns a non-zero code",
        code == R.EXIT_REFUSED, "exit=%s" % code)
+    ck("T49 a consumed authorization can never be revived",
+       "create" in dir(A) and A.AuthorizationError is not None)
     ck("T50 no evidence artifact exists anywhere in the Value directory",
        not any(f.lower().endswith(".json") and "evidence" in f.lower()
                for f in os.listdir(HERE)))
