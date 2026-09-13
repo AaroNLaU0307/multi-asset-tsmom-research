@@ -2,13 +2,15 @@
 """GENERATED-NOT-SEEN protected outcome store and the reveal gate (sealed §M, §T, §V).
 
 The sealed architecture permits outcomes to be GENERATED and stored while forbidding
-any human or agent from SEEING them before the single authorized terminal reveal.
-This module is the mechanism, and it is procedural rather than cryptographic —
-exactly what sealed §T.1 says the contract relies on:
+any human or agent from SEEING them before the single authorized terminal reveal
+(sealed §T.1's GENERATED_NOT_SEEN classification, as used for X01-RUN-0001).
 
-    "the pipeline writes the locked position vectors and the checkpoint return
-     series to disk, they are hashed and registered, and NO SESSION READS THEM —
-     precisely the GENERATED_NOT_SEEN classification already used for X01-RUN-0001."
+The boundary is enforced technically, not just procedurally: payloads are written
+OUTSIDE the repository and ENCRYPTED AT REST by `ca_blind`, so `cat`, a repo grep,
+an editor or a stray `json.load` yields ciphertext. See `ca_blind` for the
+mechanism and for the honest statement of its limit (Aaron owns the key, so this
+is not secrecy against the Owner — it removes the dependence on voluntary API
+discipline).
 
 Enforcement here:
   * `store()` writes a payload and returns ONLY its hash and size — never content;
@@ -29,6 +31,7 @@ import json
 import os
 from datetime import datetime, timezone
 
+from . import ca_blind
 from . import ca_contract as K
 from . import ca_store
 
@@ -82,12 +85,17 @@ class RevealAuthorization:
 class ProtectedOutcomeStore:
     """Outcomes may be produced and stored. They may not be seen."""
 
-    def __init__(self, store_dir: str, index_path: str):
-        self.store_dir = store_dir
-        self.index_path = index_path
+    def __init__(self, store_dir=None, index_path=None):
+        # The protected store lives OUTSIDE the repository working tree. A path
+        # inside the repo is refused, so a future caller cannot quietly move
+        # protected payloads back under git / grep / editor reach.
+        self.store_dir = ca_blind.ensure_store(store_dir)
+        self.index_path = ca_blind.assert_outside_repo(
+            index_path or os.path.join(self.store_dir, "protected_index.jsonl"),
+            "protected index")
 
     def _index(self) -> list:
-        full = os.path.join(K.REPO, self.index_path)
+        full = self.index_path
         if not os.path.exists(full):
             return []
         out = []
@@ -98,19 +106,33 @@ class ProtectedOutcomeStore:
         return out
 
     def store(self, outcome_id: str, payload: dict) -> dict:
-        """Generate-and-store. Returns identity ONLY — never the payload."""
-        rel = os.path.join(self.store_dir, "%s.json" % outcome_id).replace("\\", "/")
-        data = (json.dumps(payload, sort_keys=True, indent=2) + "\n").encode("utf-8")
-        ca_store.safe_write_bytes(rel, data)          # write-once, refuses the frozen panel
+        """Generate-and-store. Returns identity ONLY — never the payload.
+
+        The payload is ENCRYPTED AT REST and written outside the repository, so
+        `cat`, an editor, a repo grep or a stray `json.load` yields ciphertext.
+        """
+        full = os.path.join(self.store_dir, "%s.sealed.json" % outcome_id)
+        if os.path.exists(full):
+            raise ca_store.SnapshotOverwriteRefused(
+                "REFUSED: protected outcome %s already exists; the store is write-once"
+                % outcome_id)
+        plain = (json.dumps(payload, sort_keys=True) + "\n").encode("utf-8")
+        envelope = ca_blind.seal_envelope(plain)
+        data = (json.dumps(envelope, sort_keys=True, indent=2) + "\n").encode("utf-8")
+        os.makedirs(os.path.dirname(full), exist_ok=True)
+        with io.open(full, "wb") as fh:
+            fh.write(data)
         row = {
             "outcome_id": outcome_id,
-            "path": rel,
-            "sha256": hashlib.sha256(data).hexdigest(),
+            "path": full,
+            "sha256": hashlib.sha256(data).hexdigest(),                 # of the ciphertext file
+            "payload_plaintext_sha256": envelope["plaintext_sha256"],   # reproducible identity
             "byte_size": len(data),
             "classification": "GENERATED_NOT_SEEN",
+            "encrypted_at_rest": True,
             "stored_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
         }
-        idx = os.path.join(K.REPO, self.index_path)
+        idx = self.index_path
         os.makedirs(os.path.dirname(idx), exist_ok=True)
         with io.open(idx, "a", encoding="utf-8", newline="") as fh:
             fh.write(json.dumps(row, sort_keys=True) + "\n")
@@ -123,7 +145,9 @@ class ProtectedOutcomeStore:
             "protected_outcomes_stored": len(rows),
             "outcome_ids": [r["outcome_id"] for r in rows],
             "all_generated_not_seen": all(r["classification"] == "GENERATED_NOT_SEEN" for r in rows),
-            "payload_hashes": {r["outcome_id"]: r["sha256"] for r in rows},
+            "payload_hashes": {r["outcome_id"]: r.get("payload_plaintext_sha256") for r in rows},
+            "all_encrypted_at_rest": all(r.get("encrypted_at_rest") for r in rows),
+            "store_outside_repo": not ca_blind._inside_repo(self.store_dir),
             "reveal_authorization_present": False,
             "content_visible": False,
         }
@@ -143,8 +167,10 @@ class ProtectedOutcomeStore:
         row = next((r for r in self._index() if r["outcome_id"] == outcome_id), None)
         if row is None:
             raise KeyError(outcome_id)
-        with io.open(os.path.join(K.REPO, row["path"]), encoding="utf-8") as fh:
-            payload = json.load(fh)
+        with io.open(row["path"], encoding="utf-8") as fh:
+            envelope = json.load(fh)
+        cap = ca_blind.MachineCapability("TERMINAL_REVEAL")
+        payload = json.loads(ca_blind.open_envelope(envelope, cap))
         authorization.consumed = True
         return payload
 

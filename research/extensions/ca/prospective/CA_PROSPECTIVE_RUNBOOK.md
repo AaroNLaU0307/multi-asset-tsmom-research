@@ -94,12 +94,53 @@ cumulative return · Sharpe · drawdown · win rate · sleeve performance · FM-
 performance · the crisis-diagnostic outcome · **any position vector** · **any proxy
 sufficient to infer scientific performance**.
 
-**Positions are outcomes by another name.** The ledger record *contains* the
-position vector because reproducibility demands it; that file is machine-read only
-and is never rendered to an operator. `PositionLedger.public_summary()` and
+**Positions are outcomes by another name.** The ledger record preserves the
+position vector because reproducibility demands it, but it is stored **encrypted**
+inside a `protected_position` envelope (§5A) and reading it requires a
+`MachineCapability`. `PositionLedger.public_summary()` and
 `ProtectedOutcomeStore.describe()` are the operator-facing views and emit counts,
 booleans and hashes only. `ca_integrity._enforce` raises
 `BlindnessBreachBlocked` rather than leak.
+
+---
+
+## 5A. The blindness boundary — where it actually lives
+
+Blindness is **not** enforced by operators choosing the polite API. A go-live
+preflight probe showed that the first build's protected files were plaintext JSON
+in the working tree, so `cat`, an editor, a repo grep or a one-line `json.load`
+exposed a position vector and an outcome payload with no authorization. Three
+mechanisms now close that, and `ca_blind` owns all three:
+
+1. **Protected content lives OUTSIDE the repository.** Default
+   `%LOCALAPPDATA%\ca_prospective_store` (override with `CA_PROSPECTIVE_STORE`).
+   A store path inside the repo is **refused**, so git, grep, diff, editors and
+   code review can never surface protected content.
+2. **Encrypted at rest.** Bytes on disk are ciphertext (encrypt-then-MAC,
+   domain-separated subkeys, HMAC-SHA256 counter-mode keystream — stdlib, because
+   no AEAD library is installed here). `cat` yields nothing.
+3. **The key lives outside the repository and is never committed.** Default
+   `<store>/blind.key` (override with `CA_PROSPECTIVE_KEY_FILE`).
+
+**Honest limit, stated plainly.** Aaron owns this machine and the key file, so this
+is *not* secrecy against the Owner and never can be. What it provides is the
+standard the contract requires: the sealed blindness rule no longer depends only on
+voluntary API discipline. Ordinary operational use cannot expose a position vector
+or an outcome; circumventing it now requires deliberately locating the key and
+calling a decryption path, which is a knowing act rather than an accident.
+
+**Reproducibility is not weakened.** The SHA-256 of the *plaintext* is recorded in
+the clear inside every envelope, so record identity stays verifiable without
+decrypting. `PositionLedger.position_identity()` returns it and is operator-safe.
+
+**The supported machine path.** `ca_blind.MachineCapability` names the purpose —
+`TURNOVER_PRIOR_POSITION`, `LOCKED_VS_RECOMPUTED_DIAGNOSTIC`, `TERMINAL_REVEAL` —
+and `PositionLedger.machine_read_position()` requires one. No operator-facing
+report constructs a capability. An unsupported purpose is refused.
+
+**Key custody at go-live.** The key is created on first use if absent. Back it up
+**outside the repository**: losing it makes protected outcomes unrecoverable, and
+committing it would silently undo the whole boundary. It must never enter git.
 
 ---
 

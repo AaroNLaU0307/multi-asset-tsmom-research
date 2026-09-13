@@ -12,11 +12,17 @@ Guarantees:
     instrument-registry identity, runtime, code revision, the prior-position
     reference used for turnover, the rf lock, and the integrity-gate result.
 
-A ledger record CONTAINS the position vector, because reproducibility requires it.
-It is therefore protected material: sealed §T.3 says positions are outcomes by
-another name, so the ledger file is read by machinery, never displayed to an
-operator. `ca_integrity` is the only operator-facing view and it emits booleans
-and counts only.
+A ledger record must preserve the position vector, because reproducibility requires
+it -- but sealed §T.3 says positions are outcomes by another name. The record is
+therefore SPLIT: the position vector and its raw gross/net/leverage values are
+ENCRYPTED into a `protected_position` envelope (`ca_blind`), while the clear half
+carries identity, reproducibility bindings and §T.2 invariant BOOLEANS. The
+plaintext sha256 is recorded in the clear inside the envelope, so record identity
+stays verifiable without decrypting.
+
+Reading the vector requires `machine_read_position()` with a `MachineCapability`.
+`public_summary()` and `ca_integrity` are the operator-facing views and emit
+booleans, counts and hashes only.
 """
 from __future__ import annotations
 
@@ -26,6 +32,7 @@ import json
 import os
 from datetime import datetime, timezone
 
+from . import ca_blind
 from . import ca_contract as K
 from . import ca_store
 
@@ -79,8 +86,21 @@ class PositionLedger:
                 "The position ledger is write-once (§I.1); records are never "
                 "rewritten, merged or superseded." % holding_month)
 
+        # SPLIT: the sensitive half (the position vector and its raw gross/net/
+        # leverage values) is sealed; the clear half carries identity, bindings and
+        # §T.2 invariant BOOLEANS so operator monitoring stays rich without ever
+        # exposing a vector. Sealed §T.3: positions are outcomes by another name.
+        protected_plain = json.dumps({
+            "weights": decision["weights"],
+            "gross": decision["gross"],
+            "net": decision["net"],
+            "leverage": decision["leverage"],
+        }, sort_keys=True).encode("utf-8")
+        sealed_block = ca_blind.seal_envelope(protected_plain)
+        g, w = decision["gross"], [v for v in decision["weights"].values() if v is not None]
+
         rec = {
-            "schema": "CA_POSITION_LEDGER_V1",
+            "schema": "CA_POSITION_LEDGER_V2_BLIND",
             "holding_month": holding_month,
             "decision_month_end": decision["decision_month_end"],
             "decision_timestamp_utc": decision_timestamp_utc or datetime.now(timezone.utc).isoformat(timespec="seconds"),
@@ -92,11 +112,12 @@ class PositionLedger:
             "runtime_pinned_match": K.runtime_matches(),
             "code_revision": K.build_identity()["code_revision"],
             "sealed_prereg_sha256": K.SEALED_PREREG_SHA256,
-            # the canonical decision
-            "weights": decision["weights"],
-            "gross": decision["gross"],
-            "net": decision["net"],
-            "leverage": decision["leverage"],
+            # the canonical decision — SEALED. Reproducibility is preserved: the
+            # plaintext sha256 is recorded in the clear inside the envelope.
+            "protected_position": sealed_block,
+            # §T.2 invariants, as booleans and counts only
+            "gross_within_cap": (g is None) or (g <= K.MAX_GROSS_LEVERAGE + 1e-9),
+            "asset_weight_within_cap": all(abs(x) <= K.MAX_GROSS_LEVERAGE + 1e-9 for x in w),
             "n_available": decision["n_available"],
             "cap_binds": decision["cap_binds"],
             # turnover lineage (§F.1 step 2)
@@ -118,6 +139,29 @@ class PositionLedger:
             fh.write(json.dumps(rec, sort_keys=True) + "\n")
         return rec
 
+    # -- the supported MACHINE path (capability-gated) ---------------------- #
+    def machine_read_position(self, holding_month: str, capability) -> dict:
+        """Decrypt one record's position block. Requires a MachineCapability.
+
+        This is the path the pipeline uses for the §F.1 turnover prior position and
+        the §T.2 locked-vs-recomputed diagnostic. It is never called by any
+        operator-facing report.
+        """
+        rec = self.get(holding_month)
+        if rec is None:
+            raise KeyError(holding_month)
+        return json.loads(ca_blind.open_envelope(rec["protected_position"], capability))
+
+    def position_identity(self, holding_month: str) -> dict:
+        """Reproducible identity WITHOUT decrypting — operator-safe."""
+        rec = self.get(holding_month)
+        if rec is None:
+            raise KeyError(holding_month)
+        env = rec["protected_position"]
+        return {"holding_month": holding_month,
+                "position_plaintext_sha256": env["plaintext_sha256"],
+                "record_sha256": rec["record_sha256"]}
+
     # -- operator-safe summary (NO position data) --------------------------- #
     def public_summary(self) -> dict:
         """Counts and booleans only. Never a weight, never a return."""
@@ -128,4 +172,7 @@ class PositionLedger:
             "all_records_have_snapshot_binding": all(r.get("source_snapshot_sha256") for r in rows),
             "all_records_runtime_pinned": all(r.get("runtime_pinned_match") for r in rows),
             "rf_missing_months": [r["holding_month"] for r in rows if r["rf_lock"].get("rf_missing")],
+            "all_positions_sealed": all("protected_position" in r and "weights" not in r for r in rows),
+            "position_identities": {r["holding_month"]: r["protected_position"]["plaintext_sha256"]
+                                    for r in rows},
         }

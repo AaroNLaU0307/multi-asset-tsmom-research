@@ -24,7 +24,7 @@ import pandas as pd
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                                 "..", "..", "..", "..")))
 from research.extensions.ca.prospective import (  # noqa: E402
-    ca_contract as K, ca_engine, ca_golive, ca_identity, ca_inference,
+    ca_blind, ca_contract as K, ca_engine, ca_golive, ca_identity, ca_inference,
     ca_integrity, ca_ledger, ca_protected, ca_rf, ca_store)
 
 OK = True
@@ -170,9 +170,16 @@ rec = led.append(holding_month="2026-02", decision=dec, snapshot_row=row1,
                  turnover_value=float("nan"))
 ck("5", "ledger record written", led.count() == 1)
 for f in ["source_snapshot_sha256", "instrument_registry", "runtime", "code_revision",
-          "weights", "gross", "net", "leverage", "prior_position_ref", "rf_lock",
+          "protected_position", "prior_position_ref", "rf_lock",
           "integrity", "record_sha256", "sealed_prereg_sha256"]:
     ck("5", "record binds %s" % f, f in rec)
+# the position vector is SEALED, not stored in the clear
+ck("5", "record does NOT carry a clear position vector",
+   not any(k in rec for k in ("weights", "gross", "net", "leverage")))
+ck("5", "record carries §T.2 invariant booleans instead",
+   isinstance(rec["gross_within_cap"], bool) and isinstance(rec["asset_weight_within_cap"], bool))
+ck("5", "sealed block records the plaintext sha256 for reproducibility",
+   len(rec["protected_position"]["plaintext_sha256"]) == 64)
 ck("6", "duplicate holding month is refused loudly",
    raises(ca_ledger.LedgerRewriteRefused, led.append, holding_month="2026-02", decision=dec,
           snapshot_row=row1, registry_identity=regid, rf_lock=rfrec, integrity=gate0,
@@ -434,6 +441,51 @@ ck("22", "degenerate series -> INFERENCE_PROCEDURE_FAILURE, not a state",
 ck("22", "sealed inference constants intact",
    (K.BOOTSTRAP_BLOCK_LEN, K.BOOTSTRAP_REPLICATES, K.CI_LEVEL, K.MASTER_SEED,
     K.MIN_DISTINCT_MONTHS, K.VALID_REPLICATE_FLOOR) == (12, 10000, 95, 7, 24, 9500))
+
+# ==========================================================================  #
+# 23. BLINDNESS ACCESS BOUNDARY (go-live preflight)
+# ==========================================================================  #
+import tempfile as _tf  # noqa: E402
+_store = _tf.mkdtemp(prefix="ca_s2_store_")
+_ledraw = io.open(os.path.join(d_abs, "positions.jsonl"), encoding="utf-8").read()
+_needle = repr(max((v for v in dec["weights"].values() if v is not None), key=abs))[:14]
+ck("23", "ledger file on disk contains no 'weights' key", '"weights"' not in _ledraw)
+ck("23", "ledger file on disk contains no weight value", _needle not in _ledraw)
+ck("23", "private _rows() no longer exposes weights", "weights" not in led._rows()[0])
+ck("23", "machine read without a capability is refused",
+   raises(ca_blind.CapabilityRequired, led.machine_read_position, "2026-02", None))
+_cap = ca_blind.MachineCapability("TURNOVER_PRIOR_POSITION")
+ck("23", "machine read WITH a capability returns the vector",
+   led.machine_read_position("2026-02", _cap)["weights"] == dec["weights"])
+ck("23", "position identity is reproducible without decrypting",
+   led.position_identity("2026-02")["position_plaintext_sha256"]
+   == rec["protected_position"]["plaintext_sha256"])
+ck("23", "an unsupported capability purpose is refused",
+   raises(ca_blind.CapabilityRequired, ca_blind.MachineCapability, "BROWSE_FOR_FUN"))
+
+_ps = ca_protected.ProtectedOutcomeStore(_store)
+_ident = _ps.store("SYN_BOUNDARY", {"synthetic_value": 0.7770707707})
+_praw = io.open(os.path.join(_store, "SYN_BOUNDARY.sealed.json"), encoding="utf-8").read()
+ck("23", "protected payload on disk is ciphertext", "0.7770707707" not in _praw)
+ck("23", "a direct json.load does not expose the payload",
+   "synthetic_value" not in json.dumps(json.load(io.open(
+       os.path.join(_store, "SYN_BOUNDARY.sealed.json"), encoding="utf-8"))))
+ck("23", "envelope cannot be opened without a capability",
+   raises(ca_blind.CapabilityRequired, ca_blind.open_envelope,
+          json.load(io.open(os.path.join(_store, "SYN_BOUNDARY.sealed.json"), encoding="utf-8")), None))
+ck("23", "a protected store inside the repo is refused",
+   raises(ca_blind.ProtectedStoreMisconfigured, ca_protected.ProtectedOutcomeStore,
+          os.path.join(K.REPO, "research", "should_not_exist")))
+ck("23", "key file lives outside the repository",
+   ca_blind.boundary_report()["key_file_outside_repo"])
+ck("23", "protected store lives outside the repository",
+   ca_blind.boundary_report()["protected_store_outside_repo"])
+ck("23", "describe() reports encrypted-at-rest and outside-repo",
+   _ps.describe()["all_encrypted_at_rest"] and _ps.describe()["store_outside_repo"])
+ck("23", "tampered ciphertext is rejected by the MAC",
+   raises(ca_blind.EnvelopeTampered, ca_blind.open_envelope,
+          {**ca_blind.seal_envelope(b"abc"), "ciphertext": "AAAA"}, _cap))
+shutil.rmtree(_store, ignore_errors=True)
 
 # ==========================================================================  #
 # seal immutability + cleanup
