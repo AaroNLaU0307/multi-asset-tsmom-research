@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T07:55:11Z",
+  "generated_utc": "2026-09-13T08:22:33Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -590,5 +590,132 @@
       "EXECUTION_AUTHORIZATION_EXISTS": false
     },
     "note": "A SEAL IS NOT AUTHORIZATION TO EXECUTE. S2 BUILD may implement this contract without changing it; running it needs a separate Owner authorization that does not exist."
+  },
+  "s2_coverage_audit": {
+    "date": "2026-09-13",
+    "purpose": "Bounded numeric-coverage audit of every sealed Value raw input, distinguishing PERIOD_LABEL_COUNT from NUMERIC_OBSERVATION_COUNT. Data integrity only; no return, signal, Sharpe, correlation or combination quantity was touched.",
+    "root_cause_of_the_original_error": "My Phase-A acquisition counted data rows / index periods rather than observations carrying a value, so coverage was recorded that does not exist. Two legs were affected and both are recorded below.",
+    "series": [
+      {
+        "series": "CPI SEK KPI2020M/00000808 (SEALED)",
+        "labels": 559,
+        "numeric": 7,
+        "first": "2026-01",
+        "last": "2026-07",
+        "covers_window": false,
+        "note": "BLOCKER. The sealed Swedish leg. Only 7 of 559 labels carry a value."
+      },
+      {
+        "series": "CPI EUR Eurostat I25",
+        "labels": 368,
+        "numeric": 321,
+        "first": "1999-12",
+        "last": "2026-08",
+        "covers_window": true,
+        "note": "The sealed text claims 1996-01; values actually begin 1999-12. A factual misstatement, NOT a blocker: usable from 2000-02, far before the 2014-07 window start."
+      },
+      {
+        "series": "SPY Shiller CAPE",
+        "labels": 1869,
+        "numeric": 1629,
+        "first": "1881-08",
+        "last": "2026-09",
+        "covers_window": true,
+        "note": "Expected and non-material: CAPE needs ten years of earnings, so the first ~120 months of the file carry no CAPE value."
+      },
+      {
+        "series": "CPI US CPIAUCNS",
+        "labels": 1364,
+        "numeric": 1363,
+        "first": "1913-01",
+        "last": "2026-08",
+        "covers_window": true,
+        "note": "One trailing label without a value. Non-material."
+      },
+      {
+        "series": "CPI CAD StatCan 18-10-0004",
+        "labels": 1351,
+        "numeric": 1351,
+        "first": "1914-01",
+        "last": "2026-07",
+        "covers_window": true
+      },
+      {
+        "series": "CPI CHF SNB plkopr",
+        "labels": 1267,
+        "numeric": 1267,
+        "first": "1921-01",
+        "last": "2026-07",
+        "covers_window": true
+      },
+      {
+        "series": "CPI GBP ONS D7BT",
+        "labels": 463,
+        "numeric": 463,
+        "first": "1988-01",
+        "last": "2026-07",
+        "covers_window": true
+      },
+      {
+        "series": "SPY/TLT DFII20",
+        "labels": 267,
+        "numeric": 267,
+        "first": "2004-07",
+        "last": "2026-09",
+        "covers_window": true
+      },
+      {
+        "series": "LQD BAA10Y",
+        "labels": 489,
+        "numeric": 489,
+        "first": "1986-01",
+        "last": "2026-09",
+        "covers_window": true
+      },
+      {
+        "series": "FX legs (6x DEX*)",
+        "labels": "333-669",
+        "numeric": "identical",
+        "first": "1971-01 / 1999-01",
+        "last": "2026-09",
+        "covers_window": true,
+        "note": "No label/numeric gap on any FX leg."
+      }
+    ],
+    "series_not_covering_the_sealed_window": [
+      "CPI SEK KPI2020M/00000808"
+    ],
+    "additional_material_mismatches": "NONE beyond the SEK blocker and the EUR factual misstatement already identified.",
+    "sweden_amendment_investigation": {
+      "owner_named_source": "SCB Rebased Fixed CPI-Numbers, matrix 000007MM",
+      "table_id": "PR/PR0101/PR0101A/KPI2020M1980",
+      "table_title": "Rebased Fixed CPI-Numbers by observations and month",
+      "codes_read_mechanically": [
+        {
+          "code": "000007MM",
+          "description": "Fixed CPI, index numbers 2020=100 rebased to 1980=100",
+          "labels": 559,
+          "numeric": 7,
+          "span": "2026M01..2026M07"
+        },
+        {
+          "code": "000007T9",
+          "description": "Fixed CPI, index numbers 1980=100 rebased to 2020=100",
+          "labels": 559,
+          "numeric": 552,
+          "span": "1980M01..2025M12"
+        }
+      ],
+      "finding": "NEITHER rebasing direction covers the sealed window on its own. They are complementary halves, not alternatives: 000007T9 carries the history on the 2020=100 basis and stops at 2025M12, while the current year lives in KPI2020M/00000808 (2026M01..2026M07, same 2020=100 basis). The window needs reference months through 2026-03, so the historical half alone is SHORT BY THREE MONTHS.",
+      "union_properties": {
+        "overlap": "NONE",
+        "month_gap": 1,
+        "junction": "2025M12 = 124.42 -> 2026M01 = 124.58, same 2020=100 basis",
+        "union_span": "1980M01..2026M07",
+        "sufficient_for_window": true
+      },
+      "action_taken": "NONE. Per the amendment instruction's own condition and its stop rule, a two-table join is a data-identity decision and was not made unilaterally. No series was adopted, no raw file was pinned, and the sealed contract was not modified.",
+      "shadow_index_used": false
+    }
   }
 }
