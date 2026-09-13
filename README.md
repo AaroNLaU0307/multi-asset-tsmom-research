@@ -21,9 +21,10 @@
 [![Tests](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml/badge.svg)](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml)
 
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)
-strategy: a *confirmed* core edge, then four candidate overlays each *falsified* at the
-cheapest stage with a mechanism explanation.** The deliverable is not a single strategy —
-it is the discipline: confirm what survives, reject what doesn't, and explain *why* in
+strategy: a *supported* core edge, then four candidate overlays each rejected at the
+cheapest stage with a mechanism explanation, and two later sealed extension studies that
+were run to a preregistered verdict and closed.** The deliverable is not a single strategy —
+it is the discipline: keep what survives, reject what doesn't, and explain *why* in
 each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
@@ -33,8 +34,9 @@ each case.
 
 ## TL;DR (60 seconds)
 
-- **Confirmed core:** multi-asset TSMOM, 17 ETFs / 5 sleeves, monthly + vol-targeted — net Sharpe
-  **0.75** (95% bootstrap CI [0.29, 1.23], excludes 0), with genuine crisis alpha (GFC +11.6%, COVID +7.3%).
+- **Supported core** (*not* independently confirmed): multi-asset TSMOM, 17 ETFs / 5 sleeves,
+  monthly + vol-targeted — historical-baseline net Sharpe **0.75** (95% bootstrap CI [0.29, 1.23],
+  excludes 0), with genuine crisis alpha (GFC +11.6%, COVID +7.3%).
 - **Four overlays tested to extend it, all falsified at the cheapest premise stage** —
   crash-defense (trigger anti-aligned with drawdowns), vol-compression breakout (no directional
   premise), seasonality (0/18, BH-FDR multiplicity), yield-curve macro regime (0/6, single-episode
@@ -44,24 +46,51 @@ each case.
 - **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
   control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
 - **101 tests, CI-verified** on every push (badge above) — not a self-reported count.
+- **Two sealed extension studies, both closed under preregistration** — the X01 futures-wrapper
+  study (`INSUFFICIENT_EVIDENCE`) and the Time-Series Value sleeve (standalone `MATERIALLY_ADVERSE`,
+  diversification candidacy failed, `not_promoted`). Both ran exactly one authorized execution
+  against a sealed contract.
 - **Costs always modelled; negatives are first-class results**, reported as plainly as the one positive.
 
-## The arc at a glance
+## The research map
 
 ```mermaid
 flowchart TD
-    CORE["TSMOM core<br/>✅ CONFIRMED — Sharpe 0.75, CI excludes 0"]
+    CORE["<b>Canonical 17-ETF TSMOM</b><br/>SUPPORTED - not independently confirmed<br/>historical baseline Sharpe 0.75, CI excludes 0"]
 
-    CORE --> O1["Crash-defense<br/>Gate: systemic-risk spike?<br/>❌ trigger anti-aligned"]
-    CORE --> O2["Vol-compression breakout<br/>Gate: compression → direction?<br/>❌ no directional premise"]
-    CORE --> O3["Seasonality<br/>Gate: BH-FDR, 18 cells<br/>❌ 0/18, multiplicity"]
-    CORE --> O4["Yield-curve slope<br/>Gate: episode jackknife<br/>❌ 0/6, single-episode illusion"]
-    CORE -. parallel study .-> X["XSMOM cross-sectional<br/>Gate: Sharpe CI + BH-FDR map<br/>❌ 0/5, same source (corr +0.42)"]
+    CORE --> OV["<b>Overlay program</b> - premise-gated"]
+    OV --> O1["Crash-defense<br/>trigger anti-aligned<br/>not promoted"]
+    OV --> O2["Vol-compression breakout<br/>no directional premise<br/>not promoted"]
+    OV --> O3["Seasonality<br/>0/18 under BH-FDR<br/>not promoted"]
+    OV --> O4["Yield-curve slope<br/>0/6, single-episode illusion<br/>not promoted"]
+
+    CORE -. parallel study .-> X["XSMOM cross-sectional<br/>0/5 universes, corr +0.42<br/>not promoted"]
+
+    CORE --> EXT["<b>Sealed extension studies</b> - vNext, one authorized run each"]
+    EXT --> X01["<b>X01 futures wrapper</b><br/>delta-Sharpe -0.240815<br/>95% CI -0.460571 to -0.050489<br/>INSUFFICIENT_EVIDENCE - CLOSED"]
+    EXT --> VAL["<b>Time-Series Value sleeve</b><br/>standalone MATERIALLY_ADVERSE<br/>C1 FAIL - C2 PASS - C3 FAIL<br/>candidacy FAIL, FULL not executed<br/>not_promoted - CLOSED"]
 ```
+
+| Line of work | Status | Where the evidence lives |
+| --- | --- | --- |
+| Canonical 17-ETF TSMOM core | **supported** — not independently confirmed | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) |
+| Four overlays (crash-defense, vol-breakout, seasonality, yield-curve) | **not promoted** — all rejected at the premise gate | [`research/`](research/README.md) |
+| XSMOM cross-sectional (parallel) | **not promoted** — 0/5 universes | [`research/xsmom/`](research/xsmom/XSMOM_README.md) |
+| X01 futures wrapper (sealed) | **INSUFFICIENT_EVIDENCE** — closed | [`research/extensions/x01/`](research/extensions/x01/) |
+| Time-Series Value sleeve (sealed) | **not_promoted** — closed | [`research/extensions/value/`](research/extensions/value/) |
+
+Status words are the knowledge base's own vocabulary. This README's older sections use
+"falsified" as narrative shorthand for the four overlays and XSMOM; the registry records all
+five as `not_promoted`, which is the authoritative label.
 
 ---
 
-## 1. The confirmed core — multi-asset TSMOM
+## 1. The supported core — multi-asset TSMOM
+
+> **Status: `supported`, not independently confirmed.** No held-out out-of-sample
+> confirmation has been run; parameters were never fitted. The numbers below are the
+> **historical baseline** result on the window stated in the table, and are *not*
+> comparable to the later sealed extension studies, which use their own windows.
 
 Classic time-series (absolute) momentum: go **long** assets trending up, **short** those
 trending down, size each to equal risk, then scale the book to a target volatility.
@@ -77,7 +106,7 @@ trending down, size each to equal risk, then scale the book to a target volatili
 - **Construction:** equal-weight aggregation (a naive risk parity), then scale the whole book
   to 10% portfolio vol, gross capped 3×.
 
-**Result (net of 2 bps, 2008-05 → 2026-06, 218 months):**
+**Historical baseline result (net of 2 bps, 2008-05 → 2026-06, 218 months):**
 
 | Metric | TSMOM (net) | Equal-weight buy & hold |
 | --- | --- | --- |
@@ -86,7 +115,7 @@ trending down, size each to equal risk, then scale the book to a target volatili
 | Max drawdown | −15.6% | −34.8% |
 | Crisis (GFC 2008 / COVID 2020) | **+11.6% / +7.3%** | −27.4% / −13.0% |
 
-A **confirmable but modest** edge with genuine **crisis alpha** (momentum can go short;
+A **supported but modest** edge with genuine **crisis alpha** (momentum can go short;
 buy & hold cannot). Honest caveats are kept, not hidden: the CI is wide (lower bound ~0.29),
 the edge is cost-sensitive (marginal by ~20 bps one-way), and Monte-Carlo shows a 20%+
 drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md).
@@ -230,7 +259,110 @@ trend. The question — does relative-strength add anything time-series momentum
 → [`research/xsmom/`](research/xsmom/XSMOM_README.md) (Phase 1) ·
 [`research/xsmom/XSMOM_UNIVERSES_README.md`](research/xsmom/XSMOM_UNIVERSES_README.md) (Phase 2)
 
-## 4. What this means
+## 4. Sealed extension studies (vNext)
+
+Two later studies ran under the `S0 → S1 SEAL → S2 → S3 → S4` lifecycle: a
+preregistration is sealed and hashed *before* any target computation, exactly one
+execution is authorized, and the verdict follows mechanically from rules fixed in advance.
+Both are closed. Neither changes the core result above.
+
+### 4a. X01 — futures wrapper vs the ETF commodity sleeve — **INSUFFICIENT_EVIDENCE, CLOSED**
+
+*Does running the commodity sleeve through a futures wrapper beat the ETF expression of the
+same sleeve?* Two paired streams over the same months, adjudicated on a preregistered
+materiality boundary of ±0.15 Sharpe.
+
+| Arm | Annualised net Sharpe |
+| --- | --- |
+| **E** — ETF commodity sleeve (the comparison leg) | 0.652321 |
+| **F** — futures commodity sleeve (the leg under test) | 0.411506 |
+| **ΔSharpe (F − E)** | **−0.240815**, 95% CI **[−0.460571, −0.050489]** |
+
+The interval sits below zero but straddles the −0.15 materiality boundary, so the sealed
+rule returns **`INSUFFICIENT_EVIDENCE`** — it is *not* a demonstration that the wrapper is
+materially worse, and it is *not* a null. That is a legitimate terminal state, not a
+failure to finish.
+
+> **X01's E arm is not the canonical baseline.** It is a **four-instrument commodity
+> sleeve** (USO, UNG, GLD, DBA) with the portfolio-level volatility target and gross cap
+> deliberately removed. It must not be read as, or substituted for, the 17-ETF book — and
+> it was **not** used as the comparator for the Value study below.
+
+→ [`research/extensions/x01/`](research/extensions/x01/) ·
+[sealed preregistration](research/extensions/x01/X01_PREREGISTRATION_DRAFT.md) ·
+[`X01_EVIDENCE.json`](research/extensions/x01/X01_EVIDENCE.json)
+
+### 4b. Time-Series Value sleeve — **not_promoted, CLOSED**
+
+> *Can a frozen Time-Series / Fundamental Value sleeve provide a useful orthogonal return
+> source to the canonical TSMOM baseline?*
+
+Five instruments, four valuation objects, each measured against **its own expanding
+history** (never cross-sectionally): **SPY** (Shiller earnings yield) · **TLT** (real
+yield) · **LQD** (public corporate credit spread) · **UUP** and **FXY** (real exchange
+rates). Sealed evaluation window **2014-07 → 2026-05, N = 143 months**; comparator is the
+**canonical 17-ETF TSMOM book**.
+
+**Standalone edge — the whole interval is below the preregistered adverse floor:**
+
+![Value standalone Sharpe against the sealed thresholds](research/extensions/value/value_sharpe_ci.svg)
+
+| Quantity | Value |
+| --- | --- |
+| Annualised net Sharpe | **−1.030455** |
+| 95% stationary-bootstrap CI | **[−1.559647, −0.545022]** |
+| Standalone state | **`MATERIALLY_ADVERSE`** |
+| Pearson ρ vs canonical TSMOM | −0.217239, 95% CI [−0.383617, −0.059500] |
+
+**The preregistered candidacy gate:**
+
+```mermaid
+flowchart TD
+    A["Standalone Value<br/>Sharpe -1.030455<br/>CI -1.559647 to -0.545022<br/><b>MATERIALLY_ADVERSE</b>"] --> A1["<b>C1 FAIL</b>"]
+    B["Value / TSMOM dependence<br/>rho -0.217239<br/>rho upper CI -0.059500 &lt;= 0.40"] --> B1["<b>C2 PASS</b>"]
+    C["Contribution sensitivity<br/>three prespecified ablations<br/>all remain materially adverse"] --> C1["<b>C3 FAIL</b>"]
+
+    A1 --> D{"C1 AND C2 AND C3"}
+    B1 --> D
+    C1 --> D
+    D --> E["<b>DIVERSIFICATION CANDIDACY: FAIL</b>"]
+    E --> F["<b>FULL 75/25 branch NOT EXECUTED</b>"]
+```
+
+The sleeve **passed** the dependence screen and **failed** the edge screens. Because
+candidacy failed, the sealed conditional branch stopped: the frozen 75/25 TSMOM/Value
+combination was **never executed**, so no combination statistic exists — this is *not* a
+finding that the 75/25 portfolio performed badly.
+
+**C3 — contribution sensitivity.** Each of the three prespecified longest
+instrument-episode direct net contributions was removed in turn, on the original portfolio
+capital basis, retaining every calendar month:
+
+| Ablated episode | Signal months | Value CI after ablation | C1 | C2 | Case |
+| --- | --- | --- | --- | --- | --- |
+| FXY 2014-07 → 2026-05 | 143 | [−1.661792, −0.539409] | FAIL | PASS | **FAIL** |
+| UUP 2014-09 → 2026-05 | 141 | [−1.539346, −0.490313] | FAIL | PASS | **FAIL** |
+| SPY 2014-07 → 2025-03 | 129 | [−1.202922, −0.190264] | FAIL | PASS | **FAIL** |
+
+**C3 is contribution sensitivity only.** It is not temporal-regime replication, not
+independent valuation-regime confirmation, and not independent episode replication. Two of
+the three episodes span nearly the whole window, so those ablations remove an instrument's
+contribution in almost every month — an explicit limit on what C3 could show here.
+
+**Scope and ceiling.** Evidence ceiling **`T0 / POST-EXPOSURE / AT MOST SUPPORTED`**; never
+confirmed. The Shiller input is a
+`RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATION` — its 3-month publication lag
+handles causal availability but does **not** remove historical revision / vintage bias. The
+verdict applies to the **one frozen construction actually tested**: it is not a claim about
+Value strategies in general, other valuation signals, other universes, other normalisations
+or other portfolio constructions.
+
+→ [sealed preregistration](research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md) ·
+[`VALUE_EVIDENCE.json`](research/extensions/value/VALUE_EVIDENCE.json) ·
+[provenance correction](research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json) ·
+final verdict in [`PROJECT_STATE.md`](PROJECT_STATE.md)
+
+## 5. What this means
 
 The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
 directions tested** — and establishing that, *with the mechanism of each failure*, is itself
@@ -253,12 +385,35 @@ relative-strength instead of trend — was *also* falsified (0/5 universes), for
 of all: at liquid-ETF granularity it is largely the **same source** the time-series core already
 harvests (corr +0.42; the XSMOM-only lead-lag term not shown to be non-trivial).
 
+## 6. Research lessons carried forward
+
+1. **Low correlation is not sufficient for useful diversification.** The Value sleeve had
+   low, slightly negative dependence with TSMOM and passed the dependence screen (C2) —
+   while its standalone edge was materially adverse. Passing C2 established orthogonality
+   and nothing about return.
+2. **Orthogonality and expected return are separate requirements.** An economically poor
+   return stream does not become attractive because it is uncorrelated. The candidacy gate
+   was deliberately built to require both.
+3. **The negative Value result survived the sealed contribution-sensitivity checks.**
+   Removing each of the three prespecified longest instrument-episode direct contributions
+   separately did not rescue the standalone state.
+4. **C3 is contribution sensitivity only** — never temporal-regime replication, independent
+   valuation-regime confirmation, or independent episode replication. The name of a test
+   should not outrun what it measures.
+5. **Pre-registration prevented post-outcome rescue.** The failed construction was closed,
+   not repaired by changing parameters after seeing the result. Any alternative horizon,
+   universe, normalisation or split would be a new research question needing its own
+   lineage.
+6. **Negative results are retained as research evidence.** The purpose of this repository
+   is not to maximise the number of positive strategies. Every closed study keeps its
+   sealed contract, its immutable evidence artifact and its verdict.
+
 ## How to run (reproducible)
 
 ```powershell
 python -m venv .venv ; .\.venv\Scripts\Activate.ps1 ; pip install -r requirements.txt
 
-# --- confirmed core ---
+# --- supported core ---
 python run_analysis.py            # 30-ETF screening
 python finalize_universe.py       # lock the 17-asset universe
 python run_backtest.py            # returns + full validation
@@ -298,6 +453,8 @@ src/                              # library: engine + screening + diagnostic + d
   yields                                                                # yield-curve macro-regime premise (causal slope/tercile)
   xsmom xsmom_data xsmom_stats                                          # cross-sectional momentum (parallel study)
 research/                         # committed arc write-ups (reports + figures), per investigation
+  extensions/x01/                 # sealed X01 futures-wrapper study + immutable evidence
+  extensions/value/               # sealed Time-Series Value study + immutable evidence
 tests/                           # 101 tests (no-look-ahead + reconciliation + causality)
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
