@@ -7,12 +7,17 @@ document, and `conformance()` re-reads that document and refuses to agree with
 itself: each constant must be found in the sealed bytes.
 
     sealed prereg : research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md
-    sha256 (LF)   : bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
-    seal revision : 5812997229eafe2184fe68193856bea2fa41eeae
-    amendment     : VALUE_S1_DATA_IDENTITY_AMENDMENT_001
-    original seal : ba5814d8dad2b81f28d45a0b6df7c010ef4c052f /
-                    df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
-                    (superseded, lineage preserved - never erased)
+    sha256 (LF)   : 844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0dfb1a91a9948d1cb
+    seal revision : see SEAL_REVISION below
+    amendment     : VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002
+
+lineage, never erased - each seal is superseded, none is deleted:
+
+    original   ba5814d8dad2b81f28d45a0b6df7c010ef4c052f /
+               df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
+    _001       5812997229eafe2184fe68193856bea2fa41eeae /
+               bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
+    _002       the seal revision above / the sha256 above
 """
 import hashlib
 import io
@@ -23,14 +28,26 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
 SEALED_PREREG_RELPATH = "research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md"
-SEALED_PREREG_SHA256 = ("bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7"
-                        "b809ca67a099")
-SEAL_REVISION = "5812997229eafe2184fe68193856bea2fa41eeae"
+SEALED_PREREG_SHA256 = ("844fea84d5f1dddc7da5cbaea4ead4af4f3fe3a15b4f0cd0"
+                        "dfb1a91a9948d1cb")
+SEAL_REVISION = "PENDING_SEAL_REVISION"
 OWNER_DECISION = "SEAL TIME-SERIES VALUE S1"
-AMENDMENT_ID = "VALUE_S1_DATA_IDENTITY_AMENDMENT_001"
+
+# --- amendment lineage, oldest first. No seal is ever erased. ---------------
+AMENDMENT_ID_001 = "VALUE_S1_DATA_IDENTITY_AMENDMENT_001"
+AMENDMENT_ID_002 = "VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002"
+AMENDMENT_ID = AMENDMENT_ID_002          # the amendment this module implements
+
 ORIGINAL_SEAL_REVISION = "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f"
 ORIGINAL_SEALED_PREREG_SHA256 = ("df142f83d82996f1df87d7953c1480397e4d128c8b32"
                                  "d599e31237901b3278cf")
+AMENDMENT_001_SEAL_REVISION = "5812997229eafe2184fe68193856bea2fa41eeae"
+AMENDMENT_001_SEALED_PREREG_SHA256 = ("bc841ea80dd1afd521d8ecd2dc656b3e608396f4"
+                                      "dd6546eab9c7b809ca67a099")
+
+# --- §17 comparator identity ------------------------------------------------
+TSMOM_COMPARATOR = "CANONICAL_17_ETF_TSMOM_BASELINE"
+COMPARATOR_IS_X01_E_ARM = False
 
 # --- §2 universe and objects -----------------------------------------------
 UNIVERSE = ("SPY", "TLT", "LQD", "UUP", "FXY")
@@ -172,8 +189,26 @@ def conformance():
        has("S_f(t) = 1 / q_f(t)", "DEXUSEU, DEXUSUK"))
     ck("US CPI is the NSA series", has("`CPIAUCNS`"))
     ck("amendment 001 is recorded with its lineage",
-       has(AMENDMENT_ID, ORIGINAL_SEAL_REVISION, ORIGINAL_SEALED_PREREG_SHA256,
-           "The original seal is NOT erased"))
+       has(AMENDMENT_ID_001, ORIGINAL_SEAL_REVISION,
+           ORIGINAL_SEALED_PREREG_SHA256, "The original seal is NOT erased"))
+    ck("amendment 002 is recorded and the full lineage preserved",
+       has(AMENDMENT_ID_002, AMENDMENT_001_SEAL_REVISION,
+           AMENDMENT_001_SEALED_PREREG_SHA256,
+           "LINEAGE = original seal → AMENDMENT_001 → AMENDMENT_002"))
+    ck("the TSMOM comparator is pinned",
+       has("VALUE_TSMOM_COMPARATOR = " + TSMOM_COMPARATOR))
+    ck("comparator is the 17-ETF book, not X01's E arm",
+       has("SPY EEM EWJ XLE XLU TLT SHY LQD HYG USO UNG GLD DBA UUP FXY VNQ RWX",
+           "This is NOT X01's E arm"))
+    ck("comparator panel is pinned to the X01-sealed hash",
+       has("3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31"))
+    ck("comparator is recomputed, not read from an untracked file",
+       has("RECOMPUTED, never read from an untracked file",
+           "`output/monthly_returns.csv` is **git-ignored and carries no hash**"))
+    ck("amendment 002 asserts pre-amendment outcome blindness",
+       has("VALUE_TARGET_RETURNS_COMPUTED     = NO",
+           "VALUE_TSMOM_CORRELATION_COMPUTED  = NO",
+           "S3_AUTHORIZATION_CONSUMED         = NO"))
     ck("Sweden is the authorised two-table Fixed CPI",
        has("KPI2020M1980", "000007T9", "KPI2020M", "00000808",
            "month <= 2025-12", "month >= 2026-01"))

@@ -14,11 +14,17 @@ ACCEPTED_DESIGN_REVISION = 4c31add4cd7f927952139715206029ae70fb4e3b
                            (the bytes Aaron reviewed and accepted; the original
                            seal changed status metadata only)
 AMENDMENTS = VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (2026-09-13) — see §16.
+             VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002 (2026-09-13) — see §17.
              ORIGINAL_SEAL_REVISION = ba5814d8dad2b81f28d45a0b6df7c010ef4c052f
              ORIGINAL_SEALED_PREREG_SHA256 =
                df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
+             AMENDMENT_001_SEAL_REVISION =
+               5812997229eafe2184fe68193856bea2fa41eeae
+             AMENDMENT_001_SEALED_PREREG_SHA256 =
+               bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
+             LINEAGE = original seal → AMENDMENT_001 → AMENDMENT_002
              The original seal is NOT erased; this document supersedes it and
-             its lineage is preserved above and in §16.
+             its lineage is preserved above and in §16 and §17.
 ```
 
 **Research family:** `FINANCIAL_ASSET_TIME_SERIES_VALUE`
@@ -383,7 +389,7 @@ PURPOSE = SCREEN_FOR_COMBINATION_ELIGIBILITY      (never CONFIRM_VALUE_FACTOR)
 Three screens, all evaluated before any combination is computed:
 
 - **C1** — Object A is **not** adjudicated `MATERIALLY_ADVERSE`.
-- **C2** — dependence with the frozen TSMOM sleeve satisfies
+- **C2** — dependence with the frozen TSMOM sleeve (**§17**) satisfies
   `ρ_upper ≤ 0.40`, where `ρ_upper` is the **upper bound of the 95% interval**
   for the Pearson correlation between the two monthly net-return series,
   computed by the bootstrap in §9.1 (D8). Adjudicating on the upper bound rather
@@ -409,7 +415,8 @@ Object-A status and is never reported as evidence of a Value edge.
 ```
 
 at exactly **one** preregistered risk split (§12-D9), under comparable portfolio
-risk budgets. No weight grid. No reallocation after seeing any result.
+risk budgets. No weight grid. No reallocation after seeing any result. `TSMOM`
+is the frozen comparator identified in **§17**.
 
 ```
 L_combo >  +0.10        -> SUPPORTED_INCREMENTAL_BENEFIT
@@ -510,9 +517,9 @@ For a selected episode *e*:
 
 1. take `M(e)` = the set of calendar months belonging to *e*;
 2. **delete those calendar months from the entire paired evaluation sample** —
-   the Value sleeve series, the frozen TSMOM series, and the combined series
-   alike, so every statistic is recomputed on the *same* reduced set of common
-   months;
+   the Value sleeve series, the frozen TSMOM series (**§17**), and the
+   combined series alike, so every statistic is recomputed on the *same*
+   reduced set of common months;
 3. recompute **C1** (the §7 standalone adjudication) and **C2** (the §8
    `ρ_upper ≤ 0.40` test) on the remaining months, using the §9.1 bootstrap
    unchanged;
@@ -660,6 +667,97 @@ window are all unchanged, and the leg is usable from 2000-02, far before the
 
 **6–8. Nothing else changed.** No `D1`–`D11` value, no evaluation window, no
 signal, inference, portfolio, episode, C3 or verdict rule.
+
+```
+
+## 17. `VALUE_S1_COMPARATOR_IDENTITY_AMENDMENT_002`
+
+**Owner decision, 2026-09-13:** pin the identity and provenance of the frozen
+TSMOM comparator. A narrow specification repair. No scientific choice is
+reopened and no previously decided value changes.
+
+**1. The defect this section exists to correct.** §1, §8 (C2), §9 (FULL) and
+§11.1 all consume "the frozen TSMOM sleeve", and the sealed text never
+identified it — no universe, no construction, no module, no configuration, no
+hash. Three of the four adjudicating screens depend on that object, so a reader
+could not have reproduced `C2`, `C3` or `ΔS_combo` from the sealed bytes. The
+S3 run gate halted on exactly this, **before** any authorization was created.
+
+**2. State at the moment of this amendment, mechanically verified:**
+
+```
+VALUE_TARGET_RETURNS_COMPUTED     = NO
+VALUE_SHARPE_COMPUTED             = NO
+VALUE_TSMOM_CORRELATION_COMPUTED  = NO
+COMBINATION_OUTCOME_COMPUTED      = NO
+S3_AUTHORIZATION_CREATED          = NO
+S3_AUTHORIZATION_CONSUMED         = NO
+EVIDENCE_ARTIFACT_EXISTS          = NO
+```
+
+No Value outcome of any kind existed when this comparator was pinned, so the
+choice cannot have been informed by one.
+
+**3. The comparator, frozen:**
+
+```
+VALUE_TSMOM_COMPARATOR = CANONICAL_17_ETF_TSMOM_BASELINE
+```
+
+It is the project's already-accepted canonical multi-asset TSMOM book, frozen at
+`TSMOM_EXTENSION_RESEARCH_MAP_v2.md` §A.1 *"The mechanism as implemented
+(frozen)"*. Every element is **read from an authoritative artifact, not
+inferred**, and a call-site argument or a Python default argument is never
+treated as authority:
+
+| element | frozen value | authority |
+|---|---|---|
+| universe | the canonical 17-ETF book | `universe.py::TICKERS`; MAP_v2 §A.1 |
+| signal | mean-of-signs composite of the 1/3/6/12-month month-end returns; **sign first, mean second**; all four horizons required; `combine="mean"`; `np.sign(0)=0`; resample `ME` | `src/signals.py::signal_method_b`; **X01 §3.7** (SEALED, pinned to implementer-equality); MAP_v2 §A.1 |
+| sizing | `w = score × 0.10 / σ_60d`, clipped to ±2.0 | `src/sizing.py::target_weights`; `config.TARGET_VOL_ANNUAL`, `MAX_ASSET_WEIGHT`, `VOL_WINDOW_DAYS` |
+| aggregation | equal weight over available assets, `base_i = w_i / N_live` | `src/portfolio.py::equal_weight_aggregate`, which the module itself declares the main strategy and names the alternatives CONTROL experiments |
+| portfolio risk | `L = min(0.10 / σ_60d(base book), 3.0 / gross_base)` | `src/portfolio.py::leverage`; `config.PORT_TARGET_VOL_ANNUAL`, `PORT_VOL_WINDOW_DAYS`, `MAX_GROSS_LEVERAGE` |
+| timing | decision at month-end *t*, held through *t+1* (`shift(1)`) | `src/sizing.py::positions_from_weights`; MAP_v2 §A.1 |
+| costs | **2.0 bps** one-way per unit turnover on `Σ|Δposition|` | `src/performance.py`; `config.TRANSACTION_COST_BPS` — the same convention §5 already inherits for the Value sleeve |
+| eligibility | a return month counts only when the decision month carried all 17 weights | `run_backtest.py`, the canonical full-universe rule |
+| return basis | **NET** monthly returns | §9 compares net to net |
+| price panel | `data/close_prices_raw.csv`, SHA256 `3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31` | the identical pin carried by the **SEALED X01 contract**; verified matched on disk |
+
+The 17 instruments are exactly the union of this contract's §2 partition —
+the five valued instruments plus the twelve excluded ones:
+
+```
+SPY EEM EWJ XLE XLU TLT SHY LQD HYG USO UNG GLD DBA UUP FXY VNQ RWX
+```
+
+That the partition reproduces the book exactly is checked mechanically, and a
+mismatch is a hard error: the study and its comparator must describe one world.
+
+**4. This is NOT X01's E arm, and the distinction is deliberate.** X01's E arm
+shares this signal definition, this panel pin and this cost convention, but it
+restricts to the four commodity ETFs and **removes the portfolio-level
+volatility target and gross cap**, because those "depend on the other four
+sleeves and would inject non-commodity information into a commodity wrapper
+test". This contract needs the opposite object: §4 step 8 keeps "the existing
+portfolio volatility target and gross cap, unchanged", and §1 asks about a
+portfolio "that already runs the frozen TSMOM strategy" — the whole book.
+Reusing X01's E arm here would silently substitute a four-asset commodity
+sleeve for the incumbent portfolio.
+
+**5. The comparator is RECOMPUTED, never read from an untracked file.** Its
+authority is this frozen construction path applied to the hash-pinned panel by
+the hash-pinned canonical modules — implemented at
+[`value_comparator.py`](value_comparator.py), which passes every canonical
+argument explicitly and refuses to run if the panel or any canonical module has
+moved. `output/monthly_returns.csv` is **git-ignored and carries no hash**; it
+is a historical convenience artifact and is **NOT** the scientific authority
+here. That it agrees with the recomputation at the full precision it was written
+to is recorded as a corroborating diagnostic only.
+
+**6. Nothing else changed.** No `D1`–`D11` value, no evaluation window
+(`2014-07 → 2026-05`, `N = 143`), no source, no lag, no Value object, signal,
+staleness, portfolio, cost, episode, bootstrap, C1/C2/C3, candidacy or verdict
+rule, and no claim ceiling.
 
 ```
 ```
