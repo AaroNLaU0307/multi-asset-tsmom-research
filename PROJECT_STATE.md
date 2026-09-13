@@ -202,7 +202,7 @@ regardless of `core.autocrlf`.
 | frozen historical panel `data/close_prices_raw.csv` | `3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31` |
 
 ```
-C_A_SEAL_REVISION = __REVISION__
+C_A_SEAL_REVISION = 7706d61df8b06beccc8f81ccdb1a22fe79680590
 ```
 
 `S_0` and its sidecars stay outside git because `data/` is git-ignored for vendor
