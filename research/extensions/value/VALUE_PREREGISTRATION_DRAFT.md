@@ -1,12 +1,18 @@
-# TIME-SERIES VALUE — PREREGISTRATION **DRAFT** (UNSEALED)
+# TIME-SERIES VALUE — PREREGISTRATION (**SEALED**)
 
 ```
-VALUE_PREREG_SEALED = NO
+VALUE_PREREG_SEALED = YES
+VALUE_PREREG_SEAL_DECISION = AARON OWNER DECISION, 2026-09-13 —
+                             SEAL TIME-SERIES VALUE S1
 VALUE_FULL_PERFORMANCE_EXECUTED = NO
 TARGET_OUTCOMES_COMPUTED = NO
-STATUS = S1 DESIGN COMPLETE — D1-D11 are FROZEN as Owner decisions (§12).
-         READY_FOR_OWNER_SEAL. Nothing below has been run.
+STATUS = SEALED. The scientific content below is frozen. D1-D11 are Owner
+         decisions and no alternative threshold may be introduced after this
+         seal. Nothing below has been run.
 OWNER_DECISIONS_REMAINING = NONE
+ACCEPTED_DESIGN_REVISION = 4c31add4cd7f927952139715206029ae70fb4e3b
+                           (the bytes Aaron reviewed and accepted; this seal
+                           changes status metadata only)
 ```
 
 **Research family:** `FINANCIAL_ASSET_TIME_SERIES_VALUE`
@@ -597,9 +603,10 @@ separate Owner decision and a genuinely new question.
 ---
 
 ```
-A SEAL IS NOT AUTHORIZATION TO EXECUTE. This contract is a DRAFT. Nothing may be
-run until Aaron resolves §12 and seals it, and then separately authorizes one
-execution.
+A SEAL IS NOT AUTHORIZATION TO EXECUTE. This contract is SEALED and its
+scientific content is frozen. S2 BUILD may implement it without changing it.
+Nothing may be RUN until Aaron separately authorizes one real execution, and no
+such authorization exists.
 
-NEXT GATE = AARON — RESOLVE §12 AND SEAL, OR AMEND
+NEXT GATE = S2 BUILD — IMPLEMENT THE SEALED CONTRACT WITHOUT CHANGING IT
 ```
