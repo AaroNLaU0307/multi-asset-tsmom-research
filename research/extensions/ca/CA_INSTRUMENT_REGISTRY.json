@@ -1,0 +1,645 @@
+{
+  "artifact": "CA_INSTRUMENT_REGISTRY",
+  "role": "CA_PREREGISTRATION_DRAFT.md \u00a7Z.1 item 6 / \u00a7K instrument identity registry",
+  "status": "SEALED \u2014 bound by the C-A S1 seal of 2026-09-13T17:42:06Z",
+  "sealed_by_owner": "Aaron",
+  "c_a_seal_timestamp_utc": "2026-09-13T17:42:06Z",
+  "section_k_conformance": {
+    "requirement": "CA \u00a7K rule 1 \u2014 'The seal carries an instrument registry keyed by legal fund identity with a documented identifier chain.'",
+    "verdict": "SATISFIED",
+    "keyed_by_legal_fund_identity": "The identity key is the FIGI pair, share-class FIGI primary. \u00a7K rule 1 itself enumerates what the key must survive: 'Symbols, CUSIPs, listing venues, sponsors and names may change without changing the object.' Ticker, CUSIP, ISIN, venue, sponsor and name are therefore all disqualified as the key by \u00a7K's own text. The share-class FIGI is the only recorded identifier NOT on that mutable list: it is assigned to one share class of one legal fund entity by an accredited registration authority and is never reused or reassigned. All 17 are present and distinct.",
+    "documented_identifier_chain": "The seal-time identifier set is link 0 of the chain \u2014 its documented STARTING POINT \u2014 and \u00a7K events A, B and C append to it by 'registry mapping; record continues'. \u00a7K nowhere requires historical reconstruction of pre-seal identifier history at seal, and the prospective record has no identifier event before the seal by construction (the T4 clock starts at the seal).",
+    "each_k_mechanism_has_what_it_needs": {
+      "A ticker rename / B identifier change / C split": "identity key + registry mapping \u2014 PINNED",
+      "D successor five-condition test": "same asset class, same sleeve, same base currency, no leverage/inverse \u2014 ALL PINNED. The 'same index or documented replacement index' limb is verified at the event from external documents, which \u00a7K requires to happen 'before the successor's first scored month', not at seal.",
+      "G benchmark / methodology change": "\u00a7K states 'the only test is asset-class and sleeve membership \u2014 no judgment of how different'. Both are PINNED. The benchmark index NAME is explicitly not the test, so leaving it NOT_PINNED does not impair event G.",
+      "E / F / H / I / J": "no registry field beyond the identity key is required"
+    },
+    "why_the_not_pinned_fields_do_not_block_the_seal": {
+      "sponsor_of_record": "\u00a7K rule 1 lists sponsors as mutable; a sponsor cannot be the key.",
+      "legal_name_of_record_from_prospectus": "\u00a7K rule 1 lists names as mutable; a name cannot be the key.",
+      "benchmark_index_name": "\u00a7K event G tests asset class and sleeve, never the index name.",
+      "prior_identifier_lineage": "\u00a7K requires a chain going forward, not historical reconstruction at seal."
+    }
+  },
+  "generated_utc": "2026-09-13T17:42:06+00:00",
+  "object_count": 17,
+  "identity_principle": "Identity is the fund entity, not the symbol (CA \u00a7K rule 1). The registry is keyed by the FIGI pair. Ticker, CUSIP, listing venue and name may all change without changing the object; such a change is IDENTITY_PRESERVING under CA \u00a7K events A/B/C.",
+  "method": {
+    "sources": [
+      "OpenFIGI v3 mapping API (public, unauthenticated) \u2014 FIGI, composite FIGI, share-class FIGI, name, security type",
+      "Yahoo Finance chart meta (the project's existing ETF vendor) \u2014 vendor long name, listing venue, currency",
+      "ishares.com public product-screener JSON \u2014 CUSIP, ISIN, fund name, asset class (6 funds)",
+      "ssga.com / sectorspdrs.com / invesco.com / uscfinvestments.com / investor.vanguard.com public product pages \u2014 ISIN or CUSIP (11 funds)"
+    ],
+    "prohibited_and_not_done": [
+      "account registration",
+      "paid data purchase",
+      "bypassing access controls",
+      "strategy-outcome reasoning",
+      "instrument replacement",
+      "universe change",
+      "performance-based discretionary judgement"
+    ],
+    "validation": [
+      "ISIN check digit recomputed for all 17",
+      "CUSIP check digit recomputed for all 17",
+      "CUSIP derived from the ISIN body cross-checked against the sponsor-reported CUSIP for the 6 iShares funds",
+      "registry membership asserted equal to the canonical 17 with no others",
+      "sleeve sizes asserted 5/4/4/2/2"
+    ]
+  },
+  "not_pinned_fields": {
+    "legal_name_of_record_from_prospectus": "no prospectus-level source was reachable read-only from this environment (SEC EDGAR returned HTTP 403)",
+    "sponsor_of_record": "same; the vendor-reported names embed a sponsor label for 14 of 17 but that is a vendor attribution, not fund documentation",
+    "benchmark_index_name": "not exposed by any read-only source used here",
+    "identifier_lineage": "prior identifiers not established in this session"
+  },
+  "what_this_is_not": [
+    "not a performance record",
+    "not a data snapshot",
+    "not S_0",
+    "not S_G",
+    "not a universe change \u2014 the 17 objects are exactly those fixed by CA \u00a7B"
+  ],
+  "instruments": [
+    {
+      "canonical_ticker": "SPY",
+      "sleeve": "Equity",
+      "asset_class": "EQUITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S72SM3",
+        "composite_figi": "BBG000BDTBL9",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US78462F1030",
+        "cusip": "78462F103",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "State Street SPDR S&P 500 ETF Trust",
+        "openfigi_name": "SS SPDR S&P 500 ETF TRUST-US",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ssga.com product page"
+    },
+    {
+      "canonical_ticker": "EEM",
+      "sleeve": "Equity",
+      "asset_class": "EQUITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SK77D5",
+        "composite_figi": "BBG000M0P5L2",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US4642872349",
+        "cusip": "464287234",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "464287234"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares MSCI Emerging Markets ETF",
+        "vendor_reported_long_name": "iShares MSCI Emerging Markets ETF",
+        "openfigi_name": "ISHARES MSCI EMERGING MARKET",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Equity",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "EWJ",
+      "sleeve": "Equity",
+      "asset_class": "EQUITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S8SYN9",
+        "composite_figi": "BBG000BK38F5",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US46434G8226",
+        "cusip": "46434G822",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "46434G822"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares MSCI Japan ETF",
+        "vendor_reported_long_name": "iShares MSCI Japan ETF",
+        "openfigi_name": "ISHARES MSCI JAPAN ETF",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Equity",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "XLE",
+      "sleeve": "Equity",
+      "asset_class": "EQUITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S7T1S7",
+        "composite_figi": "BBG000BJ20S2",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US81369Y5069",
+        "cusip": "81369Y506",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "State Street Energy Select Sector SPDR ETF",
+        "openfigi_name": "SS ENERGY SELECT SECTOR",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "sectorspdrs.com / ssga.com product page"
+    },
+    {
+      "canonical_ticker": "XLU",
+      "sleeve": "Equity",
+      "asset_class": "EQUITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S7TD56",
+        "composite_figi": "BBG000BJ7G75",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US81369Y8865",
+        "cusip": "81369Y886",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "State Street Utilities Select Sector SPDR ETF",
+        "openfigi_name": "ST SR UTL SL SE SPDR ETF-USD",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "sectorspdrs.com / ssga.com product page"
+    },
+    {
+      "canonical_ticker": "TLT",
+      "sleeve": "Fixed income",
+      "asset_class": "FIXED_INCOME",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S8MLN3",
+        "composite_figi": "BBG000BJKYW3",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US4642874329",
+        "cusip": "464287432",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "464287432"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares 20+ Year Treasury Bond ETF",
+        "vendor_reported_long_name": "iShares 20+ Year Treasury Bond ETF",
+        "openfigi_name": "ISHARES 20+ YEAR TREASURY BD",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NasdaqGM",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Fixed Income",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "SHY",
+      "sleeve": "Fixed income",
+      "asset_class": "FIXED_INCOME",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SKXPR1",
+        "composite_figi": "BBG000NTFYM5",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US4642874576",
+        "cusip": "464287457",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "464287457"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares 1-3 Year Treasury Bond ETF",
+        "vendor_reported_long_name": "iShares 1-3 Year Treasury Bond ETF",
+        "openfigi_name": "ISHARES 1-3 YEAR TREASURY BO",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NasdaqGM",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Fixed Income",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "LQD",
+      "sleeve": "Fixed income",
+      "asset_class": "FIXED_INCOME",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001S60QR6",
+        "composite_figi": "BBG000BBV9N3",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US4642872422",
+        "cusip": "464287242",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "464287242"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares iBoxx $ Investment Grade Corporate Bond ETF",
+        "vendor_reported_long_name": "iShares iBoxx $ Investment Grade Corporate Bond ETF",
+        "openfigi_name": "ISHR IBX USD INVGD CB ETF-UI",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Fixed Income",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "HYG",
+      "sleeve": "Fixed income",
+      "asset_class": "FIXED_INCOME",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001ST0ZQ7",
+        "composite_figi": "BBG000R2T3H9",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US4642885135",
+        "cusip": "464288513",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "464288513"
+      },
+      "names": {
+        "sponsor_reported_fund_name": "iShares iBoxx $ High Yield Corporate Bond ETF",
+        "vendor_reported_long_name": "iShares iBoxx $ High Yield Corporate Bond ETF",
+        "openfigi_name": "ISHR IBX USD HIYLD CB ETF-UI",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": "Fixed Income",
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ishares.com product-screener JSON"
+    },
+    {
+      "canonical_ticker": "USO",
+      "sleeve": "Commodity",
+      "asset_class": "COMMODITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SQNKR0",
+        "composite_figi": "BBG000NL49J3",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US91232N2071",
+        "cusip": "91232N207",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "United States Oil Fund, LP",
+        "openfigi_name": "UNITED STATES OIL FUND LP",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "uscfinvestments.com product page"
+    },
+    {
+      "canonical_ticker": "UNG",
+      "sleeve": "Commodity",
+      "asset_class": "COMMODITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001ST67S1",
+        "composite_figi": "BBG000R695F9",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US9123184098",
+        "cusip": "912318409",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "United States Natural Gas Fund, LP",
+        "openfigi_name": "US NATURAL GAS FUND LP",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "uscfinvestments.com product page"
+    },
+    {
+      "canonical_ticker": "GLD",
+      "sleeve": "Commodity",
+      "asset_class": "COMMODITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SCPX28",
+        "composite_figi": "BBG000CRF6Q8",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US78463V1070",
+        "cusip": "78463V107",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "SPDR Gold Shares",
+        "openfigi_name": "SPDR GOLD SHARES",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ssga.com product page"
+    },
+    {
+      "canonical_ticker": "DBA",
+      "sleeve": "Commodity",
+      "asset_class": "COMMODITY",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SSDLZ6",
+        "composite_figi": "BBG000QNKPC9",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US46140H1068",
+        "cusip": "46140H106",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "Invesco DB Agriculture Fund",
+        "openfigi_name": "INVESCO DB AGRICULTURE FUND",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "invesco.com product-detail page"
+    },
+    {
+      "canonical_ticker": "UUP",
+      "sleeve": "FX",
+      "asset_class": "FX",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SRWF17",
+        "composite_figi": "BBG000Q7R318",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US46141D2036",
+        "cusip": "46141D203",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "Invesco DB US Dollar Index Bullish Fund",
+        "openfigi_name": "INVESCO DB US DOLLAR INDEX B",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "invesco.com product-detail page"
+    },
+    {
+      "canonical_ticker": "FXY",
+      "sleeve": "FX",
+      "asset_class": "FX",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SMC6F5",
+        "composite_figi": "BBG000D25FL8",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US46138W1071",
+        "cusip": "46138W107",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "Invesco CurrencyShares Japanese Yen Trust",
+        "openfigi_name": "INVESCO CURRENCYSHARES JAPAN",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "invesco.com product-detail page"
+    },
+    {
+      "canonical_ticker": "VNQ",
+      "sleeve": "Real estate",
+      "asset_class": "REAL_ESTATE",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SMD2X3",
+        "composite_figi": "BBG000Q89NG6",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US9229085538",
+        "cusip": "922908553",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": true,
+        "sponsor_reported_cusip": "922908553"
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "Vanguard Real Estate Index Fund ETF Shares",
+        "openfigi_name": "VANGUARD REAL ESTATE ETF",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "investor.vanguard.com profile API (CUSIP); ISIN derived from CUSIP and check-digit validated"
+    },
+    {
+      "canonical_ticker": "RWX",
+      "sleeve": "Real estate",
+      "asset_class": "REAL_ESTATE",
+      "identity_key": {
+        "basis": "FIGI pair \u2014 share-class FIGI is the primary anchor",
+        "share_class_figi": "BBG001SRXRL8",
+        "composite_figi": "BBG000Q8TD76",
+        "why_not_cusip": "CA \u00a7K records that CUSIPs change on reverse splits; a CUSIP is a recorded identifier at pin time, never the identity key."
+      },
+      "identifiers_at_pin_time": {
+        "isin": "US78463X8636",
+        "cusip": "78463X863",
+        "isin_check_digit_valid": true,
+        "cusip_check_digit_valid": true,
+        "cusip_agrees_with_sponsor_reported": null,
+        "sponsor_reported_cusip": null
+      },
+      "names": {
+        "sponsor_reported_fund_name": null,
+        "vendor_reported_long_name": "State Street SPDR Dow Jones International Real Estate ETF",
+        "openfigi_name": "STATE STREET SPDR DOW JONES",
+        "legal_name_of_record_from_prospectus": "NOT_PINNED"
+      },
+      "sponsor_of_record": "NOT_PINNED",
+      "listing_venue_at_pin_time": "NYSEArca",
+      "base_currency": "USD",
+      "leveraged_or_inverse": "NO",
+      "leveraged_or_inverse_basis": "no leverage/inverse descriptor present in any recorded name at pin time",
+      "benchmark_index_name": "NOT_PINNED",
+      "sponsor_reported_asset_class": null,
+      "identifier_lineage": "NOT_PINNED \u2014 prior identifiers were not established in this session. Under CA \u00a7K events A/B/C an identifier or name change is IDENTITY_PRESERVING and does not change the object.",
+      "identifier_source": "ssga.com product page"
+    }
+  ]
+}

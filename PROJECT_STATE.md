@@ -125,6 +125,92 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## C-A — canonical TSMOM prospective confirmation — S1 SEALED 2026-09-13
+
+```
+RESEARCH_QUESTION   = Does the canonical 17-ETF multi-asset TSMOM strategy's expected
+                      raw net Sharpe (rf = 0, 2 bps) remain positive and economically
+                      material -- at least +0.30 -- over a genuinely prospective window?
+RESEARCH_ID · LANE  = TSMOM-CA-001 · FULL
+S0 FRAME            = COMPLETE. Fable frame -> Opus outcome-blind feasibility -> Astra
+                      xHigh challenge -> Fable prospective design -> bounded repair ->
+                      Fable Owner-decision advisory -> independent Astra OD-1/OD-2
+                      advisory -> Aaron's Owner decisions.
+S1 DESIGN+SEAL      = COMPLETE. **SEALED 2026-09-13T17:42:06Z** under Aaron's Owner
+                      authorization `SEAL C-A` (OD-8, ops/OWNER_DECISION_RECORD_PHASE_B.md
+                      §6E). Sealed contract at
+                      research/extensions/ca/CA_PREREGISTRATION_DRAFT.md (historical
+                      _DRAFT filename retained to avoid reference churn, exactly as the
+                      Value contract did; the document reads SEALED).
+                      The seal changed STATUS METADATA ONLY: §A-§Z are byte-identical to
+                      the pre-seal bytes Aaron accepted.
+OWNER_DECISIONS     = OD-1 materiality +0.30 / -0.20, strict crossing ·
+                      OD-2 N_scored = 120, ONE terminal reveal, no interim look, no
+                      adverse oracle, no automatic extension ·
+                      OD-3 FM-1 complementary only ·
+                      OD-4 ALL_17_REQUIRED ·
+                      OD-5 ONE central 95% stationary-bootstrap percentile interval,
+                      block length 12, 10,000 replicates ·
+                      OD-6 FM-1 rf = FRED DGS3MO, <= 7 calendar days, Y/100/12, no
+                      fallback · OD-7 FM-1 sign-vs-zero only, no materiality floors ·
+                      OD-8 SEAL C-A.
+CB REPAIRS SEALED IN = CB-1 first scored month requires a post-PROSPECTIVE_START decision ·
+                      CB-2 S_0 and S_G distinct · CB-3 S1/S2 gates separate ·
+                      CB-4 C-D spec is a DRAFT only.
+PC-1                = CLOSED from existing §J authority. The S_0-vs-frozen overlap is
+                      classified MECHANICAL_CORRECTION (no action) under the §J
+                      split/dividend back-adjustment row, on that row's own declared
+                      test: max abs delta position 1.348102e-04 against 0.01, and 0 sign
+                      flips, over 402 decision months and 6,477 position cells, computed
+                      strictly inside the frozen window ending 2026-06-12.
+                      NO new daily-return tolerance was created.
+S2 BUILD            = NOT STARTED and NOT AUTHORIZED.
+S3 RUN              = NOT AUTHORIZED. TARGET_RUN_AUTHORIZED = NO. No record exists in
+                      ops/EXECUTION_AUTHORIZATIONS.md for C-A, and a seal is not
+                      permission to execute.
+PROSPECTIVE STATE   = T4_SEAL_EXISTS = YES, but the scoring stream has NOT started.
+                      PROSPECTIVE_START = max(SEAL_TIMESTAMP, PIPELINE_GO_LIVE) and
+                      PIPELINE_GO_LIVE does not exist. S_G_CREATED = NO.
+                      N_scored = 0. FIRST_ELIGIBLE_SCORED_PERIOD = NOT YET DETERMINED.
+                      No accrued pre-go-live month may ever be retroactively scored.
+TARGET_OUTCOMES     = NONE COMPUTED, NONE REVEALED.
+SB-3                = OPEN -- blocks C_D_PASS ONLY. It never blocked the C-A S1 seal.
+C-B                 = PARKED.
+NEXT_OWNER_DECISION = S2 BUILD AUTHORIZATION for C-A (and, separately, C-D
+                      implementation authorization). Both are distinct gates that this
+                      seal did not consume.
+```
+
+### C-A sealed identity
+
+Recorded per the X01 / Value convention: the sealed bytes and the seal revision.
+All artifacts are stored LF (`.gitattributes` `eol=lf`), so each SHA-256 below is
+the working-copy **and** the git-blob identity and reproduces from any checkout
+regardless of `core.autocrlf`.
+
+| artifact | SHA-256 |
+|---|---|
+| sealed preregistration `research/extensions/ca/CA_PREREGISTRATION_DRAFT.md` | `9a41d7cf2055b5212d8517fa11fbde08218e2b6d2b92e39cbd2081ee9eea882b` |
+| Owner Decision Record `ops/OWNER_DECISION_RECORD_PHASE_B.md` | `cc6a297abbb06b1e9711cd311d933cd52523784cba3899f2251b7e22c46d5603` |
+| C-D verification spec at seal time `research/extensions/cd/CD_VERIFICATION_SPECIFICATION_DRAFT.md` | `c8db66dfe0dd064d4f4c6af4d574a840bf6f5180f3528748152dad7101ad1a5c` |
+| instrument registry `research/extensions/ca/CA_INSTRUMENT_REGISTRY.json` | `8dd261fd1b5487af023f07ba230c4cdc8e43b14197f1f09d9e086cb20d26ed65` |
+| snapshot registry `research/extensions/ca/CA_SNAPSHOT_REGISTRY.md` | `3a563aee06b145672a65e77cd0b25697406b7fcff66e46d1c410ff3e17c5b933` |
+| validator `research/extensions/ca/ca_prereg_validate.py` | `95b9ade8c02caa5733031e30b9ac47fbbbcc5ceca428efda59bd8b5cfb8c9f8f` |
+| validator `research/extensions/ca/ca_synthetic_reachability.py` | `c7d996cc91aee2b69033c35578c7bc4d97f71693242a56be6b7a42629ba6f81a` |
+| builder `research/extensions/ca/ca_instrument_registry_build.py` | `25872777696f06fc2221b6c35fe2e6ea3e90d33df828ac52ae83ee81dd3c36b7` |
+| `S_0` `data/prospective/S0_20260913T165624Z.csv` (git-ignored; 3,323,945 bytes; acquired 2026-09-13T16:56:24Z–16:57:01Z; 1993-01-29 → 2026-09-11; 30/30 tickers) | `c4a21dc86038f9f0d06e32a267810b46cb39d9dd3549c35ef3329c87f884d6fb` |
+| frozen historical panel `data/close_prices_raw.csv` | `3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31` |
+
+```
+C_A_SEAL_REVISION = __REVISION__
+```
+
+`S_0` and its sidecars stay outside git because `data/` is git-ignored for vendor
+licensing; their exact path, SHA-256, byte size and acquisition identity are pinned
+here in tracked sealed state, which is what makes them durable.
+
+---
+
 ## Time-Series Value — CLOSED 2026-09-13
 
 ```
