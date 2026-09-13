@@ -36,3 +36,25 @@ qros-state.yaml text eol=lf
 *.json text eol=lf
 *.yaml text eol=lf
 *.yml  text eol=lf
+
+# The three IMMUTABLE Time-Series Value run artifacts are the one exception to
+# `*.json text eol=lf` above, and the exception is deliberate.
+#
+# Their authoritative SHA256s were computed from the bytes the real S3 run
+# actually produced and that Aaron accepted, and those bytes carry CRLF (the
+# emitter wrote them with platform line endings). Those hashes are cited by the
+# final Owner verdict in PROJECT_STATE.md, by the provenance correction sidecar,
+# and by the knowledge-base cards. Under `text eol=lf` git stored an LF-
+# normalised blob, so the committed bytes were NOT the hashed bytes and a fresh
+# checkout could not reproduce them without the right local core.autocrlf.
+#
+# `-text` disables all EOL conversion for exactly these paths, so the blob holds
+# the authoritative bytes verbatim and any checkout materialises them verbatim,
+# independent of the user's core.autocrlf. The files themselves are NOT edited:
+# re-indexing changes how git stores them, never their contents. Normalising
+# them instead would have silently invalidated every recorded hash.
+#
+# Scoped to these three paths only. The repo-wide JSON policy is unchanged.
+research/extensions/value/VALUE_EVIDENCE.json -text
+research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json -text
+research/extensions/value/VALUE_S3_AUTHORIZATION.json -text
