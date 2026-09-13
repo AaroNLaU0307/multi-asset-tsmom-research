@@ -29,7 +29,7 @@ each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
 > zero) · a drawdown diagnostic · four overlays not promoted · a parallel cross-sectional study (XSMOM, falsified)
-> · 101 passing tests, CI-verified · strict
+> · a CI-verified test suite · strict
 > no-look-ahead, reconciled at every step.
 
 ## TL;DR (60 seconds)
@@ -45,7 +45,8 @@ each case.
   +0.42-correlated with TSMOM (no diversification), 0/5 universes in the FDR-controlled map.
 - **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
   control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
-- **101 tests, CI-verified** on every push (badge above) — not a self-reported count.
+- **CI-verified test suite** run on every push (badge above) — not a self-reported count.
+  Three legacy XSMOM tests currently fail on pandas API drift; see *Validation status* in §2.
 - **Two sealed extension studies, both closed under preregistration** — the X01 futures-wrapper
   study (`INSUFFICIENT_EVIDENCE`) and the Time-Series Value sleeve (standalone `MATERIALLY_ADVERSE`,
   diversification candidacy failed, `not_promoted`). Both ran exactly one authorized execution
@@ -155,10 +156,18 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
   pre-registered variants. In practice all four overlays failed earlier, at the premise gate, so no
   P&L was ever fit.
 
-**101 passing tests** cover the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
+**The test suite** covers the fragile pieces (signal/sizing/portfolio/returns no-look-ahead,
 attribution reconciliation, daily↔monthly reconciliation, regime/premise causality, the
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
+
+**Validation status.** The checks belonging to the recently closed Time-Series Value
+lineage are green — sealed-contract conformance, data provenance, the synthetic
+end-to-end rehearsal and its own suite all pass. Three tests in
+`tests/test_xsmom_universes.py` currently fail in this environment on pandas API drift;
+they reproduce unchanged at commit `c63114a0` and predate the Value work, so they are a
+library-compatibility issue rather than a research finding. XSMOM's recorded status
+(`falsified`) rests on its published results, not on these tests. Not repaired here.
 
 ## 3. The research arc — one diagnostic, four overlays not promoted, one parallel study
 
@@ -434,7 +443,7 @@ python run_yield_premise.py               # yield-curve slope premise, 0/6 (not 
 python run_xsmom.py                        # XSMOM Phase 1 head-to-head, Sharpe 0.28 (falsified)
 python run_xsmom_universes.py             # XSMOM Phase 2 map, 0/5 (falsified)
 
-python -m pytest -q                       # 101 tests
+python -m pytest -q                       # full test suite
 ```
 
 First core run downloads daily ETF data from Yahoo Finance and caches it to `data/`
@@ -458,7 +467,7 @@ src/                              # library: engine + screening + diagnostic + d
 research/                         # committed arc write-ups (reports + figures), per investigation
   extensions/x01/                 # sealed X01 futures-wrapper study + immutable evidence
   extensions/value/               # sealed Time-Series Value study + immutable evidence
-tests/                           # 101 tests (no-look-ahead + reconciliation + causality)
+tests/                           # no-look-ahead + reconciliation + causality
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 ```
