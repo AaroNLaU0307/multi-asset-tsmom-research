@@ -260,6 +260,80 @@ def go_live(authorization, *, note: str = "") -> dict:
 
 
 # --------------------------------------------------------------------------- #
+# S3 operating cycle — preflight, scheduling, monthly cycle
+# --------------------------------------------------------------------------- #
+SNAPSHOT_LAG_BDAYS = K.SNAPSHOT_LAG_BUSINESS_DAYS
+
+
+def next_scheduled_event(now=None) -> dict:
+    """The next operational event. Pure scheduling; executes nothing."""
+    st = read_state()
+    if st is None:
+        return {"event": "NOT_LIVE"}
+    now = pd.Timestamp(now or datetime.now(timezone.utc)).tz_localize(None)         if pd.Timestamp(now or datetime.now(timezone.utc)).tz is None         else pd.Timestamp(now or datetime.now(timezone.utc)).tz_convert(None)
+    decision = pd.Timestamp(st["first_eligible_decision_month_end_scheduled"])
+    # each cycle: decision month-end, then SNAPSHOT_LAG business days to acquire
+    while decision + pd.offsets.BDay(SNAPSHOT_LAG_BDAYS) < now:
+        nxt = decision + pd.offsets.MonthEnd(1)
+        decision = nxt if nxt.weekday() < 5 else nxt - pd.offsets.BDay(1)
+    snapshot_due = decision + pd.offsets.BDay(SNAPSHOT_LAG_BDAYS)
+    holding = decision + pd.offsets.MonthBegin(1)
+    return {
+        "event": "ACQUIRE_SNAPSHOT_AND_LOCK_POSITION",
+        "decision_month_end": str(decision.date()),
+        "snapshot_due_utc_date": str(snapshot_due.date()),
+        "holding_month": "%04d-%02d" % (holding.year, holding.month),
+        "days_until_snapshot_due": int((snapshot_due.normalize() - now.normalize()).days),
+        "due_now": bool(now >= snapshot_due),
+    }
+
+
+def preflight() -> dict:
+    """Every run-safety condition. Returns PASS or HOLD with reasons. Reads only."""
+    holds = []
+    st = read_state()
+    if st is None:
+        holds.append("pipeline is not live")
+    sd = ca_blind.default_store_dir()
+    if not ca_blind.is_initialized(sd):
+        holds.append("protected store not initialized")
+    else:
+        try:
+            ca_blind.unlock_store(sd)          # key present, readable, fingerprint matches
+        except Exception as exc:  # noqa: BLE001
+            holds.append("blind store: %s" % type(exc).__name__)
+    try:
+        ca_blind.require_off_machine_backup(sd)
+    except ca_blind.OperationalHold:
+        holds.append("no verified OFF-MACHINE key backup")
+    if not K.runtime_matches():
+        holds.append("runtime does not match the pin")
+    if K.sha256_file(K.SEALED_PREREG) != K.SEALED_PREREG_SHA256:
+        holds.append("sealed preregistration hash changed")
+    if not ca_store.verify_frozen_panel():
+        holds.append("frozen historical panel altered")
+    return {"status": "HOLD" if holds else "PASS", "hold_reasons": holds}
+
+
+def monthly_cycle(now=None, *, dry_run: bool = True) -> dict:
+    """One S3 operating cycle. REFUSES on any preflight HOLD, and refuses to run
+    a cycle before its actual eligible time — no early execution, ever."""
+    pf = preflight()
+    if pf["status"] == "HOLD":
+        raise ca_blind.OperationalHold(
+            "OPERATIONAL_HOLD — no protected record written. Reasons: %s"
+            % "; ".join(pf["hold_reasons"]))
+    ev = next_scheduled_event(now)
+    if not ev.get("due_now"):
+        return {"action": "WAITING", "next_event": ev,
+                "note": "the cycle is not due; future dates are never executed early"}
+    if dry_run:
+        return {"action": "DUE_BUT_DRY_RUN", "next_event": ev}
+    raise NotImplementedError(
+        "live monthly execution is enabled only when the cycle is genuinely due")
+
+
+# --------------------------------------------------------------------------- #
 # Operator-safe status — sealed §T.2 only
 # --------------------------------------------------------------------------- #
 def status() -> dict:

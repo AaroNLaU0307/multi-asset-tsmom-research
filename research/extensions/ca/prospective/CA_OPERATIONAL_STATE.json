@@ -14,6 +14,12 @@
   "first_eligible_decision_month_end_scheduled": "2026-09-30",
   "first_eligible_rule": "the last TRADING day of the decision month, strictly after PROSPECTIVE_START; the exact date is confirmed from that month's snapshot and may move if it is an exchange holiday",
   "first_eligible_scored_month": "2026-10",
+  "first_protected_record_prerequisite": {
+    "currently_satisfied": false,
+    "effect": "the pipeline stays LIVE but writes NO protected position until resolved",
+    "enforced_by": "ca_blind.require_off_machine_backup via ca_pipeline.preflight; ca_pipeline.monthly_cycle raises OperationalHold and writes nothing",
+    "requires_off_machine_backup_verified": true
+  },
   "forward_boundary": "2026-09-11",
   "frozen_panel": {
     "path": "data/close_prices_raw.csv",
@@ -25,6 +31,46 @@
     "sha256": "8dd261fd1b5487af023f07ba230c4cdc8e43b14197f1f09d9e086cb20d26ed65",
     "status": "SEALED \u2014 bound by the C-A S1 seal of 2026-09-13T17:42:06Z"
   },
+  "key_backup": {
+    "key_fingerprint_sha256": "9c6d2c48dce7fa1a5c22844b5ebcbb1e8954c7fb456a4f9d0eddec4fae2f6d5c",
+    "off_machine_backup": {
+      "device_class": "NONE",
+      "inspection": {
+        "cloud_sync_present_but_excluded": [
+          "OneDrive"
+        ],
+        "data_volumes": [
+          "C:"
+        ],
+        "disk": "NVMe Disk 0 (system disk)",
+        "mapped_shares": 0,
+        "network_drives": 0,
+        "physical_disks": 1,
+        "removable_drives": 0
+      },
+      "minimum_owner_action": "attach an already-owned removable/USB device, a second physical disk, or a NAS / other reachable machine; OR make an explicit Owner decision to permit a named cloud-sync destination. Then re-run the backup and restore test.",
+      "reason": "no separate failure domain exists on this machine: one physical disk (NVMe Disk 0), one data volume (C:), no removable media, no network drives, no mapped shares. OneDrive is present but is a cloud-sync destination and is excluded without a separate Owner decision.",
+      "status": "HOLD \u2014 NO ACCEPTABLE EXISTING DESTINATION",
+      "verified": false
+    },
+    "policy": [
+      "the off-machine backup must live in a SEPARATE failure domain from the live key",
+      "losing the only key makes every protected record permanently unrecoverable",
+      "the key is never committed, never logged, never printed, never emailed",
+      "restoration must verify THIS fingerprint; restoring a different key is forbidden",
+      "no cloud-sync destination may be used without a separate Owner decision"
+    ],
+    "restore_mechanism_validated": true,
+    "restore_test": "PASS against the same-machine backup: copied to an isolated recovery location, fingerprint verified, synthetic AES-GCM envelope decrypted. The live key was not modified. This validates the MECHANISM, not an off-machine disaster-recovery path.",
+    "same_machine_backup": {
+      "device_class": "SAME_PHYSICAL_DISK",
+      "fingerprint_match": true,
+      "limitation": "same machine and same physical disk as the live key; protects against accidental deletion or corruption of the store, NOT against disk or machine loss",
+      "location_label": "%LOCALAPPDATA%/ca_prospective_key_backup",
+      "status": "PRESENT_AND_VERIFIED"
+    }
+  },
+  "monitoring_entry_point": "research/extensions/ca/prospective/ca_monitor.py",
   "n_scored": 0,
   "owner_authorization": {
     "authorization_id": "CA-GOLIVE-0001",
@@ -56,6 +102,7 @@
     "pandas": "2.3.3",
     "python": "3.13.14"
   },
+  "s3_operational_status": "HOLD_BEFORE_FIRST_PROTECTED_RECORD",
   "s_0": {
     "path": "data/prospective/S0_20260913T165624Z.csv",
     "sha256": "c4a21dc86038f9f0d06e32a267810b46cb39d9dd3549c35ef3329c87f884d6fb"

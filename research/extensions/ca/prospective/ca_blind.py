@@ -98,6 +98,10 @@ class ProtectedStoreHold(Exception):
     """HARD HOLD: key missing, unreadable, or its fingerprint changed."""
 
 
+class OperationalHold(Exception):
+    """Run-safety HOLD. The pipeline refuses to write a protected record."""
+
+
 class CapabilityRequired(Exception):
     """Raised when protected content is requested without an issued capability."""
 
@@ -481,6 +485,98 @@ def verify_backup(store_dir: str | None = None, backup_dir: str | None = None) -
         return out
     out["fingerprint_match"] = (got == state["key_fingerprint_sha256"])
     out["permissions"] = permissions_report(dest)
+    return out
+
+
+# --------------------------------------------------------------------------- #
+# Off-machine key backup — a RUN-SAFETY PREREQUISITE, not a scientific rule
+# --------------------------------------------------------------------------- #
+OFF_MACHINE_STATE = "off_machine_backup.json"
+
+
+def off_machine_state_path(store_dir: str | None = None) -> str:
+    return os.path.join(assert_outside_repo(store_dir or default_store_dir(),
+                                            "protected store"), OFF_MACHINE_STATE)
+
+
+def record_off_machine_backup(store_dir: str | None = None, *, verified: bool,
+                              device_class: str, device_id: str, location_label: str,
+                              restore_test: str, reason: str = "", note: str = "") -> dict:
+    """Record NON-SECRET off-machine backup state. Never records key material."""
+    sd = assert_outside_repo(store_dir or default_store_dir(), "protected store")
+    st = store_state(sd)
+    if st is None:
+        raise ProtectedStoreNotInitialized("REFUSED: store %s is not initialized" % sd)
+    rec = {
+        "schema": "CA_OFF_MACHINE_BACKUP_V1",
+        "verified": bool(verified),
+        "verified_utc": datetime.now(timezone.utc).isoformat(timespec="seconds") if verified else None,
+        "checked_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "key_fingerprint_sha256": st["key_fingerprint_sha256"],   # NON-SECRET
+        "device_class": device_class,        # e.g. REMOVABLE_USB | SECOND_PHYSICAL_DISK | NAS | OTHER_MACHINE | NONE
+        "device_id": device_id,              # stable abstract identifier, never a secret
+        "location_label": location_label,    # abstract label, not necessarily a full path
+        "restore_test": restore_test,        # PASS | NOT_RUN | FAIL
+        "reason": reason,
+        "note": note,
+        "policy": [
+            "the off-machine backup must live in a SEPARATE failure domain from the live key",
+            "losing the only key makes every protected record permanently unrecoverable",
+            "the key is never committed, never logged, never printed, never emailed",
+            "restoration must verify THIS fingerprint; restoring a different key is forbidden",
+            "no cloud-sync destination may be used without a separate Owner decision",
+        ],
+    }
+    with io.open(off_machine_state_path(sd), "w",
+                 encoding="utf-8", newline="\n") as fh:
+        json.dump(rec, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+    _harden_permissions(off_machine_state_path(sd))
+    return rec
+
+
+def off_machine_backup_status(store_dir: str | None = None) -> dict:
+    p = off_machine_state_path(store_dir)
+    if not os.path.exists(p):
+        return {"verified": False, "reason": "no off-machine backup has been recorded",
+                "device_class": "NONE", "restore_test": "NOT_RUN"}
+    with io.open(p, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
+def require_off_machine_backup(store_dir: str | None = None) -> dict:
+    """HARD PREREQUISITE before any protected prospective record may be written."""
+    st = off_machine_backup_status(store_dir)
+    if not st.get("verified"):
+        raise OperationalHold(
+            "OPERATIONAL_HOLD: no verified OFF-MACHINE key backup. A backup in the same "
+            "failure domain as the live key is not disaster recovery. No protected "
+            "prospective record may be written until an off-machine backup is recorded "
+            "and verified against the key fingerprint. Reason: %s"
+            % st.get("reason", "not recorded"))
+    return st
+
+
+def restore_test_from_backup(backup_file: str, expected_fingerprint: str,
+                             recovery_dir: str) -> dict:
+    """Copy a backup into an ISOLATED location, verify its fingerprint, and prove a
+    synthetic envelope sealed under that key identity decrypts.
+
+    NEVER touches the live key and NEVER decrypts a real prospective outcome.
+    """
+    rd = assert_outside_repo(recovery_dir, "isolated recovery directory")
+    os.makedirs(rd, exist_ok=True)
+    dest = os.path.join(rd, "restored.key")
+    with io.open(backup_file, "rb") as src, io.open(dest, "wb") as dst:
+        dst.write(src.read())
+    key = base64.b64decode(io.open(dest, "rb").read())
+    fp = fingerprint(key)
+    out = {"restored_to": rd, "fingerprint_match": fp == expected_fingerprint,
+           "synthetic_roundtrip": False}
+    if out["fingerprint_match"]:
+        env = _seal(key, b'{"synthetic":"restore-test"}', {"record_type": "RESTORE_TEST"})
+        cap = MachineCapability("SYNTHETIC_TEST", _token=_ISSUE_TOKEN, _key=key)
+        out["synthetic_roundtrip"] = open_envelope(env, cap) == b'{"synthetic":"restore-test"}'
     return out
 
 
