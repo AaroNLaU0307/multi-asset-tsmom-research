@@ -260,6 +260,18 @@ MAINTENANCE_ITEM    = NON-SCIENTIFIC, OPEN. value_orchestrator.py emitted
                       a documentation closure, and under no circumstances may it
                       trigger another run, authorization, evidence regeneration or
                       recomputation.
+MAINTENANCE_ITEM_2  = NON-SCIENTIFIC, OPEN. The Value run artifacts were written
+                      with platform line endings, so on disk they are CRLF while
+                      git stores LF (.gitattributes covers *.md/*.csv/*.py, not
+                      *.json; core.autocrlf = true). The recorded SHA256s are of
+                      the WORKING-COPY bytes and reproduce on a machine with
+                      autocrlf = true, but NOT from the blob bytes directly. X01
+                      differs: X01_EVIDENCE.json is LF both on disk and in the
+                      blob. The artifacts were deliberately NOT rewritten — the
+                      Owner decision forbids editing them, and normalising them
+                      now would change the very hashes this record, the sidecar
+                      and the KB cards all cite. Recorded so any future verifier
+                      knows which bytes the hashes refer to.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.
