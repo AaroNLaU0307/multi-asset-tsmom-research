@@ -133,9 +133,14 @@ RESEARCH_QUESTION   = Does fundamental cheapness relative to an asset's own prio
                       sleeve built on it add anything to the frozen TSMOM book?
 FAMILY · ANCHOR     = FINANCIAL_ASSET_TIME_SERIES_VALUE · EXPANDING_OWN_HISTORY
 S0 FRAME            = COMPLETE
-S1 DESIGN+SEAL      = IN_PROGRESS — draft at
+S1 DESIGN+SEAL      = IN_PROGRESS, design COMPLETE. Draft at
                       research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md,
-                      NOT sealed. 11 Owner decisions (D1-D11) open in its §12.
+                      READY_FOR_OWNER_SEAL but NOT sealed.
+                      D1-D11 are FROZEN as Owner decisions;
+                      OWNER_DECISIONS_REMAINING = NONE.
+EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
+                      2004-07 + 120-month warm-up) binds the start; the ETF price
+                      panel, which ends 2026-06-12, binds the end.
 S2 BUILD            = NOT_STARTED
 UNIVERSE            = SPY, TLT, LQD, UUP, FXY (five instruments, four objects:
                       equity / duration / public corporate credit / FX real)
@@ -144,8 +149,10 @@ CREDIT_OBJECT       = BAA10Y, LQD only; HYG REMOVED. Explicit redefinition, froz
 DATA                = VALUE_DATA_PIT_READINESS = PASS. All legs acquired from
                       current official sources and pinned by sha256 in
                       VALUE_DATA_INVENTORY.json.
-EVALUATION_END      = binding constraint 2026-07 (earliest CPI last-observation).
-                      NOT forced to 2025-12.
+SHILLER_VINTAGE     = RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATION.
+                      The 3-month publication lag fixes release timing only and
+                      does NOT cure historical revision; no positive result may be
+                      called strict vintage-PIT confirmation.
 TARGET_OUTCOMES     = NONE COMPUTED. No Value signal, no Sharpe, no TSMOM
                       correlation, no combination result, no backtest.
 NEXT_OWNER_DECISION = resolve §12 D1-D11, then seal or amend.

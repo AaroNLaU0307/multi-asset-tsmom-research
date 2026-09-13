@@ -137,6 +137,38 @@ ck("and the same path can equally end NOT_ESTABLISHED",
    combo(-0.02, 0.09) == "INCREMENTAL_BENEFIT_NOT_ESTABLISHED")
 
 print()
+print("== 7. the six required reachability flags ==")
+flags = {
+    "PREMISE_PASS_REACHABLE":
+        candidacy("UNRESOLVED_EDGE", 0.25, True)[0],
+    "PREMISE_FAIL_REACHABLE":
+        (not candidacy("MATERIALLY_ADVERSE", 0.10, True)[0]
+         and not candidacy("UNRESOLVED_EDGE", 0.65, True)[0]
+         and not candidacy("UNRESOLVED_EDGE", 0.25, False)[0]),
+    "UNRESOLVED_EDGE_CAN_QUALIFY":
+        standalone(-0.10, 0.12) == "UNRESOLVED_EDGE"
+        and candidacy("UNRESOLVED_EDGE", 0.30, True)[0],
+    "FULL_SUPPORTED_REACHABLE":
+        combo(0.15, 0.40) == "SUPPORTED_INCREMENTAL_BENEFIT",
+    "FULL_NON_SUPPORTED_REACHABLE":
+        combo(-0.05, 0.20) == "INCREMENTAL_BENEFIT_NOT_ESTABLISHED",
+    "FULL_ADVERSE_REACHABLE":
+        combo(-0.40, -0.05) == "INCREMENTAL_BENEFIT_ADVERSE",
+}
+for k, v in flags.items():
+    ck(k, v, "YES" if v else "NO")
+
+print()
+print("== 8. frozen boundary-touch treatment is predetermined ==")
+ck("L_V == +E exactly -> UNRESOLVED_EDGE", standalone(E, 0.9) == "UNRESOLVED_EDGE")
+ck("U_V == -F exactly -> UNRESOLVED_EDGE", standalone(-0.9, -F) == "UNRESOLVED_EDGE")
+ck("L_combo == +delta exactly -> NOT_ESTABLISHED",
+   combo(DELTA, 0.5) == "INCREMENTAL_BENEFIT_NOT_ESTABLISHED")
+ck("U_combo == 0 exactly -> NOT_ESTABLISHED",
+   combo(-0.5, 0.0) == "INCREMENTAL_BENEFIT_NOT_ESTABLISHED")
+ck("rho_upper == rho_max exactly PASSES C2", 0.40 <= RHO_MAX)
+
+print()
 print("BRANCH_REACHABILITY =", "PASS" if ok else "FAIL")
 print("VALUE_TARGET_RETURNS_COMPUTED = NO")
 print("TARGET_BACKTEST_RUN = NO")
