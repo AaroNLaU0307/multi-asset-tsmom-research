@@ -139,11 +139,15 @@ S1 DESIGN+SEAL      = COMPLETE. SEALED 2026-09-13 under Aaron's Owner decision
                       (historical _DRAFT filename retained to avoid reference
                       churn; the document reads SEALED).
                       sealed sha256
-                      df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
-                      at seal revision ba5814d8dad2b81f28d45a0b6df7c010ef4c052f.
-                      D1-D11 frozen; OWNER_DECISIONS_REMAINING = NONE.
-S2 BUILD            = READY_TO_START — implement the sealed contract without
-                      changing it. Not started.
+                      bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
+                      at seal revision 5812997229eafe2184fe68193856bea2fa41eeae,
+                      carrying VALUE_S1_DATA_IDENTITY_AMENDMENT_001 (Sweden
+                      two-table Fixed CPI; EUR coverage fact). The original seal
+                      df142f83...b3278cf at ba5814d8... is SUPERSEDED, not
+                      erased. D1-D11 frozen; OWNER_DECISIONS_REMAINING = NONE.
+S2 BUILD            = COMPLETE — implementation, tests and all gates green.
+                      UUP and FXY both 143/143 over the sealed window. No target
+                      outcome computed; the S3 entry point refuses.
 EVALUATION_WINDOW   = 2014-07 .. 2026-05, N = 143 months. TLT (DFII20 from
                       2004-07 + 120-month warm-up) binds the start; the ETF price
                       panel, which ends 2026-06-12, binds the end.

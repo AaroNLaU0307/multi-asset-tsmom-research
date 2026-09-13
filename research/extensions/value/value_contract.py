@@ -7,8 +7,12 @@ document, and `conformance()` re-reads that document and refuses to agree with
 itself: each constant must be found in the sealed bytes.
 
     sealed prereg : research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md
-    sha256 (LF)   : df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
-    seal revision : ba5814d8dad2b81f28d45a0b6df7c010ef4c052f
+    sha256 (LF)   : bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099
+    seal revision : 5812997229eafe2184fe68193856bea2fa41eeae
+    amendment     : VALUE_S1_DATA_IDENTITY_AMENDMENT_001
+    original seal : ba5814d8dad2b81f28d45a0b6df7c010ef4c052f /
+                    df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf
+                    (superseded, lineage preserved - never erased)
 """
 import hashlib
 import io
@@ -19,10 +23,14 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 
 SEALED_PREREG_RELPATH = "research/extensions/value/VALUE_PREREGISTRATION_DRAFT.md"
-SEALED_PREREG_SHA256 = ("df142f83d82996f1df87d7953c1480397e4d128c8b32d599e312"
-                        "37901b3278cf")
-SEAL_REVISION = "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f"
+SEALED_PREREG_SHA256 = ("bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7"
+                        "b809ca67a099")
+SEAL_REVISION = "5812997229eafe2184fe68193856bea2fa41eeae"
 OWNER_DECISION = "SEAL TIME-SERIES VALUE S1"
+AMENDMENT_ID = "VALUE_S1_DATA_IDENTITY_AMENDMENT_001"
+ORIGINAL_SEAL_REVISION = "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f"
+ORIGINAL_SEALED_PREREG_SHA256 = ("df142f83d82996f1df87d7953c1480397e4d128c8b32"
+                                 "d599e31237901b3278cf")
 
 # --- §2 universe and objects -----------------------------------------------
 UNIVERSE = ("SPY", "TLT", "LQD", "UUP", "FXY")
@@ -91,7 +99,8 @@ RAW_INPUTS = {
     "cpi_JPY": "japan_cpi_estat_000040482943.csv",
     "cpi_GBP": "uk_cpi_ons_D7BT.json",
     "cpi_CAD": "canada_cpi_statcan_18100004.zip",
-    "cpi_SEK": "sweden_cpi_scb_KPI2020M.json",
+    "cpi_SEK_historical": "sweden_cpi_scb_KPI2020M1980_000007T9.json",
+    "cpi_SEK_current": "sweden_cpi_scb_KPI2020M_00000808.json",
     "cpi_CHF": "swiss_cpi_snb.csv",
     "fx_EUR": "DEXUSEU.csv", "fx_JPY": "DEXJPUS.csv", "fx_GBP": "DEXUSUK.csv",
     "fx_CAD": "DEXCAUS.csv", "fx_SEK": "DEXSDUS.csv", "fx_CHF": "DEXSZUS.csv",
@@ -162,6 +171,21 @@ def conformance():
     ck("inverted quotes are DEXUSEU and DEXUSUK",
        has("S_f(t) = 1 / q_f(t)", "DEXUSEU, DEXUSUK"))
     ck("US CPI is the NSA series", has("`CPIAUCNS`"))
+    ck("amendment 001 is recorded with its lineage",
+       has(AMENDMENT_ID, ORIGINAL_SEAL_REVISION, ORIGINAL_SEALED_PREREG_SHA256,
+           "The original seal is NOT erased"))
+    ck("Sweden is the authorised two-table Fixed CPI",
+       has("KPI2020M1980", "000007T9", "KPI2020M", "00000808",
+           "month <= 2025-12", "month >= 2026-01"))
+    ck("Sweden join verified: no overlap, no gap, bases match",
+       has("OVERLAP_MONTHS = 0", "GAP_MONTHS_AT_JUNCTION = 0",
+           "REFERENCE_BASE_MATCH = YES", "SEASONAL_ADJUSTMENT_MATCH = YES"))
+    ck("Shadow CPI is explicitly NOT used",
+       has("Shadow CPI is NOT used") and "Shadow" not in str(RAW_INPUTS))
+    ck("no leg was rescaled, bridged or interpolated",
+       has("No leg was rescaled, no", "bridge factor estimated"))
+    ck("EUR coverage states the ACTUAL numeric span",
+       has("1999-12 → 2026-08, 321 numeric"))
     ck("Shiller vintage limitation is frozen", has(SHILLER_VINTAGE_STATUS))
     ck("evidence ceiling frozen", has(EVIDENCE_CEILING))
     ck("C3 requires C1 and C2 in each jackknife",

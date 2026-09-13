@@ -102,7 +102,17 @@ def load_cpi_gbp(filename="uk_cpi_ons_D7BT.json"):
     return out
 
 
-def load_cpi_sek(filename="sweden_cpi_scb_KPI2020M.json"):
+SEK_HISTORICAL = "sweden_cpi_scb_KPI2020M1980_000007T9.json"
+SEK_CURRENT = "sweden_cpi_scb_KPI2020M_00000808.json"
+SEK_JUNCTION_LAST_HISTORICAL = "2025-12"
+SEK_JUNCTION_FIRST_CURRENT = "2026-01"
+
+
+class SwedishCompositionError(ValueError):
+    """The authorised two-table join failed. There is no fallback."""
+
+
+def _scb_numeric(filename):
     d = json.load(io.open(_raw(filename), encoding="utf-8"))
     out = {}
     for row in d["data"]:
@@ -110,6 +120,55 @@ def load_cpi_sek(filename="sweden_cpi_scb_KPI2020M.json"):
         v = row["values"][0]
         if v not in ("..", ".", ""):
             out["%s-%s" % (k[:4], k[5:7])] = float(v)
+    return out
+
+
+def load_cpi_sek(historical=SEK_HISTORICAL, current=SEK_CURRENT):
+    """VALUE_S1_DATA_IDENTITY_AMENDMENT_001 — the authorised two-table object.
+
+        month <= 2025M12  ->  KPI2020M1980 / 000007T9
+        month >= 2026M01  ->  KPI2020M     / 00000808
+
+    STRICT CONCATENATION. Both legs are official SCB all-items Fixed CPI, NSA,
+    on the same 2020=100 basis, so no rescaling, bridging or interpolation is
+    performed or permitted. Every failure below is loud: there is no silent
+    fallback and no Shadow-CPI fallback.
+    """
+    for f in (historical, current):
+        if not os.path.isfile(_raw(f)):
+            raise SwedishCompositionError("required SCB component missing: %s" % f)
+
+    hist = _scb_numeric(historical)
+    curr = _scb_numeric(current)
+    if not hist or not curr:
+        raise SwedishCompositionError("an SCB component carries no numeric value")
+
+    if SEK_JUNCTION_LAST_HISTORICAL not in hist:
+        raise SwedishCompositionError(
+            "historical leg is missing the junction month %s"
+            % SEK_JUNCTION_LAST_HISTORICAL)
+    if SEK_JUNCTION_FIRST_CURRENT not in curr:
+        raise SwedishCompositionError(
+            "current leg is missing the junction month %s"
+            % SEK_JUNCTION_FIRST_CURRENT)
+
+    hist = {m: v for m, v in hist.items() if m <= SEK_JUNCTION_LAST_HISTORICAL}
+    curr = {m: v for m, v in curr.items() if m >= SEK_JUNCTION_FIRST_CURRENT}
+
+    overlap = sorted(set(hist) & set(curr))
+    if overlap:
+        raise SwedishCompositionError("legs overlap at %s" % overlap)
+    if m_key(min(curr)) - m_key(max(hist)) != 1:
+        raise SwedishCompositionError(
+            "junction gap between %s and %s" % (max(hist), min(curr)))
+
+    out = dict(hist)
+    out.update(curr)
+    months = sorted(out)
+    for i in range(len(months) - 1):
+        if m_key(months[i + 1]) - m_key(months[i]) != 1:
+            raise SwedishCompositionError(
+                "internal gap between %s and %s" % (months[i], months[i + 1]))
     return out
 
 

@@ -5,7 +5,7 @@
   },
   "study": "FINANCIAL_ASSET_TIME_SERIES_VALUE",
   "phase": "A - bounded PIT data acquisition and verification",
-  "generated_utc": "2026-09-13T08:22:33Z",
+  "generated_utc": "2026-09-13T08:33:37Z",
   "hash_convention": "sha256_of_raw_file_on_disk - the same convention the X01 manifest uses for git-ignored data under data/",
   "raw_snapshot_directory": "data/value_raw",
   "raw_snapshots_are_git_ignored": true,
@@ -717,5 +717,106 @@
       "action_taken": "NONE. Per the amendment instruction's own condition and its stop rule, a two-table join is a data-identity decision and was not made unilaterally. No series was adopted, no raw file was pinned, and the sealed contract was not modified.",
       "shadow_index_used": false
     }
+  },
+  "s1_amendment_001": {
+    "amendment_id": "VALUE_S1_DATA_IDENTITY_AMENDMENT_001",
+    "date": "2026-09-13",
+    "owner_decision": "AUTHORIZE THE OFFICIAL SCB TWO-TABLE FIXED-CPI JOIN FOR SWEDEN",
+    "original_seal_revision": "ba5814d8dad2b81f28d45a0b6df7c010ef4c052f",
+    "original_sealed_prereg_sha256": "df142f83d82996f1df87d7953c1480397e4d128c8b32d599e31237901b3278cf",
+    "new_seal_revision": "5812997229eafe2184fe68193856bea2fa41eeae",
+    "new_sealed_prereg_sha256": "bc841ea80dd1afd521d8ecd2dc656b3e608396f4dd6546eab9c7b809ca67a099",
+    "lineage": "The original seal is superseded, NOT erased. Both identities are recorded here and in the sealed document's header and §16.",
+    "scientific_object": "SWEDEN_ALL_ITEMS_FIXED_CPI_NSA — UNCHANGED",
+    "scientific_object_changed": false,
+    "shadow_index_used": false,
+    "composition_rule": {
+      "month <= 2025-12": "KPI2020M1980 / 000007T9",
+      "month >= 2026-01": "KPI2020M / 00000808",
+      "type": "STRICT CONCATENATION — no rescaling, no bridge factor, no interpolation, no averaging, no behaviour-based splice"
+    },
+    "verification": {
+      "OVERLAP_MONTHS": 0,
+      "GAP_MONTHS_AT_JUNCTION": 0,
+      "LAST_HISTORICAL_MONTH": "2025-12",
+      "FIRST_CURRENT_MONTH": "2026-01",
+      "REFERENCE_BASE_MATCH": true,
+      "SEASONAL_ADJUSTMENT_MATCH": true,
+      "OBJECT_DEFINITION_MATCH": true,
+      "junction": "2025-12 = 124.42 -> 2026-01 = 124.58",
+      "composed_numeric_coverage": "1980-01 .. 2026-07 (559 observations)",
+      "composed_series_contiguous": true
+    },
+    "composed_object_depends_on_both_raw_identities": true,
+    "legs": [
+      {
+        "role": "historical",
+        "provider": "Statistics Sweden (SCB)",
+        "table": "KPI2020M1980",
+        "observation_code": "000007T9",
+        "series_description": "Fixed CPI, index numbers 1980=100 rebased to 2020=100",
+        "title": "Rebased Fixed CPI-Numbers by observations and month",
+        "raw_file": "data/value_raw/sweden_cpi_scb_KPI2020M1980_000007T9.json",
+        "sha256_of_raw_file_on_disk": "1960189043cd808b39d1c2633f7f92d0b9414d7e1bae350809248dfce555c952",
+        "bytes": 22209,
+        "frequency": "monthly",
+        "units": "index",
+        "reference_base": "2020=100",
+        "seasonal_adjustment": "NSA",
+        "period_label_count": 559,
+        "numeric_observation_count": 552,
+        "earliest_numeric_month": "1980-01",
+        "latest_numeric_month": "2025-12",
+        "source_url": "https://api.scb.se/OV0104/v1/doris/en/ssd/PR/PR0101/PR0101A/KPI2020M1980",
+        "retrieved_utc_date": "2026-09-13",
+        "revision_semantics": "SCB Fixed CPI (fastställda indextal) is fixed on publication and is not subsequently revised; reference-year rebasing is a documented agency operation, not a revision of history.",
+        "publication_timing": "monthly, roughly two weeks after the reference month; the sealed 2-month lag clears it conservatively"
+      },
+      {
+        "role": "current",
+        "provider": "Statistics Sweden (SCB)",
+        "table": "KPI2020M",
+        "observation_code": "00000808",
+        "series_description": "CPI, fixed index numbers",
+        "title": "Consumer Price Index (CPI), total 2020=100 by observations and month",
+        "raw_file": "data/value_raw/sweden_cpi_scb_KPI2020M_00000808.json",
+        "sha256_of_raw_file_on_disk": "d42882277a19eb2c49a5feeed6beb7068d6a3253f5784a1bb19f1da1a09c55aa",
+        "bytes": 20452,
+        "frequency": "monthly",
+        "units": "index",
+        "reference_base": "2020=100",
+        "seasonal_adjustment": "NSA",
+        "period_label_count": 559,
+        "numeric_observation_count": 7,
+        "earliest_numeric_month": "2026-01",
+        "latest_numeric_month": "2026-07",
+        "source_url": "https://api.scb.se/OV0104/v1/doris/en/ssd/PR/PR0101/PR0101A/KPI2020M",
+        "retrieved_utc_date": "2026-09-13",
+        "revision_semantics": "SCB Fixed CPI (fastställda indextal) is fixed on publication and is not subsequently revised; reference-year rebasing is a documented agency operation, not a revision of history.",
+        "publication_timing": "monthly, roughly two weeks after the reference month; the sealed 2-month lag clears it conservatively"
+      }
+    ],
+    "eur_coverage_correction": {
+      "old_statement": "1996-01 → 2026-08 (period labels)",
+      "actual_numeric_coverage": "1999-12 → 2026-08 (321 of 368 labels)",
+      "changed": [
+        "the coverage statement only"
+      ],
+      "unchanged": [
+        "source",
+        "scientific object",
+        "reference basis",
+        "lag",
+        "real-FX formula",
+        "evaluation window"
+      ]
+    },
+    "window_effect": {
+      "UUP_WINDOW_COVERAGE": "143 / 143",
+      "FXY_WINDOW_COVERAGE": "143 / 143",
+      "required_reference_months": "2014-05 .. 2026-03",
+      "missing": "NONE"
+    },
+    "target_outcomes_observed_before_amendment": false
   }
 }
