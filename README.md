@@ -28,7 +28,7 @@ it is the discipline: keep what survives, reject what doesn't, and explain *why*
 each case.
 
 > 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
-> zero) · a drawdown diagnostic · four falsified overlays · a parallel cross-sectional study (XSMOM)
+> zero) · a drawdown diagnostic · four overlays not promoted · a parallel cross-sectional study (XSMOM, falsified)
 > · 101 passing tests, CI-verified · strict
 > no-look-ahead, reconciled at every step.
 
@@ -37,7 +37,7 @@ each case.
 - **Supported core** (*not* independently confirmed): multi-asset TSMOM, 17 ETFs / 5 sleeves,
   monthly + vol-targeted — historical-baseline net Sharpe **0.75** (95% bootstrap CI [0.29, 1.23],
   excludes 0), with genuine crisis alpha (GFC +11.6%, COVID +7.3%).
-- **Four overlays tested to extend it, all falsified at the cheapest premise stage** —
+- **Four overlays tested to extend it, none promoted — each rejected at the cheapest premise stage** —
   crash-defense (trigger anti-aligned with drawdowns), vol-compression breakout (no directional
   premise), seasonality (0/18, BH-FDR multiplicity), yield-curve macro regime (0/6, single-episode
   illusion) — each with a stated mechanism, not just "it didn't work."
@@ -64,7 +64,7 @@ flowchart TD
     OV --> O3["Seasonality<br/>0/18 under BH-FDR<br/>not promoted"]
     OV --> O4["Yield-curve slope<br/>0/6, single-episode illusion<br/>not promoted"]
 
-    CORE -. parallel study .-> X["XSMOM cross-sectional<br/>0/5 universes, corr +0.42<br/>not promoted"]
+    CORE -. parallel study .-> X["XSMOM cross-sectional<br/>0/5 universes, corr +0.42<br/>falsified"]
 
     CORE --> EXT["<b>Sealed extension studies</b> - vNext, one authorized run each"]
     EXT --> X01["<b>X01 futures wrapper</b><br/>delta-Sharpe -0.240815<br/>95% CI -0.460571 to -0.050489<br/>INSUFFICIENT_EVIDENCE - CLOSED"]
@@ -75,13 +75,16 @@ flowchart TD
 | --- | --- | --- |
 | Canonical 17-ETF TSMOM core | **supported** — not independently confirmed | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) |
 | Four overlays (crash-defense, vol-breakout, seasonality, yield-curve) | **not promoted** — all rejected at the premise gate | [`research/`](research/README.md) |
-| XSMOM cross-sectional (parallel) | **not promoted** — 0/5 universes | [`research/xsmom/`](research/xsmom/XSMOM_README.md) |
+| XSMOM cross-sectional (parallel) | **falsified** — 0/5 universes under a FDR-controlled replication map | [`research/xsmom/`](research/xsmom/XSMOM_README.md) |
 | X01 futures wrapper (sealed) | **INSUFFICIENT_EVIDENCE** — closed | [`research/extensions/x01/`](research/extensions/x01/) |
 | Time-Series Value sleeve (sealed) | **not_promoted** — closed | [`research/extensions/value/`](research/extensions/value/) |
 
-Status words are the knowledge base's own vocabulary. This README's older sections use
-"falsified" as narrative shorthand for the four overlays and XSMOM; the registry records all
-five as `not_promoted`, which is the authoritative label.
+Status words above are the knowledge base's own vocabulary, and the registry is the
+authoritative source. Two labels are deliberately different: the four overlays are
+`not_promoted` — each failed a single cheap premise gate before any P&L was fit — while
+XSMOM is `falsified`, having been rejected across a five-universe FDR-controlled
+replication with nothing material left untried. The narrative sections below use
+"falsification" to describe the *method*; the status words are what the registry records.
 
 ---
 
@@ -157,7 +160,7 @@ attribution reconciliation, daily↔monthly reconciliation, regime/premise causa
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-## 3. The research arc — one diagnostic, four falsified overlays, one parallel study
+## 3. The research arc — one diagnostic, four overlays not promoted, one parallel study
 
 Full write-ups in [`research/`](research/README.md). Summary:
 
@@ -172,7 +175,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
 
 ![drawdowns tagged chop vs crash](research/diagnostic/dd_chop_crash_timeline.png)
 
-### 3b. Crash-defense overlay — **FALSIFIED at Phase 0**
+### 3b. Crash-defense overlay — **`not_promoted`** (rejected at Phase 0)
 - **Premise:** de-gross when systemic risk (cross-asset vol / correlation) spikes.
 - **Gate (read-only):** verify the drawdowns are actually a systemic-risk-spike regime.
 - **Why it failed — trigger anti-alignment.** Standalone (unit-risk) sleeves do fall together
@@ -182,7 +185,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   trigger would therefore **amputate the crisis alpha and miss the actual drawdowns.** Clean no-go.
 → [`research/crash_defense/`](research/crash_defense/PHASE0_SYSTEMIC_VERIFICATION.md)
 
-### 3c. Vol-compression breakout overlay — **FALSIFIED at Phase 1B**
+### 3c. Vol-compression breakout overlay — **`not_promoted`** (rejected at Phase 1B)
 - **Premise:** after volatility compresses, a directional breakout follows — and it sits in the
   ordinary-vol regime where the core bleeds, so it's orthogonal to the crash-defense failure.
 - **Gate (descriptive):** does compression actually precede *directional* expansion, above base rate?
@@ -197,7 +200,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   need OHLC data) — stated, not glossed.
 → [`research/vol_breakout/`](research/vol_breakout/BREAKOUT_PHASE1B_PREMISE.md)
 
-### 3d. Seasonality / calendar-effects overlay — **FALSIFIED at premise (0/18)**
+### 3d. Seasonality / calendar-effects overlay — **`not_promoted`** (rejected at premise, 0/18)
 - **Premise:** classic calendar anomalies — **turn-of-month**, **Halloween / "Sell-in-May"**, and the
   **Monday** effect — tilt daily returns, so a mechanical calendar tilt could complement the core. A
   different direction entirely from the drawdown-motivated overlays above.
@@ -223,7 +226,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
 → [`research/seasonality/`](research/seasonality/SEASONALITY_PHASE1_PREMISE.md) · pre-registration:
 [`research/seasonality/PREREGISTRATION.md`](research/seasonality/PREREGISTRATION.md)
 
-### 3e. Yield-curve slope overlay (macro regime) — **FALSIFIED at premise (0/6)**
+### 3e. Yield-curve slope overlay (macro regime) — **`not_promoted`** (rejected at premise, 0/6)
 - **Premise:** a single economy-wide **yield-curve slope** (10Y-3M primary, 10Y-2Y robustness) as a
   **portfolio-regime conditioner** on the whole book — the one *genuinely macro / orthogonal* overlay
   (the term structure of rates is not a function of the ETF price paths), unlike the three price-based ones.
@@ -245,7 +248,7 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
 → [`research/yield_spread/`](research/yield_spread/PHASE1_PREMISE.md) · pre-registration:
 [`research/yield_spread/PREREGISTRATION.md`](research/yield_spread/PREREGISTRATION.md)
 
-### Parallel investigation — Cross-sectional momentum (XSMOM) — **FALSIFIED (0/5)**
+### Parallel investigation — Cross-sectional momentum (XSMOM) — **`falsified`** (0/5)
 *Not an overlay on the core, but its **cross-sectional counterpart**: the same 17 ETFs and the same
 engine, ranking assets against each other (dollar-neutral long-short) instead of each against its own
 trend. The question — does relative-strength add anything time-series momentum doesn't?*
@@ -421,11 +424,11 @@ python robustness.py ; python cost_analysis.py ; python rp_comparison.py   # con
 
 # --- research arc ---
 python run_drawdown_attribution.py        # diagnostic
-python verify_systemic.py                 # crash-defense Phase 0 (falsified)
+python verify_systemic.py                 # crash-defense Phase 0 (not promoted)
 python run_breakout_phase1a.py            # daily infra
-python run_breakout_phase1b.py            # vol-breakout premise (falsified)
-python run_seasonality_premise.py         # seasonality premise, 0/18 (falsified)
-python run_yield_premise.py               # yield-curve slope premise, 0/6 (falsified)
+python run_breakout_phase1b.py            # vol-breakout premise (not promoted)
+python run_seasonality_premise.py         # seasonality premise, 0/18 (not promoted)
+python run_yield_premise.py               # yield-curve slope premise, 0/6 (not promoted)
 
 # --- parallel: cross-sectional momentum (XSMOM) ---
 python run_xsmom.py                        # XSMOM Phase 1 head-to-head, Sharpe 0.28 (falsified)
@@ -480,7 +483,7 @@ Part of a falsification-first research series applying the same protocol across 
 and strategy families:
 
 - [`quant-backtest-framework`](https://github.com/AaroNLaU0307/quant-backtest-framework) - multi-instrument SMC price-action study, **falsified** (0/210 cross-instrument BH-FDR across 5 instruments x 42 configs).
-- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **falsified/null** (0/20 cells survive BH-FDR; 18-month OOS never opened).
+- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **not promoted** (0/20 cells survive BH-FDR; 18-month OOS never opened).
 - [`spot-mfi-btc-perp-research`](https://github.com/AaroNLaU0307/spot-mfi-btc-perp-research) - spot money-flow signals for BTC perps, base study **falsified** (0/42 BH-FDR); funding-divergence follow-up **inconclusive, leaning falsified**.
 
 The series' base rate is the point: confirmations are earned against the same gates that falsify everything else.
