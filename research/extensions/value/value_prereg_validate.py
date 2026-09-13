@@ -122,7 +122,25 @@ ck("one bootstrap engine; IID correlation interval forbidden",
 ck("Shiller vintage limitation frozen",
    has("RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATION"))
 ck("claim ceiling explicit", has("T0 / POST-EXPOSURE / AT_MOST_SUPPORTED"))
-ck("still unsealed", has("VALUE_PREREG_SEALED = NO"))
+# Seal state: assert INTERNAL CONSISTENCY rather than hard-coding one state, so
+# this validator stays meaningful both before and after the Owner seal.
+sealed_flag = has("VALUE_PREREG_SEALED = YES")
+unsealed_flag = has("VALUE_PREREG_SEALED = NO")
+ck("seal flag is present and unambiguous", sealed_flag != unsealed_flag,
+   "SEALED" if sealed_flag else "UNSEALED")
+if sealed_flag:
+    ck("sealed: heading, status and closing gate all agree",
+       has("PREREGISTRATION (**SEALED**)", "STATUS = SEALED",
+           "VALUE_PREREG_SEAL_DECISION",
+           "This contract is SEALED and its scientific content is frozen",
+           "NEXT GATE = S2 BUILD"))
+    ck("sealed: still not executed and not authorised",
+       has("VALUE_FULL_PERFORMANCE_EXECUTED = NO",
+           "A SEAL IS NOT AUTHORIZATION TO EXECUTE",
+           "no such authorization exists"))
+else:
+    ck("unsealed: heading and closing gate agree",
+       has("PREREGISTRATION **DRAFT** (UNSEALED)", "NEXT GATE = AARON"))
 ck("no target outcome recorded", has("TARGET_OUTCOMES_COMPUTED = NO"))
 
 print()
