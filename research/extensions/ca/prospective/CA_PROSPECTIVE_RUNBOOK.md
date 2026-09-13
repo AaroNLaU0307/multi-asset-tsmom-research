@@ -1,19 +1,26 @@
 # C-A PROSPECTIVE PIPELINE — OPERATIONS RUNBOOK
 
 ```
-STATUS            = BUILT AND SYNTHETICALLY VALIDATED. NOT LIVE.
-GO-LIVE REQUIRES SEPARATE OWNER AUTHORIZATION.
-S_G_CREATED       = NO
-PIPELINE_GO_LIVE  = NOT YET
+STATUS            = **LIVE** since 2026-09-13T18:33:11Z (Aaron's OD-9).
+S_G_CREATED       = YES   sha256 8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35
+PIPELINE_GO_LIVE  = 2026-09-13T18:33:11Z
+PROSPECTIVE_START = 2026-09-13T18:33:11Z
+FORWARD_BOUNDARY  = 2026-09-11
+FIRST_ELIGIBLE_DECISION_MONTH_END = 2026-09-30 (scheduled; confirmed from that month's snapshot)
+FIRST_ELIGIBLE_SCORED_MONTH       = 2026-10
 N_scored          = 0
-FIRST_ELIGIBLE_SCORED_PERIOD = NOT YET DETERMINED
 SEALED CONTRACT   = ../CA_PREREGISTRATION_DRAFT.md  (SEALED 2026-09-13T17:42:06Z)
+TERMINAL_REVEAL_AUTHORIZED = NO
 ```
 
-> **GO-LIVE REQUIRES SEPARATE OWNER AUTHORIZATION.** The C-A S1 seal did not grant
-> it and the S2 build authorization did not grant it. `ca_golive.establish_go_live`
-> refuses without a `GoLiveAuthorization` constructed by Aaron. Until that happens
-> there is no prospective record, no eligible month, and nothing to score.
+> **GO-LIVE HAS OCCURRED** (OD-9, 2026-09-13T18:33:11Z). The pipeline is now in
+> prospective accrual. `N_scored = 0` until the first complete eligible holding
+> month (2026-10) has genuinely elapsed under the sealed process.
+>
+> **The terminal reveal is a SEPARATE Owner authorization that does not exist.** No
+> interim reveal may be created, and there is no debugging exception: if an
+> operational incident seems to require inspecting protected content before the
+> terminal reveal, **HOLD and return to Aaron** for a new explicit Owner decision.
 
 ---
 

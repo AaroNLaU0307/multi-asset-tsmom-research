@@ -410,7 +410,13 @@ if os.path.isfile(SNAP):
     sn = flat(io.open(SNAP, encoding="utf-8").read())
     ck("snapshot registry pins the frozen-panel hash", FROZEN_SHA in sn)
     ck("snapshot registry pins S_0 by sha256", S0_SHA in sn)
-    ck("snapshot registry records S_G as NOT created", "S_G_CREATED = NO" in sn)
+    # S_G was created at go-live (OD-9, 2026-09-13T18:33:11Z); the registry must now
+    # pin it, and must still pin the S_0 -> S_G lineage.
+    ck("snapshot registry records S_G as created and pinned",
+       "S_G_CREATED = YES" in sn and "8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35" in sn)
+    ck("snapshot registry records the S_0 -> S_G lineage", has(sn, "`S_0` → `S_G` lineage"))
+    ck("snapshot registry records FORWARD_BOUNDARY from S_G",
+       has(sn, "`FORWARD_BOUNDARY = 2026-09-11`"))
     ck("snapshot registry states S_0 need not equal FORWARD_BOUNDARY",
        has(sn, "is NOT required to equal `FORWARD_BOUNDARY`"))
     ck("post-boundary rows classified state-input-only",

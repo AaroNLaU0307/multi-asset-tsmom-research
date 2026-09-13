@@ -408,6 +408,83 @@ def open_envelope(env: dict, capability: MachineCapability | None = None) -> byt
 
 
 # --------------------------------------------------------------------------- #
+# Off-repository key backup
+# --------------------------------------------------------------------------- #
+def default_backup_dir() -> str:
+    env = os.environ.get("CA_PROSPECTIVE_KEY_BACKUP")
+    if env:
+        return os.path.abspath(env)
+    base = os.environ.get("LOCALAPPDATA") or os.path.expanduser("~")
+    return os.path.abspath(os.path.join(base, "ca_prospective_key_backup"))
+
+
+def backup_key(store_dir: str | None = None, backup_dir: str | None = None) -> dict:
+    """Copy the production key to an off-repository destination.
+
+    Does NOT alter the live key. Verifies the copy by fingerprint. Never returns
+    or logs key material.
+    """
+    sd = assert_outside_repo(store_dir or default_store_dir(), "protected store")
+    state = store_state(sd)
+    if state is None:
+        raise ProtectedStoreNotInitialized("REFUSED: store %s is not initialized" % sd)
+    bd = assert_outside_repo(backup_dir or default_backup_dir(), "key backup directory")
+    kf = state["key_file"]
+    before = fingerprint(base64.b64decode(io.open(kf, "rb").read()))
+    if before != state["key_fingerprint_sha256"]:
+        raise ProtectedStoreHold("HARD HOLD: live key fingerprint does not match store state")
+    os.makedirs(bd, exist_ok=True)
+    _harden_permissions(bd)
+    dest = os.path.join(bd, "blind.key.backup")
+    if os.path.exists(dest):
+        existing = fingerprint(base64.b64decode(io.open(dest, "rb").read()))
+        if existing != before:
+            raise ProtectedStoreHold(
+                "HARD HOLD: a DIFFERENT key is already backed up at %s. Restoring a "
+                "different key is forbidden; resolve manually." % dest)
+    with io.open(kf, "rb") as src, io.open(dest, "wb") as dst:
+        dst.write(src.read())
+    _harden_permissions(dest)
+    # the live key must be untouched
+    after = fingerprint(base64.b64decode(io.open(kf, "rb").read()))
+    if after != before:
+        raise ProtectedStoreHold("HARD HOLD: the live key changed during backup")
+    manifest = {
+        "schema": "CA_KEY_BACKUP_V1",
+        "backup_path": dest,
+        "key_fingerprint_sha256": before,          # NON-SECRET
+        "backed_up_utc": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "source_store": sd,
+        "outside_repository": not _inside_repo(dest),
+    }
+    with io.open(os.path.join(bd, "backup_manifest.json"), "w",
+                 encoding="utf-8", newline="\n") as fh:
+        json.dump(manifest, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+    return manifest
+
+
+def verify_backup(store_dir: str | None = None, backup_dir: str | None = None) -> dict:
+    """Verify the backup holds the SAME key by fingerprint. No key material returned."""
+    sd = assert_outside_repo(store_dir or default_store_dir(), "protected store")
+    state = store_state(sd)
+    bd = assert_outside_repo(backup_dir or default_backup_dir(), "key backup directory")
+    dest = os.path.join(bd, "blind.key.backup")
+    out = {"backup_path": dest, "exists": os.path.exists(dest), "fingerprint_match": False,
+           "outside_repository": not _inside_repo(dest),
+           "expected_fingerprint": (state or {}).get("key_fingerprint_sha256")}
+    if not out["exists"] or state is None:
+        return out
+    try:
+        got = fingerprint(base64.b64decode(io.open(dest, "rb").read()))
+    except Exception:
+        return out
+    out["fingerprint_match"] = (got == state["key_fingerprint_sha256"])
+    out["permissions"] = permissions_report(dest)
+    return out
+
+
+# --------------------------------------------------------------------------- #
 # Operator-safe reporting — no key material, ever
 # --------------------------------------------------------------------------- #
 def boundary_report(store_dir: str | None = None) -> dict:

@@ -164,6 +164,22 @@ PC-1                = CLOSED from existing §J authority. The S_0-vs-frozen over
                       flips, over 402 decision months and 6,477 position cells, computed
                       strictly inside the frozen window ending 2026-06-12.
                       NO new daily-return tolerance was created.
+C-A PIPELINE        = **LIVE** since 2026-09-13T18:33:11Z under Aaron's OD-9
+                      C_A_GO_LIVE_AUTHORIZATION (CA-GOLIVE-0001, consumed).
+                      PROSPECTIVE_START = 2026-09-13 18:33:11+00:00
+                      FORWARD_BOUNDARY  = 2026-09-11
+                      FIRST_ELIGIBLE_DECISION_MONTH_END = 2026-09-30 (scheduled;
+                        confirmed from that month's snapshot)
+                      FIRST_ELIGIBLE_SCORED_MONTH = 2026-10
+                      N_scored = 0. No prospective position has been generated.
+                      S_G = data/prospective/snapshots/S_G_20260913T183249Z.csv
+                        sha256 8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35, 1948685 bytes, 17/17 canonical objects,
+                        1993-01-29 .. 2026-09-11 (git-ignored; identity pinned here
+                        and in research/extensions/ca/prospective/CA_OPERATIONAL_STATE.json).
+                      Protected store + key: OUTSIDE the repository, AES-256-GCM,
+                        key fingerprint (non-secret) 9c6d2c48dce7fa1a5c22844b5ebcbb1e8954c7fb456a4f9d0eddec4fae2f6d5c, off-repo backup verified.
+                      TERMINAL_REVEAL_AUTHORIZED = NO. No target performance computed,
+                        no outcome revealed, no position vector human-visible.
 S2 BUILD            = COMPLETE (build + synthetic validation only), under Aaron's
                       C_A_S2_BUILD_AUTHORIZATION. Package at
                       research/extensions/ca/prospective/ (11 modules + runbook).
@@ -185,10 +201,12 @@ PROSPECTIVE STATE   = T4_SEAL_EXISTS = YES, but the scoring stream has NOT start
 TARGET_OUTCOMES     = NONE COMPUTED, NONE REVEALED.
 SB-3                = OPEN -- blocks C_D_PASS ONLY. It never blocked the C-A S1 seal.
 C-B                 = PARKED.
-NEXT_OWNER_DECISION = C-A GO-LIVE AUTHORIZATION (acquire S_G, establish
-                      PIPELINE_GO_LIVE, begin accrual) and, separately, the C-D
-                      implementation authorization. Both remain distinct gates that
-                      neither the seal nor the S2 build authorization consumed.
+NEXT_OWNER_DECISION = NONE required to accrue. The pipeline runs monthly under the
+                      sealed contract. Separately and still outstanding: the C-D
+                      implementation authorization (which must go to an independent
+                      session) and, only at N_scored = 120, the single terminal
+                      reveal authorization. Neither the seal, the S2 build
+                      authorization nor OD-9 consumed either of them.
 ```
 
 ### C-A sealed identity

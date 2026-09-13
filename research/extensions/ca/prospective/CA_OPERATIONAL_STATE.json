@@ -1,0 +1,89 @@
+{
+  "blind_store": {
+    "aead": "AES-256-GCM",
+    "backup_path": "C:\\Users\\Aaron\\AppData\\Local\\ca_prospective_key_backup\\blind.key.backup",
+    "backup_verified": true,
+    "key_fingerprint_sha256": "9c6d2c48dce7fa1a5c22844b5ebcbb1e8954c7fb456a4f9d0eddec4fae2f6d5c",
+    "store_dir": "C:\\Users\\Aaron\\AppData\\Local\\ca_prospective_store"
+  },
+  "c_a_pipeline": "LIVE",
+  "c_a_s1": "SEALED",
+  "c_a_s2_build": "COMPLETE",
+  "c_a_seal_timestamp_utc": "2026-09-13T17:42:06Z",
+  "first_eligible_decision_month": "2026-09",
+  "first_eligible_decision_month_end_scheduled": "2026-09-30",
+  "first_eligible_rule": "the last TRADING day of the decision month, strictly after PROSPECTIVE_START; the exact date is confirmed from that month's snapshot and may move if it is an exchange holiday",
+  "first_eligible_scored_month": "2026-10",
+  "forward_boundary": "2026-09-11",
+  "frozen_panel": {
+    "path": "data/close_prices_raw.csv",
+    "sha256": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31"
+  },
+  "instrument_registry": {
+    "artifact": "research/extensions/ca/CA_INSTRUMENT_REGISTRY.json",
+    "object_count": 17,
+    "sha256": "8dd261fd1b5487af023f07ba230c4cdc8e43b14197f1f09d9e086cb20d26ed65",
+    "status": "SEALED \u2014 bound by the C-A S1 seal of 2026-09-13T17:42:06Z"
+  },
+  "n_scored": 0,
+  "owner_authorization": {
+    "authorization_id": "CA-GOLIVE-0001",
+    "consumed": true,
+    "consumed_utc": "2026-09-13T18:33:11Z",
+    "granted_utc": "2026-09-13T18:30:00Z",
+    "is_not": [
+      "TARGET_REVEAL_AUTHORIZATION",
+      "C_D_AUTHORIZATION",
+      "PHASE_C_AUTHORIZATION",
+      "TERMINAL_ADJUDICATION_AUTHORIZATION"
+    ],
+    "owner": "Aaron",
+    "scope": "C_A_GO_LIVE ONLY - not a run, not a reveal, not C-D, not Phase C"
+  },
+  "pipeline_go_live_timestamp_utc": "2026-09-13T18:33:11Z",
+  "post_seal_unscored_state_input_only": {
+    "counts_toward_n_scored": false,
+    "may_be_relabelled_t4_later": false,
+    "may_update_state": true,
+    "scored": false,
+    "window": "observations after the C-A seal and strictly before PROSPECTIVE_START"
+  },
+  "prospective_start_utc": "2026-09-13 18:33:11+00:00",
+  "recorded_utc": "2026-09-13T18:33:11Z",
+  "runtime": {
+    "cryptography": "50.0.1",
+    "numpy": "2.5.0",
+    "pandas": "2.3.3",
+    "python": "3.13.14"
+  },
+  "s_0": {
+    "path": "data/prospective/S0_20260913T165624Z.csv",
+    "sha256": "c4a21dc86038f9f0d06e32a267810b46cb39d9dd3549c35ef3329c87f884d6fb"
+  },
+  "s_g": {
+    "byte_size": 1948685,
+    "columns": 17,
+    "first_date": "1993-01-29",
+    "last_date": "2026-09-11",
+    "path": "data/prospective/snapshots/S_G_20260913T183249Z.csv",
+    "registered_utc": "2026-09-13T18:33:11+00:00",
+    "rows": 8462,
+    "sha256": "8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35",
+    "snapshot_id": "S_G_20260913T183249Z"
+  },
+  "s_g_acquisition": {
+    "acquisition_runtime_note": "yfinance is recorded but deliberately NOT in the hard runtime pin: the scientific computation runs on the REGISTERED, HASHED snapshot, not on the fetch library, and halting a 10-year pipeline on a vendor patch bump would protect nothing scientific.",
+    "all_canonical_present": true,
+    "finished_utc": "2026-09-13T18:33:11Z",
+    "source": "yfinance (Yahoo Finance), Ticker.history(period='max', auto_adjust=True)",
+    "started_utc": "2026-09-13T18:32:49Z",
+    "tickers_acquired": 17,
+    "tickers_requested": 17,
+    "yfinance_version": "1.7.0"
+  },
+  "schema": "CA_OPERATIONAL_STATE_V1",
+  "sealed_prereg_sha256": "9a41d7cf2055b5212d8517fa11fbde08218e2b6d2b92e39cbd2081ee9eea882b",
+  "target_outcome_revealed": false,
+  "target_performance_computed": false,
+  "terminal_reveal_authorized": false
+}

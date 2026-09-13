@@ -5,7 +5,7 @@ RECORD_TYPE   = CA_SNAPSHOT_REGISTRY
 ROLE          = CA_PREREGISTRATION_DRAFT.md §I.2 — the tracked, append-only record of
                 snapshot IDENTITY. Market data itself is git-ignored (`.gitignore`: `data/`)
                 for licensing reasons; this registry, not the files, is the committed record.
-STATUS        = PRE-SEAL. C-A is NOT sealed.
+STATUS        = C-A S1 SEALED 2026-09-13T17:42:06Z; PIPELINE LIVE 2026-09-13T18:33:11Z.
 APPEND_ONLY   = YES — rows are never edited, deleted or reordered.
 ```
 
@@ -130,13 +130,36 @@ were emitted.
 ## §4 `S_G` — go-live base snapshot
 
 ```
-S_G_CREATED = NO
+S_G_CREATED = YES  (2026-09-13T18:33:11Z, under Aaron's OD-9 C_A_GO_LIVE_AUTHORIZATION)
 ```
 
-**Deliberately not created.** `S_G` is taken immediately before / at
-`PIPELINE_GO_LIVE` under the sealed §I vintage rules, and go-live is an S2 gate
-(CA §Z.2) that is not authorized. When `S_G` is taken it is pinned here with an
-immutable `S_0` → `S_G` lineage link (CA §E.1).
+| field | value |
+|---|---|
+| artifact | `S_G` — GO-LIVE BASE SNAPSHOT |
+| snapshot id | `S_G_20260913T183249Z` |
+| path | `data/prospective/snapshots/S_G_20260913T183249Z.csv` (git-ignored: `data/`; identity pinned here) |
+| **SHA-256** | `8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35` |
+| byte size | 1948685 |
+| universe | the canonical **17**, all present |
+| window | 1993-01-29 → 2026-09-11 |
+| shape | 8,462 rows × 17 |
+| source | yfinance, `Ticker.history(period="max", auto_adjust=True)` — the sealed acquisition path, same call shape as `S_0` |
+| registered | before any scientific use, append-only |
+
+`S_G` **determines `FORWARD_BOUNDARY`** because go-live is later than the seal
+(§E.1): `PROSPECTIVE_START = max(SEAL, PIPELINE_GO_LIVE) = 2026-09-13 18:33:11+00:00`, and
+`FORWARD_BOUNDARY = 2026-09-11`.
+
+Neither `S_0` nor the frozen historical panel was overwritten — both re-verified
+unchanged before and after registration.
+
+**`S_0` → `S_G` lineage.** `S_0` (`c4a21dc8…`, 2026-09-13T16:56:24Z) is the
+seal-time provenance anchor; `S_G` (`8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35`, 2026-09-13T18:33:11Z) is the go-live base. Both
+are pinned by SHA-256 in tracked state, giving an unbroken chain from the frozen
+historical panel through the seal to the first prospective decision. Observations
+between them are `POST_SEAL_UNSCORED_STATE_INPUT_ONLY`: they may update canonical
+state, they are never scored, never retroactively T4, and contribute zero to
+`N_scored`.
 
 ---
 

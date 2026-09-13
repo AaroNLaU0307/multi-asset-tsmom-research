@@ -6,6 +6,7 @@ PROGRAMME          = Phase B — canonical multi-asset TSMOM prospective confirm
 STUDIES            = C-A (primary prospective confirmation) · C-D (implementation-verification precondition)
 DATE_OF_DECISIONS  = 2026-09-13 (OD-1 … OD-4) · 2026-09-14 (OD-5 … OD-7)
                      2026-09-13T17:42:06Z (OD-8 — SEAL C-A)
+                     2026-09-13T18:30:00Z (OD-9 — C-A GO-LIVE)
 OWNER              = Aaron  (the only authority for every decision recorded here)
 RECORD_STATUS      = CONFIRMED — on 2026-09-14 Aaron confirmed that the §2–§6
                      transcription of OD-1 … OD-4 is faithful, and adopted OD-5 … OD-7
@@ -335,6 +336,49 @@ acquisition identity) · the frozen historical panel · the C-A validators.
 
 **A seal is not an exposure event.** Consistent with every prior seal in this
 repository, no row was added to `EXPOSURE_LEDGER.md` for the seal act itself.
+
+---
+
+## §6F OD-9 — C-A GO-LIVE (Owner authorization, 2026-09-13)
+
+```
+AARON_OWNER_AUTHORIZATION  = C_A_GO_LIVE_AUTHORIZATION = YES
+AUTHORIZATION_ID           = CA-GOLIVE-0001
+GRANTED_UTC                = 2026-09-13T18:30:00Z
+PIPELINE_GO_LIVE_UTC       = 2026-09-13T18:33:11Z
+SCOPE                      = C-A GO-LIVE ONLY
+CONSUMED                   = YES (single use; a second go-live is refused)
+```
+
+**What this authorization did.** Initialized the production protected store and its
+key, established the off-repository key backup, acquired and registered the real
+`S_G` go-live base snapshot, established `PIPELINE_GO_LIVE`, and fixed
+`PROSPECTIVE_START`, `FORWARD_BOUNDARY`, the first eligible decision month-end and
+the first eligible scored month. The prospective pipeline is now LIVE and ready to
+accrue.
+
+```
+PIPELINE_GO_LIVE_TIMESTAMP_UTC        = 2026-09-13T18:33:11Z
+PROSPECTIVE_START                     = 2026-09-13 18:33:11+00:00
+FORWARD_BOUNDARY                      = 2026-09-11
+FIRST_ELIGIBLE_DECISION_MONTH_END     = 2026-09-30  (scheduled; confirmed from that month's snapshot)
+FIRST_ELIGIBLE_SCORED_MONTH           = 2026-10
+N_scored                              = 0
+S_G sha256                            = 8e2e3de98384c470a3ffef947f3fee2b17893b25c8caacdbc15f371b5a768a35
+KEY_FINGERPRINT_SHA256 (non-secret)   = 9c6d2c48dce7fa1a5c22844b5ebcbb1e8954c7fb456a4f9d0eddec4fae2f6d5c
+```
+
+**What this authorization is NOT, and may never be transformed into.** It is **not**
+a `TARGET_REVEAL_AUTHORIZATION`, **not** a `C_D_AUTHORIZATION`, **not** a
+`PHASE_C_AUTHORIZATION`, and **not** a `TERMINAL_ADJUDICATION_AUTHORIZATION`. It
+authorized no terminal reveal, no interim reveal, no human viewing of a prospective
+position vector or protected return, and no Sharpe / PnL / drawdown / cumulative
+performance output. `TERMINAL_REVEAL_AUTHORIZED = NO`.
+
+**Key material.** The production key lives outside the repository and is never
+committed, never logged and never reported. Only its non-secret SHA-256 fingerprint
+is recorded, here and in the S2 operational state — never in the sealed S1
+preregistration.
 
 ---
 
