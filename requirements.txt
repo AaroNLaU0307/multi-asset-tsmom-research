@@ -15,3 +15,8 @@ pytest>=7.4
 # Authenticated encryption for the C-A prospective blindness boundary
 # (AES-256-GCM). Pinned in research/extensions/ca/prospective/ca_contract.py.
 cryptography>=43
+
+# CTA-EDGE-01-TA macro-calendar rebuild only. The normalised
+# research/extensions/ta/TA_MACRO_CALENDAR.csv is committed, so pypdf is needed
+# ONLY to re-parse the 2006/2007 BLS annual-schedule PDFs from raw bytes.
+pypdf>=5

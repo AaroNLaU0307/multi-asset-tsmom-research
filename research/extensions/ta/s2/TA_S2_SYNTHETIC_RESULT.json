@@ -1,0 +1,183 @@
+{
+ "calendarised_sharpe": -0.01,
+ "calendarised_sharpe_ci95": [
+  -0.2,
+  0.18
+ ],
+ "contract_id": "CTA-EDGE-01-TA-PREREG-01",
+ "data_hashes": {},
+ "data_kind": "SYNTHETIC",
+ "descriptives": {
+  "WARNING": "ALL NUMBERS ABOVE ARE SYNTHETIC PLACEHOLDERS. No real CTA-EDGE-01-TA outcome exists."
+ },
+ "diagnostic_triggers": [
+  "MACRO_QRA_IDENTIFICATION"
+ ],
+ "event_calendar_sha256": "b27be5b1d94cfc13fc8310e0d5216675e097a2245fc954e4b12ed282563f7cb6",
+ "evidence_ceiling": "supported",
+ "final_class": "B",
+ "forbidden_interpretations": "REDUCED_FORM ONLY. Never evidence of a dealer balance-sheet cause; never a claim about cash Treasuries; never attributable to 30-year supply specifically (a 10-Year auction sits inside 213 of 213 primary windows); never crisis diversification; never an improvement to canonical TSMOM. Evidence ceiling is `supported` on an exposed panel - never confirmed, never independently confirmed.",
+ "generated_at_utc": "2026-09-14T17:51:47Z",
+ "gradient_shy": {
+  "damage_power": "NONE",
+  "kill_power": "NONE",
+  "mean_gross_ac_bps": {
+   "lower": -1.5,
+   "point": 0.2,
+   "replicates": 1,
+   "upper": 1.9,
+   "valid_replicates": 1
+  },
+  "n_events": 213,
+  "note": "maturity-gradient diagnostic only; may answer whether the pattern attenuates toward the short end; may NOT answer whether the mechanism exists; never enters \u00a7I",
+  "promotion_power": "NONE"
+ },
+ "lineage": "CTA-EDGE-01-TA",
+ "loyo": {
+  "min_mean_net_ac_bps": 1.0,
+  "min_year": 2006,
+  "passes": true,
+  "per_year_calendarised_sharpe": {
+   "2006": 0.05,
+   "2007": 0.05,
+   "2008": 0.05,
+   "2009": 0.05,
+   "2010": 0.05,
+   "2011": 0.05,
+   "2012": 0.05,
+   "2013": 0.05,
+   "2014": 0.05,
+   "2015": 0.05,
+   "2016": 0.05,
+   "2017": 0.05,
+   "2018": 0.05,
+   "2019": 0.05,
+   "2020": 0.05,
+   "2021": 0.05,
+   "2022": 0.05,
+   "2023": 0.05,
+   "2024": 0.05,
+   "2025": 0.05,
+   "2026": 0.05
+  },
+  "per_year_mean_net_ac_bps": {
+   "2006": 1.0,
+   "2007": 1.0,
+   "2008": 1.0,
+   "2009": 1.0,
+   "2010": 1.0,
+   "2011": 1.0,
+   "2012": 1.0,
+   "2013": 1.0,
+   "2014": 1.0,
+   "2015": 1.0,
+   "2016": 1.0,
+   "2017": 1.0,
+   "2018": 1.0,
+   "2019": 1.0,
+   "2020": 1.0,
+   "2021": 1.0,
+   "2022": 1.0,
+   "2023": 1.0,
+   "2024": 1.0,
+   "2025": 1.0,
+   "2026": 1.0
+  }
+ },
+ "macro_calendar_sha256": "8f10675033267136cb2622bf80f2f6da8ca922c0e074fae4c09128a49b1c4789",
+ "macro_covariates_sha256": "92cb21b269da66ff69f9e93540ffb2cba193d80496bf2f09887707a1aacfda04",
+ "macro_qra": {
+  "b0_gross_bps": NaN,
+  "coefficients_bps": {},
+  "damage_bar_bps": 16.0,
+  "damage_power": "YES",
+  "design_matrix_rank": 5,
+  "evaluable": false,
+  "min_reference_group": 20,
+  "n_events": 213,
+  "not_evaluable_reasons": [
+   "REFERENCE_GROUP_TOO_SMALL (7 < 20)"
+  ],
+  "promotion_power": "NONE",
+  "reference_group_n": 7,
+  "rule": "TRIGGER iff b0 < +16.0 bps OR NOT_EVALUABLE; read off the POINT estimate - a damage diagnostic, not a hypothesis test",
+  "triggered": true
+ },
+ "mean_ac_gross_bps": {
+  "lower": -2.0,
+  "point": 4.5,
+  "replicates": 10000,
+  "upper": 11.0,
+  "valid_replicates": 10000
+ },
+ "mean_ac_net_bps": -3.5,
+ "mean_ac_net_ci95": [
+  -10.0,
+  3.0
+ ],
+ "monthly_grid": {
+  "event_months": 213,
+  "months": 244,
+  "zero_months": 31
+ },
+ "placebo_spy": {
+  "damage_bar_bps": 16.0,
+  "damage_power": "YES",
+  "mean_gross_ac_bps": {
+   "lower": -2.2,
+   "point": 0.4,
+   "replicates": 1,
+   "upper": 3.0,
+   "valid_replicates": 1
+  },
+  "n_events": 213,
+  "promotion_power": "NONE",
+  "rule": "TRIGGER iff L95(mean AC_GROSS of SPY) >= +16.0 bps/event; absolute, one-sided, takes NO TLT input",
+  "triggered": false
+ },
+ "primary_event_count": 213,
+ "primary_years": [
+  2006,
+  2007,
+  2008,
+  2009,
+  2010,
+  2011,
+  2012,
+  2013,
+  2014,
+  2015,
+  2016,
+  2017,
+  2018,
+  2019,
+  2020,
+  2021,
+  2022,
+  2023,
+  2024,
+  2025,
+  2026
+ ],
+ "qualifier": "TARGET_MARGIN_EXCLUDED",
+ "research_status": "not_promoted",
+ "run_authorization_id": null,
+ "schema_version": "TA-RESULT-1",
+ "seal_commit": "881e684b4ddca73f117ea78af14843dabf3c59c9",
+ "sealed_prereg_sha256": "3b495fcb220a86b9c4226e308e4814bdfdd871d1c69ce352e99b78977436d35b",
+ "secondary_ief": {
+  "damage_power": "NONE",
+  "kill_power": "NONE",
+  "mean_net_ac_bps": {
+   "lower": -6.0,
+   "point": 1.0,
+   "replicates": 1,
+   "upper": 8.0,
+   "valid_replicates": 1
+  },
+  "n_events": 258,
+  "note": "declared secondary; NO rescue power; never enters \u00a7I",
+  "promotion_power": "NONE"
+ },
+ "synthetic_only": "YES"
+}
