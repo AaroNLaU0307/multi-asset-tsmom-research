@@ -23,7 +23,7 @@
   },
   "commit": null,
   "contract_id": "TSMOM-VRP-01-PREREG-01",
-  "generated_utc": "2026-09-14T10:32:07Z",
+  "generated_utc": "2026-09-14T13:07:22Z",
   "items": [
     {
       "evidence_prefix": "test_i01_",
@@ -217,7 +217,7 @@
   ],
   "lineage": "TSMOM-VRP-01",
   "overall": "PASS",
-  "recorded_at_head_before_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
+  "recorded_at_head_before_commit": "72499019ce9ef97f16d1ddf3b3982697a4e6c4cc",
   "s1_seal_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
   "s2a_counts": {
     "CALENDAR_DECLARED_CFE_ONLY_SESSIONS": 3,
@@ -266,7 +266,7 @@
   },
   "s2a_status": "PASS",
   "secret_scan": {
-    "files_scanned": 33,
+    "files_scanned": 36,
     "findings": [],
     "result": "PASS"
   },

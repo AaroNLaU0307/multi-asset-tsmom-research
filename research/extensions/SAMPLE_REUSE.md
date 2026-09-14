@@ -163,6 +163,35 @@ claim family.** It is logged on the research axis before any result is read.
 
 ---
 
+### KB-6 — `dataset.cboe.vix-futures-monthly-chain` (the monthly VX settlement chain)
+
+*Appended at TSMOM-VRP-01 S2 acceptance, under the rows drafted in
+`research/extensions/vrp/VRP_EXPOSURE_DISCLOSURE.md` §5. The dataset identifier is
+**provisional** until it is registered in the knowledge base; registering it there is a
+separate Owner decision and was not taken here.*
+
+| Field | Value |
+|---|---|
+| **Panel** | Monthly VX contract-level **official daily settlements**, listing → final settlement. 268 standard monthly contracts, 274 raw Cboe official per-contract files, 2004-03-26 → 2026-09-11, 47,160 rows (46,331 carrying an official settlement). Acquired under `research/extensions/vrp/VRP_PREREGISTRATION.md` §L. Every raw file is SHA-256 pinned in `research/extensions/vrp/VRP_DATA_MANIFEST.md`; the raw bytes themselves are git-ignored under `data/vix/` and are **not** committed (Cboe personal/research use, no redistribution). |
+| **Source authority** | Cboe (CFE) official, `SOURCE_AUTHORITY_LEVEL = 1 / PRIMARY`, two endpoints (the delisted-contract archive and the market-statistics historical data). **No vendor copy**, so §L's fallback-authority clause is never exercised. The price taken is the official `Settle` field — never last trade, never the Special Opening Quotation. |
+| **Burned by** | **Nothing yet.** No strategy-return series has been constructed on this panel by any research path. |
+| **Verified from bytes** | No file matching `vix`, `vx`, `vxx` or `cboe` was tracked anywhere in this repository at the S1 seal commit `16d84545`, and no tracked `.py` referenced VIX. This discharges the disclosure's "subject to repository verification that no VIX-futures series was ever constructed here". |
+| **`N_trials`** | **0, before Stage A.** Under the programme's existing convention (one trial per **distinct constructed strategy-return series with a selection opportunity**; diagnostics of an existing series excluded), the sealed TSMOM-VRP-01 Stage-A primary is this panel's **first governed trial (+1) when it runs**. It has **not** run: `STAGE_A_TRIAL_SPENT = NO`. |
+| **Not attempts** | Bootstrap replicates; the declared VRP-DESC family R1–R14; any sensitivity carrying `PROMOTION_POWER = NONE` (including the `c0 = 0.05` cost variant). |
+| **S2 exposure** | Raw contract settlements were acquired and read **for mechanical implementation and validation only** — hashes, row and contract counts, date ranges, duplicate counts, missing-settlement flags, expiry and calendar identity, roll-weight identities, specification normalisation. **No return, basis, carry, roll yield, average price or strategy statistic was computed on them**, and no Stage-A or Stage-B outcome exists. |
+| **Evidence context** | **`DESIGN_INFORMED_FIRST_LOCAL_USE`** — never "fresh", never "independent". Locally unsearched (verified above); globally saturated: VIX futures are heavily studied publicly and the sign of the long-run gross carry is common knowledge. The label travels with every citation. |
+
+**ETF-panel consequence of the same lineage (KB-1 addendum).** TSMOM-VRP-01 **Stage B** is
+a paired combination of the frozen canonical net stream (months ≤ 2026-05-31, recomputed by
+the pinned canonical modules per the Value contract's §17 comparator identity) with the
+Stage-A sleeve in a self-financing book at `s = 0.20`. It is **context T0 on the ETF panel
+— a further declared reuse (ninth-plus)**, and SPY monthly returns are used for the X46
+tail rule. The frozen panel's historical count convention (`D-ETF-COUNT`,
+`TRIAL_LEDGER.md` §4) is **untouched** by this declaration. Stage B is conditional on
+Stage A and has **not** run: `STAGE_B_TRIAL_SPENT = NO`.
+
+---
+
 ## §3 Residual — `UNKNOWN`, and deliberately left so
 
 Beyond the burns enumerated in §2, this program's cumulative prior exposure is
@@ -231,6 +260,7 @@ this program.**
 
 | Date (UTC) | Appended | By |
 |---|---|---|
+| 2026-09-14 | **TSMOM-VRP-01 S2 acceptance rows.** **KB-6** appended: the new `dataset.cboe.vix-futures-monthly-chain` dataset row at **`N_trials = 0` before Stage A**, with the repository verification that no VIX-futures series was ever constructed here, the Cboe PRIMARY source authority, the S2 mechanical-only exposure statement, and evidence context `DESIGN_INFORMED_FIRST_LOCAL_USE`. A **KB-1 addendum** records Stage B as **T0, further reuse (ninth-plus)** of the frozen ETF panel, leaving `D-ETF-COUNT` untouched. **No trial count moved**: Stage A has not run (`STAGE_A_TRIAL_SPENT = NO`), Stage B has not run (`STAGE_B_TRIAL_SPENT = NO`). **No existing row was edited or reordered.** | TSMOM-VRP-01 S2 governance-closure session (Claude Opus 5), implementation Main Agent, under Aaron's `S2 BOUNDED PRE-S3 GOVERNANCE CLOSURE` |
 | 2026-09-07 | Initial declaration: KB-1 (ETF, 6/6 burned, 7th reuse declared, no frozen count convention), KB-2 (Databento, `N_trials = 14` verified), KB-3 (T1 wrapper relationship), KB-4 (exposed-sample consequences), KB-5 (T3/T4 separation); residual `UNKNOWN`; cross-project coordination §4; claim consequences §5. | Wave-0 governance session (Claude Opus 5), under Aaron's `AUTHORIZE_WAVE_0_GOVERNANCE_EXECUTION` |
 
 ```

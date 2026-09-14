@@ -109,6 +109,24 @@ created and **no new KB schema was invented**.
 
 ---
 
+### §3.3 `dataset.cboe.vix-futures-monthly-chain` — **convention DECLARED, count 0, NOTHING SPENT**
+
+*Appended at TSMOM-VRP-01 S2 acceptance. Dataset identifier provisional until KB
+registration (a separate Owner decision, not taken here). Sample record: `SAMPLE_REUSE.md`
+KB-6.*
+
+| Field | Value |
+|---|---|
+| **Authoritative record** | `research/extensions/vrp/VRP_PREREGISTRATION.md` §M (sealed 2026-09-14, SHA256 `dd582244…53e6`), and the acquisition pinned in `research/extensions/vrp/VRP_DATA_MANIFEST.md`. |
+| **Counting convention** | The programme's existing convention, reused verbatim: **one trial per distinct constructed strategy-return series with a selection opportunity**; diagnostics of an existing series are excluded. |
+| **`N_trials`** | **0.** The sealed Stage-A primary is this panel's first governed trial and **adds +1 when it runs**. It has not run. |
+| **Not attempts** | Bootstrap replicates; VRP-DESC members R1–R14; any output carrying `PROMOTION_POWER = NONE`, including the `c0 = 0.05` cost sensitivity. |
+| **Stage B** | A paired combination on the heavily reused ETF/core panel, declared there as **T0 / further reuse (ninth-plus)** under the existing convention. It is **conditional on Stage A = SUPPORTED** and contributes nothing until Stage A resolves that way. |
+| **Failure classes vs count** | Separate axes, per the sealed §M. A Level-1 (VRP-VALIDITY) or Level-2 (VRP-IMPLEMENTABILITY) failure occurs **before** the governed run and spends **no** trial; a Stage-A run spends its trial whatever its state. |
+| **Status at this append** | `STAGE_A_TRIAL_SPENT = NO` · `STAGE_B_TRIAL_SPENT = NO` · `SCIENTIFIC_STAGE_A_OUTCOME_GENERATED = NO` · `SCIENTIFIC_STAGE_B_OUTCOME_GENERATED = NO` · `SCIENTIFIC_OUTCOME_REVEALED = NO`. S2 acquired and mechanically validated the raw chain only. |
+
+---
+
 ## §4 AARON DECISION — the ETF-panel trial count (historical OPEN · forward RESOLVED)
 
 > **Resolved at the X01 pre-execution gate, 2026-09-09.** The **historical**
@@ -314,10 +332,15 @@ would create a second competing account of them.
 
 | # | family | declared at | members / cells | multiplicity treatment | status |
 |---|---|---|---|---|---|
-| — | *(none declared)* | | | | |
+| 1 | **`F-VRP`** | `research/extensions/vrp/VRP_PREREGISTRATION.md` §S, sealed 2026-09-14 (SHA256 `dd582244…53e6`); appended here at S2 acceptance, **before any member has run** | **VRP-A** (primary, the one governed Stage-A attempt) · **VRP-B** (primary, conditional on VRP-A = SUPPORTED) · **VRP-DESC R1–R14** (`PROMOTION_POWER = NONE`) | **No automatic +1 per attempt.** VRP-DESC members are not attempts and never enter `N_trials`. Precedence is by level (§B): a Level-1/Level-2 failure precedes the governed run and spends no trial. | **DECLARED, NO MEMBER HAS RUN.** `STAGE_A_TRIAL_SPENT = NO`, `STAGE_B_TRIAL_SPENT = NO`. |
 
-**No family is declared, because a family is declared in a preregistration
-before its first member runs, and no preregistration exists**
+**This is the first declared family in this programme**, and it is declared on exactly the
+condition the register already states below: TSMOM-VRP-01 has a **sealed** preregistration,
+and the family is appended **before its first member runs**. Nothing about the
+no-preregistration position for the pre-VRP candidates changes.
+
+**For every other candidate, no family is declared, because a family is declared
+in a preregistration before its first member runs, and no preregistration exists**
 (`PREREG_SEALED=N/A`). Program v2 §11 carries the **reconciled family map** —
 the planned grouping for each candidate, including the `F-X18`/`F-X39` grouping
 question and the `F-X19`/`F-X20` counting choice. That map is **architecture**,
@@ -338,6 +361,7 @@ workload budget and explicitly not a multiplicity correction**; it never enters
 
 | Date (UTC) | Appended | By |
 |---|---|---|
+| 2026-09-14 | **TSMOM-VRP-01 S2 acceptance.** **§3.3** appended: the new `dataset.cboe.vix-futures-monthly-chain` contribution row at **`N_trials` = 0**, with the programme's existing counting convention reused verbatim. **§6.2** appended: **`F-VRP`** — the programme's **first declared HYPOTHESIS_FAMILY**, declared from the sealed VRP preregistration **before any member has run** (members VRP-A, VRP-B, VRP-DESC R1–R14; no automatic +1 per attempt). **Nothing was spent**: Stage A has not run, Stage B has not run, no scientific outcome was generated or revealed, and the Databento and ETF frozen references are untouched (`D-ETF-COUNT` stays open). **No existing row was edited or reordered.** | TSMOM-VRP-01 S2 governance-closure session (Claude Opus 5), implementation Main Agent, under Aaron's `S2 BOUNDED PRE-S3 GOVERNANCE CLOSURE` |
 | 2026-09-09 | **X01 pre-execution gate — owner decisions recorded.** `SHARED_DATABENTO_HOME_GATE = RESOLVED` via the **existing distributed form** (§3.1a, §5.2); **no KB registry CSV created, no KB schema invented, carry not modified**. `TSMOM_TRIAL_LEDGER_CURATOR` = the X01 executing/governance session. `D-ETF-COUNT`: historical stays **`UNKNOWN`**, forward convention **`E_COUNTS_AS_ONE_PROSPECTIVE_ATTEMPT`**, gate **`RESOLVED_FOR_X01_EXECUTION`**, effect on the Databento `+3` **`NONE`** (§4). §6.1 now names the **planned** A1/S1/S2/E rows and states they **do not exist yet**. **Anchor still 14; TSMOM contribution still 0; planned +3 still conditional; the cumulative total is read at execution and is NOT hard-coded to 17. No attempt row was created and nothing was evaluated.** | X01 pre-execution gate session (Claude Opus 5) |
 | 2026-09-08 | **X01 preregistration SEALED** at seal-base revision `df5b28ab7324`. §2 index **32/21**. **A commit and a seal are not strategy-return attempts:** **no `VARIANT_ATTEMPT` was created by this operation**, and none may be. **Databento contribution remains 0; frozen reference remains 14; planned future X01 contribution remains +3** on A1, S1 and S2, still conditional on exactly those three governed constructions, with the resulting cumulative total computed **at execution** and not hard-coded to 17. Shared Databento home and `D-ETF-COUNT` remain `PRE_EXECUTION`, were **not** resolved, and **the shared ledger was not created** - the seal does not authorize any of that. | Wave-1 seal-execution session (Claude Opus 5) |
 | 2026-09-08 | **X01 seal attempt — BLOCKED.** §2 index **31/20**. **Nothing changed in trial accounting:** `PLANNED_X01_CONTRIBUTION` stays **+3** on A1, S1 and S2; **a seal creates no `VARIANT_ATTEMPT` and no trial**, and none was created here - nor would one have been had the seal completed. **Databento contribution remains 0; frozen reference remains 14**; the resulting cumulative total is still computed at execution and is not hard-coded to 17. Shared Databento home and `D-ETF-COUNT` remain `PRE_EXECUTION` and were **not** resolved; **the shared ledger was not created.** | Wave-1 seal-attempt session (Claude Opus 5) |

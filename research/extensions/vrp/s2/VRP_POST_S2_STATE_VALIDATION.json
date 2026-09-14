@@ -1,0 +1,249 @@
+{
+  "checks": [
+    {
+      "check": "original validator ran",
+      "detail": "exit 1",
+      "pass": true
+    },
+    {
+      "check": "original validator content checks PASS (expected 113)",
+      "detail": "113 PASS",
+      "pass": true
+    },
+    {
+      "check": "exactly ONE original check fails",
+      "detail": "1 FAIL: no data/vix directory exists yet",
+      "pass": true
+    },
+    {
+      "check": "the ONLY failing check is the known seal-time acquisition-state assertion",
+      "detail": "'no data/vix directory exists yet'",
+      "pass": true
+    },
+    {
+      "check": "original validator exit code is 1, reported as-is and NOT relabelled",
+      "detail": "exit 1 (expected 1)",
+      "pass": true
+    },
+    {
+      "check": "data/vix exists",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "data/vix contains ONLY raw/ and manifests/",
+      "detail": "manifests,raw",
+      "pass": true
+    },
+    {
+      "check": "the acquisition manifest exists and is the reason data/vix exists",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "a TRACKED provenance manifest pins the acquisition",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "every acquired file is Cboe PRIMARY authority",
+      "detail": "274 raw contract files",
+      "pass": true
+    },
+    {
+      "check": "the acquisition binds to the accepted S1 seal",
+      "detail": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
+      "pass": true
+    },
+    {
+      "check": "every pinned raw file is present and matches its SHA256",
+      "detail": "0 mismatched",
+      "pass": true
+    },
+    {
+      "check": "data/vix/raw and data/vix/manifests are git-ignored",
+      "detail": "data/vix/raw data/vix/manifests",
+      "pass": true
+    },
+    {
+      "check": "no file under data/vix is tracked by git",
+      "detail": "0 tracked",
+      "pass": true
+    },
+    {
+      "check": "the tracked file set under data/ is unchanged since the S1 seal",
+      "detail": "added since seal: none",
+      "pass": true
+    },
+    {
+      "check": "no data file was committed by S2",
+      "detail": "1 tracked under data/, all pre-existing",
+      "pass": true
+    },
+    {
+      "check": "all four sealed S1 artifacts are byte-identical to the seal",
+      "detail": "unchanged: 4",
+      "pass": true
+    },
+    {
+      "check": "git confirms no sealed artifact changed since the seal commit",
+      "detail": "0 changed",
+      "pass": true
+    },
+    {
+      "check": "the accepted S1 seal is an ancestor of HEAD",
+      "detail": "16d84545ba13",
+      "pass": true
+    },
+    {
+      "check": "the canonical base (main) is an ancestor of HEAD",
+      "detail": "d232d3361b23",
+      "pass": true
+    },
+    {
+      "check": "main is unmoved at the canonical base",
+      "detail": "d232d3361b23",
+      "pass": true
+    },
+    {
+      "check": "no C-D-only commit is an ancestor of HEAD",
+      "detail": "5 checked",
+      "pass": true
+    },
+    {
+      "check": "research/extensions/ca/ is byte-identical to main",
+      "detail": "0 changed",
+      "pass": true
+    },
+    {
+      "check": "the acceptance log records REAL_STAGE_A_COMPUTED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "the acceptance log records REAL_STAGE_B_COMPUTED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "the acceptance log records REAL_PERFORMANCE_REVEALED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "the acceptance log records S3_AUTHORIZED = NO and REAL_RUN_AUTHORIZED = NO",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "no single-use Owner EXECUTION authorisation is committed",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "no single-use Owner REVEAL authorisation is committed",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "the governed-run entry gate REFUSES a real run",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "the VRP protected store is empty or absent",
+      "detail": "data/vrp_protected",
+      "pass": true
+    },
+    {
+      "check": "no outcome-shaped result file exists anywhere in the package",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "static C-A access audit passes",
+      "detail": "21 files audited, 0 findings",
+      "pass": true
+    },
+    {
+      "check": "audit records C_A_PROSPECTIVE_OUTCOME_ACCESSED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "audit records C_A_PROTECTED_STORE_ACCESSED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "audit records C_A_POSITION_LAYER_ACCESSED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "audit records C_A_RETURN_LAYER_ACCESSED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "audit records CANONICAL_FORWARD_RETURN_COMPUTED = NO",
+      "detail": "NO",
+      "pass": true
+    },
+    {
+      "check": "the VRP protected store is the VRP family's own, never the C-A store",
+      "detail": "C:/Users/Aaron/OneDrive/Desktop/Quant trade/multi-asset-tsmom-research/data/vrp_protected",
+      "pass": true
+    },
+    {
+      "check": "VRP_S1_MECHANICAL_ERRATUM_01.md exists",
+      "detail": "b8a089ac2f1d3f26",
+      "pass": true
+    },
+    {
+      "check": "erratum declares SCIENTIFIC_DESIGN_CHANGED",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "erratum declares OWNER_VALUE_CHANGED",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "erratum declares ESTIMAND_CHANGED",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "erratum declares OUTCOME_USED_TO_RESOLVE",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "erratum names the proving synthetic test",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "vrp_stage_a uses the SIGNED convention (no leading minus on signed q)",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "vrp_stage_b uses the SIGNED convention",
+      "detail": "",
+      "pass": true
+    }
+  ],
+  "expected_state_failure": "no data/vix directory exists yet",
+  "generated_utc": "2026-09-14T13:07:23Z",
+  "lineage": "TSMOM-VRP-01",
+  "original_s1_content_checks_pass": 113,
+  "original_s1_failing_checks": [
+    "no data/vix directory exists yet"
+  ],
+  "original_s1_validator": "EXPECTED_POST_S2_STATE_FAILURE",
+  "original_s1_validator_exit": 1,
+  "post_s2_state_transition_validator": "PASS"
+}

@@ -125,6 +125,82 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## TSMOM-VRP-01 — short-VIX-futures sleeve — S2 IMPLEMENTATION COMPLETE 2026-09-14
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Does a standalone, unconditional, constant-maturity SHORT position in
+                      listed monthly VIX futures, held at a frozen stress-budgeted size,
+                      deliver useful compensation after real holdings, rolling, variation
+                      margin, costs and collateral (Stage A) -- and, only if it does, is it
+                      compatible with the canonical TSMOM programme in systemic-tail months
+                      (Stage B)?
+RESEARCH_ID · LANE  = TSMOM-VRP-01 · FULL
+S0 FRAME            = COMPLETE (Fable Phase-C map + final adjudication; independent Astra
+                      Phase-C map and accepted S0 challenge; Aaron's Owner decisions, with
+                      VRP-OD-2...VRP-OD-9 delegated to Fable by Aaron).
+S1 DESIGN+SEAL      = COMPLETE. SEALED 2026-09-14T08:04:09Z on the canonical base.
+                      Authoritative seal commit 16d84545ba1385a482dbac7e776b31275f6fa5f7
+                      (branch vrp/s1-seal-clean, parent main d232d336).
+                      Sealed contract research/extensions/vrp/VRP_PREREGISTRATION.md
+                      sha256 dd5822440bedbe58f49940651bddf656f4dbb593295b59c4eff2b45b89cf53e6.
+                      The earlier attempt d19264af85f45c17f655493e02f71a653bfbdd86 is
+                      NON-AUTHORITATIVE (wrong lineage base) and is preserved as provenance.
+S2 BUILD            = IMPLEMENTATION COMPLETE, PENDING FINAL CHATGPT S2 ACCEPTANCE.
+                      Build commit 72499019ce9ef97f16d1ddf3b3982697a4e6c4cc, governance
+                      closure appended on branch vrp/s2-build. S2A data gate 32/32 PASS;
+                      21/21 implementation-acceptance items PASS; 100 VRP tests, 101
+                      repository tests, all pass.
+S3 RUN              = NOT AUTHORIZED. NOT RUN.
+CURRENT_VNEXT_STAGE = S2, held for final ChatGPT acceptance.
+DATA_GRANT          = VIX chain acquired under Aaron's PHASE D authorisation. 274 raw Cboe
+                      official contract files + 7 primary specification documents, SHA-256
+                      pinned in research/extensions/vrp/VRP_DATA_MANIFEST.md; raw bytes
+                      git-ignored under data/vix/ and NOT committed (Cboe research use, no
+                      redistribution). Dataset row: SAMPLE_REUSE.md KB-6.
+SAMPLE              = dataset.cboe.vix-futures-monthly-chain (identifier provisional until
+                      KB registration -- a separate Owner decision, not taken).
+                      268 monthly contracts, 2004-03-26 -> 2026-09-11.
+                      Stage-A window 2006-09 -> 2026-08 = 240 months, first month fixed
+                      MECHANICALLY by the sealed section F.6 rule, never by an outcome.
+DATA_CONTEXT        = DESIGN_INFORMED_FIRST_LOCAL_USE. Never "fresh", never "independent".
+OUTCOME_EXPOSURE    = NONE on the VIX chain. Raw settlements were read for mechanical
+                      implementation and validation ONLY. No return, basis, carry, roll
+                      yield, average price, Sharpe, CAGR, drawdown, bootstrap interval,
+                      tail statistic or cost-adjusted performance was computed on the real
+                      chain. Stage A and Stage B run on SYNTHETIC fixtures only.
+TRIALS              = STAGE_A_TRIAL_SPENT = NO · STAGE_B_TRIAL_SPENT = NO.
+                      N_trials on the VIX chain = 0 (TRIAL_LEDGER.md section 3.3).
+                      HYPOTHESIS_FAMILY F-VRP declared before any member ran
+                      (TRIAL_LEDGER.md section 6.2) -- the programme's first declared family.
+MECHANICAL_ERRATUM  = TSMOM-VRP-01-ERRATUM-01, the variation-margin sign notation, at
+                      research/extensions/vrp/VRP_S1_MECHANICAL_ERRATUM_01.md. Freezes the
+                      SIGNED convention forced by the sealed object (section A "short
+                      position"; section D.2 Loss_J = +b*K). SCIENTIFIC_DESIGN_CHANGED = NO,
+                      OWNER_VALUE_CHANGED = NO, OUTCOME_USED_TO_RESOLVE = NO. The sealed
+                      text is NOT amended and is byte-identical to the seal.
+SEAL_VALIDATOR      = The hash-pinned S1 validator vrp_prereg_validate.py is unmodified and
+                      still exits 1: 113 contract/content checks PASS and exactly one
+                      SEAL-TIME STATE assertion ("no data/vix directory exists yet") now
+                      fails, because authorised S2 acquisition made it false -- section L
+                      itself mandates data/vix/raw/. That exit code is reported as-is and is
+                      never relabelled PASS. The state transition is checked instead by
+                      research/extensions/vrp/s2/vrp_post_s2_validate.py (47/47 PASS).
+C_A_INTERACTION     = NONE. Static audit over 21 package files: no C-A import, path, key or
+                      store; no canonical quantity computed anywhere; Stage B refuses any
+                      core day after the C-A forward boundary 2026-09-11 or after the sealed
+                      Stage-B boundary 2026-05-31.
+NEXT_OWNER_DECISION = ChatGPT final S2 acceptance. Only then may Aaron consider a single-use
+                      Owner execution authorisation for S3.
+REAL_RUN_AUTHORIZED = NO
+S3_AUTHORIZED       = NO
+```
+
+Nothing in this block alters canonical TSMOM's status, C-A's status, or C-D's closure.
+
+---
+
 ## C-A — canonical TSMOM prospective confirmation — S1 SEALED 2026-09-13
 
 ```

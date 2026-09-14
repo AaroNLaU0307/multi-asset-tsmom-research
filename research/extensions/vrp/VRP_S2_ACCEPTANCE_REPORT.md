@@ -403,4 +403,57 @@ NEXT_GATE                   = CHATGPT S2 ACCEPTANCE
 S2 completion gives ChatGPT something to accept. It authorises nothing further. Stage A has
 not been run. Stage B has not been run. No real performance has been revealed.
 
+---
+
+## 8. Bounded pre-S3 governance closure (appended 2026-09-14)
+
+ChatGPT accepted S2A, the engine build, synthetic validation, sabotage validation,
+real-data mechanical validation, the C-A firewall and the outcome firewall, and held S2 for
+three bounded governance closures. All three are complete. **No research design was
+reopened, no reviewer was consulted, no stage was run, and no real performance was
+revealed.**
+
+**8.1 The variation-margin erratum is now a durable artifact.**
+`research/extensions/vrp/VRP_S1_MECHANICAL_ERRATUM_01.md` records the notation
+inconsistency between §D.2's signed-negative `q_i` and §E.1's additional leading minus,
+freezes the **SIGNED** convention the implementation uses, states the equivalent MAGNITUDE
+form, and declares `SCIENTIFIC_DESIGN_CHANGED = NO`, `OWNER_VALUE_CHANGED = NO`,
+`ESTIMAND_CHANGED = NO`, `EXPOSURE_CHANGED = NO`, `COST_CHANGED = NO`,
+`WINDOW_CHANGED = NO`, `OUTCOME_USED_TO_RESOLVE = NO`. It cites §A ("short position") and
+§D.2 (`Loss_J = +b·K`) as the fixed points that force the reading, and names the proving
+synthetic test. **The sealed contract is not amended**; it remains byte-identical to the
+seal. The erratum is an *additional* authoritative implementation-control artifact for S3.
+
+**8.2 The seal-time validator is untouched; a state-transition validator was added.**
+`vrp_prereg_validate.py` is **not modified** and **still exits 1**. Its result is reported
+as-is: **113 contract/content checks PASS, 1 seal-time state assertion FAIL**
+(`no data/vix directory exists yet`), which was intentionally true at S1 and intentionally
+became false once Owner-authorised acquisition put raw files where §L mandates. That exit
+code is **never relabelled PASS**. The transition itself is checked by
+`research/extensions/vrp/s2/vrp_post_s2_validate.py`, which runs the original validator as
+a subprocess and requires all 113 content checks to pass, requires the *only* failure to be
+exactly that known assertion, and then verifies that `data/vix` exists only because
+authorised acquisition occurred, that raw data remain git-ignored and that **the tracked
+file set under `data/` is unchanged since the seal**, that the four sealed artifacts are
+byte-identical, that the branch descends from the accepted seal with no C-D ancestor, that
+no real Stage-A or Stage-B result exists and the run gate refuses, that the protected store
+is empty, and that C-A was not accessed. **47 / 47 PASS.**
+
+**8.3 The accepted-S2 ledger rows are appended.** Using the rows drafted in
+`VRP_EXPOSURE_DISCLOSURE.md` §5 as the source, following each file's existing schema, with
+no existing row edited or reordered:
+
+| file | appended |
+|---|---|
+| `research/extensions/SAMPLE_REUSE.md` | **KB-6** `dataset.cboe.vix-futures-monthly-chain` at `N_trials = 0`, with the repository verification that no VIX-futures series was ever constructed here; plus a KB-1 addendum recording Stage B as T0 / further reuse (ninth-plus), leaving `D-ETF-COUNT` untouched |
+| `research/extensions/TRIAL_LEDGER.md` | **§3.3** the VIX-chain contribution row at 0; **§6.2** `F-VRP` — the programme's first declared HYPOTHESIS_FAMILY, declared before any member ran |
+| `ops/EXPOSURE_LEDGER.md` | **Rows 48–49**, both `NO_OUTCOME` / `PURE_MECHANICAL_VERIFICATION`: the S1 seal (recorded retrospectively, as the disclosure directs) and the S2 acquisition + mechanical validation |
+| `ops/REVIEWER_EXPOSURE_LOG.md` | **S27** Fable and **S28** Astra as `material_design_contributor`, barred from blind certification; **S29** the Opus S2 implementation builder, raw-data mechanical exposure only, barred from certifying its own implementation |
+| `PROJECT_STATE.md` | a `TSMOM-VRP-01` block, state only — `S2 IMPLEMENTATION COMPLETE, PENDING FINAL CHATGPT S2 ACCEPTANCE`, `REAL_RUN_AUTHORIZED = NO`, `S3_AUTHORIZED = NO` |
+
+**No trial count moved.** `STAGE_A_TRIAL_SPENT = NO`, `STAGE_B_TRIAL_SPENT = NO`,
+`SCIENTIFIC_STAGE_A_OUTCOME_GENERATED = NO`, `SCIENTIFIC_STAGE_B_OUTCOME_GENERATED = NO`,
+`SCIENTIFIC_OUTCOME_REVEALED = NO`. Canonical TSMOM status, C-A status and C-D closure are
+unaltered.
+
 *Recompute every hash cited here before use. Chat-carried bytes are never a source of truth.*
