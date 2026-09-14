@@ -73,6 +73,33 @@ SEALED_MONTHS = 240
 # only committed capital the contract names in dollars (section H.1 at W0).
 K_STAGE_A = K.s * K.W0                             # $200,000
 
+# ---------------------------------------------------------------------------
+# THE S3 STATE TRANSITION, ENUMERATED.
+#
+# Two accepted S2 validators contain assertions that were TRUE during S2 and that the
+# Owner-authorised S3 execution grant NECESSARILY makes false - exactly the same class as
+# the S1 validator's "no data/vix directory exists yet", one stage later:
+#
+#   * "no single-use Owner EXECUTION authorisation is committed"  - one now is;
+#   * "the governed-run entry gate REFUSES a real run"            - it now admits Stage A;
+#   * test_i21_no_execution_authorization_exists                  - same fact;
+#   * test_i21_real_stage_a_is_refused_during_s2                  - Stage A is now authorised.
+#
+# NEITHER VALIDATOR IS MODIFIED AND NEITHER EXIT CODE IS RELABELLED. The gate below
+# instead requires that these are the ONLY failures, so any OTHER regression still blocks
+# the run. Stage B is deliberately NOT on this list: `test_i21_real_stage_b_is_refused...`
+# must keep passing, and it does, because `require_run_authorization` is stage-scoped and
+# VRP-AUTH-0001 carries `stage_b_authorized = false`.
+EXPECTED_S3_STATE_FLIPS_POST_S2 = [
+    "no single-use Owner EXECUTION authorisation is committed",
+    "the governed-run entry gate REFUSES a real run",
+]
+EXPECTED_S3_STATE_FLIPS_TESTS = [
+    "test_i21_no_execution_authorization_exists",
+    "test_i21_real_stage_a_is_refused_during_s2",
+]
+POST_S2_EXPECTED_PASSES = 45      # 47 total minus the two enumerated S3-state flips
+
 _ok = True
 _gates = []
 
@@ -208,14 +235,31 @@ def cmd_preflight(_args) -> int:
        "vm += q * STANDARD_MULTIPLIER" in src
        and "vm += -q * STANDARD_MULTIPLIER" not in src)
 
-    section("D. post-S2 state-transition validator")
+    section("D. post-S2 state-transition validator (S3-state transition accounted)")
     proc = subprocess.run([sys.executable,
                            os.path.join("research", "extensions", "vrp", "s2",
                                         "vrp_post_s2_validate.py")],
                           cwd=REPO, capture_output=True, text=True,
                           encoding="utf-8", errors="replace")
-    ck("post-S2 state-transition validator PASSES", proc.returncode == 0,
-       "exit %d" % proc.returncode)
+    import re as _re
+    # Read the validator's own JSON record rather than scraping stdout: its labels are
+    # padded to a fixed width and the longest ones leave a single space before the verdict,
+    # which a whitespace regex silently mis-parses.
+    with open(os.path.join(REPO, "research", "extensions", "vrp", "s2",
+                           "VRP_POST_S2_STATE_VALIDATION.json"), encoding="utf-8") as fh:
+        d_rec = json.load(fh)
+    d_fails = sorted(c["check"] for c in d_rec["checks"] if not c["pass"])
+    d_passes = [c for c in d_rec["checks"] if c["pass"]]
+    ck("post-S2 validator content checks still PASS",
+       len(d_passes) == POST_S2_EXPECTED_PASSES,
+       "%d PASS of %d" % (len(d_passes), len(d_rec["checks"])))
+    ck("the ONLY post-S2 failures are the enumerated S3-state assertions",
+       d_fails == sorted(EXPECTED_S3_STATE_FLIPS_POST_S2),
+       "; ".join(d_fails) or "none")
+    ck("the original S1 validator still reports 113 content checks PASS",
+       d_rec["original_s1_content_checks_pass"] == 113
+       and d_rec["original_s1_failing_checks"] == [d_rec["expected_state_failure"]],
+       "exit %s" % d_rec["original_s1_validator_exit"])
 
     section("E. S2A data authority and raw hash re-verification")
     proc = subprocess.run([sys.executable,
@@ -283,13 +327,25 @@ def cmd_preflight(_args) -> int:
     ck("static C-A access audit PASSES", audit["pass"] is True,
        "%d files, %d findings" % (len(audit["files_audited"]), len(audit["findings"])))
 
-    section("I. secret scan")
-    proc = subprocess.run([sys.executable,
-                           os.path.join("research", "extensions", "vrp", "vrp_s2_accept.py")],
+    section("I. acceptance suite (S3-state transition accounted) and secret scan")
+    proc = subprocess.run([sys.executable, "-m", "pytest",
+                           os.path.join("research", "extensions", "vrp", "vrp_tests.py"),
+                           "-q", "--no-header", "--tb=no", "-p", "no:cacheprovider"],
                           cwd=REPO, capture_output=True, text=True,
                           encoding="utf-8", errors="replace")
-    ck("acceptance runner (21 items) + secret scan PASS", proc.returncode == 0,
-       "exit %d" % proc.returncode)
+    t_fails = sorted(set(_re.findall(r"vrp_tests\.py::(\S+)", proc.stdout)))
+    ck("the ONLY acceptance-suite failures are the enumerated S3-state assertions",
+       t_fails == sorted(EXPECTED_S3_STATE_FLIPS_TESTS),
+       "; ".join(t_fails) or "none")
+    m = _re.search(r"(\d+) failed, (\d+) passed", proc.stdout)
+    ck("every other acceptance test still passes",
+       bool(m) and int(m.group(1)) == len(EXPECTED_S3_STATE_FLIPS_TESTS),
+       m.group(0) if m else proc.stdout.strip().splitlines()[-1:])
+    sys.path.insert(0, PKG)
+    import vrp_s2_accept as vaccept
+    findings, scanned = vaccept.secret_scan()
+    ck("secret scan clean", not findings, "%d files, %d finding(s)"
+       % (scanned, len(findings)))
 
     section("J. reveal-control readiness")
     acc = vreveal.acceptance_log_all_pass()

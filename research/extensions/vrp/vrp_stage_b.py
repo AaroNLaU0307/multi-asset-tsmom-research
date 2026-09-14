@@ -129,7 +129,7 @@ def run_stage_b(core: Sequence[CoreMonth],
                 data_kind: str,
                 run_id: str = "") -> StageBResult:
     """The sealed self-financing book. `core` and `sleeve` are aligned month by month."""
-    vreveal.require_run_authorization(data_kind, run_id)
+    vreveal.require_run_authorization(data_kind, run_id, stage="STAGE_B")
     if data_kind == vreveal.REAL:
         _assert_core_within_boundary(core)
     sleeve_by_month = {m.month: m for m in sleeve}

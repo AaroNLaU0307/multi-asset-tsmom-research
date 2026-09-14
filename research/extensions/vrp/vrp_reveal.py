@@ -146,9 +146,17 @@ def current_commit() -> Optional[str]:
 # --------------------------------------------------------------------------- #
 # the gate
 # --------------------------------------------------------------------------- #
-def require_run_authorization(data_kind: str, run_id: str = "") -> None:
+def require_run_authorization(data_kind: str, run_id: str = "",
+                              stage: str = "STAGE_A") -> None:
     """The governed-run entry gate. SYNTHETIC data always passes; REAL data needs both
-    sealed preconditions. Acceptance item 21 asserts the refusal."""
+    sealed preconditions AND a grant whose SCOPE covers the stage being run.
+
+    The stage check is not decorative. A grant issued for one historical Stage-A run must
+    not silently open Stage B: the sealed stop rule (section O) makes Stage B a separate,
+    conditional, separately authorised act. A grant carrying
+    `binding.stage_b_authorized = false` refuses Stage B even while it authorises Stage A.
+    Acceptance item 21 asserts the refusal.
+    """
     if data_kind == SYNTHETIC:
         return
     if data_kind != REAL:
@@ -165,6 +173,17 @@ def require_run_authorization(data_kind: str, run_id: str = "") -> None:
             "present in committed state" % LINEAGE)
     if run_id and grant.get("binding", {}).get("run_id") != run_id:
         raise RunNotAuthorized("REAL run refused: run_id does not match the grant")
+    binding = grant.get("binding", {})
+    if stage.upper().startswith("STAGE_B"):
+        if not binding.get("stage_b_authorized", False):
+            raise RunNotAuthorized(
+                "REAL Stage-B run refused: grant %s does not authorise Stage B "
+                "(binding.stage_b_authorized is not true)"
+                % grant.get("authorization_id"))
+    elif binding.get("stage") and "STAGE_A" not in str(binding["stage"]).upper():
+        raise RunNotAuthorized(
+            "REAL Stage-A run refused: grant %s is scoped to %r"
+            % (grant.get("authorization_id"), binding["stage"]))
 
 
 # --------------------------------------------------------------------------- #
