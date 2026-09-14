@@ -138,17 +138,17 @@
     {
       "check": "no single-use Owner EXECUTION authorisation is committed",
       "detail": "",
-      "pass": false
+      "pass": true
     },
     {
       "check": "no single-use Owner REVEAL authorisation is committed",
       "detail": "",
-      "pass": false
+      "pass": true
     },
     {
       "check": "the governed-run entry gate REFUSES a real run",
       "detail": "",
-      "pass": false
+      "pass": true
     },
     {
       "check": "the VRP protected store is empty or absent",
@@ -237,7 +237,7 @@
     }
   ],
   "expected_state_failure": "no data/vix directory exists yet",
-  "generated_utc": "2026-09-14T13:29:21Z",
+  "generated_utc": "2026-09-14T14:17:23Z",
   "lineage": "TSMOM-VRP-01",
   "original_s1_content_checks_pass": 113,
   "original_s1_failing_checks": [

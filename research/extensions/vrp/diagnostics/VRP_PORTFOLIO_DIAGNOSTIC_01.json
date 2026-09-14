@@ -1,0 +1,219 @@
+{
+  "DOES_NOT_CHANGE_TSMOM_VRP_01_VERDICT": "YES",
+  "EXPLORATORY_ONLY": "YES",
+  "OUTCOME_EXPOSED_REUSE": "YES",
+  "PROMOTION_POWER": "NONE",
+  "TSMOM_VRP_01_HISTORICAL_VERDICT": "UNRESOLVED_CLASS_3",
+  "allocation": {
+    "W0": 1000000.0,
+    "core": 0.8,
+    "note": "fixed before outcome exposure (s = beta/b = 0.20); not optimised, no other weight tested",
+    "sleeve": 0.2
+  },
+  "code_commit": "b994efeabc60494ba76addfb05b91e50c3b36624",
+  "combined": {
+    "annualised_arithmetic_mean": 0.07772089270428263,
+    "annualised_vol": 0.08555767779321559,
+    "best_month": 0.07883044548227525,
+    "max_drawdown": -0.09568186319260119,
+    "n_months": 217,
+    "positive_month_fraction": 0.6267281105990783,
+    "sharpe": 0.9084034853321558,
+    "worst_month": -0.08245458292002672
+  },
+  "combined_total_return_fm1": {
+    "annualised_arithmetic_mean": 0.0805086346397665,
+    "annualised_vol": 0.0855105229596629,
+    "best_month": 0.07888877881560857,
+    "max_drawdown": -0.09201867927304874,
+    "n_months": 217,
+    "positive_month_fraction": 0.631336405529954,
+    "sharpe": 0.9415055814562624,
+    "worst_month": -0.08242791625336006
+  },
+  "core_only": {
+    "annualised_arithmetic_mean": 0.07739721567007282,
+    "annualised_vol": 0.10305064220179079,
+    "best_month": 0.08890429671422286,
+    "max_drawdown": -0.15604025523459364,
+    "n_months": 217,
+    "positive_month_fraction": 0.6221198156682027,
+    "sharpe": 0.7510600032799002,
+    "worst_month": -0.08443097824056191
+  },
+  "cost_diagnostic": {
+    "annualised_execution_cost_fraction_of_K": 0.024955399078341017,
+    "annualised_gross_carry_fraction_of_K": 0.10498930073622809,
+    "annualised_net_excess_fraction_of_K": 0.08003390165788707,
+    "convention": "sealed section G, unchanged",
+    "cost_as_fraction_of_gross_carry": 0.23769468796671195,
+    "cost_as_fraction_of_net_return": 0.31181035238061205
+  },
+  "crisis_windows": [
+    {
+      "combined": 0.017414987713412655,
+      "core": 0.14419661936138017,
+      "difference": -0.12678163164796752,
+      "months": 6,
+      "span": "2008-09..2009-02",
+      "vrp_sleeve": -0.415333391240876,
+      "window": "2008 GFC"
+    },
+    {
+      "combined": -0.05200095414674988,
+      "core": -0.04787555374099017,
+      "difference": -0.004125400405759705,
+      "months": 1,
+      "span": "2018-02..2018-02",
+      "vrp_sleeve": -0.0684630833333334,
+      "window": "Feb 2018 vol shock"
+    },
+    {
+      "combined": -0.005045961935385868,
+      "core": 0.07872543116131792,
+      "difference": -0.08377139309670378,
+      "months": 2,
+      "span": "2020-02..2020-03",
+      "vrp_sleeve": -0.32186646851764267,
+      "window": "Mar 2020 COVID"
+    },
+    {
+      "combined": 0.13054977340982576,
+      "core": 0.14969438603760454,
+      "difference": -0.01914461262777878,
+      "months": 12,
+      "span": "2022-01..2022-12",
+      "vrp_sleeve": 0.03418494938393968,
+      "window": "CY2022"
+    },
+    {
+      "combined": 0.049741642495690463,
+      "core": 0.06107256248324844,
+      "difference": -0.011330919987557975,
+      "months": 1,
+      "span": "2024-08..2024-08",
+      "vrp_sleeve": 0.004420239999999964,
+      "window": "Aug 2024 vol episode"
+    },
+    {
+      "combined": -0.022064298479808397,
+      "core": -0.013342176910136394,
+      "difference": -0.008722121569672003,
+      "months": 1,
+      "span": "2025-04..2025-04",
+      "vrp_sleeve": -0.05694888690476185,
+      "window": "Apr 2025 vol episode"
+    }
+  ],
+  "delta_sharpe_paired_bootstrap": {
+    "block": 12,
+    "ci_high": 0.3112516008444065,
+    "ci_low": -0.005155451757381021,
+    "point": 0.15734348205225557,
+    "replicates": 10000,
+    "seed": 20260914,
+    "usable": 10000
+  },
+  "deltas": {
+    "combined_minus_core_annual_mean": 0.00032367703420981,
+    "combined_minus_core_annual_vol": -0.0174929644085752,
+    "combined_minus_core_max_drawdown": 0.06035839204199245,
+    "combined_minus_core_sharpe": 0.15734348205225557
+  },
+  "dependence": {
+    "monthly_correlation_core_vrp": -0.10500511767892365,
+    "monthly_covariance_core_vrp": -0.0001494111159075857
+  },
+  "fm1_missing_months": [],
+  "generated_utc": "2026-09-14T14:28:32Z",
+  "inputs": {
+    "canonical_comparator": "CANONICAL_17_ETF_TSMOM_BASELINE (Value section 17)",
+    "canonical_cost_bps": 2.0,
+    "dgs3mo_sha256": "50da2bfbb25e3e3241af7a4ad16e5a1bb5f08cdfb46bcb92f224954dce054319",
+    "etf_panel_sha256": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31",
+    "vix_raw_manifest_sha256": "fe5bba6d356010123a5373f8017dfb5f2011111f3cec1ce8b664407d506d1509",
+    "vrp_protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+    "vrp_reveal_count_unchanged": 1
+  },
+  "ledger": {
+    "book_exhaustion": false,
+    "entry_month": "2008-05",
+    "entry_month_note": "the book establishes the sleeve on its first day and bears that one-off entry cost; the sealed Stage-A series has held a live position since 2006-09. Structural, disclosed, and NOT removed.",
+    "entry_month_reconstruction_difference": 0.0139208,
+    "funding_events": 0,
+    "max_core_reconstruction_error": 1.1102230246251565e-16,
+    "max_sleeve_reconstruction_error_carried_months": 8.326672684688674e-17,
+    "mean_month_start_reset_cost_on_Kt": 2.0707249323761425e-05,
+    "mechanics": "vrp_stage_b.run_book_ledger, repaired under VRP-DIAG-DEFECT-001 (acceptance items 13-15 revalidated with a cross-month fixture)"
+  },
+  "lineage": "VRP-PORTFOLIO-DIAGNOSTIC-01",
+  "return_definitions": {
+    "COMBINED": "book return; core earns total return, the sleeve's 20 % collateral earns EXCESS-OF-CASH (no cash yield credited)",
+    "CORE_ONLY": "canonical net monthly TOTAL return (price-based, rf not added)",
+    "VRP_ONLY": "sealed Stage-A monthly EXCESS-OF-CASH return on committed capital",
+    "disclosure": "CORE and VRP sit on DIFFERENT cash bases. Both definitions are reported rather than one being invented: the *_total_return block credits the FM-1 collateral yield to the sleeve."
+  },
+  "sample": {
+    "canonical_first_complete_scored_month": "2008-05",
+    "end_boundary_reason": "canonical core has a complete month only through 2026-05; 2026-06 is partial",
+    "end_month": "2026-05",
+    "n_months": 217,
+    "start_month": "2008-05",
+    "vrp_first_eligible_complete_month": "2006-09"
+  },
+  "sharpe_convention": "sqrt(12)*mean(monthly net)/std(monthly net, ddof=1), rf = 0",
+  "spy_bottom_decile_tail": {
+    "D_diag_mean_difference": -0.017833068352359958,
+    "mean_combined": -0.009271038397136505,
+    "mean_core": 0.008562029955223453,
+    "mean_vrp_in_tail": -0.08058491815724945,
+    "n_tail_months": 22,
+    "spy_decile_threshold": -0.052141216363833086,
+    "tail_months": [
+      "2008-06",
+      "2008-09",
+      "2008-10",
+      "2008-11",
+      "2009-01",
+      "2009-02",
+      "2010-05",
+      "2011-08",
+      "2011-09",
+      "2012-05",
+      "2015-08",
+      "2018-10",
+      "2018-12",
+      "2019-05",
+      "2020-02",
+      "2020-03",
+      "2022-01",
+      "2022-04",
+      "2022-06",
+      "2022-09",
+      "2022-12",
+      "2025-03"
+    ],
+    "worst_tail_combined": -0.08245458292002672,
+    "worst_tail_core": -0.08129302661458603
+  },
+  "vrp_only_excess_of_cash": {
+    "annualised_arithmetic_mean": 0.08003390165788707,
+    "annualised_vol": 0.165692551936494,
+    "best_month": 0.11894331578947369,
+    "max_drawdown": -0.4382024126766114,
+    "n_months": 217,
+    "positive_month_fraction": 0.663594470046083,
+    "sharpe": 0.48302654960955727,
+    "worst_month": -0.32168399999999997
+  },
+  "vrp_only_total_return_fm1": {
+    "annualised_arithmetic_mean": 0.09397261133530643,
+    "annualised_vol": 0.16558845915242923,
+    "best_month": 0.1190183157894737,
+    "max_drawdown": -0.4338658363482104,
+    "n_months": 217,
+    "positive_month_fraction": 0.6728110599078341,
+    "sharpe": 0.5675070099468814,
+    "worst_month": -0.3209173333333333
+  }
+}

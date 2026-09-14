@@ -622,7 +622,9 @@ def test_i13_oracle_identity_holds_when_no_funding_event_occurs():
     assert len(res.months) == 3
     for m in res.months:
         assert not m.funding_events
-        identity = 0.80 * m.r_core + 0.20 * m.r_A_on_Kt
+        # the month-start sensitivity reset is reported separately (see the cross-month
+        # tests below): Stage A holds K constant and bears no reset trade
+        identity = 0.80 * m.r_core + 0.20 * (m.r_A_on_Kt - m.reset_cost_on_Kt)
         assert m.r_book == pytest.approx(identity, rel=1e-9, abs=1e-12)
 
 
@@ -698,7 +700,7 @@ def test_i14_a_fictional_untouched_core_is_caught():
     core, sleeve = _forced_liquidation_fixture(points_shock=130.0)
     m = vsb.run_stage_b(core, sleeve, K.W0, SYN).months[0]
     assert m.funding_events
-    identity = 0.80 * m.r_core + 0.20 * m.r_A_on_Kt
+    identity = 0.80 * m.r_core + 0.20 * (m.r_A_on_Kt - m.reset_cost_on_Kt)
     assert abs(m.r_book - identity) > 1e-9, (
         "a month WITH a funding event must not reproduce the no-funding identity; "
         "if it does, the core was not actually reduced")
@@ -1078,8 +1080,9 @@ def test_sab_wrong_stage_b_capital_share():
     m = vsb.run_stage_b(core, sleeve, K.W0, SYN).months[0]
     assert m.K_t == pytest.approx(0.20 * K.W0)
     assert m.K_t != pytest.approx(0.10 * K.W0)
-    assert m.r_book == pytest.approx(0.80 * m.r_core + 0.20 * m.r_A_on_Kt, abs=1e-12)
-    wrong = 0.90 * m.r_core + 0.10 * m.r_A_on_Kt
+    assert m.r_book == pytest.approx(
+        0.80 * m.r_core + 0.20 * (m.r_A_on_Kt - m.reset_cost_on_Kt), abs=1e-12)
+    wrong = 0.90 * m.r_core + 0.10 * (m.r_A_on_Kt - m.reset_cost_on_Kt)
     if abs(m.r_core - m.r_A_on_Kt) > 1e-9:
         assert m.r_book != pytest.approx(wrong, abs=1e-12)
 
@@ -1183,3 +1186,149 @@ def test_s2_no_real_outcome_artifacts_exist():
     store = vreveal.PROTECTED_STORE
     assert not os.path.isdir(store) or not os.listdir(store), \
         "the VRP protected store must be empty at the end of S2"
+
+
+# =========================================================================== #
+# VRP-DIAG-DEFECT-001 — cross-month state continuity
+# =========================================================================== #
+# The original `_stage_b_fixture` gives EVERY synthetic month its own contract keys and
+# restarts prices at 20.0, so no month boundary ever carries a live position and the
+# holdings/prices reset bug was structurally invisible to it. The fixture below is built
+# specifically to expose it: ONE roll period spans two calendar months, so the SAME front
+# and second contracts are held across the boundary, the weights at the boundary are
+# strictly between 0 and 1, and the settlement jumps from the last day of month 1 to the
+# first day of month 2.
+PERIOD_DAYS_M1 = 21
+PERIOD_DAYS_M2 = 20
+BOUNDARY_JUMP = 2.0          # comparable VIX points, month-1 close -> month-2 open
+
+
+def _cross_month_fixture(price_before=20.0, jump=BOUNDARY_JUMP):
+    """Two calendar months, ONE roll period, the SAME contracts held across the boundary.
+
+    Month 1: settlements flat at `price_before`.
+    Month 2: settlements jump by `jump` on its FIRST day and stay there.
+    Core: flat unit index and zero turnover, so r_core = 0 in both months and every
+    difference in `r_book` comes from the sleeve.
+    """
+    days_m1 = [_dt.date(2020, 1, d) for d in range(2, 2 + PERIOD_DAYS_M1)]
+    days_m2 = [_dt.date(2020, 2, d) for d in range(3, 3 + PERIOD_DAYS_M2)]
+    period = days_m1 + days_m2
+    dt_total = len(period)
+    front_key = ("VX", _dt.date(2020, 3, 18))       # expires AFTER both months
+    second_key = ("VX", _dt.date(2020, 4, 15))
+
+    price = {}
+    for d in days_m1:
+        price[d] = price_before
+    for d in days_m2:
+        price[d] = price_before + jump
+
+    sleeve, core = [], []
+    for month, days in (("2020-01", days_m1), ("2020-02", days_m2)):
+        rows = []
+        for d in days:
+            i = period.index(d)
+            wf = (dt_total - 1 - i) / dt_total
+            rows.append(vsa.DayInput(date=d, front_key=front_key, second_key=second_key,
+                                     w_front=wf, w_second=1.0 - wf,
+                                     front_price=price[d], second_price=price[d],
+                                     month_end=(d == days[-1])))
+        sleeve.append(vsb.SleeveMonth(month=month, vx_days=tuple(rows)))
+        core.append(vsb.CoreMonth(month=month, nyse_days=tuple(days),
+                                  unit_index={d: 1.0 for d in days},
+                                  gross_fraction={d: 1.0 for d in days},
+                                  turnover=0.0))
+    return core, sleeve, front_key, second_key, period, dt_total
+
+
+def test_i13_cross_month_fixture_really_carries_a_live_position():
+    """The fixture must actually exercise the boundary, or it proves nothing."""
+    core, sleeve, front_key, second_key, period, dt_total = _cross_month_fixture()
+    last_m1 = sleeve[0].vx_days[-1]
+    first_m2 = sleeve[1].vx_days[0]
+    assert last_m1.front_key == first_m2.front_key == front_key
+    assert last_m1.second_key == first_m2.second_key == second_key
+    assert 0.0 < last_m1.w_front < 1.0 and 0.0 < first_m2.w_front < 1.0
+    assert first_m2.front_price - last_m1.front_price == pytest.approx(BOUNDARY_JUMP)
+    assert len(sleeve) == 2 and sleeve[0].month != sleeve[1].month
+
+
+def test_i13_position_persists_across_the_month_boundary():
+    """Month 2's first day must mark the carried position against month 1's last
+    settlement. The short loses exactly `jump` points on the frozen sensitivity."""
+    core, sleeve, *_ = _cross_month_fixture()
+    res = vsb.run_book_ledger(core, sleeve, K.W0)
+    m2 = res.months[1]
+    # sensitivity is 0.01*K_t per point; a +2.00-point move is a 0.02*K_t loss
+    assert m2.r_A_on_Kt < -0.019, m2.r_A_on_Kt
+    assert m2.r_A_on_Kt + 0.02 < 0.0        # the remainder is roll cost, strictly negative
+    assert m2.r_A_on_Kt + 0.02 > -0.005     # and small
+    assert not m2.funding_events
+
+
+def test_i13_old_reset_bug_is_caught_by_the_cross_month_fixture():
+    """Reproduce the OLD behaviour and prove the fixture detects it.
+
+    The defect was that `holdings`/`prices` were recreated per month. Running month 2 in
+    ISOLATION reproduces exactly that state: no carried position, so no boundary mark and
+    a full re-entry. The fixture must separate the two by a wide margin.
+    """
+    core, sleeve, *_ = _cross_month_fixture()
+    repaired = vsb.run_book_ledger(core, sleeve, K.W0).months[1]
+    # the buggy state: month 2 alone, starting flat
+    buggy = vsb.run_book_ledger(core[1:], sleeve[1:], K.W0).months[0]
+
+    # The +2.00-point boundary move is worth exactly -0.02 on the frozen 0.01*K_t
+    # sensitivity. The repaired ledger must capture it; the buggy one cannot see it at
+    # all, so all it records is cost (a full re-entry plus the month's rolling).
+    assert repaired.r_A_on_Kt < -0.019, repaired.r_A_on_Kt
+    assert buggy.r_A_on_Kt > -0.01, buggy.r_A_on_Kt
+    assert buggy.r_A_on_Kt < 0.0                      # pure cost, no mark
+    separation = buggy.r_A_on_Kt - repaired.r_A_on_Kt
+    assert separation > 0.015, (
+        "the cross-month fixture must separate the repaired ledger from the old reset "
+        "bug by about the boundary move (0.02); got %.6f. If this ever passes trivially "
+        "the fixture has stopped testing cross-month state continuity" % separation)
+
+
+def test_i13_month_start_reset_trades_only_the_increment():
+    """Section H.1: the reset goes TO the new sensitivity, keeping the weights.
+
+    With a flat core and a tiny sleeve move, K_2 is within a hair of K_1, so the reset
+    increment - and therefore its cost - must be a small fraction of a full re-entry.
+    """
+    core, sleeve, *_ = _cross_month_fixture(jump=0.0)
+    res = vsb.run_book_ledger(core, sleeve, K.W0)
+    m1, m2 = res.months
+    assert m1.reset_cost_on_Kt == 0.0          # month 1 establishes, it does not reset
+    assert 0.0 <= m2.reset_cost_on_Kt < 1e-4, m2.reset_cost_on_Kt
+    # a full liquidate-and-reopen of the whole sleeve would cost far more than this
+    full_entry = res.months[0].r_A_on_Kt
+    assert abs(m2.reset_cost_on_Kt) < abs(full_entry) / 10.0
+
+
+def test_i13_h4_identity_with_the_reset_term_cross_month():
+    """Section H.4 with the month-start reset made explicit:
+        r_book = 0.80*r_core + 0.20*(r_A_on_Kt - reset_cost_on_Kt)
+    Stage A holds K constant by benchmark convention and therefore bears NO reset trade
+    (section E.1), so the reset is reported separately rather than being folded into
+    `r_A_on_Kt` - that is what keeps `r_A_on_Kt` comparable with the sealed series."""
+    core, sleeve, *_ = _cross_month_fixture()
+    res = vsb.run_book_ledger(core, sleeve, K.W0)
+    for m in res.months:
+        assert not m.funding_events
+        identity = 0.80 * m.r_core + 0.20 * (m.r_A_on_Kt - m.reset_cost_on_Kt)
+        assert m.r_book == pytest.approx(identity, rel=1e-9, abs=1e-12)
+
+
+def test_i13_sleeve_state_is_not_declared_inside_the_month_loop():
+    """Structural guard against VRP-DIAG-DEFECT-001 ever returning."""
+    src = open(os.path.join(HERE, "vrp_stage_b.py"), encoding="utf-8").read()
+    body = src.split("def run_book_ledger")[1]
+    before_loop = body.split("for cm in core:")[0]
+    inside_loop = body.split("for cm in core:")[1].split("for day in all_days:")[0]
+    assert "holdings: Dict[Key, float] = {}" in before_loop
+    assert "prices: Dict[Key, float] = {}" in before_loop
+    assert "holdings: Dict[Key, float] = {}" not in inside_loop
+    assert "prices: Dict[Key, float] = {}" not in inside_loop

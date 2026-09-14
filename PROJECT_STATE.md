@@ -236,16 +236,26 @@ LIFECYCLE_STATUS    = CLOSED. HISTORICAL_RESEARCH_COMPLETE = YES.
                       MORE_HISTORICAL_TUNING = FORBIDDEN_INSIDE_TSMOM-VRP-01.
                       Both ONE_SHOT grants VRP-AUTH-0001 and VRP-AUTH-0002 are CONSUMED.
 DIAGNOSTIC          = VRP-PORTFOLIO-DIAGNOSTIC-01, a SEPARATE exploratory lineage
-                      (EXPLORATORY_ONLY, PROMOTION_POWER = NONE), is on HOLD under
-                      VRP-DIAG-DEFECT-001: the Stage-B book ledger resets the sleeve's
-                      holdings every calendar month, violating the binding section H.4
-                      identity by up to 6.58e-02 against the real sealed series. No
-                      sealed result is affected (Stage B never ran). No portfolio metric
-                      was produced. It does not and cannot change the verdict below.
-NEXT_OWNER_DECISION = whether to authorise the VRP-DIAG-DEFECT-001 repair (ledger fix plus
-                      a fixture that actually carries a position across a month boundary,
-                      which acceptance item 13 currently does not), or to close VRP and
-                      move to the next Phase-C candidate.
+                      (EXPLORATORY_ONLY, PROMOTION_POWER = NONE) = COMPLETE.
+                      VRP-DIAG-DEFECT-001 REPAIRED: sleeve position state now persists
+                      across calendar months and the month-start sensitivity reset moved
+                      to the allocation boundary. 216 of 217 months reconstruct to
+                      8.3e-17 against the sealed series; the entry month 2008-05 differs
+                      by construction (the book starts flat) and is disclosed, not removed.
+                      Item 13 revalidated with a cross-month fixture that provably catches
+                      the old bug (PREVIOUS_ITEM_13 = PASS_BUT_FIXTURE_INSUFFICIENT).
+                      RESULT over 2008-05..2026-05, 217 months, fixed 80/20:
+                        CORE  Sharpe 0.751, vol 0.1031, maxDD -0.1560
+                        VRP   Sharpe 0.483, vol 0.1657, maxDD -0.4382 (excess of cash)
+                        COMB  Sharpe 0.908, vol 0.0856, maxDD -0.0957
+                        correlation -0.105, DELTA_SHARPE +0.1573, CI [-0.0052, +0.3113]
+                        SPY bottom decile: CORE +0.0086 -> COMBINED -0.0093, D_diag -0.0178
+                        all six declared crisis windows worse combined than core-only
+                      PRACTICAL_CLASSIFICATION = NOT_COMPELLING. The Sharpe gain is not
+                      robust (CI includes zero) and the tail trade-off runs against the
+                      core's purpose. It does not and cannot change the verdict below.
+NEXT_OWNER_DECISION = ChatGPT final diagnostic acceptance, then move to the next Phase-C
+                      candidate. FABLE_FOLLOWUP_RECOMMENDED = NO.
 REAL_RUN_AUTHORIZED = NO   (VRP-AUTH-0001 is CONSUMED; a further run needs a new grant)
 STAGE_B_AUTHORIZED  = NO
 ```

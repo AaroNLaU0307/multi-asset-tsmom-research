@@ -96,7 +96,8 @@ class BookMonthResult(NamedTuple):
     r_book: float
     K_t: float
     r_core: float
-    r_A_on_Kt: float
+    r_A_on_Kt: float               # Stage-A-equivalent sleeve return, EXCLUDING the reset
+    reset_cost_on_Kt: float        # month-start sensitivity reset, as a fraction of K_t
     funding_events: Tuple[FundingEvent, ...]
     book_exhaustion: bool
     core_units_scale_end: float
@@ -159,6 +160,15 @@ def run_book_ledger(core: Sequence[CoreMonth],
     terminated = False
     termination_month: Optional[str] = None
 
+    # THE SLEEVE POSITION PERSISTS ACROSS CALENDAR-MONTH BOUNDARIES (section H.1/H.2).
+    # It is deliberately declared here, outside the month loop. Recreating it per month
+    # was VRP-DIAG-DEFECT-001: it discarded each month's first-day variation margin and
+    # re-established the whole position from flat, which is a different strategy and
+    # violates the binding section H.4 identity against the real Stage-A series.
+    holdings: Dict[Key, float] = {}
+    prices: Dict[Key, float] = {}
+    K_prev: Optional[float] = None
+
     for cm in core:
         if terminated:
             break
@@ -169,20 +179,38 @@ def run_book_ledger(core: Sequence[CoreMonth],
         V_core_start = CORE_SHARE * W_start
         K_t = s * W_start
         C = K_t
+        reset_charged = False
         scale = 1.0                     # core unit-holdings scale after liquidations
         funding: List[FundingEvent] = []
         pending: List[Tuple[_dt.date, float]] = []   # (detected_day, shortfall)
         exhausted = False
 
-        # sleeve state
-        holdings: Dict[Key, float] = {}
-        prices: Dict[Key, float] = {}
+        # PER-MONTH accounts only. The sleeve POSITION (`holdings`, `prices`) lives
+        # outside this loop: see VRP-DIAG-DEFECT-001 and its closure record under
+        # research/extensions/vrp/diagnostics/.
         sleeve_vm = 0.0
-        sleeve_cost = 0.0
+        sleeve_roll_cost = 0.0
+        reset_cost = 0.0
 
         vx_by_date = {d.date: d for d in vx_days}
         all_days = sorted(set(cm.nyse_days) | set(vx_by_date))
-        core_start_day = cm.nyse_days[0]
+
+        # Section H.1: the sleeve's point sensitivity for month t is 0.01 * K_t, and the
+        # reset trade to that new sensitivity is executed at the month-end allocation -
+        # i.e. BEFORE the new month's first variation margin is marked. The carried
+        # position keeps its weights and is rescaled by K_t / K_(t-1); only that increment
+        # trades. This is what makes r_A_on_Kt scale-invariant and therefore comparable,
+        # month for month, with the sealed constant-K Stage-A series.
+        if holdings and K_prev:
+            factor = K_t / K_prev
+            resized: Dict[Key, float] = {}
+            for key, q in holdings.items():
+                dq = q * (factor - 1.0)
+                if dq != 0.0:
+                    reset_cost += vcosts.cost_dollars(all_days[0], dq, STANDARD_MULTIPLIER)
+                resized[key] = q * factor
+            holdings = resized
+        K_prev = K_t
 
         def core_value(day: _dt.date) -> float:
             idx = cm.unit_index.get(day)
@@ -192,6 +220,7 @@ def run_book_ledger(core: Sequence[CoreMonth],
                 idx = cm.unit_index[earlier[-1]] if earlier else 1.0
             return V_core_start * scale * idx
 
+        C -= reset_cost
         for day in all_days:
             # ---- sleeve leg: VX settles today --------------------------------
             if day in vx_by_date:
@@ -209,7 +238,7 @@ def run_book_ledger(core: Sequence[CoreMonth],
                         cost += vcosts.cost_dollars(day, dq, STANDARD_MULTIPLIER)
                 holdings, prices = wanted, dict(today)
                 sleeve_vm += vm
-                sleeve_cost += cost
+                sleeve_roll_cost += cost
                 C += vm - cost
                 if C < 0.0:
                     pending.append((day, -C))
@@ -246,7 +275,8 @@ def run_book_ledger(core: Sequence[CoreMonth],
             r_book = W / W_start - 1.0
             results.append(BookMonthResult(
                 month=cm.month, W_start=W_start, W_end=W, r_book=r_book, K_t=K_t,
-                r_core=float("nan"), r_A_on_Kt=(sleeve_vm - sleeve_cost) / K_t,
+                r_core=float("nan"), r_A_on_Kt=(sleeve_vm - sleeve_roll_cost) / K_t,
+                reset_cost_on_Kt=reset_cost / K_t,
                 funding_events=tuple(funding), book_exhaustion=True,
                 core_units_scale_end=0.0))
             break
@@ -259,12 +289,12 @@ def run_book_ledger(core: Sequence[CoreMonth],
         W_end = V_core_end + C
 
         r_core = (cm.unit_index[month_end] - 1.0) - CANONICAL_COST_BPS * cm.turnover
-        r_A = (sleeve_vm - sleeve_cost) / K_t
+        r_A = (sleeve_vm - sleeve_roll_cost) / K_t
 
         results.append(BookMonthResult(
             month=cm.month, W_start=W_start, W_end=W_end,
             r_book=W_end / W_start - 1.0, K_t=K_t,
-            r_core=r_core, r_A_on_Kt=r_A,
+            r_core=r_core, r_A_on_Kt=r_A, reset_cost_on_Kt=reset_cost / K_t,
             funding_events=tuple(funding), book_exhaustion=False,
             core_units_scale_end=scale))
         W = W_end
