@@ -9,9 +9,9 @@
   "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
   "raw_contract_file_count": 274,
   "raw_manifest_sha256": "fe5bba6d356010123a5373f8017dfb5f2011111f3cec1ce8b664407d506d1509",
-  "result_state": "GENERATED_NOT_SEEN",
-  "reveal_count": 0,
-  "reveal_timestamp_utc": null,
+  "result_state": "REVEALED_ONCE",
+  "reveal_count": 1,
+  "reveal_timestamp_utc": "2026-09-14T13:24:57Z",
   "rng": {
     "block_p": 0.08333333333333333,
     "floor": 9500,

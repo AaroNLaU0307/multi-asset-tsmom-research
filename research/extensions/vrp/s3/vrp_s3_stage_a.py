@@ -778,6 +778,131 @@ def cmd_reveal(_args) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- #
+# POSTSTATE - the post-run state-transition validator
+# --------------------------------------------------------------------------- #
+# The governed run and the single reveal necessarily falsify four more S2-state
+# assertions, on top of the two the EXECUTION grant already flipped. Same discipline as
+# before: NOTHING is modified or relabelled; the validator below requires these to be the
+# ONLY failures, so any other regression is still caught.
+POSTRUN_FLIPS_POST_S2 = [
+    "no single-use Owner EXECUTION authorisation is committed",
+    "no single-use Owner REVEAL authorisation is committed",
+    "the VRP protected store is empty or absent",
+    "the governed-run entry gate REFUSES a real run",
+]
+POSTRUN_FLIPS_TESTS = [
+    "test_i21_no_execution_authorization_exists",
+    "test_i21_protected_result_refuses_to_print_or_yield_its_value",
+    "test_i21_real_stage_a_is_refused_during_s2",
+    "test_s2_no_real_outcome_artifacts_exist",
+]
+
+
+def cmd_poststate(_args) -> int:
+    print("TSMOM-VRP-01 - S3 POST-RUN STATE-TRANSITION VALIDATOR")
+    print("=" * 78)
+    print("Accounts for the state the governed run and the single reveal necessarily")
+    print("created. No accepted validator is modified and no exit code is relabelled.")
+    import re as _re
+
+    section("1. accepted validators: only the enumerated post-run flips")
+    subprocess.run([sys.executable, os.path.join("research", "extensions", "vrp", "s2",
+                                                 "vrp_post_s2_validate.py")],
+                   cwd=REPO, capture_output=True, text=True,
+                   encoding="utf-8", errors="replace")
+    with open(os.path.join(REPO, "research", "extensions", "vrp", "s2",
+                           "VRP_POST_S2_STATE_VALIDATION.json"), encoding="utf-8") as fh:
+        rec = json.load(fh)
+    fails = sorted(c["check"] for c in rec["checks"] if not c["pass"])
+    ck("post-S2 validator: only the enumerated post-run flips fail",
+       fails == sorted(POSTRUN_FLIPS_POST_S2), "; ".join(fails) or "none")
+    ck("post-S2 validator: every other check still PASSES",
+       len([c for c in rec["checks"] if c["pass"]])
+       == len(rec["checks"]) - len(POSTRUN_FLIPS_POST_S2),
+       "%d PASS of %d" % (len([c for c in rec["checks"] if c["pass"]]), len(rec["checks"])))
+    ck("original S1 validator still reports 113 content checks PASS",
+       rec["original_s1_content_checks_pass"] == 113
+       and rec["original_s1_failing_checks"] == [rec["expected_state_failure"]],
+       "exit %s" % rec["original_s1_validator_exit"])
+
+    proc = subprocess.run([sys.executable, "-m", "pytest",
+                           os.path.join("research", "extensions", "vrp", "vrp_tests.py"),
+                           "-q", "--no-header", "--tb=no", "-p", "no:cacheprovider"],
+                          cwd=REPO, capture_output=True, text=True,
+                          encoding="utf-8", errors="replace")
+    t_fails = sorted(set(_re.findall(r"vrp_tests\.py::(\S+)", proc.stdout)))
+    ck("acceptance suite: only the enumerated post-run flips fail",
+       t_fails == sorted(POSTRUN_FLIPS_TESTS), "; ".join(t_fails) or "none")
+    m = _re.search(r"(\d+) failed, (\d+) passed", proc.stdout)
+    ck("acceptance suite: every other test still passes",
+       bool(m) and int(m.group(1)) == len(POSTRUN_FLIPS_TESTS), m.group(0) if m else "?")
+
+    section("2. the reveal-control protections that must STILL hold")
+    probe = vreveal.ProtectedResult({"A": 0.123456789}, "probe")
+    ck("repr / str / format still hide the value",
+       all("0.123456789" not in f(probe) for f in (repr, str, lambda x: format(x))))
+    refused = False
+    try:
+        _ = probe.value
+    except vreveal.RevealNotAuthorized:
+        refused = True
+    ck("`.value` is still refused before a reveal", refused)
+    refused = False
+    try:
+        list(probe)
+    except vreveal.RevealNotAuthorized:
+        refused = True
+    ck("iteration is still refused", refused)
+
+    section("3. run and reveal are each exactly once")
+    with open(RUN_MANIFEST, encoding="utf-8") as fh:
+        rm = json.load(fh)
+    ck("RUN_COUNT = 1", rm["run_count"] == 1, str(rm["run_count"]))
+    ck("REVEAL_COUNT = 1", rm["reveal_count"] == 1, str(rm["reveal_count"]))
+    ck("RESULT_STATE = REVEALED_ONCE", rm["result_state"] == "REVEALED_ONCE",
+       rm["result_state"])
+    blob, files = _load_protected()
+    ck("exactly one protected result exists", blob is not None, "%d file(s)" % len(files))
+    ck("the protected result hash is unchanged since the run",
+       blob is not None and blob["sha256"] == rm["protected_result_sha256"],
+       rm["protected_result_sha256"][:16])
+    ck("a re-run is refused (the protected store is not empty)",
+       os.path.isdir(vreveal.PROTECTED_STORE) and bool(os.listdir(vreveal.PROTECTED_STORE)))
+
+    section("4. Stage B and C-A firewalls after the run")
+    ck("Stage B was NOT executed",
+       blob is not None and blob["payload"]["stage_b"]["executed"] is False)
+    refused = False
+    try:
+        vreveal.require_run_authorization(vreveal.REAL, stage="STAGE_B")
+    except vreveal.RunNotAuthorized:
+        refused = True
+    ck("a real Stage-B run is STRUCTURALLY refused by the live grant", refused)
+    audit = vaudit.audit()
+    ck("C-A static audit still PASSES", audit["pass"] is True
+       and audit["CANONICAL_FORWARD_RETURN_COMPUTED"] == "NO")
+    ok, detail = vval.check_sealed_artifact_hashes()
+    ck("sealed S1 artifacts still byte-identical", ok, detail)
+    ck("erratum still matches the authorised hash",
+       sha256_file(os.path.join(PKG, "VRP_S1_MECHANICAL_ERRATUM_01.md")) == ERRATUM_SHA)
+
+    section("POST-RUN STATE RESULT")
+    status = "PASS" if _ok else "FAIL"
+    print("  POST_RUN_STATE_VALIDATOR = %s   (%d PASS / %d FAIL)"
+          % (status, sum(1 for g in _gates if g["pass"]),
+             sum(1 for g in _gates if not g["pass"])))
+    with open(os.path.join(HERE, "VRP_S3_POSTRUN_STATE.json"), "w",
+              encoding="utf-8", newline="\n") as fh:
+        json.dump({"run_id": RUN_ID, "result": status,
+                   "enumerated_postrun_flips_post_s2": POSTRUN_FLIPS_POST_S2,
+                   "enumerated_postrun_flips_tests": POSTRUN_FLIPS_TESTS,
+                   "generated_utc": _dt.datetime.now(_dt.timezone.utc)
+                   .strftime("%Y-%m-%dT%H:%M:%SZ"),
+                   "gates": _gates}, fh, indent=2, sort_keys=True)
+    return 0 if _ok else 1
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description="TSMOM-VRP-01 S3 governed Stage-A run")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -785,6 +910,7 @@ def main() -> int:
     sub.add_parser("run").set_defaults(fn=cmd_run)
     sub.add_parser("verify").set_defaults(fn=cmd_verify)
     sub.add_parser("reveal").set_defaults(fn=cmd_reveal)
+    sub.add_parser("poststate").set_defaults(fn=cmd_poststate)
     args = ap.parse_args()
     return args.fn(args)
 

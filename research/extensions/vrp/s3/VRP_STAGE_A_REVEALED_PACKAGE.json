@@ -1,0 +1,45 @@
+{
+  "ADVERSE_FLOOR": -0.075,
+  "ANNUALISED_MEAN_NET_EXCESS_RETURN_ON_K": 0.07322364878859855,
+  "CI_95_HIGH": 0.13608070606663272,
+  "CI_95_LOW": 0.0039060496938722444,
+  "ECONOMIC_USEFULNESS_MARGIN": 0.075,
+  "FAILURE_CLASS": "3",
+  "FAILURE_SUBTAG": "NONE",
+  "HISTORICAL_STAGE_A_WINDOW": "2006-09..2026-08",
+  "N_MONTHS": 240,
+  "STAGE_A_STATE": "UNRESOLVED",
+  "STAGE_A_TRIAL_SPENT": "YES",
+  "STAGE_B_EXECUTED": "NO",
+  "bootstrap": {
+    "floor_met": true,
+    "invalid_replicates": 0,
+    "valid_replicates": 10000
+  },
+  "descriptives": {
+    "R12_c0_005_annualised_mean": 0.0852480360435005,
+    "R13_annualised_mean_total_return": 0.08860445278303768,
+    "R13_collateral_total_return_defined_months": 239,
+    "R13_collateral_total_return_undefined_months": [
+      "2026-08"
+    ],
+    "R14_invalid_replicates": 0,
+    "R14_lower": 0.0039060496938722444,
+    "R14_point_estimate": 0.07322364878859855,
+    "R14_upper": 0.13608070606663272,
+    "R1_mean_monthly_points": 0.8186197856566219,
+    "R2_worst_1day_sleeve_loss_fraction_of_K": -0.156554,
+    "R3_worst_5day_sleeve_loss_fraction_of_K": -0.32541297368421046,
+    "R4_stress_budget_b": 0.3,
+    "R4_worst_monthly_sleeve_loss_fraction_of_K": -0.32168399999999997,
+    "R5_capital_exhaustion_count": 0,
+    "R5_capital_exhaustion_events": [],
+    "R5_intra_month_exhaustion_months": []
+  },
+  "monthly_mean": 0.006101970732383212,
+  "note": "Exactly the fields revealed under VRP-AUTH-0002. The 240 monthly governed returns and the per-month R1 series remain ONLY in the git-ignored VRP protected store, pinned by protected_result_sha256.",
+  "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+  "reveal_count": 1,
+  "reveal_timestamp_utc": "2026-09-14T13:24:57Z",
+  "run_id": "VRP-STAGE-A-RUN-0001"
+}

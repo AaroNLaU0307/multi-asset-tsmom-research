@@ -1,0 +1,114 @@
+{
+  "enumerated_postrun_flips_post_s2": [
+    "no single-use Owner EXECUTION authorisation is committed",
+    "no single-use Owner REVEAL authorisation is committed",
+    "the VRP protected store is empty or absent",
+    "the governed-run entry gate REFUSES a real run"
+  ],
+  "enumerated_postrun_flips_tests": [
+    "test_i21_no_execution_authorization_exists",
+    "test_i21_protected_result_refuses_to_print_or_yield_its_value",
+    "test_i21_real_stage_a_is_refused_during_s2",
+    "test_s2_no_real_outcome_artifacts_exist"
+  ],
+  "gates": [
+    {
+      "check": "post-S2 validator: only the enumerated post-run flips fail",
+      "detail": "no single-use Owner EXECUTION authorisation is committed; no single-use Owner REVEAL authorisation is committed; the VRP protected store is empty or absent; the governed-run entry gate REFUSES a real run",
+      "pass": true
+    },
+    {
+      "check": "post-S2 validator: every other check still PASSES",
+      "detail": "43 PASS of 47",
+      "pass": true
+    },
+    {
+      "check": "original S1 validator still reports 113 content checks PASS",
+      "detail": "exit 1",
+      "pass": true
+    },
+    {
+      "check": "acceptance suite: only the enumerated post-run flips fail",
+      "detail": "test_i21_no_execution_authorization_exists; test_i21_protected_result_refuses_to_print_or_yield_its_value; test_i21_real_stage_a_is_refused_during_s2; test_s2_no_real_outcome_artifacts_exist",
+      "pass": true
+    },
+    {
+      "check": "acceptance suite: every other test still passes",
+      "detail": "4 failed, 96 passed",
+      "pass": true
+    },
+    {
+      "check": "repr / str / format still hide the value",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "`.value` is still refused before a reveal",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "iteration is still refused",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "RUN_COUNT = 1",
+      "detail": "1",
+      "pass": true
+    },
+    {
+      "check": "REVEAL_COUNT = 1",
+      "detail": "1",
+      "pass": true
+    },
+    {
+      "check": "RESULT_STATE = REVEALED_ONCE",
+      "detail": "REVEALED_ONCE",
+      "pass": true
+    },
+    {
+      "check": "exactly one protected result exists",
+      "detail": "1 file(s)",
+      "pass": true
+    },
+    {
+      "check": "the protected result hash is unchanged since the run",
+      "detail": "baa0a07d647b4d1b",
+      "pass": true
+    },
+    {
+      "check": "a re-run is refused (the protected store is not empty)",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "Stage B was NOT executed",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "a real Stage-B run is STRUCTURALLY refused by the live grant",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "C-A static audit still PASSES",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "sealed S1 artifacts still byte-identical",
+      "detail": "unchanged: 4 artifacts",
+      "pass": true
+    },
+    {
+      "check": "erratum still matches the authorised hash",
+      "detail": "",
+      "pass": true
+    }
+  ],
+  "generated_utc": "2026-09-14T13:29:22Z",
+  "result": "PASS",
+  "run_id": "VRP-STAGE-A-RUN-0001"
+}

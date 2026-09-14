@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## TSMOM-VRP-01 — short-VIX-futures sleeve — S2 IMPLEMENTATION COMPLETE 2026-09-14
+## TSMOM-VRP-01 — short-VIX-futures sleeve — STAGE A RUN + REVEALED 2026-09-14 — UNRESOLVED
 
 *State only, never workflow authority (vNext §0).*
 
@@ -152,8 +152,32 @@ S2 BUILD            = IMPLEMENTATION COMPLETE, PENDING FINAL CHATGPT S2 ACCEPTAN
                       closure appended on branch vrp/s2-build. S2A data gate 32/32 PASS;
                       21/21 implementation-acceptance items PASS; 100 VRP tests, 101
                       repository tests, all pass.
-S3 RUN              = NOT AUTHORIZED. NOT RUN.
-CURRENT_VNEXT_STAGE = S2, held for final ChatGPT acceptance.
+S2 ACCEPTANCE       = COMPLETE. ChatGPT final S2 acceptance; S2_STATUS = ACCEPTED / CLOSED.
+S3 RUN              = EXECUTED 2026-09-14. ONE governed historical Stage-A run under the
+                      single-use grant VRP-AUTH-0001, run_id VRP-STAGE-A-RUN-0001,
+                      RUN_COUNT = 1. Generated GENERATED_NOT_SEEN into the VRP protected
+                      store, post-compute integrity gate PASS 19/19, then exactly ONE
+                      authorised reveal under the separate grant VRP-AUTH-0002.
+                      REVEAL_COUNT = 1. Both grants are consumed.
+STAGE_A_RESULT      = window 2006-09..2026-08, 240 months.
+                      ANNUALISED_MEAN_NET_EXCESS_RETURN_ON_K = +0.073224
+                      CI_95 = [+0.003906, +0.136081]
+                      against +E = +0.075 and -F = -0.075.
+                      STAGE_A_STATE = UNRESOLVED
+                      FAILURE_CLASS = 3 INSUFFICIENT_EVIDENCE / LOW_POWER
+                      RESEARCH_STATUS = unresolved
+                      Endpoints classify; the point estimate never does. L <= +E <= U.
+                      The interval spans roughly +0.4 % to +13.6 % annualised on
+                      committed capital: consistent both with compensation well above
+                      the required margin and with compensation far below it.
+STOP_RULE_IN_FORCE  = Sealed section O: a Class-3 Stage A STOPS the historical study and
+                      STAGE B NEVER RUNS on this result. The only sealed continuation is
+                      VRP-A-PROSPECTIVE (section P), an Owner decision, NOT started.
+                      No result may authorise changing J, b, theta, E, F, s, beta,
+                      delta_tail, the maturity, the roll, the cost convention, the sample
+                      endpoints or the tail rule, or adding a filter. Each is a NEW
+                      lineage with its own trial accounting.
+CURRENT_VNEXT_STAGE = S3 complete; next gate is ChatGPT Stage-A evidence acceptance.
 DATA_GRANT          = VIX chain acquired under Aaron's PHASE D authorisation. 274 raw Cboe
                       official contract files + 7 primary specification documents, SHA-256
                       pinned in research/extensions/vrp/VRP_DATA_MANIFEST.md; raw bytes
@@ -165,13 +189,17 @@ SAMPLE              = dataset.cboe.vix-futures-monthly-chain (identifier provisi
                       Stage-A window 2006-09 -> 2026-08 = 240 months, first month fixed
                       MECHANICALLY by the sealed section F.6 rule, never by an outcome.
 DATA_CONTEXT        = DESIGN_INFORMED_FIRST_LOCAL_USE. Never "fresh", never "independent".
-OUTCOME_EXPOSURE    = NONE on the VIX chain. Raw settlements were read for mechanical
-                      implementation and validation ONLY. No return, basis, carry, roll
-                      yield, average price, Sharpe, CAGR, drawdown, bootstrap interval,
-                      tail statistic or cost-adjusted performance was computed on the real
-                      chain. Stage A and Stage B run on SYNTHETIC fixtures only.
-TRIALS              = STAGE_A_TRIAL_SPENT = NO · STAGE_B_TRIAL_SPENT = NO.
-                      N_trials on the VIX chain = 0 (TRIAL_LEDGER.md section 3.3).
+OUTCOME_EXPOSURE    = TARGET_METRIC on the VIX chain, as of 2026-09-14. The governed
+                      Stage-A series and its interval were generated, protected, and
+                      revealed ONCE (EXPOSURE_LEDGER rows 50-51; reviewer seat S30).
+                      The Main Agent seat is no longer outcome-blind for VRP Stage A and
+                      may not certify the evidence it generated.
+                      Stage B: NOT computed. No book return, no D, no tail statistic, no
+                      core-VRP combination, no crisis compatibility, no book exhaustion.
+                      Stage-B descriptives R6-R11 neither computed nor revealed.
+TRIALS              = STAGE_A_TRIAL_SPENT = YES · STAGE_B_TRIAL_SPENT = NO.
+                      N_trials on the VIX chain = 1 (was 0; TRIAL_LEDGER.md section 3.3).
+                      The trial is spent on CONSTRUCTION, whatever the state.
                       HYPOTHESIS_FAMILY F-VRP declared before any member ran
                       (TRIAL_LEDGER.md section 6.2) -- the programme's first declared family.
 MECHANICAL_ERRATUM  = TSMOM-VRP-01-ERRATUM-01, the variation-margin sign notation, at
@@ -191,10 +219,16 @@ C_A_INTERACTION     = NONE. Static audit over 21 package files: no C-A import, p
                       store; no canonical quantity computed anywhere; Stage B refuses any
                       core day after the C-A forward boundary 2026-09-11 or after the sealed
                       Stage-B boundary 2026-05-31.
-NEXT_OWNER_DECISION = ChatGPT final S2 acceptance. Only then may Aaron consider a single-use
-                      Owner execution authorisation for S3.
-REAL_RUN_AUTHORIZED = NO
-S3_AUTHORIZED       = NO
+PROSPECTIVE         = VRP-A-PROSPECTIVE sealed entry settlement 2026-09-30, first scored
+                      month 2026-10, N_A = 120. NOT STARTED. An activation decision is
+                      required before 2026-09-30 to preserve the sealed schedule; that is
+                      Aaron's, and nothing in this run changes or reveals anything because
+                      of it. VRP-B-PROSPECTIVE: conditional on VRP-A = SUPPORTED, NOT
+                      AUTHORIZED, NOT STARTED.
+NEXT_OWNER_DECISION = ChatGPT Stage-A evidence acceptance, then whether to activate
+                      VRP-A-PROSPECTIVE before 2026-09-30.
+REAL_RUN_AUTHORIZED = NO   (VRP-AUTH-0001 is CONSUMED; a further run needs a new grant)
+STAGE_B_AUTHORIZED  = NO
 ```
 
 Nothing in this block alters canonical TSMOM's status, C-A's status, or C-D's closure.
