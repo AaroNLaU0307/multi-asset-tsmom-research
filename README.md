@@ -18,6 +18,22 @@
 > current instructions. `qros check` / `qros status` survive as **on-demand**
 > mechanical diagnostics, and a `qros` HOLD is information, not a gate.
 
+## Current state
+
+| | |
+|---|---|
+| Canonical TSMOM | **SUPPORTED — NOT INDEPENDENTLY CONFIRMED** |
+| Latest completed candidate | **TSMOM-VRP-01** (unconditional constant-maturity short VIX futures) |
+| Historical verdict | **UNRESOLVED / CLASS 3** — insufficient evidence / low power |
+| Practical portfolio diagnostic | **NOT_COMPELLING** (exploratory, no promotion power) |
+| Historical Stage B | **NOT RUN** — barred by the sealed stop rule |
+| Long-horizon prospective | **NOT ACTIVATED** — closed without activation, by Owner decision |
+| Fable follow-up | **NO** |
+| VRP lineage | **CLOSED** |
+| Programme next | final handoff → next CTA / TSMOM edge |
+
+---
+
 [![Tests](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml/badge.svg)](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml)
 
 **An honest, end-to-end research arc around a multi-asset time-series momentum (TSMOM)
@@ -51,7 +67,33 @@ each case.
   study (`INSUFFICIENT_EVIDENCE`) and the Time-Series Value sleeve (standalone `MATERIALLY_ADVERSE`,
   diversification candidacy failed, `not_promoted`). Both ran exactly one authorized execution
   against a sealed contract.
+- **A third sealed study, TSMOM-VRP-01 (short VIX futures), closed `UNRESOLVED`** — the 95%
+  interval contains the preregistered +7.5% margin, so the study neither establishes that the
+  sleeve clears the required compensation nor reliably excludes it. Its exploratory 80/20
+  portfolio diagnostic is **`NOT_COMPELLING`**: see §4c.
 - **Costs always modelled; negatives are first-class results**, reported as plainly as the one positive.
+
+## Programme roadmap
+
+| Phase | What it was | Status |
+|---|---|---|
+| **A** | research / status cleanup | **COMPLETE** |
+| **B** | canonical TSMOM validation | see below |
+| **C** | next-edge discovery and adjudication | **COMPLETE** |
+| **D** | TSMOM-VRP-01 — the selected candidate, run to a verdict | **COMPLETE / CLOSED** |
+
+**Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT
+INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and
+**live under passive monthly accrual** in its existing state; nothing here touches it. The
+independent verification study (**C-D**) is **closed at HOLD** with strong evidence and one
+unresolved cross-vendor residual.
+
+**Phase C — next-edge discovery.** Claude Fable 5.1 and GPT-6 Astra were used for candidate
+discovery and adversarial challenge; neither may later certify what it helped design. The
+selected question was whether an **unconditional one-month constant-maturity short VX
+futures sleeve earns enough compensation for its severe short-volatility risk**. A
+**Treasury auction / intermediation** candidate was identified as a reserve and is **not**
+started here.
 
 ## The research map
 
@@ -273,10 +315,10 @@ trend. The question — does relative-strength add anything time-series momentum
 
 ## 4. Sealed extension studies (vNext)
 
-Two later studies ran under the `S0 → S1 SEAL → S2 → S3 → S4` lifecycle: a
+Three later studies ran under the `S0 → S1 SEAL → S2 → S3 → S4` lifecycle: a
 preregistration is sealed and hashed *before* any target computation, exactly one
 execution is authorized, and the verdict follows mechanically from rules fixed in advance.
-Both are closed. Neither changes the core result above.
+All three are closed. None changes the core result above.
 
 ### 4a. X01 — futures wrapper vs the ETF commodity sleeve — **INSUFFICIENT_EVIDENCE, CLOSED**
 
@@ -374,6 +416,131 @@ or other portfolio constructions.
 [provenance correction](research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json) ·
 final verdict in [`PROJECT_STATE.md`](PROJECT_STATE.md)
 
+### 4c. TSMOM-VRP-01 — unconditional short VIX futures — **UNRESOLVED (Class 3), CLOSED**
+
+**The question.** Does a standalone, unconditional, one-month constant-maturity **short**
+position in listed monthly VX futures, held at a frozen stress-budgeted size, earn enough
+compensation for its severe short-volatility risk? Everything real was modelled: actual
+monthly contracts, a calendar-only deterministic roll, official Cboe settlements, daily
+variation margin, spread-plus-slippage and per-side commissions, and collateral.
+
+| | |
+|---|---|
+| Sample | **2006-09 … 2026-08**, **240 months** (first month fixed mechanically by the sealed rule) |
+| Annualised arithmetic mean net excess return on committed capital | **+7.3224 %** |
+| 95 % stationary-bootstrap interval | **[+0.3906 %, +13.6081 %]** |
+| Predeclared economic usefulness margin | **+7.5 %** |
+| Verdict | **UNRESOLVED** |
+| Failure class | **Class 3 — INSUFFICIENT EVIDENCE / LOW POWER** |
+| Evidence context | `DESIGN_INFORMED_FIRST_LOCAL_USE` |
+
+**What that means, precisely:** the interval *contains* the +7.5 % margin, so the study
+neither establishes that the sleeve clears the required compensation nor reliably excludes
+it. The endpoints classify; the point estimate never does. It is not "almost passed", not
+"failed", not supported, and not falsified.
+
+**Headline descriptives** — *descriptive only, no promotion power, and they cannot change
+the verdict above*:
+
+| descriptive | value |
+|---|---|
+| worst 1-day sleeve loss | ≈ **−15.7 %** of committed capital `K` |
+| worst 5-day sleeve loss | ≈ **−32.5 %** |
+| worst monthly sleeve loss | ≈ **−32.2 %** |
+| capital-exhaustion events | **0** in the historical sample |
+
+**Stage B was never run.** The sealed rule allowed a historical Stage B *only if* Stage A
+came out `SUPPORTED`. It came out `UNRESOLVED`, so the confirmatory Stage B was never
+executed and **never spent a trial**.
+
+**Prospective confirmation is closed without activation.** `VRP-A prospective =
+NOT ACTIVATED BY OWNER DECISION`. No scheduler, daemon, background accrual or 120-month
+clock was ever started. This is not pending work.
+
+→ [historical closure](research/extensions/vrp/VRP_HISTORICAL_CLOSURE.md) ·
+[Stage-A run record](research/extensions/vrp/s3/VRP_STAGE_A_RUN_RECORD.md) ·
+[final handoff](research/extensions/vrp/VRP_FINAL_HANDOFF.md)
+
+#### EXPLORATORY / NO PROMOTION POWER — the 80/20 portfolio diagnostic
+
+> **This is not Stage B and not a preregistered claim.** It is a separate descriptive
+> lineage (`VRP-PORTFOLIO-DIAGNOSTIC-01`) answering one practical question at **one**
+> allocation that was fixed *before* any outcome was seen. No weight was searched, no
+> parameter swept. `PROMOTION_POWER = NONE`. It **does not change** the verdict above.
+
+Fixed **80 % canonical TSMOM + 20 % VRP**, common sample **2008-05 … 2026-05, 217 months**:
+
+| | ann. return | ann. vol | Sharpe | max drawdown |
+|---|---|---|---|---|
+| **CORE** (canonical TSMOM) | +7.74 % | 10.31 % | **0.751** | −15.60 % |
+| **VRP** (excess of cash) | +8.00 % | 16.57 % | 0.483 | −43.82 % |
+| **80/20 combined** | +7.77 % | 8.56 % | **0.908** | −9.57 % |
+
+```
+monthly correlation CORE vs VRP = -0.105
+Delta Sharpe                    = +0.157
+95 % paired block-bootstrap CI  = [-0.005, +0.311]
+```
+
+**The Sharpe improvement is NOT robustly established, because the interval includes zero.**
+That is the main practical reason for rejection — the rule was fixed in advance and
+"−0.005 is nearly zero" is not a finding.
+
+The second reason is the tail. Over **SPY bottom-decile months**:
+
+```
+CORE mean      = +0.86 %
+COMBINED mean  = -0.93 %
+difference     = -1.78 percentage points per tail month
+```
+
+and across the declared crisis windows:
+
+| window | CORE | COMBINED |
+|---|---|---|
+| 2008 GFC | **+14.4 %** | **+1.7 %** |
+| COVID (2020-02…03) | **+7.9 %** | **−0.5 %** |
+
+**All six declared crisis windows were worse with the VRP sleeve.** So the sleeve improves
+*unconditional* volatility and drawdown statistics while materially eroding the
+**crisis-positive behaviour for which a CTA / TSMOM core is valuable** — it buys calm
+precisely where calm is least wanted. Hence:
+
+```
+PRACTICAL_CLASSIFICATION = NOT_COMPELLING
+```
+
+→ [full diagnostic](research/extensions/vrp/diagnostics/VRP_PORTFOLIO_DIAGNOSTIC_01.md)
+
+#### A research-engineering lesson: cross-month state continuity
+
+The diagnostic's own reconstruction gate — which requires the ledger to reproduce an
+independently sealed monthly series *before* any metric is computed — caught a real defect
+(`VRP-DIAG-DEFECT-001`) in the Stage-B book ledger. It:
+
+- recreated position state at every calendar-month boundary;
+- discarded the first-day cross-boundary variation margin;
+- effectively re-entered the sleeve from flat each month; and
+- applied the new month's sensitivity reset *after* that first mark.
+
+The original synthetic fixture **could not have detected it**, because every synthetic month
+used new contract keys and restarted prices, so no boundary ever carried a live position.
+The repaired cross-month fixture genuinely carries one across the boundary and is required
+to separate the repaired ledger from the old behaviour.
+
+```
+PREVIOUS_ITEM_13 = PASS_BUT_FIXTURE_INSUFFICIENT
+CURRENT_ITEM_13  = PASS
+```
+
+**No sealed scientific result was affected**, because the confirmatory Stage B this ledger
+serves was already barred and never ran. The generalisable point: in a multi-period ledger
+the *position* is continuous state and the *accounts* are periodic state — they have
+different lifetimes — and an identity built only from an object's own intermediate values
+tests its arithmetic, not its correctness.
+
+→ [defect record](research/extensions/vrp/diagnostics/VRP_DIAGNOSTIC_DEFECT_001.md)
+
 ## 5. What this means
 
 The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
@@ -396,6 +563,17 @@ the **cross-sectional counterpart (XSMOM)** — not an overlay, but the same cor
 relative-strength instead of trend — was *also* falsified (0/5 universes), for the most telling reason
 of all: at liquid-ETF granularity it is largely the **same source** the time-series core already
 harvests (corr +0.42; the XSMOM-only lead-lag term not shown to be non-trivial).
+
+**And the most recent candidate did not settle either way.** TSMOM-VRP-01 asked whether a
+short-volatility sleeve — a genuinely *different* risk, not another trend variant — could
+pay for itself. The historical answer is `UNRESOLVED`: twenty years of monthly data were not
+enough to separate "clears +7.5 %" from "does not". The exploratory portfolio check then
+found that at the one pre-fixed allocation the sleeve trades the core's crisis-positive
+behaviour for unconditional calm, without a robust Sharpe gain to show for it. Both results
+are recorded as they came out, and neither is retuned into something friendlier.
+
+**Next:** final handoff, then the next CTA / TSMOM edge. A Treasury auction / intermediation
+candidate is held in reserve from the Phase-C map; no new research is authorised here.
 
 ## 6. Research lessons carried forward
 
