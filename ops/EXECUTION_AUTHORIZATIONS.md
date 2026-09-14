@@ -255,3 +255,37 @@ revision that would actually execute.
   }
 }
 ```
+
+### VRP-AUTH-0001 — TSMOM-VRP-01 Stage-A historical run
+
+One outcome-bearing historical Stage-A run for TSMOM-VRP-01, and nothing else.
+**Stage B is NOT authorized by this grant** and remains forbidden even if Stage A
+is SUPPORTED. The reveal is a SEPARATE single-use grant (`VRP-AUTH-0002`),
+committed only after the post-compute integrity gate passes.
+
+```json
+{
+  "authority": "CHATGPT_FINAL_S2_ACCEPTANCE_ON_BEHALF_OF_OWNER_WORKFLOW; relayed by Aaron in session",
+  "authorization_id": "VRP-AUTH-0001",
+  "authorized_utc": "2026-09-14T18:05:00Z",
+  "binding": {
+    "erratum_sha256": "b8a089ac2f1d3f26d0493684bb3512cfe564b4f82d49690c3b7daa77b28e8f1a",
+    "prereg_sha256": "dd5822440bedbe58f49940651bddf656f4dbb593295b59c4eff2b45b89cf53e6",
+    "research_id": "TSMOM-VRP-01",
+    "run_id": "VRP-STAGE-A-RUN-0001",
+    "s1_seal_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
+    "s2_closure_commit": "f196cfdc3a866f64ca8d12d5b91bd9433b327d06",
+    "stage": "STAGE_A_HISTORICAL_ONLY",
+    "stage_b_authorized": false
+  },
+  "grant_kind": "EXECUTION",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "vrp-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_OUTCOME_BEARING_RUN",
+  "status": "AUTHORIZED"
+}
+```

@@ -77,10 +77,27 @@ class MonthResult(NamedTuple):
     contract_sides_traded: int
 
 
+class DailyRecord(NamedTuple):
+    """One exchange business day of the sleeve ledger, gross and net.
+
+    ADDITIVE OUTPUT ONLY. Nothing here enters `r_A`, which is formed from the monthly
+    aggregates exactly as before; this record exists so the sealed PREDECLARED
+    descriptives R2 (worst 1-day sleeve loss) and R3 (worst 5-day sleeve loss) can be
+    computed from the ledger itself rather than from a re-implementation of it.
+    `PROMOTION_POWER = NONE` for everything derived from it.
+    """
+    date: _dt.date
+    variation_margin: float     # VM_d, gross of cost
+    cost: float                 # section G cost charged on day d
+    turnover_contracts: float   # sum_i |dq_i| traded on day d, standard-contract units
+    cost_points: float          # max(c0, tick_comparable(d)) applied on day d
+
+
 class StageAResult(NamedTuple):
     months: Tuple[MonthResult, ...]
     K: float
     capital_exhaustion_months: Tuple[str, ...]
+    daily: Tuple[DailyRecord, ...] = ()
 
 
 def _month_key(d: _dt.date) -> str:
@@ -110,6 +127,7 @@ def run_stage_a(days: Sequence[DayInput],
     holdings: Dict[Key, float] = {}
     by_month: Dict[str, Dict[str, float]] = {}
     order: List[str] = []
+    daily: List[DailyRecord] = []
 
     for day in days:
         month = _month_key(day.date)
@@ -132,16 +150,21 @@ def run_stage_a(days: Sequence[DayInput],
         wanted = target_holdings(day, K)
         cost = 0.0
         sides = 0
+        turnover = 0.0
         for key in set(wanted) | set(holdings):
             dq = wanted.get(key, 0.0) - holdings.get(key, 0.0)
             if dq != 0.0:
                 cost += vcosts.cost_dollars(day.date, dq, STANDARD_MULTIPLIER)
+                turnover += abs(dq)
                 sides += 1
         bucket["cost"] += cost
         bucket["sides"] += sides
 
         holdings = wanted
         prices = dict(today_prices)
+        daily.append(DailyRecord(date=day.date, variation_margin=vm, cost=cost,
+                                 turnover_contracts=turnover,
+                                 cost_points=vcosts.cost_points(day.date)))
 
         running = bucket["vm"] - bucket["cost"]
         if running < bucket["min_cum"]:
@@ -172,7 +195,8 @@ def run_stage_a(days: Sequence[DayInput],
             contract_sides_traded=int(bucket["sides"]),
         ))
     return StageAResult(months=tuple(months), K=K,
-                        capital_exhaustion_months=tuple(exhausted))
+                        capital_exhaustion_months=tuple(exhausted),
+                        daily=tuple(daily))
 
 
 def annualised_mean(monthly_returns: Sequence[float]) -> float:
