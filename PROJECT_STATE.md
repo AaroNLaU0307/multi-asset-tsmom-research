@@ -125,6 +125,67 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## CTA-EDGE-01-TA — Treasury auction / refunding-week ETF effect — CLOSED PRE-OUTCOME 2026-09-15
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Does the predeclared US Treasury coupon-auction cycle produce an
+                      economically harvestable, repeatable round-trip return pattern in a
+                      liquid duration ETF (TLT), measured close-to-close, surviving costs
+                      and not carried by a single year?
+RESEARCH_ID · LANE  = CTA-EDGE-01-TA · FULL
+S0 FRAME            = COMPLETE / PASS (2026-09-15)
+S1 DESIGN+SEAL      = COMPLETE / SEALED. Sealed contract
+                      research/extensions/ta/TA_PREREGISTRATION.md sha256
+                      3b495fcb220a86b9c4226e308e4814bdfdd871d1c69ce352e99b78977436d35b
+                      at seal commit 881e684b4ddca73f117ea78af14843dabf3c59c9.
+S2 BUILD            = COMPLETE / PASS at commit 3bc779a67247110625378b8558cad3dfcf698ed6.
+                      48 targeted tests pass; ta_prereg_validate.py 122/122 PASS.
+S3 RUN              = NOT AUTHORIZED. No execution authorization for this lineage ever
+                      existed and none was created.
+LIFECYCLE_STATUS    = CLOSED PRE-OUTCOME
+CLOSURE_RECORD      = research/extensions/ta/TA_CLOSURE.md
+FAILURE_TYPE        = IDENTIFICATION_DESIGN_INSUFFICIENT
+CLOSURE_REASON      = The sealed §G.3 macro/QRA identification diagnostic is mechanically
+                      NOT_EVALUABLE on the sealed event calendar: design-matrix rank 5 of
+                      5 (not deficient) but REFERENCE_GROUP_N = 7 against the sealed
+                      minimum of 20. Under the sealed rule NOT_EVALUABLE triggers the
+                      damage diagnostic, and under §I.2 a triggered damage diagnostic
+                      converts a would-be Class D into Class I. Class D was therefore
+                      STRUCTURALLY UNREACHABLE before any historical ETF outcome was
+                      opened, and the controller closed the lineage rather than spend a
+                      governed run on it.
+HISTORICAL_OUTCOME_EXPOSED = NO
+MECHANISM_FALSIFIED = NO   · ETF_EDGE_FALSIFIED = NO · TARGET_MARGIN_EXCLUDED = NO
+VERDICT             = NONE. Classes A/B/C/D/I are the sealed verdict vocabulary and none
+                      applies: the study did not run. This is NOT falsification, NOT
+                      target-margin exclusion, NOT low power from a result, and NOT
+                      evidence against the Treasury auction mechanism — which the intraday
+                      literature identifies with a causal design.
+RESEARCH_LESSON     = At daily ETF frequency the mid-month refunding-week object is too
+                      structurally entangled with the sealed macro/QRA calendar to support
+                      the programme's positive identification standard. CPI falls after the
+                      auction in 125 of 213 windows and payrolls precede it in 178 of 213;
+                      only 7 windows are free of all four covariates.
+TRIALS              = NONE SPENT. F-TA was declared before any member ran and no member
+                      ever ran. D-ETF-COUNT untouched.
+SAMPLE              = No burn added to the ETF panel: no event return, AC, mean, interval,
+                      Sharpe or bootstrap statistic was computed on it by this lineage.
+                      The Treasury auction record and the macro release calendars are
+                      metadata, not outcome samples, and create no burn.
+DESIGN_EXPOSURE     = Fable and Astra remain material_design_contributor and remain barred
+                      from blind certification (REVIEWER_EXPOSURE_LOG rows S31, S32).
+REOPENING           = NOT AVAILABLE to any agent. Sealed §K.8 stands. A design capable of
+                      the identification this one lacked is a NEW lineage with its own S0.
+NEXT_OWNER_DECISION = NONE for this lineage. It is closed.
+```
+
+Nothing in this block alters canonical TSMOM's status, C-A's status, C-D's HOLD, or any
+closed lineage.
+
+---
+
 ## TSMOM-VRP-01 — short-VIX-futures sleeve — CLOSED 2026-09-14 — UNRESOLVED (Class 3)
 
 *State only, never workflow authority (vNext §0).*
