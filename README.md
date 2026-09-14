@@ -62,11 +62,13 @@ each case.
 - **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
   control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
 - **CI-verified test suite** run on every push (badge above) — not a self-reported count.
-  Three legacy XSMOM tests currently fail on pandas API drift; see *Validation status* in §2.
-- **Two sealed extension studies, both closed under preregistration** — the X01 futures-wrapper
-  study (`INSUFFICIENT_EVIDENCE`) and the Time-Series Value sleeve (standalone `MATERIALLY_ADVERSE`,
-  diversification candidacy failed, `not_promoted`). Both ran exactly one authorized execution
-  against a sealed contract.
+  The suite is **green: 101 passed, 0 failed** (`python -m pytest -q`). Three legacy XSMOM
+  tests *previously* failed under an earlier pandas API-drift environment; they pass now.
+- **Three sealed extension studies, all closed under preregistration** — the X01
+  futures-wrapper study (`INSUFFICIENT_EVIDENCE`), the Time-Series Value sleeve (standalone
+  `MATERIALLY_ADVERSE`, diversification candidacy failed, `not_promoted`) and TSMOM-VRP-01
+  (short VIX futures, `UNRESOLVED`). Each ran exactly one authorized execution against a
+  sealed contract.
 - **A third sealed study, TSMOM-VRP-01 (short VIX futures), closed `UNRESOLVED`** — the 95%
   interval contains the preregistered +7.5% margin, so the study neither establishes that the
   sleeve clears the required compensation nor reliably excludes it. Its exploratory 80/20
@@ -203,13 +205,16 @@ attribution reconciliation, daily↔monthly reconciliation, regime/premise causa
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-**Validation status.** The checks belonging to the recently closed Time-Series Value
-lineage are green — sealed-contract conformance, data provenance, the synthetic
-end-to-end rehearsal and its own suite all pass. Three tests in
-`tests/test_xsmom_universes.py` currently fail in this environment on pandas API drift;
-they reproduce unchanged at commit `c63114a0` and predate the Value work, so they are a
-library-compatibility issue rather than a research finding. XSMOM's recorded status
-(`falsified`) rests on its published results, not on these tests. Not repaired here.
+**Validation status — green.** `python -m pytest -q` reports **101 passed, 0 failed**
+(verified on this branch, pandas 3.0.3). The checks belonging to the closed Time-Series
+Value and TSMOM-VRP-01 lineages pass, as do the sealed-contract conformance, data
+provenance and synthetic end-to-end rehearsal suites.
+
+*History, no longer current:* three tests in `tests/test_xsmom_universes.py` **previously**
+failed under an earlier pandas API-drift environment — a library-compatibility issue, never
+a research finding, reproducing unchanged at commit `c63114a0` and predating the Value work.
+That file now passes 16/16. XSMOM's recorded status (`falsified`) always rested on its
+published results, not on these tests.
 
 ## 3. The research arc — one diagnostic, four overlays not promoted, one parallel study
 
