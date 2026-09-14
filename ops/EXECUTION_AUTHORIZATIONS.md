@@ -289,3 +289,35 @@ committed only after the post-compute integrity gate passes.
   "status": "AUTHORIZED"
 }
 ```
+
+### VRP-AUTH-0002 — TSMOM-VRP-01 Stage-A single reveal
+
+Committed ONLY after the post-compute integrity gate passed 19/19 on the
+protected result named in the binding. Authorises exactly ONE reveal of the
+predeclared Stage-A evidence package. Stage-B descriptives are NOT covered:
+Stage B has not run.
+
+```json
+{
+  "authority": "CHATGPT_FINAL_S2_ACCEPTANCE_ON_BEHALF_OF_OWNER_WORKFLOW; relayed by Aaron in session",
+  "authorization_id": "VRP-AUTH-0002",
+  "authorized_utc": "2026-09-14T18:40:00Z",
+  "binding": {
+    "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+    "research_id": "TSMOM-VRP-01",
+    "reveals": "ONE_PREDECLARED_STAGE_A_EVIDENCE_PACKAGE",
+    "run_id": "VRP-STAGE-A-RUN-0001",
+    "stage": "STAGE_A_HISTORICAL_ONLY",
+    "stage_b_authorized": false
+  },
+  "grant_kind": "REVEAL",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "vrp-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_REVEAL",
+  "status": "AUTHORIZED"
+}
+```

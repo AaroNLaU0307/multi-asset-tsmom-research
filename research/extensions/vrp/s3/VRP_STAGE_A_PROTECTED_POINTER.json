@@ -1,0 +1,15 @@
+{
+  "bootstrap_valid_replicates": 10000,
+  "chain_days": 5032,
+  "month_count": 240,
+  "protected": {
+    "classification": "GENERATED_NOT_SEEN",
+    "generated_utc": "20260914T132408Z",
+    "path": "data/vrp_protected/TSMOM-VRP-01_stage_a_historical_20260914T132408Z.json",
+    "sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc"
+  },
+  "result_state": "GENERATED_NOT_SEEN",
+  "run_id": "VRP-STAGE-A-RUN-0001",
+  "sample_first_month": "2006-09",
+  "sample_last_month": "2026-08"
+}

@@ -623,8 +623,12 @@ def cmd_verify(_args) -> int:
     ck("raw manifest hash unchanged since the run",
        p["raw_manifest_sha256"] == sha256_file(MANIFEST_JSON))
     _, head = git("rev-parse", "HEAD")
-    ck("CODE_COMMIT_MATCH (run recorded the commit it ran at)",
-       p["code_commit"] == head or True, "%s" % p["code_commit"][:12])
+    ck("CODE_COMMIT_MATCH (the run recorded the commit it actually ran at)",
+       p["code_commit"] == head, "run %s vs HEAD %s"
+       % (p["code_commit"][:12], head[:12]))
+    ck("the run's seal / build / closure pins match this lineage",
+       p["seal_commit"] == S1_SEAL and p["s2_build_commit"] == S2_BUILD
+       and p["s2_closure_commit"] == S2_CLOSURE)
     ok, detail = vval.check_sealed_artifact_hashes()
     ck("S1_HASHES_MATCH", ok, detail)
     ck("ERRATUM_HASH_MATCH", p["erratum_sha256"] == ERRATUM_SHA
