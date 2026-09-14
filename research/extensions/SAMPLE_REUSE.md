@@ -211,6 +211,24 @@ exists. Nothing has run.*
 
 ---
 
+### KB-1 addendum — `CTA-EDGE-02-BENB` (bond ETF–NAV basis)
+
+*Appended at the CTA-EDGE-02-BENB S1 seal, 2026-09-15, BEFORE any candidate outcome
+exists. Nothing has run.*
+
+| Field | Value |
+|---|---|
+| **Lineage** | `CTA-EDGE-02-BENB` — the tradable next-session convergence of an abnormal HYG discount to its official issuer NAV |
+| **Price leg** | **REUSED / BURNED CONTEXT.** HYG and LQD price history belongs to the lineage of the frozen ETF panel (burned 6 of 6, `must_not_be_retested_on_same_sample`). The RAW UNADJUSTED series acquired at S0 repair is a different **footing** of the same economic history — **not a new sample** — and is treated as reused |
+| **NAV leg** | **NEW external historical source** with no prior programme exposure: iShares/BlackRock daily per-share NAV, HYG from 2007-04-04 and LQD from 2002-07-22, pinned by sha256 in the sealed contract §C |
+| **NAV provenance** | `RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATION` — one retrieved vintage; issuer restatement cannot be excluded. No positive result may be described as strict vintage-PIT confirmation |
+| **Combined provenance** | **MIXED / DEPENDENT.** A new NAV leg does **NOT** launder the reused price sample |
+| **Evidence ceiling** | **`supported`.** Never `confirmed`, never `independently confirmed`, whatever the result |
+| **`N_trials`** | **NOT ASSERTED.** `D-ETF-COUNT` remains `UNKNOWN_PENDING_AARON_DECISION` and is **untouched**. The sealed design uses **no DSR** and no trial-count deflation, so it is not blocked on that decision |
+| **Exposure at this append** | **NONE.** No basis, abnormal basis, discount-sign count, coefficient, return, Sharpe or bootstrap statistic has been computed. `DISCOUNT_OBSERVATION_COUNT` is deliberately **UNKNOWN** at seal |
+
+---
+
 ## §3 Residual — `UNKNOWN`, and deliberately left so
 
 Beyond the burns enumerated in §2, this program's cumulative prior exposure is
@@ -279,6 +297,7 @@ this program.**
 
 | Date (UTC) | Appended | By |
 |---|---|---|
+| 2026-09-15 | **CTA-EDGE-02-BENB S1 seal.** A **KB-1 addendum** records the bond ETF–NAV basis lineage: the HYG/LQD **price leg is REUSED / BURNED context** (the raw unadjusted series is a different footing of the same economic history, not a new sample), the **NAV leg is a NEW external source** carrying a non-vintage limitation, and the combined provenance is **MIXED / DEPENDENT** with evidence ceiling **`supported`** — a new NAV leg does not launder a reused price sample. `D-ETF-COUNT` untouched; **no `N_trials` asserted**. **Nothing has run**: no basis, abnormal basis, discount-sign count, coefficient, return, Sharpe or bootstrap statistic exists. **No existing row was edited or reordered.** | CTA-EDGE-02-BENB S1 seal session (Claude Opus 5) |
 | 2026-09-15 | **CTA-EDGE-01-TA CLOSED PRE-OUTCOME — no burn was added.** The lineage closed before any governed run, so the KB-1 addendum's `Exposure at this append = NONE` **stands as final for it**: no ETF event return, `AC`, mean, interval, Sharpe or bootstrap statistic was ever computed on the frozen panel by this lineage, and the only panel contact remained a `Date` column read with a non-null presence mask. The official Treasury auction record and the BLS/Federal Reserve release calendars acquired at S1/S2 are **metadata, not outcome samples**, and create no burn and no trial. The KB-1 addendum is **not edited** and `D-ETF-COUNT` is untouched. **No existing row was edited or reordered.** | CTA-EDGE-01-TA closeout session (Claude Opus 5) |
 | 2026-09-15 | **CTA-EDGE-01-TA S1 seal.** A **KB-1 addendum** records the new Treasury-auction lineage as **T0, further reuse (tenth-plus)** of the frozen ETF panel (TLT primary, IEF secondary, SHY/SPY diagnostics), with evidence ceiling **`supported`** and `D-ETF-COUNT` **untouched**. The official Treasury auction record is declared as **metadata, not an outcome sample** — it creates no burn and no trial. **Nothing has run**: no ETF event return, `AC`, interval, Sharpe or bootstrap statistic exists. **No existing row was edited or reordered.** | CTA-EDGE-01-TA S1 design/seal session (Claude Opus 5), Main Agent, under the controller's S1 DESIGN + PRE-SEAL REPAIR + CONDITIONAL SEAL authorisation |
 | 2026-09-14 | **TSMOM-VRP-01 S3 governed Stage-A run.** KB-6 updated: **`N_trials` 0 → 1**, `Burned by` now names the one governed VRP-A Stage-A series (2006-09..2026-08, 240 months), and an **S3 exposure** row records `TARGET_METRIC` — the series was generated, protected, and revealed ONCE. The panel is now exposed and may not be reused as fresh independent confirmation. Stage B did not run and, under the sealed §O stop rule, never runs on this historical result; the KB-1 ETF addendum is therefore unchanged and `D-ETF-COUNT` stays untouched. **No existing row was edited or reordered.** | TSMOM-VRP-01 S3 run session (Claude Opus 5) |
