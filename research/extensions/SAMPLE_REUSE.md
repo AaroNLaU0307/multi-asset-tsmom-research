@@ -193,6 +193,24 @@ Stage A and has **not** run: `STAGE_B_TRIAL_SPENT = NO`.
 
 ---
 
+### KB-1 addendum — `CTA-EDGE-01-TA` (Treasury auction cycle at ETF granularity)
+
+*Appended at the CTA-EDGE-01-TA S1 seal, 2026-09-15, BEFORE any candidate outcome
+exists. Nothing has run.*
+
+| Field | Value |
+|---|---|
+| **Lineage** | `CTA-EDGE-01-TA` — the pre-auction / post-auction round-trip return in a liquid duration ETF around scheduled nominal Treasury coupon auctions |
+| **Sample used** | the same frozen `dataset.yfinance.multi-asset-etf-panel` snapshot, `data/close_prices_raw.csv`, sha256 `3d2a7a56…0c05c3c31`. Columns used by the sealed design: **TLT** (primary), **IEF** (declared secondary), **SHY** and **SPY** (diagnostics) |
+| **Evidence context** | **T0 — dependent evidence on an exposed panel.** Further reuse (tenth-plus). The panel is burned 6 of 6 and carries `must_not_be_retested_on_same_sample` |
+| **Design provenance** | the design was taken from **external** published literature and an **external, official** Treasury auction calendar, not from any observed ETF outcome. The auction-conditioned statistic has **never been computed on this panel by anyone**. That does **not** lift the burn: the panel is exposed, and the ceiling below stands regardless |
+| **Evidence ceiling** | **`supported`.** Never `confirmed`, never `independently confirmed`, whatever the result |
+| **`N_trials`** | **NOT ASSERTED.** `D-ETF-COUNT` remains `UNKNOWN_PENDING_AARON_DECISION` (`TRIAL_LEDGER.md` §3.2, §4) and is **untouched** by this declaration. The sealed design uses **no DSR** and no trial-count deflation, so it is not blocked on that decision |
+| **Exposure at this append** | **NONE.** No ETF event return, `AC`, mean, interval, Sharpe or bootstrap statistic has been computed. The only panel contact was a `Date` column read and a non-null presence mask |
+| **New external sample** | the official Treasury auction record is **metadata, not an outcome sample**: it carries event dates and security identity only, it is announced in advance, it is not revised, and it creates no burn and no trial. Pinned at `research/extensions/ta/TA_DATA_MANIFEST.md` |
+
+---
+
 ## §3 Residual — `UNKNOWN`, and deliberately left so
 
 Beyond the burns enumerated in §2, this program's cumulative prior exposure is
@@ -261,6 +279,7 @@ this program.**
 
 | Date (UTC) | Appended | By |
 |---|---|---|
+| 2026-09-15 | **CTA-EDGE-01-TA S1 seal.** A **KB-1 addendum** records the new Treasury-auction lineage as **T0, further reuse (tenth-plus)** of the frozen ETF panel (TLT primary, IEF secondary, SHY/SPY diagnostics), with evidence ceiling **`supported`** and `D-ETF-COUNT` **untouched**. The official Treasury auction record is declared as **metadata, not an outcome sample** — it creates no burn and no trial. **Nothing has run**: no ETF event return, `AC`, interval, Sharpe or bootstrap statistic exists. **No existing row was edited or reordered.** | CTA-EDGE-01-TA S1 design/seal session (Claude Opus 5), Main Agent, under the controller's S1 DESIGN + PRE-SEAL REPAIR + CONDITIONAL SEAL authorisation |
 | 2026-09-14 | **TSMOM-VRP-01 S3 governed Stage-A run.** KB-6 updated: **`N_trials` 0 → 1**, `Burned by` now names the one governed VRP-A Stage-A series (2006-09..2026-08, 240 months), and an **S3 exposure** row records `TARGET_METRIC` — the series was generated, protected, and revealed ONCE. The panel is now exposed and may not be reused as fresh independent confirmation. Stage B did not run and, under the sealed §O stop rule, never runs on this historical result; the KB-1 ETF addendum is therefore unchanged and `D-ETF-COUNT` stays untouched. **No existing row was edited or reordered.** | TSMOM-VRP-01 S3 run session (Claude Opus 5) |
 | 2026-09-14 | **TSMOM-VRP-01 S2 acceptance rows.** **KB-6** appended: the new `dataset.cboe.vix-futures-monthly-chain` dataset row at **`N_trials = 0` before Stage A**, with the repository verification that no VIX-futures series was ever constructed here, the Cboe PRIMARY source authority, the S2 mechanical-only exposure statement, and evidence context `DESIGN_INFORMED_FIRST_LOCAL_USE`. A **KB-1 addendum** records Stage B as **T0, further reuse (ninth-plus)** of the frozen ETF panel, leaving `D-ETF-COUNT` untouched. **No trial count moved**: Stage A has not run (`STAGE_A_TRIAL_SPENT = NO`), Stage B has not run (`STAGE_B_TRIAL_SPENT = NO`). **No existing row was edited or reordered.** | TSMOM-VRP-01 S2 governance-closure session (Claude Opus 5), implementation Main Agent, under Aaron's `S2 BOUNDED PRE-S3 GOVERNANCE CLOSURE` |
 | 2026-09-07 | Initial declaration: KB-1 (ETF, 6/6 burned, 7th reuse declared, no frozen count convention), KB-2 (Databento, `N_trials = 14` verified), KB-3 (T1 wrapper relationship), KB-4 (exposed-sample consequences), KB-5 (T3/T4 separation); residual `UNKNOWN`; cross-project coordination §4; claim consequences §5. | Wave-0 governance session (Claude Opus 5), under Aaron's `AUTHORIZE_WAVE_0_GOVERNANCE_EXECUTION` |
