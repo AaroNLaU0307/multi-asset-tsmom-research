@@ -106,10 +106,33 @@ def secret_scan():
     return findings, len(targets)
 
 
+def _accepted_log_is_frozen():
+    """Once a single-use Owner EXECUTION grant is committed, S2 acceptance is CLOSED and
+    its log is a historical record that must not be rewritten.
+
+    Item 21's own evidence asserts that no execution authorisation exists, so re-running
+    this runner after a grant is committed necessarily reports item 21 as FAIL. Allowing
+    that to overwrite the accepted log would destroy the record of S2 acceptance and
+    permanently block the very run the grant authorises - a circularity, not a finding.
+    """
+    sys.path.insert(0, HERE)
+    import vrp_reveal as _vreveal
+    return _vreveal.active_execution_authorization("EXECUTION") is not None
+
+
 def main() -> int:
     os.makedirs(S2_DIR, exist_ok=True)
     print("TSMOM-VRP-01 - S2 ACCEPTANCE RUNNER")
     print("=" * 78)
+    if _accepted_log_is_frozen():
+        print("")
+        print("REFUSED: a single-use Owner EXECUTION grant is committed, so S2")
+        print("acceptance is CLOSED and its log is frozen as a historical record.")
+        print("Re-running would report item 21 FAIL purely because the grant exists,")
+        print("overwrite the accepted all-PASS record, and block the authorised run.")
+        print("Use research/extensions/vrp/s3/vrp_s3_stage_a.py preflight instead: it")
+        print("re-runs every check and accounts for the enumerated S3 state transition.")
+        return 0
 
     # --------------------------------------------------------------- #
     section("A. S2A data gate")

@@ -5,8 +5,8 @@
   "REAL_STAGE_B_COMPUTED": "NO",
   "S3_AUTHORIZED": "NO",
   "acceptance_suite": {
-    "failed": 3,
-    "passed": 97,
+    "failed": 0,
+    "passed": 100,
     "total": 100
   },
   "ca_access_audit": {
@@ -23,7 +23,7 @@
   },
   "commit": null,
   "contract_id": "TSMOM-VRP-01-PREREG-01",
-  "generated_utc": "2026-09-14T13:19:50Z",
+  "generated_utc": "2026-09-14T13:07:22Z",
   "items": [
     {
       "evidence_prefix": "test_i01_",
@@ -207,17 +207,17 @@
     },
     {
       "evidence_prefix": "test_i21_",
-      "failing_tests": 3,
+      "failing_tests": 0,
       "item": 21,
       "level": 1,
-      "result": "FAIL",
+      "result": "PASS",
       "tests": 6,
       "title": "No generated outcome before acceptance"
     }
   ],
   "lineage": "TSMOM-VRP-01",
-  "overall": "FAIL",
-  "recorded_at_head_before_commit": "be224bb9894af696c5c993bfd821f56d78952df2",
+  "overall": "PASS",
+  "recorded_at_head_before_commit": "72499019ce9ef97f16d1ddf3b3982697a4e6c4cc",
   "s1_seal_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
   "s2a_counts": {
     "CALENDAR_DECLARED_CFE_ONLY_SESSIONS": 3,
