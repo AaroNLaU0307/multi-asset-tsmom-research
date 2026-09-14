@@ -128,10 +128,30 @@ def run_stage_b(core: Sequence[CoreMonth],
                 W0: float,
                 data_kind: str,
                 run_id: str = "") -> StageBResult:
-    """The sealed self-financing book. `core` and `sleeve` are aligned month by month."""
+    """The sealed CONFIRMATORY Stage-B book. `core` and `sleeve` are aligned month by month.
+
+    This is the gated, preregistered entry point. Under the sealed section O stop rule a
+    Class-3 Stage A means Stage B never runs, and `require_run_authorization` refuses
+    without a grant whose `stage_b_authorized` is true.
+    """
     vreveal.require_run_authorization(data_kind, run_id, stage="STAGE_B")
     if data_kind == vreveal.REAL:
         _assert_core_within_boundary(core)
+    return run_book_ledger(core, sleeve, W0)
+
+
+def run_book_ledger(core: Sequence[CoreMonth],
+                    sleeve: Sequence[SleeveMonth],
+                    W0: float) -> StageBResult:
+    """The self-financing book LEDGER MECHANICS, with no governance gate of their own.
+
+    Separated from `run_stage_b` so that a DIFFERENT, clearly-labelled lineage may reuse
+    the mechanics that acceptance items 13, 14 and 15 already validated, without either
+    weakening the confirmatory Stage-B gate or re-implementing the ledger and risking
+    divergence. The confirmatory entry point above is the ONLY caller that may present a
+    result as sealed Stage-B evidence; any other caller is exploratory and carries
+    `PROMOTION_POWER = NONE`.
+    """
     sleeve_by_month = {m.month: m for m in sleeve}
 
     results: List[BookMonthResult] = []

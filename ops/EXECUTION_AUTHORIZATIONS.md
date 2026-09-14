@@ -321,3 +321,49 @@ Stage B has not run.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — VRP-AUTH-0001 — CONSUMED
+
+```json
+{
+  "authorization_id": "VRP-AUTH-0001",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-14T19:20:00Z",
+  "evidence": {
+    "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+    "reveal_count": 1,
+    "run_count": 1,
+    "run_record": "research/extensions/vrp/s3/VRP_STAGE_A_RUN_RECORD.md"
+  },
+  "reason": "the one governed historical Stage-A run VRP-STAGE-A-RUN-0001 completed and its evidence was durably stored as GENERATED_NOT_SEEN",
+  "record_type": "LIFECYCLE",
+  "run_id": "VRP-STAGE-A-RUN-0001",
+  "schema": {
+    "name": "vrp-execution-authorization",
+    "version": 1
+  }
+}
+```
+
+### LIFECYCLE — VRP-AUTH-0002 — CONSUMED
+
+```json
+{
+  "authorization_id": "VRP-AUTH-0002",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-14T19:20:00Z",
+  "evidence": {
+    "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+    "reveal_count": 1,
+    "run_count": 1,
+    "run_record": "research/extensions/vrp/s3/VRP_STAGE_A_RUN_RECORD.md"
+  },
+  "reason": "the single authorised Stage-A reveal was performed; reveal_count = 1",
+  "record_type": "LIFECYCLE",
+  "run_id": "VRP-STAGE-A-RUN-0001",
+  "schema": {
+    "name": "vrp-execution-authorization",
+    "version": 1
+  }
+}
+```

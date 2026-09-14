@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## TSMOM-VRP-01 — short-VIX-futures sleeve — STAGE A RUN + REVEALED 2026-09-14 — UNRESOLVED
+## TSMOM-VRP-01 — short-VIX-futures sleeve — CLOSED 2026-09-14 — UNRESOLVED (Class 3)
 
 *State only, never workflow authority (vNext §0).*
 
@@ -219,14 +219,33 @@ C_A_INTERACTION     = NONE. Static audit over 21 package files: no C-A import, p
                       store; no canonical quantity computed anywhere; Stage B refuses any
                       core day after the C-A forward boundary 2026-09-11 or after the sealed
                       Stage-B boundary 2026-05-31.
-PROSPECTIVE         = VRP-A-PROSPECTIVE sealed entry settlement 2026-09-30, first scored
-                      month 2026-10, N_A = 120. NOT STARTED. An activation decision is
-                      required before 2026-09-30 to preserve the sealed schedule; that is
-                      Aaron's, and nothing in this run changes or reveals anything because
-                      of it. VRP-B-PROSPECTIVE: conditional on VRP-A = SUPPORTED, NOT
-                      AUTHORIZED, NOT STARTED.
-NEXT_OWNER_DECISION = ChatGPT Stage-A evidence acceptance, then whether to activate
-                      VRP-A-PROSPECTIVE before 2026-09-30.
+PROSPECTIVE         = DECLINED BY OWNER 2026-09-14. Aaron explicitly decided NOT to
+                      activate the long-horizon experiment.
+                      VRP_A_PROSPECTIVE_STATUS = NOT_ACTIVATED_BY_OWNER_DECISION
+                      LONG_HORIZON_PROSPECTIVE_EXPERIMENT = CLOSED_WITHOUT_ACTIVATION
+                      ENTRY_2026_09_30 = NOT_ARMED · MONTHLY_ACCRUAL = DISABLED
+                      SCHEDULER = NONE · BACKGROUND_RUNNER = NONE
+                      TERMINAL_120_MONTH_CLOCK = NOT_STARTED
+                      VRP_B_PROSPECTIVE = NOT_ACTIVATED
+                      No trial is spent by declining activation. Nothing had to be
+                      dismantled: no scheduler, daemon, cron, runner or prospective
+                      store was ever created. The S1 seal is NOT rewritten to remove
+                      its prospective clauses; the decision is recorded alongside it in
+                      research/extensions/vrp/VRP_HISTORICAL_CLOSURE.md.
+LIFECYCLE_STATUS    = CLOSED. HISTORICAL_RESEARCH_COMPLETE = YES.
+                      MORE_HISTORICAL_TUNING = FORBIDDEN_INSIDE_TSMOM-VRP-01.
+                      Both ONE_SHOT grants VRP-AUTH-0001 and VRP-AUTH-0002 are CONSUMED.
+DIAGNOSTIC          = VRP-PORTFOLIO-DIAGNOSTIC-01, a SEPARATE exploratory lineage
+                      (EXPLORATORY_ONLY, PROMOTION_POWER = NONE), is on HOLD under
+                      VRP-DIAG-DEFECT-001: the Stage-B book ledger resets the sleeve's
+                      holdings every calendar month, violating the binding section H.4
+                      identity by up to 6.58e-02 against the real sealed series. No
+                      sealed result is affected (Stage B never ran). No portfolio metric
+                      was produced. It does not and cannot change the verdict below.
+NEXT_OWNER_DECISION = whether to authorise the VRP-DIAG-DEFECT-001 repair (ledger fix plus
+                      a fixture that actually carries a position across a month boundary,
+                      which acceptance item 13 currently does not), or to close VRP and
+                      move to the next Phase-C candidate.
 REAL_RUN_AUTHORIZED = NO   (VRP-AUTH-0001 is CONSUMED; a further run needs a new grant)
 STAGE_B_AUTHORIZED  = NO
 ```
