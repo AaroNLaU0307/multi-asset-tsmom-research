@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — GATE 0.5 PASS 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — GATE 0.5 AUDITED 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -501,6 +501,72 @@ POST-RUN VALIDATORS = S2 parser 32/32 PASS, policy schedule 33/33 PASS, S2
                       correctly after an authorized run - the same stage-bound
                       situation the controller already ruled on for the S1
                       D-checks. The test was NOT modified.
+POST-GATE05 AUDIT   = **PASS 15/15, STATIC ONLY** (research/extensions/mmv/
+                      mmv_gate05_audit.py; record MMV_GATE05_AUDIT.md). No rerun,
+                      no recomputation of the agreement statistic, no returns, no
+                      new authorization. MMV-AUTH-0001 remains CONSUMED.
+REPRESENTATION      = **VALID**. CANONICAL_COMPOSITE_SIGN_NORMALIZED_BEFORE_
+                      GATE05 = YES. The committed reader canonical_signs()
+                      (mmv_gate05_run.py:336) parses each cell as an exact
+                      Fraction at :349 and applies the inline three-valued sign
+                      (v > 0) - (v < 0) at **:350**, one line later and 170 lines
+                      before the value reaches the gate. That reader is the ONLY
+                      reader of the panel's instrument columns and its output is
+                      the ONLY thing handed to gate05.evaluate (:520 -> :432).
+                      Exact equality at engine/gate05.py:110.
+                      SYNTHETIC_NORMALIZATION_TEST = PASS: the committed
+                      expression maps [-1,-0.75,-0.5,-0.25,0,0.25,0.5,0.75,1] to
+                      exactly [-1,-1,-1,-1,0,1,1,1,1].
+                      IMPOSSIBILITY ARGUMENT (decisive, recomputes nothing):
+                      engine/gate05.py:102 passes every canonical value through
+                      _check_sign, which RAISES on anything outside {-1,0,+1}.
+                      **1167 fractional composite cells** lie inside the audited
+                      window over the 15 mapped instruments, so a run comparing
+                      raw composites would have raised on the first one and no
+                      artifact could exist. A completed run reporting 3270
+                      eligible cells is possible ONLY with normalization applied.
+                      REPORTED_RESULT_STATUS = VALID_PENDING_CONTROLLER_ACCEPTANCE.
+COLLISION RECONCILE = **COMPATIBLE**. The two counts measure DIFFERENT
+                      POPULATIONS, not different denominators of one population.
+                      The policy freeze's "1 verified / 2 unknown" counted CUTOFFS
+                      (decision OR lagged) coinciding with a target-CHANGE
+                      announcement: {2007-10-31 L unknown, 2008-04-30 L unknown,
+                      2019-07-31 D verified}. The Gate 0.5 "A=1 / B=0 / C=5"
+                      classified the SIX PINNED S1 collisions - canonical
+                      month-end DECISION dates that are FOMC announcement dates,
+                      change or no change. The sets intersect in exactly ONE
+                      member, 2019-07-31, VERIFIED in both.
+                      B=0 is not a contradiction of "2 unknown": among the six,
+                      NO target changed with an unestablished time. Three of the
+                      five class-C meetings (2018-01-31, 2024-01-31, 2024-07-31)
+                      publish a 2:00 p.m. time and changed nothing; two
+                      (2013-07-31, 2014-04-30) publish no time and also changed
+                      nothing. A meeting that changes nothing gives the same-day
+                      rule no new value to admit or withhold.
+LAGGED CUTOFF STATUS = 2007-10-31 and 2008-04-30 are SEPARATE LAGGED-CUTOFF
+                      EVENTS, NOT among the six. Structurally they cannot be:
+                      both fall BEFORE the decision window opens on 2008-05-31,
+                      so neither is a decision date. Each is a target-change
+                      announcement with time NOT_ESTABLISHED -> PRIOR TARGET, and
+                      each enters the study only as the t-12m cutoff of a later
+                      decision (2008-10-31 and 2009-04-30 respectively).
+GUARD AUDIT         = RERUN_CURRENTLY_BLOCKED = YES, verified statically without
+                      executing the driver. consumed_ids() unions committed
+                      records with the WORKING TREE (mmv_authorization.py:103)
+                      while grants come only from committed state; _scoped
+                      retains a LIFECYCLE record carrying no lineage field (the
+                      defect that previously dropped consumption and made the
+                      guard fail OPEN) while still rejecting a record declaring a
+                      DIFFERENT lineage; and the driver independently refuses when
+                      a result artifact exists (mmv_gate05_run.py:509).
+EXPOSURE            = **ops/EXPOSURE_LEDGER.md row 56**, classification
+                      REVEALED_AGGREGATE / granularity AGGREGATE, note
+                      class=PNL_FREE_STRUCTURAL_EXPOSURE (controller's term,
+                      recorded as directed; NOT a member of the Program v2 S0B
+                      triple). PNL_FREE_EXPOSURE_STATUS = VALID_GATE05_EXPOSURE.
+                      REVEALED_TARGET_METRIC would have been WRONG - no return,
+                      cost, Sharpe or drawdown exists. RETURN_TRIAL_SPENT = NO;
+                      nothing written to TRIAL_LEDGER and no trial invented.
 NEXT_OWNER_DECISION = CONTROLLER REVIEW of the Gate 0.5 PASS. A HISTORICAL
                       RETURN TEST IS STILL NOT AUTHORIZED. Gate 1, M1, M2, the
                       calendar-year block bootstrap and the first-release
