@@ -152,6 +152,41 @@ HOLD_REASON         = PINS-OD-1, a high-difficulty Owner decision on the EXPECTA
                       PINS-OD-2 (scarcity definition), PINS-OD-3 (execution latency +
                       primary horizon) and PINS-OD-4 (materiality scale) are RECORDED
                       but DEFERRED behind OD-1, which is a gate.
+PINS-OD-1           = DECIDED 2026-09-16 = CONDITIONAL OPTION 1. Anchor on ONE named
+                      PRE-API analyst-survey consensus family (C), with the
+                      first-reported API pre-release estimate (P) as a MANDATORY second
+                      point-in-time input; BOTH must be reconstructible. Option 2 (API
+                      alone) not accepted under this claim; option 3 (model expectation)
+                      rejected; option 4 (close) correct if feasibility fails.
+                      Fable advice ACCEPTED WITH QUALIFIERS PINS-Q1 (the linear update
+                      heuristic E* ~ C + k(P-C) is HEURISTIC_ONLY, k UNKNOWN, no
+                      price-fitted k), PINS-Q2 (measurement-error DIRECTION is not a
+                      programme fact) and PINS-Q3 (binding terminology: P is never
+                      "market expectation", A-P is never a "market-expectation
+                      surprise"). Record
+                      ops/OWNER_DECISION_RECORD_CTA_EDGE_03_PINS.md.
+PINS-OD-1 FEASIBILITY = **FAIL** (2026-09-16). Against a 45-release sample frozen from
+                      the EIA release calendar BEFORE any retrieval: consensus coverage
+                      0/45 for Reuters/LSEG and 0/45 for the one permitted retry
+                      (S&P Global Platts), against a >=90% threshold. reuters.com is
+                      inaccessible to the agent at the user-agent level; the LSEG Reuters
+                      Polls product does not document the weekly petroleum inventory poll
+                      as in scope; Platts has no date-addressable public archive.
+                      Economic-calendar "forecast" fields were REFUSED BY RULE — no named
+                      family, no forecast timestamp, and an explicit prohibition on use
+                      and storage. The API leg has a lawful documented route (ICE Data
+                      Services, API WSB, history from 2000) but NO ENTITLEMENT IS HELD,
+                      so it was NOT TESTED, and whether that series is first-reported or
+                      revised is UNVERIFIED.
+                      Record research/extensions/pins/PINS_OD1_FEASIBILITY_RESULT.md.
+RECOMMENDED_ACTION  = CLOSE CTA-EDGE-03-PINS AT S0 / DATA-PIT FAILURE (negative outcome
+                      class A), SUBJECT TO one Owner fact that is procurement and not
+                      science: does Aaron hold, or will he authorise, an entitlement to a
+                      named survey family's historical consensus — and does that product
+                      actually carry this weekly poll at the required coverage? If NO,
+                      close. If YES, re-run THIS SAME pilot against THE SAME frozen
+                      sample, which costs nothing in research degrees of freedom because
+                      the sample and thresholds are already committed.
 S1 DESIGN+SEAL      = NOT STARTED. No seal, no contract, no build, no run
                       authorization, no data purchase.
 SETTLED AT S0       = DAILY_DATA_ADEQUATE = NO; INTRADAY_REQUIRED = YES. The mechanism
@@ -171,12 +206,15 @@ PRICE_SAMPLE_REUSE  = REUSED / BURNED CONTEXT (KB-2, N_trials = 14 frozen). An i
                       new sample - the BENB reading, inherited.
 EVIDENCE_CEILING    = supported. A new physical (EIA) leg does not launder a reused
                       price leg.
-DESIGN EXPOSURE     = ASTRA_DESIGN_EXPOSED = YES (material_design_contributor: the
-                      candidate, the EIA crude emphasis, the PIT-consensus warning, the
-                      immediate-price-discovery risk, the curve-overlap warning, the
-                      effective-N caution). FABLE_DESIGN_EXPOSED = NO - deliberately
-                      preserved, which is what keeps Fable eligible as a delegated
-                      Owner-advice seat for PINS-OD-1..4.
+DESIGN EXPOSURE     = ASTRA_DESIGN_EXPOSED = YES (REVIEWER_EXPOSURE_LOG S38).
+                      FABLE_DESIGN_EXPOSED = **YES** as of 2026-09-16 (S37), created by
+                      ADOPTION of its PINS-OD-1 advice, not by asking for it. Fable MAY
+                      still act as a delegated Owner-advice seat for PINS-OD-2/3/4; it
+                      MAY NOT be a fresh BLIND CERTIFIER. With both seats exposed, any
+                      blind certification of a future PINS result needs a THIRD seat that
+                      is none of Fable, Astra or this Main Agent. Supersedes the
+                      PINS_S0_FRAME.md §G status by AMENDMENT (PINS_S0_AMENDMENT_01.md),
+                      not by rewriting.
 OUTCOME EXPOSURE    = NONE. No surprise, scarcity value, interaction, conditional return,
                       regression, event P&L, Sharpe, hit rate or extreme-event list was
                       computed or inspected. No exposure-ledger row was written, which
