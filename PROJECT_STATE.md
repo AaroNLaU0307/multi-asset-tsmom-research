@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — S0 HOLD 2026-09-16
+## CTA-EDGE-04-MMV — macro momentum on vintage data — S1 SEALED 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -142,11 +142,14 @@ ORIGIN              = Fable Round-1 discovery map, family F5 MACRO_MOMENTUM_VINT
                       572623ede604e569344a, re-verified at this S0.
 S0 FRAME            = COMPLETE / **PASS AFTER OWNER RESOLUTION** (2026-09-16).
                       Artifact research/extensions/mmv/MMV_S0_FRAME.md
-S1 DESIGN+SEAL      = **HOLD** (2026-09-16). NOT SEALED. No preregistration exists.
-                      Record research/extensions/mmv/MMV_S1_HOLD_RECORD.md
-                      Owner decisions MMV-OD-1..OD-5 ARE recorded and binding:
+S1 DESIGN+SEAL      = **COMPLETE / SEALED 2026-09-17**.
+                      Contract research/extensions/mmv/MMV_PREREGISTRATION.md
+                      sha256 4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dada
+                      db56b225. Seal research/extensions/mmv/MMV_SEAL_MANIFEST.md.
+                      Owner decisions MMV-OD-1..OD-6 are recorded and binding:
                       ops/OWNER_DECISION_RECORD_CTA_EDGE_04_MMV.md
-S1_BLOCKERS         = **ONE, AND IT IS SCIENTIFIC** (updated 2026-09-17, later).
+                      The 2026-09-16 HOLD record is RETAINED UNEDITED as history.
+S1_BLOCKERS         = **NONE** (resolved 2026-09-17). Both former blockers cleared.
                       ALFRED_API_ACCESS is CLEARED: the freeze ran and all six sealed
                       inputs are pinned (research/extensions/mmv/
                       MMV_RAW_DATA_MANIFEST.md; raw bytes in git-ignored data/mmv/).
@@ -167,11 +170,31 @@ S1_BLOCKERS         = **ONE, AND IT IS SCIENTIFIC** (updated 2026-09-17, later).
                       - so 9 instruments go undefined across roughly a third of the
                       sample. Undefined cells leave the Gate 0.5 denominator, so the
                       choice MOVES THE KILL GATE before any return exists.
-                      Alternatives (a) literal ALFRED, (b) announcement-date
-                      availability, (c) (b) with a declared no-power sensitivity cell,
-                      (d) re-scope the sample to 2014-04-03 and lose 64 decision dates.
-                      NOT CHOSEN. Record research/extensions/mmv/
-                      MMV_S1_HOLD_RECORD.md section 10.
+UNBOUND-4 RESOLUTION = **RESOLVED_BY_EXISTING_AUTHORITY** (controller, 2026-09-17).
+                      NOT accepted as a new scientific blocker: policy availability was
+                      ALREADY BOUND PRE-OUTCOME by the official FOMC / Federal Reserve
+                      announcement date and time. NEW_SCIENTIFIC_CHOICE = NO.
+                      MMV_OD_7_CREATED = NO. MMV-OD-1..OD-6 NOT reopened. Fable NOT
+                      consulted. ALFRED_REALTIME_START_USED_FOR_AVAILABILITY = NO;
+                      OFFICIAL_FOMC_ANNOUNCEMENT_USED_FOR_AVAILABILITY = YES.
+                      The discovered mismatch is NOT hidden: preregistration section
+                      B.2 states it in full and classifies it a FRED/ALFRED
+                      SERIES-METADATA LIMITATION, not historical unavailability;
+                      pre-seal check B10 reproduces the 71/218 and 9/15 figures the
+                      rejected reading would have cost. Record research/extensions/
+                      mmv/MMV_S1_HOLD_RECORD.md section 10 (retained unedited).
+FOMC TIMING FREEZE  = COMPLETE 2026-09-17. Exactly SIX canonical month-end decision
+                      dates are also FOMC announcement dates (2013-07-31, 2014-04-30,
+                      2018-01-31, 2019-07-31, 2024-01-31, 2024-07-31), derived from the
+                      committed TA_MACRO_CALENDAR.csv intersected with the canonical
+                      month-ends. Four carry an official 2:00 p.m. ET release time and
+                      admit the newly announced target. Two (2013-07-31, 2014-04-30)
+                      say "For immediate release" with NO clock time on the statement
+                      page, the 2013 historical calendar OR the current FOMC calendar,
+                      so the sealed fallback retains the PREVIOUS target. All six
+                      resolve DETERMINISTICALLY; nothing is guessed. Manifest
+                      data/mmv/MMV_FOMC_TIMING_MANIFEST.json sha256 be6f17afdf77aafc7
+                      d44bee593a1a94a01bb9b9474112cd197e6ed177737c4f9.
 DATA FREEZE         = COMPLETE 2026-09-16T19:37Z. INDPRO 1,222 vintages from 1927-01-26;
                       PAYEMS 859 from 1955-05-06; CPILFENS 358 from 1996-12-12;
                       DFEDTAR/L/U splice verified CONTIGUOUS at 2008-12-15/16 with no
@@ -207,13 +230,30 @@ MMV-OD-6            = DECIDED 2026-09-17, before any feature, position, separabi
                       LQD/HYG    credit class only, raw = G. Recorded as a PRE-OUTCOME
                                  CATEGORICAL OWNER COMPLETION; F5 did NOT itself
                                  resolve the credit/duration ambiguity.
+PRE-SEAL CHECK      = **38/38 PASS** (research/extensions/mmv/mmv_preseal_check.py,
+                      2026-09-17). A freeze integrity / B point-in-time + information
+                      concept / C sealed definitions / D outcome firewall. Verifies
+                      mechanically: 19 raw files present with reproducing hashes and
+                      byte counts; recorded coverage RECOMPUTES from the frozen bytes;
+                      no credential-shaped token in any of 351 tracked files;
+                      INDPRO/PAYEMS/CPILFENS latest-known-as-of reconstruction valid at
+                      all 218 decision dates with enough reference months for the
+                      sealed transform; NO final-revised leakage exhaustively over 218
+                      dates x 3 series; output_type=1 everywhere; CPILFENS missingness
+                      exactly one date under the sealed UNDEFINED rule; splice
+                      contiguous at 2008-12-16; all 6 FOMC collisions pinned to Federal
+                      Reserve bytes and deterministic; ALFRED realtime_start NOT the
+                      policy clock; OD-1..OD-6 present and no OD-7; 15 mapped exact;
+                      VNQ/RWX excluded from BOTH sides of Gate 0.5; Gate 0.5 kill
+                      boundary 80.0% INCLUSIVE; all 27 (G,I,P) states enumerated; and
+                      the outcome firewall intact by directory walk + AST scan.
 CONSTRUCTION CHECKS = 15/15 PASS, arithmetic only over the 27-state {-1,0,+1} space:
                       growth truth table exact; exactly 15 mapped; VNQ/RWX absent from
                       the coefficient table; LQD row exact; FXY == -UUP in all 27
                       states; GLD == I; LQD == G; XLE/XLU == sign(G-P); tie rule; zero
                       = abstention not veto; raw always in {-1,0,+1}. No series, no
-                      price and no outcome was touched. This is NOT the full pre-seal
-                      check: the rest depends on pinned macro inputs that do not exist.
+                      price and no outcome was touched. SUPERSEDED by the 38/38
+                      pre-seal check above, which subsumes all fifteen.
 VERIFIED AND NOT BLOCKING = canonical risk wrapper matches the brief EXACTLY
                       (config.py: VOL_WINDOW_DAYS 60, TARGET_VOL_ANNUAL 0.10,
                       MAX_ASSET_WEIGHT 2.0, equal weight, PORT_TARGET_VOL_ANNUAL 0.10,
@@ -222,7 +262,8 @@ VERIFIED AND NOT BLOCKING = canonical risk wrapper matches the brief EXACTLY
                       canonical decide-at-close / execute-next-session convention
                       (src/portfolio.py:148); the DFEDTAR -> DFEDTARL/U splice at
                       2008-12-15/16 is the OFFICIAL series boundary, verified on FRED.
-HOLD_REASON         = MMV-OD-1, the REAL-TIME INFORMATION CONCEPT. F5 says "on
+HOLD_REASON (RESOLVED by MMV-OD-1; retained as history)
+                    = MMV-OD-1, the REAL-TIME INFORMATION CONCEPT. F5 says "on
                       point-in-time (ALFRED) vintages" and never confronts the
                       difference between (A) a chain of FIRST RELEASES - what the
                       investor LEARNED, ALFRED output_type=4 - and (B) a SINGLE VINTAGE
@@ -240,6 +281,13 @@ FIXED BY F5, PRESERVED = the transform (12-MONTH CHANGE, SIGN-ONLY), the series 
                       (F5.b inflation and F5.c policy most defensible, F5.a growth as
                       declared third leg), the cross-asset directional mapping table,
                       and the cheap PnL-free gate.
+OUTCOME FIREWALL    = INTACT AT SEAL. HISTORICAL_MACRO_FEATURE_COMPUTED = NO /
+                      HISTORICAL_MMV_POSITIONS_COMPUTED = NO /
+                      SEPARABILITY_RESULT_COMPUTED = NO /
+                      GATE_05_AGREEMENT_RATE_COMPUTED = NO /
+                      FIRST_RELEASE_DISAGREEMENT_COMPUTED = NO /
+                      RETURN_OUTCOME_ACCESSED = NO / BACKTEST_RUN = NO.
+                      Enforced by checks D1-D5, not asserted.
 CHEAP GATE          = monthly SIGN AGREEMENT between the macro composite and the
                       canonical composite, per instrument and pooled, months <=
                       2026-06-12; stop above a declared bound (~80%) with reason
@@ -278,11 +326,13 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-NEXT_OWNER_DECISION = MMV-OD-7, the availability semantics of the administered policy
-                      leg (UNBOUND-4 above). HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED =
-                      YES. FABLE_OWNER_ADVICE_RECOMMENDED = YES - constructive design,
-                      Fable's designated role - marked DESIGN-EXPOSED / NOT
-                      INDEPENDENT.
+NEXT_OWNER_DECISION = AUTHORIZE S2 BUILD of the sealed contract, SYNTHETIC ONLY.
+                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No Owner decision
+                      remains open at S1. The seal authorizes NO historical MMV signal,
+                      NO Gate 0.5 evaluation on historical data, NO return, NO S3 run,
+                      NO RNG seed and NO push/PR/merge. The first-release concordance
+                      cell is post-seal but is still an Owner-gated historical
+                      computation.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
