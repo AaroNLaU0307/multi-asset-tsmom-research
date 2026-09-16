@@ -146,15 +146,40 @@ S1 DESIGN+SEAL      = **HOLD** (2026-09-16). NOT SEALED. No preregistration exis
                       Record research/extensions/mmv/MMV_S1_HOLD_RECORD.md
                       Owner decisions MMV-OD-1..OD-5 ARE recorded and binding:
                       ops/OWNER_DECISION_RECORD_CTA_EDGE_04_MMV.md
-S1_BLOCKERS         = **ONE, AND IT IS NOT SCIENTIFIC** (updated 2026-09-17).
-                      ALFRED_API_ACCESS. No FRED/ALFRED credential exists on this
-                      machine: no env var, no ~/.fredapikey, no .env, no key wiring in
-                      any repository .py/.toml/.cfg/.ini. Nothing was fetched and NO
-                      revised FRED history was substituted. Aaron configures the
-                      credential locally through the existing environment/repository
-                      convention - no secret in chat - and this same continuation
-                      re-runs to the data freeze, the full pre-seal check and the seal.
-                      NO SCIENTIFIC REDESIGN IS REQUIRED OR PERMITTED.
+S1_BLOCKERS         = **ONE, AND IT IS SCIENTIFIC** (updated 2026-09-17, later).
+                      ALFRED_API_ACCESS is CLEARED: the freeze ran and all six sealed
+                      inputs are pinned (research/extensions/mmv/
+                      MMV_RAW_DATA_MANIFEST.md; raw bytes in git-ignored data/mmv/).
+                      The freeze SURFACED a new unbound choice - UNBOUND-4, the
+                      availability semantics of the administered policy leg.
+                      ALFRED carries NO genuine availability metadata for it: every
+                      DFEDTAR observation from 1982-09-27 to 2008-12-15 has
+                      realtime_start = 2008-12-15, the day the series was
+                      DISCONTINUED, and DFEDTARU's earliest realtime_start is
+                      2014-04-03 although the target RANGE has been public since
+                      2008-12-16. Those are FRED series-creation artefacts, not
+                      information availability.
+                      MMV-OD-1's PRINCIPLE ("as publicly known at that cutoff") and its
+                      MECHANISM ("one ALFRED vintage valid at that date") diverge here
+                      and only here. Taken literally the mechanism leaves the policy leg
+                      UNDEFINED on 71 of 218 canonical decision dates, and the policy
+                      leg has a non-zero coefficient for 9 of the 15 mapped instruments
+                      - so 9 instruments go undefined across roughly a third of the
+                      sample. Undefined cells leave the Gate 0.5 denominator, so the
+                      choice MOVES THE KILL GATE before any return exists.
+                      Alternatives (a) literal ALFRED, (b) announcement-date
+                      availability, (c) (b) with a declared no-power sensitivity cell,
+                      (d) re-scope the sample to 2014-04-03 and lose 64 decision dates.
+                      NOT CHOSEN. Record research/extensions/mmv/
+                      MMV_S1_HOLD_RECORD.md section 10.
+DATA FREEZE         = COMPLETE 2026-09-16T19:37Z. INDPRO 1,222 vintages from 1927-01-26;
+                      PAYEMS 859 from 1955-05-06; CPILFENS 358 from 1996-12-12;
+                      DFEDTAR/L/U splice verified CONTIGUOUS at 2008-12-15/16 with no
+                      gap or overlap. CPILFENS has exactly ONE reference date with no
+                      value in any vintage (2025-10-01), cause NOT asserted, already
+                      governed by MMV-OD-6 section 11.7 (missing -> UNDEFINED, never 0,
+                      counted and reported). No forbidden series was requested. The
+                      credential was never printed, written to a file or committed.
 MMV-OD-6            = DECIDED 2026-09-17, before any feature, position, separability
                       percentage or return existed. Closes all three previously
                       unbound scientific choices. Fable advice artifact sha256
@@ -253,9 +278,11 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-NEXT_OWNER_DECISION = NONE. HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO and
-                      FABLE_OWNER_ADVICE_RECOMMENDED = NO. The only outstanding action
-                      is Aaron configuring ALFRED API access locally.
+NEXT_OWNER_DECISION = MMV-OD-7, the availability semantics of the administered policy
+                      leg (UNBOUND-4 above). HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED =
+                      YES. FABLE_OWNER_ADVICE_RECOMMENDED = YES - constructive design,
+                      Fable's designated role - marked DESIGN-EXPOSED / NOT
+                      INDEPENDENT.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16

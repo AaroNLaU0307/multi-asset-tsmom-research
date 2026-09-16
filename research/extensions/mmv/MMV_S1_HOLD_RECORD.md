@@ -18,6 +18,11 @@ STATE ON 2026-09-16 (this record as originally written)
 STATE ON 2026-09-17 (see §9, appended)
   SEAL-BLOCKING   = NONE. All three closed by MMV-OD-6.
   DATA-BLOCKING   = 1, UNCHANGED. ALFRED_API_ACCESS is the ONLY remaining blocker.
+
+STATE ON 2026-09-17, LATER (see §10, appended)
+  DATA-BLOCKING   = CLEARED. The freeze ran and all six sealed inputs are pinned.
+  SEAL-BLOCKING   = 1 NEW UNBOUND SCIENTIFIC CHOICE, surfaced BY the freeze:
+                    the availability semantics of the administered policy leg.
 ```
 
 The S1 brief's §5, §6, §7 and §8 each instruct a STOP if the F5 authority leaves the
@@ -382,3 +387,126 @@ RAW MACRO DATA ACQUIRED             = NONE
 
 The fifteen checks in §9.2 enumerate a 27-state sign space defined entirely by MMV-OD-6.
 They read no series and produce no historical quantity of any kind.
+
+---
+
+# §10 THE FREEZE RAN — AND SURFACED ONE NEW UNBOUND CHOICE — 2026-09-17
+
+*Appended. Everything above is preserved unchanged.*
+
+## §10.1 The data blocker is cleared
+
+```
+ALFRED_ACCESS_STATUS    = OK
+RAW_MACRO_INPUTS_PINNED = YES
+```
+
+All six sealed inputs were acquired and pinned:
+[`MMV_RAW_DATA_MANIFEST.md`](MMV_RAW_DATA_MANIFEST.md), raw bytes in the git-ignored
+`data/mmv/`, producer `mmv_data_freeze.py`. No macro feature, composite, position,
+separability figure or return was computed. No forbidden series was requested.
+
+Structural validation that **passed**:
+
+```
+policy splice           DFEDTAR ends 2008-12-15, DFEDTARL/U begin 2008-12-16
+                        CONTIGUOUS - no gap, no overlap, exactly the MMV-OD-2 date
+INDPRO   vintages 1,222  1927-01-26 .. 2026-08-18
+PAYEMS   vintages   859  1955-05-06 .. 2026-09-04
+CPILFENS vintages   358  1996-12-12 .. 2026-09-11   (well before the 2008-05 window)
+canonical decision dates in the ~2008-05..2026-06 window: 218
+INDPRO / PAYEMS / CPILFENS: 0 decision dates lack a prior vintage
+CPILFENS: exactly ONE reference date has no value in any vintage - 2025-10-01.
+          Cause NOT asserted; already governed by MMV-OD-6 §11.7 (missing -> UNDEFINED,
+          never 0, counted and reported).
+```
+
+## §10.2 UNBOUND-4 — the availability semantics of the administered policy leg
+
+```
+UNBOUND_SCIENTIFIC_CHOICE =
+  For the administered FOMC target leg, does "available as of t" mean ALFRED's
+  realtime_start metadata, or the FOMC announcement date?
+```
+
+**What the frozen data actually shows.** ALFRED's real-time metadata for the policy
+series does not encode information availability at all:
+
+```
+DFEDTAR    EVERY observation, 1982-09-27 through 2008-12-15, carries
+           realtime_start = 2008-12-15 and realtime_end = 9999-12-31.
+           ONE interval for twenty-six years of history - the day the series was
+           DISCONTINUED. Read literally, the entire federal-funds-target history was
+           "unavailable" until the day it ended, which is plainly false: the FOMC
+           announced every target change on the day it made it.
+
+DFEDTARU   earliest realtime_start = 2014-04-03, although the target RANGE - both
+           bounds together - has been public since 2008-12-16. The upper bound was
+           announced in the same sentence as the lower bound; no investor ever knew
+           one without the other.
+
+DFEDTARL   earliest realtime_start = 2008-12-17, two days after the range began.
+```
+
+These dates are artefacts of **when FRED created or restructured each series**, not of
+when the information became public.
+
+**Why this is estimand-level and not plumbing.** MMV-OD-1's *principle* and its
+*mechanism* diverge here, and only here:
+
+```
+PRINCIPLE  "reconstruct the macro history exactly as PUBLICLY KNOWN at that cutoff"
+           -> the FOMC target was publicly known on its announcement date
+MECHANISM  "use ONE ALFRED vintage snapshot valid at that decision date"
+           -> the policy leg is UNDEFINED wherever ALFRED records no earlier vintage
+```
+
+Taken literally, the mechanism makes the policy leg unavailable on **71 of the 218**
+canonical decision dates in the window — 7 pre-splice plus **64** in the range era
+before DFEDTARU's first vintage. The policy leg carries a **non-zero coefficient for 9
+of the 15 mapped instruments** (five equity, two duration, `UUP`, `FXY`), so under
+MMV-OD-6 §11.7 those 9 instruments become **UNDEFINED across roughly a third of the
+sample**.
+
+Undefined cells are excluded from the Gate 0.5 denominator. So this choice **changes the
+kill gate's denominator and its pooled agreement rate** — the number that decides whether
+the lineage lives — before any return exists. That is exactly the class of choice the
+brief says must not be made silently.
+
+```
+ALTERNATIVES (not chosen here):
+  (a) LITERAL ALFRED. Availability = realtime_start. The policy leg is UNDEFINED for
+      71 of 218 decision dates and 9 of 15 instruments go undefined with it.
+      Internally consistent, and arguably absurd: it asserts the FOMC target was
+      secret until the series was retired.
+  (b) ANNOUNCEMENT-DATE AVAILABILITY. The administered target is available from its
+      own reference date, because an administered rate IS the announcement. ALFRED's
+      realtime metadata is treated as provider bookkeeping for this leg only, and the
+      reason is recorded. Restores all 218 decision dates.
+  (c) (b) for the policy leg, with a declared pre-registered sensitivity cell under
+      (a) carrying NO promotion, rescue or kill power.
+  (d) Re-scope the sample to begin at 2014-04-03, where both bounds are
+      ALFRED-available. Costs 64 of 218 decision dates - and F5 already warns the
+      study has only 10-15 effective macro turns.
+```
+
+**Why I did not resolve it.** Option (b) is the one I would argue for, and I still may
+not take it: it grants an exception to the mechanism MMV-OD-1 names explicitly, on a
+leg that feeds 9 of 15 instruments, and it moves the kill gate. The brief's §6 is
+unambiguous — *"If anything remains scientifically unbound: DO NOT SEAL."*
+
+```
+This is CONSTRUCTIVE DESIGN, so Fable remains the appropriate advice seat, marked
+DESIGN-EXPOSED / NOT INDEPENDENT. It is not an adjudication of Fable's own claim.
+```
+
+## §10.3 Firewall
+
+```
+HISTORICAL_MACRO_FEATURE_COMPUTED   = NO      HISTORICAL_MMV_POSITIONS_COMPUTED = NO
+SEPARABILITY_RESULT_COMPUTED        = NO      RETURN_OUTCOME_ACCESSED           = NO
+FIRST_RELEASE_DISAGREEMENT_COMPUTED = NO      BACKTEST_RUN                      = NO
+```
+
+Everything computed in §10.1 is a count, a date range or a metadata field. No 12-month
+change, no sign, no composite and no position was formed.
