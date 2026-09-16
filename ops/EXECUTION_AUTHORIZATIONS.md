@@ -367,3 +367,79 @@ Stage B has not run.
   }
 }
 ```
+
+---
+
+### BENB-AUTH-0001 — CTA-EDGE-02-BENB S3 single governed historical run
+
+One outcome-bearing historical run of the sealed CTA-EDGE-02-BENB contract, and
+nothing else. The scope is `ONE_SHOT`: a single invocation of
+`research/extensions/benb/benb_s3_run.py --execute` under `run_id`
+`BENB-RUN-20260915-01`. Once that run durably writes its result artifact the
+authorization is CONSUMED and can never authorize another run, another `run_id`,
+another seed, or a retry.
+
+**The reader for these records is `research/extensions/benb/benb_authorization.py`**,
+which is scoped to `BENB-AUTH` ids and to the `CTA-EDGE-02-BENB` lineage. It reuses the
+X01 asymmetries unchanged: **granting requires committed state** (a grant in the working
+tree only is invalid), while **blocking does not** (an unreadable ledger, an unparseable
+record, or more than one live grant all refuse).
+
+`rng_seed` is `1788924436`, the first eight hexadecimal digits of the accepted S1 seal
+manifest sha256 (`6aa0d214`) read as an integer. It is derived from the SEAL, not from
+any outcome, and was fixed before the run. No second seed is authorized.
+
+This grant authorizes **execution and the reveal of the sealed statistics it produces**
+— unlike the VRP lineage, CTA-EDGE-02-BENB has no separate `GENERATED_NOT_SEEN` stage,
+because its sealed §J classification is mechanical and its result artifact is the
+verdict. It authorizes nothing beyond that: no redesign, no tuning, no rescue run, no
+alternate specification, no portfolio integration, and no S4 action.
+
+```json
+{
+  "authority": "OWNER EXECUTION DECISION relayed by Aaron in session as the CTA-EDGE-02-BENB S3 task brief section 0 (FIXED OWNER EXECUTION DECISION)",
+  "authorization_id": "BENB-AUTH-0001",
+  "authorized_utc": "2026-09-16T06:35:37Z",
+  "binding": {
+    "bootstrap_replicates": 10000,
+    "lineage": "CTA-EDGE-02-BENB",
+    "no_refetch": "live or re-downloaded data is NOT authorized; a pinned-hash mismatch is a LEVEL-1 STOP, never a substitution",
+    "permitted_inputs": [
+      "data/benb/HYG_raw_ohlc.csv sha256 1ed30697cd0c665d9abe3d60abfe8c03314fb8889f3a459df207c5b85cb3bce8",
+      "data/benb/HYG_nav_daily.csv sha256 7735da958ef10522e39c9138b8cf8c686206585f3b805c327588fb61e9eae5de",
+      "data/benb/LQD_raw_ohlc.csv sha256 9d120233fd18bbd28188c18ce5a99b8347416f58b903d7452b83b47d011fe036",
+      "data/benb/LQD_nav_daily.csv sha256 3d78dbd80b92e9715eb9f6249597d65556d12b6517aad6832640e7296698007a",
+      "data/benb/ishares_HYG_fund_download.xml sha256 10dcd91e095a56d83762019738aa5b14374ea5d1f723616636b52170150ec533",
+      "data/benb/ishares_LQD_fund_download.xml sha256 d0cc3b0121806b20a227b00ae50d3f8523e6cc560e7bae16d715824b50ce0a47",
+      "data/benb/benb_price_meta.json sha256 8179c06f8f8dd088d3b08cb9b4d6a1a8abbd210239f3e2b226e70de223d8b339"
+    ],
+    "permitted_operation": "exactly ONE invocation of research/extensions/benb/benb_s3_run.py --execute, which performs the LEVEL-1 structural pre-check and then the sealed CTA-EDGE-02-BENB computation as preregistered",
+    "prohibited": [
+      "any parameter change",
+      "any horizon change (the sealed trade is open(t+1) to close(t+1) and nothing else)",
+      "any cost change (5 bps one way, 10 bps round trip, sealed)",
+      "any feature change (b_t, the expanding median with 250 prior observations, x_t, the discount-only sample, the t+1 ex-date union rule)",
+      "any classification change (the sealed J.3 order, M1 STRICT > 0, M2 STRICT > +0.30)",
+      "a second run, a second seed, an alternate run_id, a retry, an exploratory preview or a dry run on historical outcomes",
+      "promotion, falsification, portfolio integration or any S4 action"
+    ],
+    "rng_seed": 1788924436,
+    "rng_seed_derivation": "first 8 hexadecimal digits of the accepted S1 seal-manifest sha256, 6aa0d214, read as an integer: 1788924436. Outcome-independent and fixed by the Owner.",
+    "run_id": "BENB-RUN-20260915-01",
+    "s1_seal_commit": "c1a3f8155a9fdb86d55b620c33498f604fcbf8d0",
+    "s1_seal_manifest_sha256": "6aa0d21401b9887f4a44ab6559fa10d7a59ae5a8b512e1ad306543c061483703",
+    "s2_implementation_commit": "d1ccefc8c6ed6e15e6366856ff0b64a0f6516bc3",
+    "sealed_prereg_sha256": "1b7ca2122ba14c4097e4d76d7a733bf0c77ab9c0d02dd93a38c25bc1be5160cf"
+  },
+  "grant_kind": "EXECUTION",
+  "lineage": "CTA-EDGE-02-BENB",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "benb-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_OUTCOME_BEARING_RUN",
+  "status": "AUTHORIZED"
+}
+```
