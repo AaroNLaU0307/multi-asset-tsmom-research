@@ -443,3 +443,50 @@ alternate specification, no portfolio integration, and no S4 action.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — BENB-AUTH-0001 — CONSUMED
+
+The single authorised CTA-EDGE-02-BENB historical execution ran exactly once,
+under `run_id` `BENB-RUN-20260915-01` with the grant's `rng_seed` `1788924436`
+and the sealed `B = 10,000`, and durably wrote its result artifact. The grant is
+now spent: no second run, no second seed, no alternate `run_id` and no retry is
+authorized by it, and none was performed.
+
+`BENB_PRIMARY_TRIAL_SPENT` moves `NO -> YES` in
+`research/extensions/TRIAL_LEDGER.md` §6.2. `N_trials` on the ETF panel remains
+**NOT ASSERTED** — `D-ETF-COUNT` is still `UNKNOWN_PENDING_AARON_DECISION`, and
+the sealed design uses no DSR, so nothing here decides it.
+
+```json
+{
+  "authorization_id": "BENB-AUTH-0001",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-16T06:41:00Z",
+  "evidence": {
+    "alternate_seed_used": false,
+    "bootstrap_replicates": 10000,
+    "design_changed_after_exposure": false,
+    "execution_count": 1,
+    "exposure_row": "ops/EXPOSURE_LEDGER.md row 54",
+    "feature_realisation_artifact": "research/extensions/benb/s3/BENB_S3_FEATURE_REALISATION.json",
+    "feature_realisation_sha256": "7f4c93aa58527240295eb73f0960b871d4b58a313e93e6cc497c89062fa0c469",
+    "final_class": "A-M",
+    "post_outcome_tuning": false,
+    "research_status": "not_promoted",
+    "result_artifact": "research/extensions/benb/s3/BENB_S3_RESULT.json",
+    "result_artifact_sha256": "ebc3baeed51d40916aef3c68a3e50f83ca13ad21077344dcacc5516830106157",
+    "reveal_count": 1,
+    "rng_seed": 1788924436,
+    "run_count": 1,
+    "run_record": "research/extensions/benb/s3/BENB_S3_RUN_RECORD.md",
+    "second_run_performed": false
+  },
+  "reason": "the one governed historical run BENB-RUN-20260915-01 completed and durably wrote its result artifact; under D6 consumption is permanent",
+  "record_type": "LIFECYCLE",
+  "run_id": "BENB-RUN-20260915-01",
+  "schema": {
+    "name": "benb-execution-authorization",
+    "version": 1
+  }
+}
+```
