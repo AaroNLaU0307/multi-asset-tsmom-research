@@ -180,11 +180,15 @@ PINS-OD-1 FEASIBILITY = **FAIL** (2026-09-16). Against a 45-release sample froze
                       revised is UNVERIFIED.
                       Record research/extensions/pins/PINS_OD1_FEASIBILITY_RESULT.md.
 LIFECYCLE_STATUS    = **CLOSED PRE-OUTCOME** / DATA-PIT ACCESS NOT ESTABLISHED.
-                      Declared by the programme controller and recorded here 2026-09-16
-                      at the CTA-EDGE-04 candidate audit. No trial was spent, no data was
-                      purchased, and no candidate outcome was ever generated. The
-                      feasibility record below stands as the reason; no separate closure
-                      artifact was written because none was requested.
+                      Declared by the programme controller 2026-09-16. No trial was
+                      spent, no data was purchased, and no candidate outcome was ever
+                      generated.
+CLOSURE_RECORD      = research/extensions/pins/PINS_CLOSURE.md
+MECHANISM_TESTED    = NO · WTI_RESPONSE_TESTED = NO · SCARCITY_MODERATION_TESTED = NO
+REOPEN_ONLY_IF      = new concrete lawful access to the required point-in-time
+                      expectation inputs. The frozen 45-release audit sample
+                      (sha256 52e70b40...4283a) stands, so a retry would spend no
+                      research degrees of freedom.
 RECOMMENDED_ACTION  = CLOSE CTA-EDGE-03-PINS AT S0 / DATA-PIT FAILURE (negative outcome
                       class A), SUBJECT TO one Owner fact that is procurement and not
                       science: does Aaron hold, or will he authorise, an entitlement to a
