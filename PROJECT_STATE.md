@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — S1 SEALED 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — S2 BUILT 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -149,6 +149,46 @@ S1 DESIGN+SEAL      = **COMPLETE / SEALED 2026-09-17**.
                       Owner decisions MMV-OD-1..OD-6 are recorded and binding:
                       ops/OWNER_DECISION_RECORD_CTA_EDGE_04_MMV.md
                       The 2026-09-16 HOLD record is RETAINED UNEDITED as history.
+S2 BUILD            = **COMPLETE / PASS 2026-09-17**, SYNTHETIC VALIDATION ONLY.
+                      Branch cta-edge/macro-momentum-vintage-s2 from the sealed
+                      commit cdb01fd. Record research/extensions/mmv/
+                      MMV_S2_BUILD.md. Engine research/extensions/mmv/engine/
+                      (pit, policy, legs, votes, gate05, concordance, risk, start).
+                      Seal and preregistration hashes VERIFIED at build time; the
+                      validator asserts no sealed artifact was modified.
+S2 VALIDATION       = **151/151 PASS** synthetic (research/extensions/mmv/
+                      mmv_s2_validate.py) + **32/32 PASS** data-layer parser check
+                      (mmv_s2_parser_check.py). Groups SEAL 4 / PIT 16 / POLICY 20
+                      / LEGS 27 / VOTES 27 / GATE05 19 / CONCORD 7 / RISK 15 /
+                      START 7 / FIREWALL 9. All 27 macro states enumerated; all 9
+                      growth pairs tested as nine separate named tests; FXY == -UUP
+                      across all 27; missing-not-zero across all 15 instruments x 3
+                      legs; Gate 0.5 boundary 79/100 and 799/1000 PASS, 80/100 and
+                      800/1000 KILL.
+S2 STRUCTURAL GUARDS = Three sealed clauses are enforced by construction rather
+                      than by a deletable test: (1) no function or constructor in
+                      engine/policy.py accepts a vintage/realtime/catalog
+                      parameter, so the S1 metadata defect is UNEXPRESSIBLE, not
+                      merely tested against; (2) votes.raw_direction RAISES
+                      NotInDomain for VNQ/RWX rather than returning 0 or UNDEFINED;
+                      (3) the coefficient table is a MappingProxyType constant with
+                      no override hook. All macro arithmetic is exact Fraction, never
+                      float - an epsilon would itself be a forbidden threshold, and
+                      the kill gate fires on equality.
+S2 ARITHMETIC       = EXACT. Values parse from decimal strings to Fraction; the
+                      Gate 0.5 comparison is Fraction(agree, eligible) >=
+                      Fraction(4,5).
+S1 CHECK AFTER BUILD = STATED, NOT HIDDEN. mmv_preseal_check.py is a SEALED S1
+                      artifact and was NOT modified. Against the sealed commit in a
+                      clean worktree it still reports 38/38 PASS. Against the S2
+                      tree it reports 36/38: groups A/B/C remain 33/33, and the two
+                      D-group failures are correct behaviour from a check that
+                      asserts "no implementation exists yet" - D1 flags the filename
+                      engine/gate05.py, D2 flags the validator importing pandas and
+                      defining tests whose NAMES contain position/sharpe/bootstrap/
+                      agreement (they are the tests that enforce the firewall).
+                      Modules and tests were NOT renamed to keep the sealed check
+                      green. See MMV_S2_BUILD.md section 6.
 S1_BLOCKERS         = **NONE** (resolved 2026-09-17). Both former blockers cleared.
                       ALFRED_API_ACCESS is CLEARED: the freeze ran and all six sealed
                       inputs are pinned (research/extensions/mmv/
@@ -326,13 +366,28 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-NEXT_OWNER_DECISION = AUTHORIZE S2 BUILD of the sealed contract, SYNTHETIC ONLY.
-                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No Owner decision
-                      remains open at S1. The seal authorizes NO historical MMV signal,
-                      NO Gate 0.5 evaluation on historical data, NO return, NO S3 run,
-                      NO RNG seed and NO push/PR/merge. The first-release concordance
-                      cell is post-seal but is still an Owner-gated historical
-                      computation.
+S3_PREREQUISITE     = ONE construction question is deferred and RECORDED rather
+                      than decided: how each administered target change maps to the
+                      announcement that made it public. The contract fully determines
+                      eligibility GIVEN a schedule (section C.2; the six collisions
+                      are pinned), but does not specify effective-date -> announcing-
+                      meeting attribution, which matters for INTERMEETING changes
+                      where a naive "latest FOMC date <= effective date" rule could
+                      attribute a change to a meeting weeks earlier and admit it too
+                      soon. PolicySchedule is therefore generic over an explicit
+                      announcement sequence and S2 tests it that way. This is NOT a
+                      change to any sealed definition and NOT a scientific choice
+                      about the signal; it is recorded now because deciding it later,
+                      with the schedule half-built, is how a look-ahead gets
+                      rationalised.
+NEXT_OWNER_DECISION = AARON / CHATGPT ACCEPTANCE of the S2 build, then explicit
+                      authorization for the sealed historical PnL-FREE Gate 0.5 run.
+                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No scientific
+                      choice remains open. Still UNAUTHORIZED: any historical MMV
+                      feature, composite or position; the historical Gate 0.5
+                      evaluation; the first-release concordance cell; any return,
+                      Sharpe, bootstrap or interval; any RNG seed; any push, PR or
+                      merge.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
