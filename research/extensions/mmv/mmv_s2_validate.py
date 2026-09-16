@@ -1341,12 +1341,32 @@ FORBIDDEN_OUTPUT = ("result", "backtest", "sharpe", "bootstrap", "pnl",
                     "separab", "outcome", "agreement")
 
 
+#: Frozen INPUT AUTHORITY that legitimately lives in the lineage directory.
+#: These are pinned data the engine consumes, never MMV outputs. Every entry is
+#: named explicitly so the exemption list itself is auditable — a result file
+#: could not hide here without being added by hand.
+INPUT_AUTHORITY_FILES = frozenset({
+    "MMV_POLICY_ANNOUNCEMENT_SCHEDULE.csv",
+})
+
+#: Tools authorized to READ the frozen macro data. The S1 freezes are sealed;
+#: the policy-schedule pair is the post-S2 data-authority completion, which is
+#: REQUIRED to cross-check the frozen target series. The engine itself is never
+#: exempt and is covered by its own check below.
+DATA_AUTHORITY_TOOLS = frozenset({
+    "mmv_preseal_check.py", "mmv_data_freeze.py", "mmv_fomc_timing_freeze.py",
+    "mmv_policy_schedule_freeze.py", "mmv_policy_schedule_validate.py",
+})
+
+
 @test("FIREWALL")
 def t_no_mmv_output_artifact_exists():
     found = []
     for root, dirs, files in os.walk(MMV):
         dirs[:] = [d for d in dirs if d != "__pycache__"]
         for f in files:
+            if f in INPUT_AUTHORITY_FILES:
+                continue
             if f.endswith((".csv", ".parquet", ".pkl", ".npy")):
                 found.append(os.path.join(root, f))
             elif f.endswith(".json") and "MANIFEST" not in f.upper():
@@ -1445,9 +1465,8 @@ def t_no_s2_build_file_reads_the_canonical_panel_or_frozen_macro_data():
             if not f.endswith(".py"):
                 continue
             path = os.path.join(root, f)
-            if f in ("mmv_preseal_check.py", "mmv_data_freeze.py",
-                     "mmv_fomc_timing_freeze.py"):
-                continue                     # sealed S1 artifacts, pinned
+            if f in DATA_AUTHORITY_TOOLS:
+                continue                     # see DATA_AUTHORITY_TOOLS above
             checked += 1
             for literal in opened_literals(open(path, encoding="utf-8").read()):
                 for bad in FORBIDDEN_READS:

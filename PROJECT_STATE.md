@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — S2 BUILT 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — POLICY SCHEDULE FROZEN 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -366,7 +366,65 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-S3_PREREQUISITE     = ONE construction question is deferred and RECORDED rather
+POLICY SCHEDULE     = **FROZEN / PASS 2026-09-17**. Closes the S3_PREREQUISITE
+                      recorded at S2. Record research/extensions/mmv/
+                      MMV_POLICY_SCHEDULE_FREEZE.md. Schedule research/extensions/
+                      mmv/MMV_POLICY_ANNOUNCEMENT_SCHEDULE.csv sha256 ae34bf1e192c
+                      4355fb71136a3e3017dfd07525ac8e48d7d3ea102130fa6a11da.
+                      42 regimes, 2006-06-29 .. 2025-12-11 effective. Window
+                      derived: targets needed from 2007-05-31 because the leg
+                      reads target(t-12m). SCIENTIFIC_CHOICE = NONE; this is
+                      data-authority completion only.
+                      METHOD each regime matched to the OFFICIAL Federal Reserve
+                      press release that STATES that exact target. Acceptance is
+                      DOCUMENT CONTENT; proximity is never the criterion. 42/42
+                      sources on federalreserve.gov, each hashed; the validator
+                      re-opens every cached page and re-confirms the target.
+                      WHY NO HEURISTIC the Fed's own footnote ("On July 10, 2024,
+                      this date was corrected from March 3, 2020, to March 4,
+                      2020") shows its date column is EFFECTIVE, not announcement.
+                      Offsets are BOTH 0 and -1 days, so no fixed lag works. The
+                      committed TA_MACRO_CALENDAR lacks 2008-01-22 entirely, so
+                      "latest calendar event <= effective" would misdate that
+                      intermeeting cut by six weeks. All three are live regression
+                      checks, not prose.
+                      INTERMEETING 4, each POSITIVELY corroborated by a Federal
+                      Reserve Conference Call or "(unscheduled)" label:
+                      2008-01-22 (call 01-21), 2008-10-08 (call 10-07),
+                      2020-03-03 ("March 2 (unscheduled) Meeting - Statement
+                      Released March 3"), 2020-03-15 ("(unscheduled) Meeting").
+                      TIMES 31 VERIFIED, 11 NOT_ESTABLISHED - the Fed's archived
+                      pages say only "For immediate release". NO time was
+                      invented. Sealed fallback (previous target) applies.
+POLICY SCHEDULE CHECKS = **33/33 PASS** (mmv_policy_schedule_validate.py).
+                      TARGET_SERIES_MATCH = YES, TARGET_RANGE_SPLICE_MATCH = YES,
+                      NEAREST_MEETING_HEURISTIC_USED = NO,
+                      ALFRED_REALTIME_START_USED = NO, FIXED_LAG_USED = NO.
+                      The Fed open-market table reproduces the SAME ORDERED LEVEL
+                      SEQUENCE as the frozen regimes - a date-free confirmation.
+                      Zero revisions across every vintage of all three policy
+                      series, confirming the sealed unrevisedness premise.
+POLICY DISCREPANCY RECORDED = FRED and the Fed disagree by ONE DAY on the
+                      effective date of exactly two regimes: FRED stamps
+                      2015-12-16 / 2016-12-14 (announcement day), the Fed stamps
+                      2015-12-17 / 2016-12-15 (stated effective day). VALUES are
+                      identical and the announcement dates are independently
+                      established from the statements, which is what the sealed
+                      rule reads. NOT material; recorded, not repaired.
+LAGGED-CUTOFF FINDING = The S1 six-collision list intersected FOMC dates with
+                      DECISION dates only. The policy leg also reads a cutoff 12
+                      months earlier, and TWO lagged cutoffs are themselves
+                      target-change announcement dates: 2007-10-31 (lagged for the
+                      2008-10-31 decision) and 2008-04-30 (lagged for 2009-04-30),
+                      both NOT_ESTABLISHED -> PREVIOUS target by the sealed
+                      fallback. Of the six pinned collisions only 2019-07-31 is
+                      also a target CHANGE (2:00 p.m. EDT, eligible); the other
+                      five are no-change meetings. SAME sealed rule at the cutoff
+                      it was always defined on - no new rule, no new choice.
+                      Recorded because a lagged cutoff resolving silently is
+                      exactly what should not resolve silently.
+S3_PREREQUISITE     = CLOSED 2026-09-17 by the policy schedule freeze above.
+                      Originally: ONE construction question was deferred rather
                       than decided: how each administered target change maps to the
                       announcement that made it public. The contract fully determines
                       eligibility GIVEN a schedule (section C.2; the six collisions
@@ -380,8 +438,9 @@ S3_PREREQUISITE     = ONE construction question is deferred and RECORDED rather
                       about the signal; it is recorded now because deciding it later,
                       with the schedule half-built, is how a look-ahead gets
                       rationalised.
-NEXT_OWNER_DECISION = AARON / CHATGPT ACCEPTANCE of the S2 build, then explicit
-                      authorization for the sealed historical PnL-FREE Gate 0.5 run.
+NEXT_OWNER_DECISION = AARON / CHATGPT ACCEPTANCE of the policy schedule freeze,
+                      then explicit authorization for ONE sealed historical
+                      PnL-FREE Gate 0.5 run.
                       HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No scientific
                       choice remains open. Still UNAUTHORIZED: any historical MMV
                       feature, composite or position; the historical Gate 0.5
