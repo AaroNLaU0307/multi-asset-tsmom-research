@@ -125,6 +125,67 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## CTA-EDGE-02-BENB — bond ETF–NAV basis — CLOSED 2026-09-16
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Does an abnormal HYG discount to official issuer NAV converge in
+                      the next session's TRADABLE window (open(t+1) -> close(t+1)), by
+                      enough to survive costs, and separably from overnight price
+                      discovery and NAV catch-down?
+RESEARCH_ID · LANE  = CTA-EDGE-02-BENB · FULL
+S0 FRAME            = COMPLETE / PASS (2026-09-15), after a S0 DATA-RESOLUTION and
+                      DESIGN-REPAIR pass that replaced the dividend-adjusted panel with
+                      raw unadjusted prices and located the issuer daily NAV history.
+S1 DESIGN+SEAL      = COMPLETE / SEALED. research/extensions/benb/BENB_PREREGISTRATION.md
+                      sha256 1b7ca2122ba14c4097e4d76d7a733bf0c77ab9c0d02dd93a38c25bc1be5160cf;
+                      seal manifest sha256
+                      6aa0d21401b9887f4a44ab6559fa10d7a59ae5a8b512e1ad306543c061483703
+                      at seal commit c1a3f8155a9fdb86d55b620c33498f604fcbf8d0.
+                      M2 = +0.30 STRICT > fixed by Aaron's Owner decision BENB-OD-1.
+S2 BUILD            = COMPLETE / PASS at commit d1ccefc8c6ed6e15e6366856ff0b64a0f6516bc3.
+                      65 targeted tests pass; the three mandatory economic worlds behave
+                      as mandated; benb_prereg_validate.py 72/72 at that commit.
+S3 RUN              = EXECUTED 2026-09-16. ONE governed historical run under the
+                      single-use grant BENB-AUTH-0001, run_id BENB-RUN-20260915-01,
+                      rng_seed 1788924436 = int("6aa0d214", 16) from the seal-manifest
+                      hash, B = 10,000. The authorization is CONSUMED; zero live grants
+                      remain and a further real run is refused.
+S4 VERDICT          = COMPLETE / ACCEPTED 2026-09-16 (programme controller).
+LIFECYCLE_STATUS    = CLOSED
+CLOSURE_RECORD      = research/extensions/benb/BENB_CLOSURE.md
+FINAL_CLASS         = A-M — MIXED NON-HARVESTABLE CONVERGENCE
+PROGRAMME_STATUS    = NOT_PROMOTED   (KB research_status = not_promoted)
+FAILURE_TYPE        = GATE_1_NOT_SUPPORTED
+CLOSURE_REASON      = The sealed Gate-1 coefficient on the only lawfully reachable leg,
+                      beta_T over open(t+1) -> close(t+1), has 95 % interval
+                      [-14.53, 1432.72] and does not clear the STRICT > 0 bar, while BOTH
+                      diagnostics fire: beta_O [555.23, 2014.54] supported positive and
+                      beta_N [-2783.12, -1898.88] supported negative. Under the sealed
+                      §J.3 first-match-wins order that is STEP 1, class A-M. Gate 2
+                      (mean NET -11.19 bps, calendarised Sharpe -3.057) and LOYO (passes)
+                      were computed and recorded but NOT consulted: both sit after
+                      Gate 1 in the order.
+HISTORICAL_OUTCOME_EXPOSED = YES
+PRIMARY_CLAIM_SUPPORTED = NO · TRADABLE_CONVERGENCE_SUPPORTED = NO
+OVERNIGHT_PRICE_DISCOVERY_SUPPORTED = YES · NAV_CATCH_DOWN_SUPPORTED = YES
+MECHANISM_FALSIFIED = NO   · PORTFOLIO_TEST_AUTHORIZED = NO
+RETUNE_AUTHORIZED   = NO   · SECOND_RUN_AUTHORIZED     = NO
+EVIDENCE_CEILING    = supported. The HYG/LQD price leg is REUSED / BURNED context
+                      (KB-1, 6 of 6); the NAV leg is new; combined provenance is
+                      MIXED / DEPENDENT. A new NAV leg does not launder a reused sample.
+TRIAL ACCOUNTING    = F-BENB / BENB-PRIMARY spent, m = 1. N_trials on the ETF panel
+                      remains NOT ASSERTED; D-ETF-COUNT untouched.
+FEATURE-DESIGN NOTE = the sealed expanding median produced a highly persistent
+                      discount-side state, 3,555 / 4,415 = 80.52 %. Recorded as a
+                      design lesson ONLY. It authorizes no threshold, z-score,
+                      top-decile selection, longer holding, overnight capture, LQD
+                      promotion or premium-side short inside this lineage; each is a
+                      NEW lineage.
+NEXT_OWNER_DECISION = NONE for this lineage. It is closed.
+```
+
 ## CTA-EDGE-01-TA — Treasury auction / refunding-week ETF effect — CLOSED PRE-OUTCOME 2026-09-15
 
 *State only, never workflow authority (vNext §0).*
