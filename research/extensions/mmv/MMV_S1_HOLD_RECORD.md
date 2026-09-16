@@ -11,8 +11,13 @@ S1_DESIGN_STATUS = HOLD
 S1_SEAL_CREATED  = NO
 PREREGISTRATION_CREATED = NO
 
-SEAL-BLOCKING   = 3 UNBOUND SCIENTIFIC CHOICES  (§2, §3, §4)
-DATA-BLOCKING   = 1 ORDINARY ACQUISITION BLOCKER (§5)
+STATE ON 2026-09-16 (this record as originally written)
+  SEAL-BLOCKING   = 3 UNBOUND SCIENTIFIC CHOICES  (§2, §3, §4)
+  DATA-BLOCKING   = 1 ORDINARY ACQUISITION BLOCKER (§5)
+
+STATE ON 2026-09-17 (see §9, appended)
+  SEAL-BLOCKING   = NONE. All three closed by MMV-OD-6.
+  DATA-BLOCKING   = 1, UNCHANGED. ALFRED_API_ACCESS is the ONLY remaining blocker.
 ```
 
 The S1 brief's §5, §6, §7 and §8 each instruct a STOP if the F5 authority leaves the
@@ -272,3 +277,108 @@ them is one focused decision round, not a redesign.
 NOTHING IN THIS RECORD AUTHORISES S2, A SEAL, A RUN, A DATA PURCHASE, OR ANY
 COMPUTATION ON ANY CANDIDATE OUTCOME.
 ```
+
+---
+
+# §9 RESOLUTION UPDATE — 2026-09-17
+
+*Appended. Everything above is preserved unchanged and records the state on 2026-09-16.*
+
+## §9.1 The three scientific blockers are closed
+
+```
+UNBOUND-1  growth-leg aggregation         CLOSED by MMV-OD-6 §11.1
+UNBOUND-2  the macro composite rule       CLOSED by MMV-OD-6 §11.2 / §11.3
+UNBOUND-3  class-to-instrument mapping    CLOSED by MMV-OD-6 §11.3 - §11.6
+
+SCIENTIFIC_CHOICES_REMAINING = 0
+```
+
+Each of the four gaps §4 identified now has an explicit, pre-outcome answer:
+
+| §4 gap | resolution |
+|---|---|
+| real estate in no F5 class | `VNQ`, `RWX` = **NOT_MAPPED**; weight 0 always; **UNDEFINED** in Gate 0.5, not zero |
+| FXY's sign is the negation of its class | `FXY` = dollar class with **orientation −1**; `FXY = −UUP` by construction |
+| LQD / HYG dual credit-duration membership | **credit class only**, `raw = G_t`; recorded as a pre-outcome categorical Owner completion, **not** as something F5 resolved |
+| GLD contested, XLE sector loading | `GLD` = **commodity class only**, `raw = I_t`; `XLE`/`XLU` = **equity class only**, `raw = sign(G−P)`; no secondary loadings anywhere |
+
+The equity contradiction §3 identified — growth LONG against policy SHORT — is resolved
+not by picking a winner but by the **asset-specific vote architecture**: equity carries
+`(c_G, c_I, c_P) = (+1, 0, −1)`, so the two themes cancel to `0` when they oppose. The
+contradiction becomes an abstention rather than an arbitrary precedence.
+
+## §9.2 Construction checks run this session — arithmetic only, no data, no outcome
+
+Fifteen checks over the `{−1, 0, +1}` state space. They touch no macro series, no price,
+and no outcome; they are pure enumeration of the adopted definitions.
+
+```
+CHK-1   growth truth table reproduces all 9 (INDPRO, PAYEMS) sign pairs      PASS
+CHK-2   exactly 15 mapped instruments                                        PASS
+CHK-3   mapped set == canonical 17 minus {VNQ, RWX}                          PASS
+CHK-4   VNQ / RWX absent from the coefficient table (not coded as zero rows) PASS
+CHK-5   LQD row exactly (+1, 0, 0); HYG identical                            PASS
+CHK-6   every coefficient in {-1, 0, +1} - there is no weight to tune        PASS
+CHK-7   FXY == -UUP across all 27 (G, I, P) states                           PASS
+CHK-8   XLE and XLU both == sign(G - P), equity class only                   PASS
+CHK-9   GLD == I_t, commodity class only                                     PASS
+CHK-10  LQD == G_t, credit class only                                        PASS
+CHK-11  UUP == sign(I + P)                                                   PASS
+CHK-12  tie rule: vote sum 0 -> 0 in every case, no priority theme           PASS
+CHK-13  all-zero legs -> every mapped raw is 0                               PASS
+CHK-14  raw always in {-1, 0, +1}                                            PASS
+CHK-15  a zero leg is abstention, never a veto (dropping it is identical)    PASS
+
+PRESEAL_CHECK_COUNT = 15 construction checks · 15 PASS · 0 FAIL
+```
+
+**These are not the full pre-seal adversarial check.** The remaining items in that check
+depend on the pinned raw macro inputs, which do not exist (§9.3), so the full check
+cannot be completed and **no seal was created**.
+
+## §9.3 The only remaining blocker — ALFRED_API_ACCESS
+
+Re-checked this session, without printing or exposing any secret:
+
+```
+environment variables matching FRED / ALFRED / STLOUIS        NONE
+~/.fredapikey · ~/.fred_api_key · ~/.config/fred/api_key      ABSENT
+.env · .env.local · secrets.json · .secrets · config.local.py ABSENT
+FRED_API_KEY / fred_api_key / ALFRED_API_KEY referenced in
+  any repository .py / .toml / .cfg / .ini                    NONE
+
+ALFRED_ACCESS_STATUS    = NOT AVAILABLE
+RAW_MACRO_INPUTS_PINNED = NO
+```
+
+```
+NOTHING WAS FETCHED. NO REVISED FRED HISTORY WAS SUBSTITUTED.
+```
+
+The required inputs remain exactly as accepted and unchanged: `INDPRO` vintage history ·
+`PAYEMS` vintage history · `CPILFENS` point-in-time history and official availability ·
+`DFEDTAR` · `DFEDTARL` · `DFEDTARU` · official release-time metadata for the same-day
+cutoff rule.
+
+**What is needed.** Aaron configures a FRED/ALFRED API credential locally, through the
+existing repository or environment convention — an environment variable or a local
+credential file that the repository can read. A key is obtained by self-service
+registration with the Federal Reserve Bank of St. Louis; it is **not** an institutional
+entitlement, which is what distinguishes this from the LSEG / ICE wall that closed PINS.
+
+**No secret should be pasted into chat.** Once the credential is present locally, this
+same continuation re-runs and proceeds directly to the data freeze, the full pre-seal
+adversarial check and the seal. **No scientific redesign is required or permitted.**
+
+## §9.4 Firewall status, re-verified
+
+```
+HISTORICAL_MACRO_FEATURE_COMPUTED   = NO      HISTORICAL_MMV_POSITIONS_COMPUTED = NO
+SEPARABILITY_RESULT_COMPUTED        = NO      RETURN_OUTCOME_ACCESSED           = NO
+FIRST_RELEASE_DISAGREEMENT_COMPUTED = NO      BACKTEST_RUN                      = NO
+RAW MACRO DATA ACQUIRED             = NONE
+```
+
+The fifteen checks in §9.2 enumerate a 27-state sign space defined entirely by MMV-OD-6.
+They read no series and produce no historical quantity of any kind.

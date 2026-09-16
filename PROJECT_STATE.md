@@ -146,27 +146,49 @@ S1 DESIGN+SEAL      = **HOLD** (2026-09-16). NOT SEALED. No preregistration exis
                       Record research/extensions/mmv/MMV_S1_HOLD_RECORD.md
                       Owner decisions MMV-OD-1..OD-5 ARE recorded and binding:
                       ops/OWNER_DECISION_RECORD_CTA_EDGE_04_MMV.md
-S1_BLOCKERS         = THREE unbound scientific choices, all in the same place - F5
-                      specified the INPUTS and the DIRECTIONS in full and never
-                      specified the ARITHMETIC that turns them into a position:
-                      (1) GROWTH-LEG AGGREGATION - F5 names INDPRO and PAYEMS with one
-                          mapping and never says how the two signs become one;
-                      (2) MACRO COMPOSITE - F5 uses the phrase "the macro composite"
-                          exactly three times, always as a referent inside the
-                          falsification gate, and never defines it. Its own mapping
-                          table CONTRADICTS ITSELF ON EQUITY (growth LONG vs policy
-                          SHORT), and credit and commodities are each spoken for by a
-                          single leg. Whatever resolves this changes the position
-                          matrix, which is the input to the Gate-0.5 KILL gate;
-                      (3) CLASS-TO-INSTRUMENT MAPPING not implementable as written -
-                          real estate (VNQ, RWX) is in NO F5 class; FXY's sign is the
-                          negation of its class and that inversion is inference not
-                          text; LQD/HYG sit in both credit (LONG) and duration (SHORT);
-                          GLD is contested between "long commodities" and "long dollar".
-                      PLUS one ordinary acquisition blocker, NOT a scientific one:
-                      DATA_FREEZE_BLOCKER = ALFRED_API_ACCESS. No FRED/ALFRED key exists
-                      on this machine; no revised FRED history was substituted and
-                      nothing was fetched.
+S1_BLOCKERS         = **ONE, AND IT IS NOT SCIENTIFIC** (updated 2026-09-17).
+                      ALFRED_API_ACCESS. No FRED/ALFRED credential exists on this
+                      machine: no env var, no ~/.fredapikey, no .env, no key wiring in
+                      any repository .py/.toml/.cfg/.ini. Nothing was fetched and NO
+                      revised FRED history was substituted. Aaron configures the
+                      credential locally through the existing environment/repository
+                      convention - no secret in chat - and this same continuation
+                      re-runs to the data freeze, the full pre-seal check and the seal.
+                      NO SCIENTIFIC REDESIGN IS REQUIRED OR PERMITTED.
+MMV-OD-6            = DECIDED 2026-09-17, before any feature, position, separability
+                      percentage or return existed. Closes all three previously
+                      unbound scientific choices. Fable advice artifact sha256
+                      ff413cfa46cc4aa8919731d9fe52adbb4abbf58b8514447e84934375e5dfc443
+                      VERIFIED; Fable remains DESIGN-EXPOSED / NOT INDEPENDENT.
+                      GROWTH     G = sign(sign(D12 INDPRO) + sign(D12 PAYEMS)),
+                                 sign(0)=0; opposed measures abstain, a silent measure
+                                 does not veto.
+                      ARCHITECTURE asset-specific votes, never a global scalar:
+                                 raw(i,t) = sign(c_iG*G + c_iI*I + c_iP*P); ties -> 0
+                                 with no priority theme; a zero leg abstains; a MISSING
+                                 leg -> UNDEFINED, never 0, counted and reported.
+                      COEFFICIENTS all in {-1,0,+1}, so there is no weight to tune.
+                                 Equity (+1,0,-1) - duration (-1,-1,-1) -
+                                 credit (+1,0,0) - commodities (0,+1,0) -
+                                 UUP (0,+1,+1) - FXY (0,-1,-1).
+                      REAL ESTATE VNQ and RWX are NOT_MAPPED: weight 0 always, and
+                                 UNDEFINED in Gate 0.5, entering NEITHER numerator nor
+                                 denominator. Coding them as signal 0 would inject
+                                 mechanical disagreement every month IN MMV'S FAVOUR
+                                 and corrupt the kill gate.
+                      DOMAIN     15 mapped ETFs drawn from the canonical 17. The claim
+                                 must NOT say "all canonical 17 ETFs"; corrected in
+                                 research/extensions/mmv/MMV_S0_AMENDMENT_01.md.
+                      LQD/HYG    credit class only, raw = G. Recorded as a PRE-OUTCOME
+                                 CATEGORICAL OWNER COMPLETION; F5 did NOT itself
+                                 resolve the credit/duration ambiguity.
+CONSTRUCTION CHECKS = 15/15 PASS, arithmetic only over the 27-state {-1,0,+1} space:
+                      growth truth table exact; exactly 15 mapped; VNQ/RWX absent from
+                      the coefficient table; LQD row exact; FXY == -UUP in all 27
+                      states; GLD == I; LQD == G; XLE/XLU == sign(G-P); tie rule; zero
+                      = abstention not veto; raw always in {-1,0,+1}. No series, no
+                      price and no outcome was touched. This is NOT the full pre-seal
+                      check: the rest depends on pinned macro inputs that do not exist.
 VERIFIED AND NOT BLOCKING = canonical risk wrapper matches the brief EXACTLY
                       (config.py: VOL_WINDOW_DAYS 60, TARGET_VOL_ANNUAL 0.10,
                       MAX_ASSET_WEIGHT 2.0, equal weight, PORT_TARGET_VOL_ANNUAL 0.10,
@@ -231,11 +253,9 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-NEXT_OWNER_DECISION = the THREE unbound aggregation/mapping rules above. Recommended
-                      route: Aaron -> Fable delegated Owner-advice seat, marked
-                      DESIGN-EXPOSED / NOT INDEPENDENT (this is CONSTRUCTIVE DESIGN,
-                      Fable's designated role) -> controller acceptance. The ALFRED key
-                      is mechanical and needs no advice seat.
+NEXT_OWNER_DECISION = NONE. HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO and
+                      FABLE_OWNER_ADVICE_RECOMMENDED = NO. The only outstanding action
+                      is Aaron configuring ALFRED API access locally.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16

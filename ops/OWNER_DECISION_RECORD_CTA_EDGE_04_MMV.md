@@ -28,13 +28,15 @@ implement, not authorisation to run, not an exposure event. It creates no row in
 
 ```
 S0 FRAME                = COMPLETE / PASS AFTER OWNER RESOLUTION
-MMV-OD-1 .. OD-5        = DECIDED by this record
-S1 DESIGN               = **HOLD** — two unbound aggregation rules (see §7)
+MMV-OD-1 .. OD-5        = DECIDED 2026-09-16
+MMV-OD-6                = DECIDED 2026-09-17 (§11) — closes every unbound scientific
+                          choice. NO SCIENTIFIC CHOICE REMAINS.
+S1 DESIGN               = **HOLD** on DATA ACCESS ONLY (§11.9)
 S1 SEALED               = NO
 S2 BUILD_AUTHORIZED     = NO
 GATE 0.5 RUN            = NO
 TARGET_RUN_AUTHORIZED   = NO
-DATA FREEZE             = BLOCKED — no ALFRED API key present (§6)
+DATA FREEZE             = BLOCKED — no ALFRED API credential present (§11.9)
 ```
 
 ---
@@ -268,13 +270,16 @@ SAME-DAY RELEASE RULE
 
 ## §9 What these decisions do NOT decide
 
+> **SUPERSEDED 2026-09-17 by MMV-OD-6 (§11).** The text below recorded the state on
+> 2026-09-16 and is preserved unchanged for provenance. Both items are now DECIDED.
+
 ```
 GROWTH-LEG AGGREGATION   how sign(D12 INDPRO) and sign(D12 PAYEMS) combine     UNBOUND
 MACRO-COMPOSITE RULE     how growth, inflation and policy combine into a
                          per-instrument direction                              UNBOUND
 ```
 
-Both are recorded as unresolved in
+Both were recorded as unresolved in
 [`../research/extensions/mmv/MMV_S1_HOLD_RECORD.md`](../research/extensions/mmv/MMV_S1_HOLD_RECORD.md)
 and are the reason S1 did not seal. Neither was invented here.
 
@@ -297,3 +302,190 @@ ASTRA_DESIGN_EXPOSED = NO
 
 Seat rows are written to `REVIEWER_EXPOSURE_LOG.md` **at seal**, per the TA / BENB
 convention. None is written here, because there is no seal.
+
+---
+
+## §11 MMV-OD-6 — signal construction semantics  *(decided 2026-09-17)*
+
+```
+DECISION_ID = MMV-OD-6
+STATUS      = OWNER-CONFIRMED, BINDING
+ADVICE      = Claude Fable 5.1 — DESIGN-EXPOSED / NOT INDEPENDENT
+ADVICE ARTIFACT
+  Quant trade/2026-09-16-cta-edge-04-mmv-od-6-signal-construction-fable-01.md
+  32,025 bytes · sha256 VERIFIED THIS SESSION:
+  ff413cfa46cc4aa8919731d9fe52adbb4abbf58b8514447e84934375e5dfc443
+```
+
+**Made before exposure.** At the moment of this decision no MMV macro feature, composite,
+position, separability percentage, first-release disagreement figure or return existed
+anywhere in this repository. None exists now.
+
+### §11.1 Growth aggregation
+
+```
+G_t = sign( sign(D12 INDPRO_t) + sign(D12 PAYEMS_t) )        sign(0) = 0
+
+(-1,-1) -> -1     (0,-1) -> -1     (+1,-1) ->  0
+(-1, 0) -> -1     (0, 0) ->  0     (+1, 0) -> +1
+(-1,+1) ->  0     (0,+1) -> +1     (+1,+1) -> +1
+```
+
+One measure, one vote; opposed votes abstain; a silent measure does not veto the other.
+**Verified mechanically this session:** the formula reproduces all nine pairs exactly.
+
+### §11.2 Composite architecture — asset-specific votes, never a global scalar
+
+```
+raw(i,t) = sign( c_iG * G_t  +  c_iI * I_t  +  c_iP * P_t )        sign(0) = 0
+```
+
+Each F5 theme casts a signed vote on each instrument through F5's own class table. There
+is no global macro scalar and no instrument-level score.
+
+### §11.3 The frozen coefficient table — 15 mapped instruments
+
+| instrument | c_G | c_I | c_P | F5 class |
+|---|---:|---:|---:|---|
+| SPY, EEM, EWJ, XLE, XLU | +1 | 0 | −1 | equity |
+| TLT, SHY | −1 | −1 | −1 | duration |
+| LQD, HYG | +1 | 0 | 0 | credit |
+| USO, UNG, GLD, DBA | 0 | +1 | 0 | commodities |
+| UUP | 0 | +1 | +1 | dollar |
+| FXY | 0 | −1 | −1 | dollar, orientation −1 |
+
+```
+COEFFICIENTS ARE NOT ALTERABLE.  NO SECONDARY ASSET LOADINGS.
+All coefficients are in {-1, 0, +1}: there is no weight to tune.
+```
+
+### §11.4 Real estate — a binding Owner clarification
+
+```
+VNQ = NOT_MAPPED          RWX = NOT_MAPPED
+They are OUTSIDE the primary MMV signal domain.
+Primary MMV portfolio weight = 0 ALWAYS.
+
+THEY ARE *NOT* "MMV signal = 0". THE DISTINCTION IS LOAD-BEARING.
+
+Gate 0.5:  VNQ / RWX cells are UNDEFINED / EXCLUDED.
+           They enter NEITHER the numerator NOR the denominator.
+```
+
+**Why the distinction matters.** Coding an unmapped instrument as a signal zero would
+make it disagree with the canonical composite in every month in which that composite is
+non-zero — mechanically, by construction, regardless of any macro information. Two
+permanently unmapped instruments would then push pooled agreement down **in MMV's own
+favour**, for a reason that has nothing to do with whether the macro composite carries the
+core's bet. That would corrupt the kill gate.
+
+```
+PRIMARY MMV DOMAIN = 15 mapped ETFs drawn from the canonical 17-ETF universe.
+```
+
+Verified against repository authority: `output/monthly_signal_panel.csv` carries exactly
+17 canonical instruments, and the canonical 17 minus `{VNQ, RWX}` is exactly the 15 rows
+of the table in §11.3.
+
+### §11.5 LQD and HYG — credit class only
+
+```
+LQD = CREDIT CLASS ONLY        raw(LQD) = G_t
+HYG = CREDIT CLASS ONLY        raw(HYG) = G_t
+No duration votes are added.
+```
+
+**Recorded explicitly:** this is a **PRE-OUTCOME CATEGORICAL OWNER COMPLETION** based on
+F5's class-based mapping and the repository's own pre-existing label
+(`config.py ASSET_UNIVERSE`: `"LQD": "Bond/US-IG-Credit"`). **F5 did not itself resolve the
+credit/duration ambiguity**, and must not be represented as having done so.
+
+### §11.6 Gold, FX and the equity sectors
+
+```
+GLD  commodity class only      raw = I_t
+UUP  dollar class              raw = sign(I_t + P_t)
+FXY  dollar class, inverted    raw = -sign(I_t + P_t)          FXY = -UUP by construction
+XLE  equity class only         raw = sign(G_t - P_t)
+XLU  equity class only         raw = sign(G_t - P_t)
+No sector-specific secondary loading. No dollar loading in GLD. No oil loading in XLE.
+```
+
+**Verified mechanically this session** over all 27 `(G, I, P)` states: `FXY == -UUP`
+everywhere; `GLD == I`; `LQD == G`; `UUP == sign(I+P)`; `XLE == XLU == sign(G-P)`.
+
+### §11.7 Ties, zeros and missing legs
+
+```
+TIE      vote sum = 0  ->  raw = 0.   No priority theme. No carry-forward.
+ZERO     a zero macro leg casts NO VOTE (it is abstention, never a veto).
+         All-zero eligible votes -> raw = 0.
+MISSING  NEVER converted to zero.
+         If a leg with a NON-ZERO coefficient for instrument i is unavailable:
+             raw(i,t) = UNDEFINED.
+         Undefined cells: carry no position · excluded from Gate 0.5 ·
+         excluded from later primary return statistics · MUST BE COUNTED AND REPORTED.
+```
+
+The canonical historical sample is *expected* to contain zero such cells after the
+structural start. **That expectation is not assumed** — the count is a required output.
+
+### §11.8 Provenance wording — binding
+
+```
+F5 SUPPLIED:   the economic mechanism · the macro themes · the directional class
+               mapping · the transforms · the separability concept.
+
+MMV-OD-6 COMPLETED the previously unbound deterministic arithmetic, BEFORE macro
+               feature computation, position computation, separability exposure and
+               return exposure.
+
+DO NOT RECORD: "F5 already specified all signal arithmetic."  It did not.
+
+NEW_TUNABLE_NUMERIC_PARAMETERS = NONE
+NEW_PRE_OUTCOME_CATEGORICAL_OWNER_RESOLUTIONS = YES:
+  1. growth aggregation = sign-of-sum-of-signs (abstain on opposition)
+  2. architecture = asset-specific votes, never a global scalar
+  3. VNQ / RWX = NOT_MAPPED, and UNDEFINED rather than zero in Gate 0.5
+  4. LQD / HYG = credit class only, no duration vote
+  5. GLD = commodity class only, no dollar loading
+  6. FXY = dollar class with orientation -1
+  7. XLE / XLU = equity class only, no sector loading
+  8. tie -> 0 with no priority theme; zero = abstention; missing -> UNDEFINED
+NONE MAY BE CHANGED AFTER EXPOSURE.
+```
+
+### §11.9 Gate 0.5 domain, frozen
+
+```
+ELIGIBLE_GATE_05_CELL(i,t) iff
+    i is one of the 15 mapped MMV instruments
+    AND MMV_sign(i,t) is defined
+    AND canonical_TSMOM_sign(i,t) is defined
+
+POOLED_EXACT_SIGN_AGREEMENT
+    = count( MMV_sign == TSMOM_sign ) / count( ELIGIBLE_GATE_05_CELL )
+
+Within eligible cells:  0 == 0 is AGREEMENT;  0 vs +/-1 is DISAGREEMENT.
+KILL iff agreement >= 80.0%, INCLUSIVE (MMV-OD-4, unchanged).
+VNQ / RWX NEVER enter this calculation.
+```
+
+### §11.10 Claim wording — binding correction
+
+```
+The primary MMV claim covers 15 MAPPED ETFs DRAWN FROM the canonical 17-ETF universe.
+It must NOT be stated as "all canonical 17 ETFs".
+The canonical risk infrastructure remains shared and unchanged; real estate simply
+receives NO MMV ALPHA EXPOSURE.
+```
+
+Every prior claim to the contrary is corrected in
+[`../research/extensions/mmv/MMV_S0_AMENDMENT_01.md`](../research/extensions/mmv/MMV_S0_AMENDMENT_01.md).
+
+### §11.11 What MMV-OD-6 leaves open
+
+```
+NOTHING SCIENTIFIC. SCIENTIFIC_CHOICES_REMAINING = 0.
+The only outstanding item is ALFRED API access, which is ordinary data acquisition.
+```
