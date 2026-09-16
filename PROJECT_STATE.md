@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — POLICY SCHEDULE FROZEN 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — GATE 0.5 PASS 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -438,9 +438,74 @@ S3_PREREQUISITE     = CLOSED 2026-09-17 by the policy schedule freeze above.
                       about the signal; it is recorded now because deciding it later,
                       with the schedule half-built, is how a look-ahead gets
                       rationalised.
-NEXT_OWNER_DECISION = AARON / CHATGPT ACCEPTANCE of the policy schedule freeze,
-                      then explicit authorization for ONE sealed historical
-                      PnL-FREE Gate 0.5 run.
+GATE 0.5            = **RUN ONCE, PASS, 2026-09-17**. RUN_ID
+                      MMV-GATE05-20260917-01 under MMV-AUTH-0001, scope
+                      ONE_SHOT_SINGLE_PNL_FREE_GATE05_RUN, now CONSUMED
+                      permanently. RNG_SEED = NONE (deterministic exact integer
+                      counting; no resampling exists to seed).
+                      POOLED_EXACT_SIGN_AGREEMENT = 1313 / 3270 = 40.152905%,
+                      compared as Fraction(1313,3270) against Fraction(4,5), NOT
+                      from a rounded percentage. Sealed threshold >= 80.0%
+                      INCLUSIVE -> NO KILL.
+                      Record research/extensions/mmv/MMV_GATE05_RESULT.md;
+                      machine artifact research/extensions/mmv/gate05/
+                      MMV_GATE05_RESULT.json.
+GATE 0.5 STRUCTURAL = 218 decision months 2008-05-31..2026-06-30; 15 mapped
+                      instruments; 3270 instrument-months, no duplicates; VNQ and
+                      RWX ABSENT (never constructed, so excluded_unmapped = 0 is
+                      not an empty filter); all three legs defined at all 218
+                      dates; 0 undefined MMV cells; 0 undefined canonical cells;
+                      718 zero (flat) MMV cells counted on both sides.
+                      PIT observed: newest-reference lag is 1 month in 216-217 of
+                      218 cases per series, with a few genuine 2-3 month
+                      publication gaps. The sealed same-day vintage rule BIT ONCE
+                      (one INDPRO vintage fell on a decision date; no
+                      authoritative release clock time exists, so the prior
+                      vintage was used).
+                      The known CPILFENS hole at 2025-10-01 never fell on a lag
+                      the transform reads, because the leg takes the newest
+                      VALUED reference month rather than a fixed calendar slot.
+GATE 0.5 MEANING    = MMV raw position states are NOT a restatement of the
+                      canonical TSMOM control, so the lineage is not spending a
+                      return trial on a sleeve that merely re-expresses the core
+                      book in macro vocabulary. It does NOT mean alpha,
+                      diversification, predictive power or positive return
+                      exists, and it does NOT support the macro mechanism. A
+                      PnL-free direction screen cannot distinguish a separable
+                      strategy from a worthless one.
+SIX-COLLISION ACCT  = A=1 (2019-07-31, 2:00 p.m. EDT <= 15:45, new target
+                      eligible), B=0, C=5. A+B+C=6. The two collisions whose Fed
+                      pages say only "For immediate release" (2013-07-31,
+                      2014-04-30) are class C no-change meetings: no new target
+                      value existed for the unestablished time to gate, so the
+                      conservative fallback was available and simply not needed.
+PRIMARY TRIAL       = **NOT SPENT**. Contract section M sets the primary trial
+                      family to the MMV composite, m=1, and that trial is the
+                      GATE-1 RETURN TEST, which remains unspent and
+                      unauthorized. Gate 0.5 is the sealed PnL-FREE pre-PnL
+                      falsification and touched no return.
+                      No row was written to ops/EXPOSURE_LEDGER.md or
+                      research/extensions/TRIAL_LEDGER.md under this grant;
+                      whether a PnL-free position-agreement reveal warrants a
+                      ledger row is a CONTROLLER question, not a builder
+                      decision, and the brief did not direct one.
+DIAGNOSTICS         = per-instrument, per-leg and calendar-period agreement were
+                      NOT COMPUTED AT ALL - not computed and withheld. No
+                      best/worst instrument ranking, per-leg breakdown or
+                      calendar map of unusual agreement exists for anyone to
+                      build a later narrative on.
+POST-RUN VALIDATORS = S2 parser 32/32 PASS, policy schedule 33/33 PASS, S2
+                      synthetic 150/151 with ONE expected flag:
+                      t_no_mmv_output_artifact_exists now detects the AUTHORIZED
+                      result artifact. That is a PRE-RUN assertion behaving
+                      correctly after an authorized run - the same stage-bound
+                      situation the controller already ruled on for the S1
+                      D-checks. The test was NOT modified.
+NEXT_OWNER_DECISION = CONTROLLER REVIEW of the Gate 0.5 PASS. A HISTORICAL
+                      RETURN TEST IS STILL NOT AUTHORIZED. Gate 1, M1, M2, the
+                      calendar-year block bootstrap and the first-release
+                      concordance cell all remain CLOSED pending separate
+                      controller authorization.
                       HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No scientific
                       choice remains open. Still UNAUTHORIZED: any historical MMV
                       feature, composite or position; the historical Gate 0.5

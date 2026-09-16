@@ -61,19 +61,61 @@ def _blocks(text: str) -> List[Dict[str, Any]]:
     return found
 
 
-def mmv_records(rev: str = "HEAD") -> List[Dict[str, Any]]:
-    text = read_committed(LEDGER_RELPATH, rev)
-    if text is None:
-        return []
+def read_worktree(relpath: str) -> Optional[str]:
+    """The file as it sits in the WORKING TREE, or None.
+
+    Used for BLOCKING only. A grant here would be worthless, but a CONSUMED
+    record here is a reason to refuse: the asymmetry is deliberate.
+    """
+    path = os.path.join(REPO, relpath)
+    try:
+        with open(path, encoding="utf-8") as fh:
+            return fh.read()
+    except OSError:
+        return None
+
+
+def _scoped(text: Optional[str]) -> List[Dict[str, Any]]:
+    """Records belonging to this lineage.
+
+    The authorization id prefix and the schema name identify CTA-EDGE-04-MMV on
+    their own. `lineage` is checked only when the record carries it, because a
+    LIFECYCLE record does not: requiring it would silently DROP consumption
+    records, and a dropped consumption record is a guard that fails open.
+    """
     out = []
-    for obj in _blocks(text):
-        if obj.get("lineage") != LINEAGE:
-            continue
+    for obj in _blocks(text or ""):
         if not str(obj.get("authorization_id", "")).startswith(ID_PREFIX):
             continue
         if obj.get("schema", {}).get("name") != SCHEMA_NAME:
             continue
+        if "lineage" in obj and obj.get("lineage") != LINEAGE:
+            continue
         out.append(obj)
+    return out
+
+
+def mmv_records(rev: str = "HEAD") -> List[Dict[str, Any]]:
+    """Records from COMMITTED state. Grants may only ever come from here."""
+    return _scoped(read_committed(LEDGER_RELPATH, rev))
+
+
+def consumed_ids(rev: str = "HEAD") -> set:
+    """Every authorization id marked CONSUMED, from committed state UNION the
+    working tree.
+
+    Consumption BLOCKS, and blocking does not require a commit. A CONSUMED
+    record that has been written but not yet committed still spends the grant:
+    the run really did happen, and the commit is bookkeeping that follows it.
+    Requiring the commit first would leave a window in which a completed run
+    could be repeated.
+    """
+    out = set()
+    for source in (mmv_records(rev), _scoped(read_worktree(LEDGER_RELPATH))):
+        for r in source:
+            if (r.get("record_type") == "LIFECYCLE"
+                    and r.get("event") == "CONSUMED"):
+                out.add(r.get("authorization_id"))
     return out
 
 
@@ -88,9 +130,7 @@ def active_grant(rev: str = "HEAD") -> Dict[str, Any]:
               if r.get("record_type") == "AUTHORIZATION"
               and r.get("grant_kind") == "EXECUTION"
               and r.get("status") == "AUTHORIZED"]
-    consumed = {r.get("authorization_id") for r in records
-                if r.get("record_type") == "LIFECYCLE"
-                and r.get("event") == "CONSUMED"}
+    consumed = consumed_ids(rev)
     live = [g for g in grants if g.get("authorization_id") not in consumed]
 
     if not grants:

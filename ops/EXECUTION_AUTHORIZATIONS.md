@@ -570,3 +570,67 @@ a return authorization.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — MMV-AUTH-0001 — CONSUMED
+
+The single authorised CTA-EDGE-04-MMV Gate 0.5 execution ran exactly once, under
+`run_id` `MMV-GATE05-20260917-01`, and durably wrote its result artifact. The
+grant is now spent: no second run, no alternate `run_id` and no retry is
+authorized by it, and none was performed. The run driver refuses outright if a
+result artifact already exists.
+
+The run was **deterministic** — exact integer counting over sign states, no RNG,
+no resampling, no tie-break — so reproducing it requires no seed.
+
+**This consumption did NOT spend the primary return trial.** Contract §M sets
+`PRIMARY TRIAL FAMILY = CTA-EDGE-04-MMV composite, m = 1`, and that trial is the
+Gate-1 return test, which remains unspent and unauthorized. Gate 0.5 is the
+sealed **PnL-free** pre-PnL falsification: it compared position DIRECTIONS
+against the canonical control and touched no return. `RETURN_OUTCOME_ACCESSED`
+remains `NO`.
+
+No row was written to `ops/EXPOSURE_LEDGER.md` or
+`research/extensions/TRIAL_LEDGER.md` under this grant. Whether a PnL-free
+position-agreement reveal warrants a ledger row is a governance question for the
+controller, not a builder decision, and the brief did not direct one.
+
+```json
+{
+  "authorization_id": "MMV-AUTH-0001",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-17T00:00:00Z",
+  "lineage": "CTA-EDGE-04-MMV",
+  "evidence": {
+    "alternate_run_id_used": false,
+    "authorization_commit": "8d37746629f7cbaa741eaa13907e118eb1a35537",
+    "design_changed_after_exposure": false,
+    "execution_count": 1,
+    "first_release_diagnostic_run": false,
+    "gate05_agreement_cells": 1313,
+    "gate05_eligible_cells": 3270,
+    "gate05_pooled_agreement_exact": "1313/3270",
+    "gate05_result": "PASS",
+    "gate05_threshold": "agreement / eligible >= 4/5, inclusive",
+    "per_instrument_diagnostics_computed": false,
+    "post_outcome_tuning": false,
+    "primary_return_trial_spent": false,
+    "result_artifact": "research/extensions/mmv/gate05/MMV_GATE05_RESULT.json",
+    "result_artifact_sha256": "1fa8df006574199cef2a6153f57f354d6fa93475b07c5c576036cebb09b6c3d8",
+    "result_record": "research/extensions/mmv/MMV_GATE05_RESULT.md",
+    "result_record_sha256": "05e20ef8740ccd55b051c4be31b0b85e1b38e9479ef703009037dcd1d8062440",
+    "return_outcome_accessed": false,
+    "reveal_count": 1,
+    "rng_seed": null,
+    "run_count": 1,
+    "run_driver_commit": "6918688be6850e5f1bf513eb7f0698e7f5789a30",
+    "second_run_performed": false
+  },
+  "reason": "the one governed historical run MMV-GATE05-20260917-01 completed and durably wrote its result artifact; consumption is permanent",
+  "record_type": "LIFECYCLE",
+  "run_id": "MMV-GATE05-20260917-01",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  }
+}
+```
