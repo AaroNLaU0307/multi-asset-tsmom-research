@@ -125,6 +125,84 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## CTA-EDGE-04-MMV — macro momentum on vintage data — S0 HOLD 2026-09-16
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Does the DIRECTION OF CHANGE in a small predeclared set of
+                      macroeconomic series - measured only from information actually
+                      published by the decision date - predict the direction of
+                      subsequent asset-class returns, SEPARABLY from the asset-return
+                      trend the canonical book already trades?
+RESEARCH_ID · LANE  = CTA-EDGE-04-MMV · not yet assigned (S0)
+ORIGIN              = Fable Round-1 discovery map, family F5 MACRO_MOMENTUM_VINTAGE.
+                      Authority 2026-09-15-cta-edge-discovery-r1-mechanism-feature-map-
+                      fable-01.md sha256 02ca5f45fe41763e55a353090645c3b2a98b6dcf5fce
+                      572623ede604e569344a, re-verified at this S0.
+S0 FRAME            = COMPLETE / **HOLD** (2026-09-16).
+                      Artifact research/extensions/mmv/MMV_S0_FRAME.md
+HOLD_REASON         = MMV-OD-1, the REAL-TIME INFORMATION CONCEPT. F5 says "on
+                      point-in-time (ALFRED) vintages" and never confronts the
+                      difference between (A) a chain of FIRST RELEASES - what the
+                      investor LEARNED, ALFRED output_type=4 - and (B) a SINGLE VINTAGE
+                      SNAPSHOT as-of the decision date - what everything published by
+                      then implied, ALFRED vintage_dates. Both are point-in-time, both
+                      are obtainable with one documented API parameter, and they encode
+                      different theories of what the investor responds to. Under (B) an
+                      annual payroll benchmark revision or a February CPI seasonal-factor
+                      revision moves today's signal with no new information about the
+                      current month. The affected series are exactly F5's two
+                      most-defensible legs. Not a feasibility question; purely
+                      scientific; cannot be deferred past S1 without making the study
+                      unfalsifiable.
+FIXED BY F5, PRESERVED = the transform (12-MONTH CHANGE, SIGN-ONLY), the series family
+                      (F5.b inflation and F5.c policy most defensible, F5.a growth as
+                      declared third leg), the cross-asset directional mapping table,
+                      and the cheap PnL-free gate.
+CHEAP GATE          = monthly SIGN AGREEMENT between the macro composite and the
+                      canonical composite, per instrument and pooled, months <=
+                      2026-06-12; stop above a declared bound (~80%) with reason
+                      `not_separable_at_position_level`. The benchmark side is ALREADY
+                      ON DISK (output/monthly_signal_panel.csv, 17 x 402, 1993-01-31..
+                      2026-06-30). NOT RUN AT S0 - designed only, runs after
+                      preregistration.
+SETTLED AT S0       = MACRO_SIGNAL_CONSTRUCTIBLE_WITHOUT_PRICE = YES, conditional on
+                      F5.c resolving to the ADMINISTERED POLICY RATE. The 2-year
+                      Treasury yield is EXCLUDED BY RULE: it is a traded price
+                      mechanically tied to SHY/IEF/TLT returns inside the traded panel.
+                      Vintage coverage verified on ALFRED: PAYEMS from 1955-05-06
+                      (~850+ vintages), CPIAUCSL from 1972-07-21 (~650+), PCEPILFE from
+                      2000-08-01 (~314) - all decades before the 2008-05 window.
+DATA POSITION       = NEW_PAID_ENTITLEMENT_REQUIRED = NO. FRED/ALFRED requires a
+                      self-service registration key; the terms page checked does not
+                      state a fee and a registration key is NOT an institutional
+                      entitlement - categorically unlike the LSEG/ICE problem that
+                      closed PINS. No vintage data and no ALFRED-aware code exists in
+                      the repository yet; nothing was fetched.
+PRICE_SAMPLE_REUSE  = ETF panel BURNED / context T0 (KB-1, 6 of 6,
+                      must_not_be_retested_on_same_sample, D-ETF-COUNT open).
+MACRO_DATA_REUSE    = ALFRED vintages NEW. The REVISED counterparts of some series were
+                      used by the closed Value lineage - a different object, declared.
+TRIAL_FAMILY_OVERLAP = LOW. No macro-CHANGE signal has ever been built here. No family
+                      declared at S0.
+EVIDENCE_CEILING    = supported. A new ALFRED vintage leg does not launder a reused
+                      price sample.
+DESIGN EXPOSURE     = FABLE_DESIGN_EXPOSED = YES (originated F5; barred from blind
+                      certification; advising on MMV-OD-1 will not restore
+                      independence). ASTRA_DESIGN_EXPOSED = NO, but recorded as an
+                      INFERENCE FROM ABSENCE: Astra's Round-1 output is not persisted
+                      anywhere in this workspace (REVIEWER_EXPOSURE_LOG S32/S38 carry
+                      the same gap). Seat rows are written AT SEAL, not at S0.
+OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regression,
+                      Sharpe or hit rate was computed; no famous macro episode was
+                      inspected against candidate returns. No exposure-ledger row was
+                      written, following the TA / BENB / PINS S0 precedent.
+NEXT_OWNER_DECISION = MMV-OD-1 (real-time information concept). Recommended route:
+                      Aaron -> Fable delegated Owner-advice seat, marked DESIGN-EXPOSED
+                      / NOT INDEPENDENT -> controller acceptance.
+```
+
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
 
 *State only, never workflow authority (vNext §0).*
