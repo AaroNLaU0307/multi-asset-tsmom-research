@@ -422,6 +422,58 @@ authorised one historical execution and it has been spent.
 
 ---
 
+## 16a. POST-RUN VALIDATION RESULTS
+
+*Appended after the post-run commit, because two of these results can only be produced
+once the consumption record is in committed state. No design artifact, result value or
+governance decision is changed by this section.*
+
+```
+benb_s3_validate.py                          47/47 PASS
+benb_tests.py            (S2 behavioural)    65 passed
+ta_tests.py              (prior lineage)     48 passed
+python -m pytest         (repository)        98 passed, 3 failed
+benb_prereg_validate.py  (S1 pre-seal)       71/72   <- see below
+```
+
+**The three repository failures are PRE_EXISTING**, all in
+`tests/test_xsmom_universes.py` (`pandas OutOfBoundsDatetime: 2333-04-30`). They are
+unrelated to BENB and were **not** repaired here: fixing an unrelated failure inside a
+governed-run commit is scope creep, and repairing anything after outcome exposure is
+exactly what the S3 brief forbids. NEW failures: **0**.
+
+**`benb_prereg_validate.py` now returns 71/72, and that is correct.** The one failing
+check is:
+
+```
+E/no execution authorization exists for this lineage
+    "CTA-EDGE-02-BENB" not in ops/EXECUTION_AUTHORIZATIONS.md
+```
+
+That is an **S1-seal-time state assertion**, not a statement about the contract. It was
+true at the seal and is deliberately false now: `BENB-AUTH-0001` exists, was exercised
+once, and is recorded CONSUMED. All 71 checks that test the **content** of the sealed
+contract still pass, and the two seal hashes reproduce.
+
+**The validator was not modified.** It is a sealed-lineage artifact (sha256
+`dfaff01a38011ec898199e2e00d6fa8324ba4bcd52bd87d10d043eb9617db984`), byte-unchanged
+since the seal, and editing it after outcome exposure — even to "fix" a check that has
+done its job — would be precisely the post-result design change the brief prohibits. The
+expected reading is recorded here instead.
+
+**`benb_tests.py` gd01 and gd02 pass again**, and the round trip is itself evidence:
+they assert "no live BENB EXECUTION grant, and `RealCellSource` refuses". That was true
+at S2, went **false** in the window between the authorization commit and consumption —
+which is the only window in which a historical run was possible — and is true again now.
+
+**Design integrity after exposure**, by `git diff d1ccefc8..HEAD`: every sealed document
+and every accepted S2 module is **UNCHANGED** — `BENB_S0_FRAME.md`,
+`BENB_S0_REPAIR_RECORD.md`, `BENB_PREREGISTRATION.md`, `BENB_SEAL_MANIFEST.md`,
+`benb_prereg_validate.py`, and all twelve `benb_*.py` implementation modules. The only
+changes are the five governance ledgers and the new S3 artifacts.
+
+---
+
 ## 17. NEXT
 
 S3 ends here. This record does not start S4, does not ask a reviewer to interpret the
