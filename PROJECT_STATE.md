@@ -140,8 +140,41 @@ ORIGIN              = Fable Round-1 discovery map, family F5 MACRO_MOMENTUM_VINT
                       Authority 2026-09-15-cta-edge-discovery-r1-mechanism-feature-map-
                       fable-01.md sha256 02ca5f45fe41763e55a353090645c3b2a98b6dcf5fce
                       572623ede604e569344a, re-verified at this S0.
-S0 FRAME            = COMPLETE / **HOLD** (2026-09-16).
+S0 FRAME            = COMPLETE / **PASS AFTER OWNER RESOLUTION** (2026-09-16).
                       Artifact research/extensions/mmv/MMV_S0_FRAME.md
+S1 DESIGN+SEAL      = **HOLD** (2026-09-16). NOT SEALED. No preregistration exists.
+                      Record research/extensions/mmv/MMV_S1_HOLD_RECORD.md
+                      Owner decisions MMV-OD-1..OD-5 ARE recorded and binding:
+                      ops/OWNER_DECISION_RECORD_CTA_EDGE_04_MMV.md
+S1_BLOCKERS         = THREE unbound scientific choices, all in the same place - F5
+                      specified the INPUTS and the DIRECTIONS in full and never
+                      specified the ARITHMETIC that turns them into a position:
+                      (1) GROWTH-LEG AGGREGATION - F5 names INDPRO and PAYEMS with one
+                          mapping and never says how the two signs become one;
+                      (2) MACRO COMPOSITE - F5 uses the phrase "the macro composite"
+                          exactly three times, always as a referent inside the
+                          falsification gate, and never defines it. Its own mapping
+                          table CONTRADICTS ITSELF ON EQUITY (growth LONG vs policy
+                          SHORT), and credit and commodities are each spoken for by a
+                          single leg. Whatever resolves this changes the position
+                          matrix, which is the input to the Gate-0.5 KILL gate;
+                      (3) CLASS-TO-INSTRUMENT MAPPING not implementable as written -
+                          real estate (VNQ, RWX) is in NO F5 class; FXY's sign is the
+                          negation of its class and that inversion is inference not
+                          text; LQD/HYG sit in both credit (LONG) and duration (SHORT);
+                          GLD is contested between "long commodities" and "long dollar".
+                      PLUS one ordinary acquisition blocker, NOT a scientific one:
+                      DATA_FREEZE_BLOCKER = ALFRED_API_ACCESS. No FRED/ALFRED key exists
+                      on this machine; no revised FRED history was substituted and
+                      nothing was fetched.
+VERIFIED AND NOT BLOCKING = canonical risk wrapper matches the brief EXACTLY
+                      (config.py: VOL_WINDOW_DAYS 60, TARGET_VOL_ANNUAL 0.10,
+                      MAX_ASSET_WEIGHT 2.0, equal weight, PORT_TARGET_VOL_ANNUAL 0.10,
+                      MAX_GROSS_LEVERAGE 3.0, TRANSACTION_COST_BPS 2.0); the 15:45 ET
+                      cutoff is COMPATIBLE and strictly conservative against the
+                      canonical decide-at-close / execute-next-session convention
+                      (src/portfolio.py:148); the DFEDTAR -> DFEDTARL/U splice at
+                      2008-12-15/16 is the OFFICIAL series boundary, verified on FRED.
 HOLD_REASON         = MMV-OD-1, the REAL-TIME INFORMATION CONCEPT. F5 says "on
                       point-in-time (ALFRED) vintages" and never confronts the
                       difference between (A) a chain of FIRST RELEASES - what the
@@ -198,9 +231,11 @@ OUTCOME EXPOSURE    = NONE. No macro feature, composite, position, return, regre
                       Sharpe or hit rate was computed; no famous macro episode was
                       inspected against candidate returns. No exposure-ledger row was
                       written, following the TA / BENB / PINS S0 precedent.
-NEXT_OWNER_DECISION = MMV-OD-1 (real-time information concept). Recommended route:
-                      Aaron -> Fable delegated Owner-advice seat, marked DESIGN-EXPOSED
-                      / NOT INDEPENDENT -> controller acceptance.
+NEXT_OWNER_DECISION = the THREE unbound aggregation/mapping rules above. Recommended
+                      route: Aaron -> Fable delegated Owner-advice seat, marked
+                      DESIGN-EXPOSED / NOT INDEPENDENT (this is CONSTRUCTIVE DESIGN,
+                      Fable's designated role) -> controller acceptance. The ALFRED key
+                      is mechanical and needs no advice seat.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
