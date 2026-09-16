@@ -32,3 +32,21 @@ Thumbs.db
 .vscode/
 
 # --- NOTE: assets/ is intentionally NOT ignored (tracked figures for the README) ---
+
+# --- Credentials: NEVER commit ---
+# Added 2026-09-17 at the CTA-EDGE-04-MMV data freeze. The MMV lineage needs a
+# FRED/ALFRED API key on this machine; nothing in this file previously stopped a
+# `git add -A` from committing one. These patterns are preventive, not reactive:
+# no credential has ever been committed to this repository.
+.env
+.env.*
+!.env.example
+*.env
+secrets.json
+.secrets
+config.local.py
+*.key
+*.pem
+.fredapikey
+.fred_api_key
+.alfredapikey
