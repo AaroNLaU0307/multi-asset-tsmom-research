@@ -179,6 +179,12 @@ PINS-OD-1 FEASIBILITY = **FAIL** (2026-09-16). Against a 45-release sample froze
                       so it was NOT TESTED, and whether that series is first-reported or
                       revised is UNVERIFIED.
                       Record research/extensions/pins/PINS_OD1_FEASIBILITY_RESULT.md.
+LIFECYCLE_STATUS    = **CLOSED PRE-OUTCOME** / DATA-PIT ACCESS NOT ESTABLISHED.
+                      Declared by the programme controller and recorded here 2026-09-16
+                      at the CTA-EDGE-04 candidate audit. No trial was spent, no data was
+                      purchased, and no candidate outcome was ever generated. The
+                      feasibility record below stands as the reason; no separate closure
+                      artifact was written because none was requested.
 RECOMMENDED_ACTION  = CLOSE CTA-EDGE-03-PINS AT S0 / DATA-PIT FAILURE (negative outcome
                       class A), SUBJECT TO one Owner fact that is procurement and not
                       science: does Aaron hold, or will he authorise, an entitlement to a
@@ -220,8 +226,8 @@ OUTCOME EXPOSURE    = NONE. No surprise, scarcity value, interaction, conditiona
                       computed or inspected. No exposure-ledger row was written, which
                       follows the CTA-EDGE-01-TA and CTA-EDGE-02-BENB precedent: an S0
                       frame generates no outcome, and seat rows are written AT SEAL.
-NEXT_OWNER_DECISION = PINS-OD-1 (expectation source). Recommended route: Aaron -> Fable
-                      delegated Owner-advice seat -> controller acceptance.
+NEXT_OWNER_DECISION = NONE for this lineage. It is closed. The backlog successor is
+                      audited in research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md.
 ```
 
 ## CTA-EDGE-02-BENB — bond ETF–NAV basis — CLOSED 2026-09-16
