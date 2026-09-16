@@ -490,3 +490,83 @@ the sealed design uses no DSR, so nothing here decides it.
   }
 }
 ```
+
+### MMV-AUTH-0001 — CTA-EDGE-04-MMV historical PnL-free Gate 0.5 run
+
+One historical execution of the sealed CTA-EDGE-04-MMV **Gate 0.5** — the
+PnL-free position-level separability screen — and nothing else. The scope is
+`ONE_SHOT`: a single invocation of
+`research/extensions/mmv/mmv_gate05_run.py --execute` under `run_id`
+`MMV-GATE05-20260917-01`. Once that run durably writes its result artifact the
+authorization is CONSUMED and can never authorize another run, another
+`run_id`, or a retry.
+
+**The reader for these records is `research/extensions/mmv/mmv_authorization.py`**,
+scoped to `MMV-AUTH` ids and to the `CTA-EDGE-04-MMV` lineage. It reuses the X01
+asymmetries unchanged: **granting requires committed state** (a grant in the
+working tree only is invalid), while **blocking does not** (an unreadable
+ledger, an unparseable record, or more than one live grant all refuse).
+
+`rng_seed` is **NONE**. This run is fully deterministic: the sealed Gate 0.5 is
+exact integer counting over sign states, with no resampling, no simulation and
+no tie-breaking. A seed would imply a stochastic step that the sealed design
+does not contain.
+
+This grant authorizes the **first historical construction of the sealed MMV
+macro feature and raw position matrix**, and the reveal of the sealed Gate 0.5
+statistic those produce. It authorizes **nothing about returns**. Historical
+return exposure remains CLOSED whatever the Gate 0.5 outcome, and a PASS is not
+a return authorization.
+
+```json
+{
+  "authority": "OWNER EXECUTION DECISION relayed by Aaron in session as the CTA-EDGE-04-MMV HISTORICAL GATE 0.5 task brief (ONE-TIME PNL-FREE RUN AUTHORIZATION)",
+  "authorization_id": "MMV-AUTH-0001",
+  "authorized_utc": "2026-09-17T00:00:00Z",
+  "binding": {
+    "accepted_policy_freeze_commit": "d52883f230d1961c6c1f23b1dbb63402177e5dd3",
+    "accepted_s2_commit": "dc2817b99f048f561f1db55f998e24ff2193df10",
+    "lineage": "CTA-EDGE-04-MMV",
+    "no_refetch": "live or re-downloaded data is NOT authorized; a pinned-hash mismatch is a STRUCTURAL STOP, never a substitution",
+    "permitted_inputs": [
+      "research/extensions/mmv/MMV_PREREGISTRATION.md sha256 4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225",
+      "research/extensions/mmv/MMV_SEAL_MANIFEST.md sha256 75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+      "research/extensions/mmv/MMV_POLICY_ANNOUNCEMENT_SCHEDULE.csv sha256 ae34bf1e192c4355fb71136a3e3017dfd07525ac8e48d7d3ea102130fa6a11da",
+      "data/mmv/MMV_RAW_MANIFEST.json sha256 908e2d6deeceedf9d74f3cc684a5ab6b1224e5960887af082aba3329787706da",
+      "data/mmv/MMV_FOMC_TIMING_MANIFEST.json sha256 be6f17afdf77aafc7d44bee593a1a94a01bb9b9474112cd197e6ed177737c4f9",
+      "data/mmv/INDPRO.observations.realtime.json sha256 3f53f959e399e21a060c6c7ab04392b82950c916826a1c964472d8c78682ddd9",
+      "data/mmv/PAYEMS.observations.realtime.json sha256 c773c5681807fe0057dd66814aa18bfc03b8c0201be57a50f425b48e7c471bd6",
+      "data/mmv/CPILFENS.observations.realtime.json sha256 75c3c36306c109b11683d808471b30aa8061a2dfc0a4141a6668e6fe8b9ad2f4",
+      "output/monthly_signal_panel.csv sha256 fa154e01ec597070729b5489ee4f8ed0e588add30c70d33196d7bf3c8069173f"
+    ],
+    "permitted_operation": "exactly ONE invocation of research/extensions/mmv/mmv_gate05_run.py --execute, which performs the structural pre-checks and then the sealed CTA-EDGE-04-MMV Gate 0.5 as preregistered",
+    "prohibited": [
+      "any access to ETF returns, MMV gross or net returns, transaction-cost results, Sharpe, drawdown, hit rate, predictive regression, bootstrap, Gate 1, M1 or M2",
+      "the first-release concordance diagnostic, which remains CLOSED under this grant",
+      "per-instrument, per-leg or calendar-period agreement diagnostics, which are preregistered as non-promotional but are NOT required for this kill decision and are intentionally not exposed",
+      "any series, transform, coefficient, mapping, threshold or cutoff change",
+      "ALFRED realtime_start as the policy availability clock",
+      "any imputation, carry-forward or conversion of a missing leg to zero",
+      "a second run, an alternate run_id, a retry, an exploratory preview or a dry run on historical outcomes",
+      "promotion, falsification, portfolio integration or any S4 action"
+    ],
+    "rng_seed": null,
+    "rng_seed_derivation": "NONE. The sealed Gate 0.5 is deterministic exact integer counting over sign states; there is no resampling, simulation or tie-break, so no seed exists to fix.",
+    "run_id": "MMV-GATE05-20260917-01",
+    "run_type": "HISTORICAL_PNL_FREE_SEPARABILITY",
+    "s1_seal_commit": "cdb01fdc903e97671c3ef50fde6875628ca39ac8",
+    "s1_seal_manifest_sha256": "75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+    "sealed_prereg_sha256": "4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225"
+  },
+  "grant_kind": "EXECUTION",
+  "lineage": "CTA-EDGE-04-MMV",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_PNL_FREE_GATE05_RUN",
+  "status": "AUTHORIZED"
+}
+```
