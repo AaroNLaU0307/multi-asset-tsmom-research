@@ -125,6 +125,67 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Does a FIRST-PUBLISHED unexpected change in U.S. commercial crude
+                      oil inventories produce a directionally consistent WTI futures
+                      price response that survives a realistic post-release execution
+                      delay and realistic release-window costs, and is that response
+                      stronger when the pre-release physical inventory state was already
+                      scarce?
+RESEARCH_ID · LANE  = CTA-EDGE-03-PINS · not yet assigned (S0)
+S0 FRAME            = COMPLETE / **HOLD** (2026-09-16).
+                      Artifact research/extensions/pins/PINS_S0_FRAME.md
+HOLD_REASON         = PINS-OD-1, a high-difficulty Owner decision on the EXPECTATION
+                      SOURCE. The three live options are three different hypotheses:
+                      (1) survey consensus (Reuters/Bloomberg/Platts) - licensed, not
+                      held, and economic-calendar "forecast" columns have undocumented
+                      provenance; (2) API Weekly Statistical Bulletin as the expectation,
+                      the Ye & Karali construction - academically standard and genuinely
+                      point-in-time, but subscription-only via Refinitiv/ICE;
+                      (3) a model-based expectation - always available, costs nothing,
+                      and is A DIFFERENT HYPOTHESIS requiring a renamed lineage;
+                      (4) close at S0 as a DATA/PIT failure, spending no trial.
+                      PINS-OD-2 (scarcity definition), PINS-OD-3 (execution latency +
+                      primary horizon) and PINS-OD-4 (materiality scale) are RECORDED
+                      but DEFERRED behind OD-1, which is a gate.
+S1 DESIGN+SEAL      = NOT STARTED. No seal, no contract, no build, no run
+                      authorization, no data purchase.
+SETTLED AT S0       = DAILY_DATA_ADEQUATE = NO; INTRADAY_REQUIRED = YES. The mechanism
+                      is a jump at 10:30:00 ET whose effect is largely spent inside the
+                      first half-hour; a daily close-to-close return cannot answer the
+                      harvestability question. This is the CTA-EDGE-01-TA lesson applied
+                      directly, and no daily fallback is offered.
+                      FIRST_PUBLISHED_EIA_SERIES_RECONSTRUCTIBLE = YES from 2012-01-05:
+                      the EIA per-release archive holds 765 releases through 2026-09-10,
+                      each with 15 CSV tables (enumerated from link metadata only).
+DATA POSITION       = CL intraday NOT held but cheaply obtainable under a live Databento
+                      GLBX.MDP3 entitlement (~$14-19 per CME root for 12-15 years of
+                      ohlcv-1m, observed). CL daily IS held and is part of KB-2, which is
+                      BURNED. No EIA and no consensus data exist anywhere on this machine.
+PRICE_SAMPLE_REUSE  = REUSED / BURNED CONTEXT (KB-2, N_trials = 14 frozen). An intraday
+                      CL panel is a different FOOTING of the same economic history, not a
+                      new sample - the BENB reading, inherited.
+EVIDENCE_CEILING    = supported. A new physical (EIA) leg does not launder a reused
+                      price leg.
+DESIGN EXPOSURE     = ASTRA_DESIGN_EXPOSED = YES (material_design_contributor: the
+                      candidate, the EIA crude emphasis, the PIT-consensus warning, the
+                      immediate-price-discovery risk, the curve-overlap warning, the
+                      effective-N caution). FABLE_DESIGN_EXPOSED = NO - deliberately
+                      preserved, which is what keeps Fable eligible as a delegated
+                      Owner-advice seat for PINS-OD-1..4.
+OUTCOME EXPOSURE    = NONE. No surprise, scarcity value, interaction, conditional return,
+                      regression, event P&L, Sharpe, hit rate or extreme-event list was
+                      computed or inspected. No exposure-ledger row was written, which
+                      follows the CTA-EDGE-01-TA and CTA-EDGE-02-BENB precedent: an S0
+                      frame generates no outcome, and seat rows are written AT SEAL.
+NEXT_OWNER_DECISION = PINS-OD-1 (expectation source). Recommended route: Aaron -> Fable
+                      delegated Owner-advice seat -> controller acceptance.
+```
+
 ## CTA-EDGE-02-BENB — bond ETF–NAV basis — CLOSED 2026-09-16
 
 *State only, never workflow authority (vNext §0).*
