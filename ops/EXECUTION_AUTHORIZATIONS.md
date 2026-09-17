@@ -634,3 +634,108 @@ controller, not a builder decision, and the brief did not direct one.
   }
 }
 ```
+
+### MMV-AUTH-0002 — CTA-EDGE-04-MMV primary historical return run (S3)
+
+The FIRST and ONLY primary historical return trial for CTA-EDGE-04-MMV. The
+scope is `ONE_SHOT`: a single invocation of
+`research/extensions/mmv/mmv_s3_run.py --execute` under `run_id`
+`MMV-S3-20260917-01`. Once that run durably writes its result artifact the
+authorization is CONSUMED and can never authorize another run, another
+`run_id`, or a retry.
+
+`--preflight` is NOT an execution. It runs the authorization, state, signal and
+structural phases, touches no return and produces no statistic, so it consumes
+nothing and may be repeated. Only `--execute` spends the trial.
+
+This grant is issued because the programme controller **accepted the Gate 0.5
+PASS**: pooled exact sign agreement `1313/3270` = 40.152905 %, against a sealed
+kill threshold of `>= 80.0 %` inclusive. Gate 0.5 SURVIVED. The accepted result
+is READ by this run and is never recomputed; `MMV-AUTH-0001` remains CONSUMED
+and no Gate 0.5 rerun is authorized by this grant or any other.
+
+**The RNG seed is DERIVED, not chosen.** It is the first eight hexadecimal
+characters of the S1 seal manifest hash, `75016e77`, read as an unsigned
+integer: **1963028087**. The run driver recomputes the derivation and refuses if
+it does not reproduce. A seed chosen after an outcome, or chosen at all, would
+be a researcher degree of freedom; this one is a function of a hash that was
+sealed before any return existed.
+
+**What this grant does NOT authorize.** No redesign, retuning, rescue cell,
+alternative series, alternative mapping, alternative cost, alternative
+threshold, alternative start date or post-result exploration. No second
+historical return run. No promotion, falsification or S4 action. The terminal
+class is whatever the sealed first-match classification returns, and the
+evidence ceiling is **supported** — never *confirmed*.
+
+```json
+{
+  "authority": "OWNER EXECUTION DECISION relayed by Aaron in session as the CTA-EDGE-04-MMV S3 task brief (ONE-TIME PRIMARY HISTORICAL RETURN RUN AUTHORIZATION), which records the programme controller's acceptance of GATE05_RESULT = PASS",
+  "authorization_id": "MMV-AUTH-0002",
+  "authorized_utc": "2026-09-17T00:00:00Z",
+  "binding": {
+    "accepted_gate05_audit_commit": "059f3593fb87122f6f5b93f2dda7b4992934cb2a",
+    "accepted_gate05_result_commit": "8a30ec328311812f09b2f98a68a2ba4f7680f729",
+    "accepted_gate05_result_exact": "1313/3270",
+    "accepted_policy_freeze_commit": "d52883f230d1961c6c1f23b1dbb63402177e5dd3",
+    "accepted_s2_commit": "dc2817b99f048f561f1db55f998e24ff2193df10",
+    "bootstrap": "calendar-year block bootstrap, B = 10000, 95 % percentile interval, ONE common draw set for Gate 1, M1 and M2. No HAC, no Newey-West, no second bootstrap, no monthly IID bootstrap.",
+    "cost": "2 bps ONE-WAY per unit turnover, config.py:196 TRANSACTION_COST_BPS, applied per the canonical ETF execution convention",
+    "execution_convention": "RECOVERED from committed canonical code, never invented: monthly return interval is month-end close to month-end close (src/signals.py::to_monthly + src/performance.py::monthly_asset_returns); the position held during month M is the portfolio weight decided at month-end M-1 (src/portfolio.py::positions_from_weights, shift(1)); the macro information cutoff remains 15:45:00 America/New_York on the decision date",
+    "gate05_authorization_commit": "8d37746629f7cbaa741eaa13907e118eb1a35537",
+    "lineage": "CTA-EDGE-04-MMV",
+    "m": 1,
+    "mapped_instruments": ["DBA", "EEM", "EWJ", "FXY", "GLD", "HYG", "LQD", "SHY", "SPY", "TLT", "UNG", "USO", "UUP", "XLE", "XLU"],
+    "no_refetch": "live or re-downloaded data is NOT authorized; a pinned-hash mismatch is a STRUCTURAL STOP, never a substitution",
+    "not_mapped": ["RWX", "VNQ"],
+    "permitted_inputs": [
+      "research/extensions/mmv/MMV_PREREGISTRATION.md sha256 4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225",
+      "research/extensions/mmv/MMV_SEAL_MANIFEST.md sha256 75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+      "research/extensions/mmv/MMV_POLICY_ANNOUNCEMENT_SCHEDULE.csv sha256 ae34bf1e192c4355fb71136a3e3017dfd07525ac8e48d7d3ea102130fa6a11da",
+      "data/mmv/INDPRO.observations.realtime.json sha256 3f53f959e399e21a060c6c7ab04392b82950c916826a1c964472d8c78682ddd9",
+      "data/mmv/PAYEMS.observations.realtime.json sha256 c773c5681807fe0057dd66814aa18bfc03b8c0201be57a50f425b48e7c471bd6",
+      "data/mmv/CPILFENS.observations.realtime.json sha256 75c3c36306c109b11683d808471b30aa8061a2dfc0a4141a6668e6fe8b9ad2f4",
+      "output/monthly_signal_panel.csv sha256 fa154e01ec597070729b5489ee4f8ed0e588add30c70d33196d7bf3c8069173f",
+      "data/close_prices_raw.csv sha256 3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31",
+      "research/extensions/mmv/gate05/MMV_GATE05_RESULT.json sha256 1fa8df006574199cef2a6153f57f354d6fa93475b07c5c576036cebb09b6c3d8",
+      "research/extensions/mmv/MMV_GATE05_RESULT.md sha256 05e20ef8740ccd55b051c4be31b0b85e1b38e9479ef703009037dcd1d8062440",
+      "research/extensions/mmv/MMV_GATE05_AUDIT.md sha256 029a5618182a9043680f14102b57de25386ce6bf87569c717d3520185fbee713"
+    ],
+    "permitted_operation": "exactly ONE invocation of research/extensions/mmv/mmv_s3_run.py --execute, which performs the authorization, state, sealed-signal and structural phases and then the sealed Gate 1, M1 and M2 as preregistered",
+    "preflight": "research/extensions/mmv/mmv_s3_run.py --preflight runs phases 0-3 only, accesses no return, produces no statistic and consumes NOTHING; it is repeatable",
+    "primary_trial_family": "CTA-EDGE-04-MMV composite",
+    "prohibited": [
+      "a second historical return run, an alternate run_id, a retry, or a silent re-execution after a technical failure",
+      "rerunning, recomputing or reinterpreting Gate 0.5, whose authorization MMV-AUTH-0001 remains CONSUMED",
+      "the first-release concordance diagnostic, which remains CLOSED during this primary trial and has no promotion, rescue or kill power",
+      "per-ETF return rankings, per-leg PnL, growth-only, inflation-only or policy-only PnL",
+      "best or worst years or months, recession or crisis performance, drawdown, hit rate, rolling Sharpe",
+      "alternative start dates, lookbacks, costs, mappings, series, thresholds or targets",
+      "any change to INDPRO, PAYEMS, CPILFENS, the policy target series, latest-known-as-of semantics, the policy announcement schedule, the growth aggregation, the inflation transform, the policy transform, the 15-ETF coefficient table, the VNQ/RWX exclusion, the missingness rule, the information cutoff or the execution convention",
+      "treating VNQ or RWX as live flat participating assets",
+      "letting any alpha information enter through risk scaling",
+      "selecting successful components, or any post-result rescue analysis",
+      "promotion, falsification, portfolio integration or any S4 action"
+    ],
+    "rng_seed": 1963028087,
+    "rng_seed_derivation": "int(S1 seal manifest sha256[:8], 16) = int('75016e77', 16) = 1963028087. DERIVED from a hash sealed before any return existed, never chosen. The run driver recomputes the derivation and refuses on mismatch.",
+    "run_driver_commit": "93d9a4768a387d1fd1ffe30deba1c24dffeb9206",
+    "run_id": "MMV-S3-20260917-01",
+    "run_type": "PRIMARY_HISTORICAL_RETURN",
+    "s1_seal_commit": "cdb01fdc903e97671c3ef50fde6875628ca39ac8",
+    "s1_seal_manifest_sha256": "75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+    "sealed_prereg_sha256": "4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225",
+    "stop_rule": "if execution fails before a result is produced: STOP and report the technical failure; do not silently retry"
+  },
+  "grant_kind": "EXECUTION",
+  "lineage": "CTA-EDGE-04-MMV",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_PRIMARY_RETURN_RUN",
+  "status": "AUTHORIZED"
+}
+```
