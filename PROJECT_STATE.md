@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — S3 COMPLETE, CLASS D 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — S3 CORRECTED, CLASS D 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -584,15 +584,17 @@ RETURN ALIGNMENT    = **RECOVERED, NEVER INVENTED**. The sealed authority unique
                       in the month the trade executes and subtracted ONCE.
                       HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO.
                       FABLE_OWNER_ADVICE_REQUIRED = NO.
-SAMPLE              = **214 eligible return months, 2008-09-30 .. 2026-06-30**, 15
+SAMPLE              = **213 eligible return months, 2008-09-30 .. 2026-05-31**, 15
                       mapped instruments, VNQ/RWX absent. 218 canonical decision
-                      dates minus a 4-month wrapper warm-up (2008-05-31..2008-08-31):
+                      dates minus the ineligible partial terminal return month
+                      2026-06-30 (MMV-OD-8) and a 4-month wrapper warm-up
+                      (2008-05-31..2008-08-31):
                       the canonical portfolio-vol estimate needs 60 daily returns of
                       the MMV book itself before any leverage exists, so those months
                       carry no position. STRUCTURAL, not chosen; nothing later is
-                      excluded. The final month is TRUNCATED - the frozen daily panel
-                      ends 2026-06-12 - and stands because section H forbids
-                      extending past the authoritative panel. 0 missing returns, 0
+                      excluded. The 218-date DECISION grid is NOT altered:
+                      2026-06-30 remains a valid decision-state date and only its
+                      RETURN observation is ineligible. 0 missing returns, 0
                       duplicate months, 0 partial books.
 CAUSALITY           = TESTED, not asserted. The whole wrapper (asset vol, asset
                       weights, portfolio vol, leverage, portfolio weights) was
@@ -600,18 +602,84 @@ CAUSALITY           = TESTED, not asserted. The whole wrapper (asset vol, asset
                       2019-09-30 and 2023-03-31 and is **BITWISE identical** up to
                       each truncation date. held(M) == port_weight(M-1) exactly on
                       all 218 months.
-PRIMARY RESULT      = **GATE 1 FAIL / M1 FAIL / M2 FAIL**, one calendar-year block
-                      bootstrap, 19 blocks, B = 10,000, ONE common draw set, seed
-                      **1963028087 DERIVED** as int(S1 seal sha256[:8], 16).
-                        GATE 1  gross mean  +0.00016410  95% [-0.00424423, +0.00420519]
-                        M1      net mean    +0.00002419  95% [-0.00439365, +0.00407023]
-                        M2      net Sharpe  +0.003056    95% [-0.527604, +0.547064]
-                      Aggregate turnover 149.7011, aggregate cost 0.029940 at the
+FIRST RESULT (VOID) = **INVALID_PRIMARY_SAMPLE / NONDECISIONAL**, superseded
+                      2026-09-17. The run MMV-S3-20260917-01 included ONE partial
+                      terminal return observation - the row labelled 2026-06-30,
+                      whose data end 2026-06-12. Its Gate-1, M1, M2 and terminal
+                      class are NO LONGER PROGRAMME EVIDENCE and are not restated
+                      here; the artifacts are preserved immutably for provenance
+                      at MMV_S3_RESULT.md / s3/MMV_S3_RESULT.json, unedited.
+MMV-OD-8            = **B_EXCLUDE** (controller, 2026-09-17).
+                      LOCKBOX_AUTHORITY_VERIFIED = YES; NEW_SCIENTIFIC_CHOICE = NO.
+                      research/extensions/LOCKBOX_PROCEDURE.md section 2.1 was
+                      written 2026-09-08, NINE DAYS BEFORE the seal. It verifies
+                      the panel boundary at 2026-06-12, calls the June 2026 row
+                      "a complete label over an incomplete period", and requires
+                      an evaluation EITHER to (a) truncate the terminal row and
+                      state so OR (b) declare the inclusion in its
+                      preregistration. The sealed contract records the boundary
+                      in section P and never exercises (b), so (a) BINDS. The
+                      first run included the row and merely stated that it had,
+                      which is neither path. Section 2.1 also calls this "the
+                      first item every new candidate's A2 challenge should
+                      check" - it was a documented trap and the first run walked
+                      into it.
+CORRECTION RUN      = **MMV-S3-REPAIR-20260917-01**, one bounded repair of the
+                      SAME primary trial under MMV-AUTH-0003 (grant commit
+                      1734dcb, driver research/extensions/mmv/mmv_s3_repair_run.py
+                      commit cd41614), now CONSUMED. TRIAL_COUNT_INCREMENT = 0,
+                      F-MMV stays at m = 1, NOT a new trial and NOT independent
+                      evidence. Seed, B, execution convention, wrapper, cost and
+                      bootstrap implementation ALL UNCHANGED.
+ONE ROW, PROVEN     = removed exactly {2026-06-30}, added none, 214 -> 213, every
+                      earlier month identical and in order. The guard is
+                      STRUCTURAL, not a hard-coded date: a month is eligible only
+                      if the price panel continues PAST it, which is what
+                      establishes that the last observed price inside it is its
+                      final trading close; a panel that stops inside a month
+                      fails closed. Three mechanical checks: 14 files verified
+                      BYTE-IDENTICAL to the parent-run commit (parent driver,
+                      canonical src/, config.py, all seven sealed engine/ modules,
+                      the Gate-0.5 driver); 9 scientific functions reused by
+                      OBJECT IDENTITY from the parent module; and the repair
+                      module's own definitions derived from its AST and required
+                      to match a declared classification table exactly - which
+                      tripped on itself when written, as a real check should.
+                      OUTCOME_AFFECTING_DIFFS = TERMINAL_ROW_ONLY.
+IDENTITY            = SIGNAL_IDENTITY_VERIFIED = YES, POSITION_IDENTITY_VERIFIED
+                      = YES, proven by REPRODUCTION: before computing anything
+                      repaired, the run recomputed the first run's 214-month
+                      statistics from its own freshly built book and reproduced
+                      every published figure BIT-FOR-BIT. Had the macro feature,
+                      the decision grid, the positions, the wrapper, the cost
+                      model or the bootstrap drifted at all, they could not have.
+PRIMARY RESULT      = **DECISIONAL. GATE 1 FAIL / M1 FAIL / M2 FAIL** on the
+                      corrected **213-month** sample, one calendar-year block
+                      bootstrap, 19 blocks (2008:4 .. 2026:5), B = 10,000, ONE
+                      common draw set, seed **1963028087 UNCHANGED**.
+                        GATE 1  gross mean  +0.00014275  95% [-0.00428624, +0.00420283]
+                        M1      net mean    +0.00000230  95% [-0.00443109, +0.00406748]
+                        M2      net Sharpe  +0.00029     95% [-0.531249, +0.545330]
+                      Aggregate turnover 149.5821, aggregate cost 0.029916 at the
                       sealed 2 bps. gross mean - cost mean = net mean exactly.
+BOOTSTRAP BOUNDARY  = UNAMBIGUOUS. A calendar year is ONE block whatever its month
+                      count; the 2026 block simply drops from 6 months to 5. Same
+                      rule that already produced a 4-month 2008 block, same rule
+                      implemented in benb_inference.py::year_block_bootstrap, and
+                      section J's "resample COMPLETE calendar years" names the
+                      resampling UNIT - a whole year rather than the monthly IID
+                      draw section J forbids - not a filter on which years
+                      qualify. The draw matrix is identical to the first run's.
                       Reconciled against src/performance.py: gross BIT-IDENTICAL,
                       turnover and net within one ULP (bound 1e-12, which is a
                       floating-point identity check and NOT a research threshold).
-TERMINAL CLASS      = **D - PREDICTIVE RESPONSE UNRESOLVED**. PROGRAMME_STATUS =
+TERMINAL CLASS      = **D - PREDICTIVE RESPONSE UNRESOLVED**, classified FROM
+                      SCRATCH on the corrected sample; the void run's class was
+                      NOT carried forward. It is the same letter the void run
+                      reported and that is arithmetic, not inheritance: removing
+                      one month of 214 moved every interval endpoint by less than
+                      5e-05, far too little to cross a boundary the point estimate
+                      misses by two orders of magnitude. PROGRAMME_STATUS =
                       UNRESOLVED / LOW_POWER. FAILURE_TYPE = NONE. TERMINAL under
                       section K: no retuning, no rescue, no second look. The Gate-1
                       95% interval SPANS ZERO, so the sealed first-match order stops
@@ -623,18 +691,32 @@ LEDGERS             = TRIAL_LEDGER section 6.2 row **F-MMV** appended (the fourt
                       declared family, declared in sealed section M before any member
                       ran, TRANSCRIBED LATE at the run and disclosed as such);
                       MMV_PRIMARY_RETURN_TRIAL_SPENT = YES, m = 1.
-                      ops/EXPOSURE_LEDGER.md **row 57**, REVEALED_TARGET_METRIC /
-                      TARGET_METRIC. Row 56, the PnL-free Gate 0.5 exposure, is NOT
-                      counted as a second return trial. N_trials on the ETF panel
-                      stays NOT ASSERTED; D-ETF-COUNT remains
+                      the status cell was then CORRECTED IN PLACE at the repair
+                      (the F-BENB / F-VRP precedent); m UNCHANGED at 1, no m = 2,
+                      TRIAL_COUNT_INCREMENT = 0.
+                      ops/EXPOSURE_LEDGER.md **row 57** (the void result) is
+                      PRESERVED UNEDITED - the ledger is append-only and corrects
+                      by citation, never by rewriting - and **row 58** is
+                      appended, marking row 57 INVALID_PRIMARY_SAMPLE /
+                      NONDECISIONAL and carrying the replacement primary result.
+                      Both rows are the SAME trial and are NEVER to be counted as
+                      independent evidence. Row 56, the PnL-free Gate 0.5
+                      exposure, is NOT counted as a return trial at all. N_trials
+                      on the ETF panel stays NOT ASSERTED; D-ETF-COUNT remains
                       UNKNOWN_PENDING_AARON_DECISION.
 NOT COMPUTED        = per-ETF return rankings, per-leg PnL, growth/inflation/policy-
                       only PnL, best or worst years or months, recession or crisis
                       cells, drawdown, hit rate, rolling Sharpe, alternative start
                       dates, lookbacks, costs, mappings or series. Not computed and
                       withheld - NOT COMPUTED AT ALL. The first-release concordance
-                      diagnostic remains CLOSED. Gate 0.5 was NOT rerun and the S3
-                      driver reads NO canonical TSMOM sign at all.
+                      diagnostic remains CLOSED. Gate 0.5 was NOT rerun - not at
+                      the first run and not at the repair - and neither S3 driver
+                      reads ANY canonical TSMOM sign. Gate 0.5 is unaffected by
+                      the terminal-row defect because it compares DECISION-DATE
+                      position states and never needs the following month to be a
+                      complete return observation: 1313/3270 = 40.152905% PASS
+                      stands. No search over sample endpoints was performed; the
+                      single endpoint evaluated is the one MMV-OD-8 mandates.
 NEXT_OWNER_DECISION = CONTROLLER S4 VERDICT on a TERMINAL CLASS D. NO RESCUE,
                       RETUNE OR COMPONENT SELECTION IS AUTHORIZED: series,
                       transforms, coefficients, mappings, thresholds, cost, the

@@ -925,3 +925,127 @@ exclusion of the terminal primary return row labelled `2026-06-30`.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — MMV-AUTH-0003 — CONSUMED
+
+The single authorised CTA-EDGE-04-MMV primary-sample correction executed exactly
+once, under `run_id` `MMV-S3-REPAIR-20260917-01`, and durably wrote its result
+artifact. The grant is now spent: no second repair, no alternate `run_id` and no
+retry is authorized by it, and none was performed. The driver refuses outright —
+in both `--execute` and `--preflight` — once a repaired result exists, and that
+refusal was verified before this record was written.
+
+**No trial was spent.** `TRIAL_COUNT_INCREMENT = 0`; `F-MMV` stays at `m = 1`.
+This is the SAME primary trial, recomputed on a valid sample. The parent and
+repaired outcomes are **not** independent evidence and must never be presented
+as two results.
+
+**The parent artifacts are preserved unmodified**, byte-identical to their
+pinned hashes, and `MMV-AUTH-0002` remains CONSUMED. `MMV-S3-20260917-01` is
+recorded as `INVALID_PRIMARY_SAMPLE` / `NONDECISIONAL`: it included one partial
+terminal return observation contrary to `LOCKBOX_PROCEDURE.md` §2.1, which was
+written 2026-09-08 and so was pre-existing at the 2026-09-17 seal. Its Gate-1,
+M1, M2 and terminal class are no longer programme evidence.
+
+**Gate 0.5 was not rerun.** `MMV-AUTH-0001` remains CONSUMED and the accepted
+`1313/3270` = 40.152905 % PASS stands: Gate 0.5 compares decision-date position
+states and never needs the following month to be a complete return observation.
+
+**Terminal class D, derived from scratch on the valid 213-month sample.** The
+Gate-1 95 % interval spans zero, so the sealed first-match classification returns
+D and `PROGRAMME_STATUS = UNRESOLVED / LOW_POWER`, terminal. It is the same
+letter the invalid run reported, and that is arithmetic rather than a
+carry-forward: the invalid D is withdrawn and has no standing, and removing one
+month of 214 moved every interval endpoint by less than `5e-05`.
+
+Signal and position identity were proven by reproduction, not asserted: before
+computing anything repaired, the run recomputed the parent's 214-month
+statistics from its own freshly built book and reproduced every published
+figure bit-for-bit.
+
+```json
+{
+  "authorization_id": "MMV-AUTH-0003",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-17T00:00:00Z",
+  "lineage": "CTA-EDGE-04-MMV",
+  "evidence": {
+    "added_return_rows": [],
+    "aggregate_cost": 0.02991641425152764,
+    "aggregate_turnover": 149.5820712576382,
+    "alternate_run_id_used": false,
+    "alternative_parameter_cell_run": false,
+    "alternative_sample_endpoint_run": false,
+    "bootstrap_b": 10000,
+    "bootstrap_boundary_semantics_unambiguous": true,
+    "design_changed_after_exposure": false,
+    "driver_diff_audit": "PASS",
+    "eligible_return_months_original": 214,
+    "eligible_return_months_repaired": 213,
+    "eligible_return_window": "2008-09-30 .. 2026-05-31",
+    "execution_count": 1,
+    "first_release_diagnostic_run": false,
+    "frozen_files_verified_byte_identical": 14,
+    "gate05_rerun_performed": false,
+    "gate1_ci95": [-0.004286240713899123, 0.004202827325349211],
+    "gate1_point": 0.00014275289566893753,
+    "gate1_result": "FAIL",
+    "m": 1,
+    "m1_ci95": [-0.004431085840789229, 0.004067483738587841],
+    "m1_point": 2.3002465988573153e-06,
+    "m1_result": "FAIL",
+    "m2_ci95": [-0.5312487228995167, 0.5453296278690262],
+    "m2_point": 0.00028990128438332813,
+    "m2_result": "FAIL",
+    "m2_target": 0.3,
+    "mapped_instrument_n": 15,
+    "mmv_od_8": "B_EXCLUDE",
+    "lockbox_authority_verified": true,
+    "new_scientific_choice": false,
+    "decision_grid_altered": false,
+    "outcome_affecting_diffs": "TERMINAL_ROW_ONLY",
+    "parent_artifact_modified": false,
+    "parent_authorization": "MMV-AUTH-0002",
+    "parent_decisional_status": "NONDECISIONAL",
+    "parent_record_sha256": "4ae4ad2a43345d86639a8f9a0b282c46d3c8af0f500fa72be612c1134b0d4d3f",
+    "parent_result_sha256": "70fc6f91ddcc9ce4888c76c4016d32684c8c273c9d9348754814a5860c306a5e",
+    "parent_result_status": "INVALID_PRIMARY_SAMPLE",
+    "parent_run": "MMV-S3-20260917-01",
+    "parent_statistics_reproduced_exactly": true,
+    "per_instrument_return_diagnostics_run": false,
+    "per_leg_return_diagnostics_run": false,
+    "position_identity_verified": true,
+    "post_outcome_tuning": false,
+    "removed_return_rows": ["2026-06-30"],
+    "rescue_analysis_performed": false,
+    "result_artifact": "research/extensions/mmv/s3/MMV_S3_REPAIR_RESULT.json",
+    "result_artifact_sha256": "987f50b49083f42d6ddd79f718430466ebdaf335f363e196cdce94a32bbd59a0",
+    "result_record": "research/extensions/mmv/MMV_S3_REPAIR_RESULT.md",
+    "result_record_sha256": "6586d6814746c1812cb726881e7bcf3a3296cc4d567da25c95f0bdb10348ad59",
+    "return_outcome_accessed": true,
+    "reuse_identity_functions": 9,
+    "reveal_count": 1,
+    "rng_seed": 1963028087,
+    "rng_seed_unchanged_from_parent": true,
+    "run_count": 1,
+    "run_driver_commit": "cd41614781b4d56b1bf6c33f01ef86a95b8bfa5b",
+    "second_repair_performed": false,
+    "signal_identity_verified": true,
+    "trial_count_increment": 0,
+    "trial_family": "F-MMV",
+    "evidence_ceiling": "supported",
+    "failure_type": "NONE",
+    "programme_status": "UNRESOLVED / LOW_POWER",
+    "terminal_class": "D",
+    "old_result_decisional": false,
+    "new_result_decisional": true
+  },
+  "reason": "the one governed primary-sample correction MMV-S3-REPAIR-20260917-01 completed and durably wrote its result artifact; consumption is permanent",
+  "record_type": "LIFECYCLE",
+  "run_id": "MMV-S3-REPAIR-20260917-01",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  }
+}
+```
