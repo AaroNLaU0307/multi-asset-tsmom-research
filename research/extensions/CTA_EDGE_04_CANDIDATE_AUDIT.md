@@ -10,6 +10,13 @@ BRANCH      = cta-edge/physical-inventory-news-s0  (no new lineage branch opened
 HISTORICAL_OUTCOME_ACCESSED = NO   BACKTEST_RUN = NO   NEW_LINEAGE_OPENED = NO
 ```
 
+> **CANDIDATE-STATUS UPDATE — 2026-09-18. Appended; nothing below is edited.** This audit records the backlog as it stood on 2026-09-16 and is retained as written. Two candidates have moved since:
+>
+> * **F5 `MACRO_MOMENTUM_VINTAGE`** became `CTA-EDGE-04-MMV` and is now **CLOSED / TERMINAL** (class D, `UNRESOLVED / LOW_POWER`). See [`mmv/MMV_CLOSEOUT.md`](mmv/MMV_CLOSEOUT.md).
+> * **F7 `REBALANCING_FLOW_REVERSAL`** is **NOT AN ACTIVE EDGE CANDIDATE**. It is **preserved as a mechanism-study candidate**, its historical return run was **NEVER EXECUTED** and its return outcome is **UNEXPOSED**. `CTA-EDGE-05` is **not assigned to F7**. See [`F7_NONRUN_DISPOSITION.md`](F7_NONRUN_DISPOSITION.md).
+>
+> **F4 `INVENTORY_STATE_COMMODITY_CURVE` is the next candidate for PRE-S0 review. F4 S0 is NOT AUTHORIZED** — no lineage is opened by that note or by the F7 disposition.
+
 ---
 
 ## §1 Discovery authorities — located, not reconstructed
@@ -443,6 +450,12 @@ NEW_DISCOVERY_ROUND_REQUIRED      = NO
 HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = YES
 FABLE_OWNER_ADVICE_RECOMMENDED          = NO
 ```
+
+> **ANSWERED 2026-09-18 — this question is no longer outstanding.** The flags above are retained as the state on 2026-09-16 and are **stale**; they are not edited. An independent review seat — not Fable, not the F7 originator and not its design author — adjudicated the question and returned **`ORIGINAL_F7_DISTINCTNESS = PASS`**: the original F7 was **genuinely distinct** and was **NOT** a post-hoc conditional re-cut of the closed seasonality / turn-of-month null.
+>
+> The precedent this sets is narrow and worth stating exactly: *“the unconditional test failed but the conditional one is different”* is an **adjudicable** distinctness argument in this programme, not a barred one — when the mechanism, the object and the prediction genuinely differ. It does not make that argument automatically valid for any future proposal.
+>
+> F7 was nevertheless removed from the active edge queue, for a **different reason entirely**: the fully repaired object was `MATERIALLY_REDESIGNED` and its strongest admissible claim was a predictive relation rather than an executable edge. Full record, including the provenance limits on the adjudicating seat, in [`F7_NONRUN_DISPOSITION.md`](F7_NONRUN_DISPOSITION.md).
 
 It is **not** the choice among F7/F5/F4 — those differ on factual dimensions laid out
 above and the choice is an ordinary Owner weighting.
