@@ -26,6 +26,13 @@ implement, not authorisation to run, not an exposure event. It creates no row in
 
 ## §1 Stage state at the time of recording
 
+> **POST-CLOSEOUT NOTE — appended 2026-09-17, after the CTA-EDGE-04-MMV closeout.** The block below records the state **at the time of its original recording** and is retained **unedited**; it is not a current status. Two later facts a reader needs:
+>
+> * **`MMV-OD-7` was NEVER CREATED.** The numbering gap is INTENTIONAL, not a missing file. The UNBOUND-4 policy-availability question was `RESOLVED_BY_EXISTING_AUTHORITY`, so no new decision was opened; `MMV_OD_7_CREATED = NO` is attested in `MMV_SEAL_MANIFEST.md` check C1.
+> * **`MMV-OD-8` exists and is transcribed at §12.**
+>
+> The lineage is now **CLOSED / TERMINAL**. Current state lives in `PROJECT_STATE.md` and [`../research/extensions/mmv/MMV_CLOSEOUT.md`](../research/extensions/mmv/MMV_CLOSEOUT.md), never here.
+
 ```
 S0 FRAME                = COMPLETE / PASS AFTER OWNER RESOLUTION
 MMV-OD-1 .. OD-5        = DECIDED 2026-09-16
@@ -489,3 +496,124 @@ Every prior claim to the contrary is corrected in
 NOTHING SCIENTIFIC. SCIENTIFIC_CHOICES_REMAINING = 0.
 The only outstanding item is ALFRED API access, which is ordinary data acquisition.
 ```
+
+
+---
+
+## §12 MMV-OD-8 — terminal month / partial-month sample semantics  *(decided 2026-09-17; TRANSCRIBED here after closeout)*
+
+```
+DECISION_ID = MMV-OD-8
+SUBJECT     = TERMINAL MONTH / PARTIAL-MONTH SAMPLE SEMANTICS
+DECISION    = B_EXCLUDE
+DECIDED     = 2026-09-17, BEFORE the correction run MMV-S3-REPAIR-20260917-01
+TRANSCRIBED = 2026-09-17, AFTER the lineage closeout
+```
+
+> **This section creates nothing.** MMV-OD-8 was already authoritative when the
+> correction ran: it is carried in the `MMV-AUTH-0003` grant text that was
+> committed **before** execution, in the repaired result artifact, and in
+> `MMV_CLOSEOUT.md`. This is a **transcription into the canonical decision
+> record**, not a new Owner decision, and it changes no result, no count and no
+> status.
+
+### §12.1 The rule
+
+```
+A PRIMARY MONTHLY RETURN REQUIRES THE AUTHORITATIVE FINAL TRADING CLOSE OF THAT
+CALENDAR MONTH.
+```
+
+A calendar month-end **label** does not establish that the underlying period is
+complete. `src/signals.py::to_monthly` is `daily_prices.resample("ME").last()`,
+which labels the last available close in a calendar month at that month's
+calendar end. When the frozen panel stops mid-month, the resulting row is a
+complete label over an incomplete period.
+
+### §12.2 Application to June 2026
+
+```
+authoritative panel end          2026-06-12
+  (data/close_prices_raw.csv, sha256 3d2a7a56…c3c31, frozen boundary VERIFIED
+   from bytes in LOCKBOX_PROCEDURE.md §2.1)
+June 2026 sessions observed      10   (2026-06-01 .. 2026-06-12)
+June 2026 sessions unobserved    2026-06-15 .. 2026-06-30
+row labelled 2026-06-30          close(2026-06-12) / close(2026-05-29) - 1,
+                                 earned by the position decided 2026-05-31
+
+2026-06 PRIMARY RETURN           INELIGIBLE
+LAST COMPLETE PRIMARY RETURN     2026-05
+218-DATE DECISION GRID           UNCHANGED
+GATE 0.5                         UNCHANGED
+```
+
+The 2026-06-30 **decision date** remains valid and remains in the sealed
+218-date grid; it simply earns no return. Gate 0.5 is untouched because it
+compares decision-date position states and never requires the following month to
+be a complete return observation — its accepted result
+`1313 / 3270 = 40.152905 %` PASS stands.
+
+### §12.3 Authority — all of it pre-existing or contemporaneous
+
+| source | identity |
+|---|---|
+| **pre-existing canonical rule** | `research/extensions/LOCKBOX_PROCEDURE.md` §2.1, Wave 0, **verified from bytes 2026-09-07** and committed 2026-09-08 at `df5b28a` — **before the 2026-09-17 MMV seal**. sha256 `5d786ad832a1507e4b82575ed1782076de3ce3ee78d98dd450ddbdcbec45d437` |
+| **Fable advice** | `2026-09-17-cta-edge-04-mmv-od-8-terminal-month-semantics-fable-01.md` (workspace root), sha256 `4bd90069fcb207e8a650a2ee047b904676593937def6ed47d236c27ff233347a`. `RECOMMENDATION = B_EXCLUDE`, `CONFIDENCE = HIGH`, `DOES_RECOMMENDATION_DEPEND_ON_RETURN_OUTCOME = NO` |
+| **repair grant** | `ops/EXECUTION_AUTHORIZATIONS.md` → `MMV-AUTH-0003`, committed `1734dcb` **before** execution |
+| **closeout** | `../research/extensions/mmv/MMV_CLOSEOUT.md` §4 and §8, sha256 `b3f24e539dbdd69b527d2451288af4b47bd9beb2445b36bdb2b317b0739bdb88` |
+
+`LOCKBOX_PROCEDURE.md` §2.1 states of the June 2026 row, verbatim: *"a
+complete label over an incomplete period"*, and requires an evaluation either to
+**(a)** truncate the terminal row and state so, or **(b)** declare in its
+preregistration that a partial terminal month is included and why. **The sealed
+MMV contract never exercises (b)** — it inherited the panel's last label as a
+constant in §P and never addressed the item — so **(a) binds**. The first S3
+run included the row and merely *stated* that it had, which is neither path.
+
+```
+NEW_SCIENTIFIC_CHOICE = NO.  MMV-OD-8 APPLIES A PRE-EXISTING OWNER-AUTHORISED
+RULE; IT DOES NOT CREATE ONE.
+```
+
+Corroborating precedent recorded by the advice seat: the sealed **Value**, **VRP**
+and **X01** contracts each already fixed the end of this panel at **2026-05** as
+the last complete month, and the same seat recommended excluding the same partial
+terminal month in three earlier lineages (artifacts dated 2026-09-13/14),
+**before any MMV outcome existed**.
+
+### §12.4 Advice-seat status — stated, not glossed
+
+```
+SEAT   Claude Fable 5.1, constructive Owner-advice seat
+STATUS FABLE ADVICE / DESIGN-EXPOSED / NOT INDEPENDENT
+```
+
+Consistent with contract §M, `FABLE_DESIGN_EXPOSED = YES` — Fable originated
+F5 and advised MMV-OD-1 and MMV-OD-6, and is **barred from blind certification**
+of this design, implementation or result. **Adopting its advice does not restore
+independence, and this advice is not a certification.** No independent
+verification of MMV-OD-8, or of any part of this lineage, was ever obtained.
+
+**The advice seat disclosed incidental outcome exposure rather than hiding it:**
+the HEAD commit subject line visible in `git log` carried the terminal class
+word, and one grep over `PROJECT_STATE.md` returned the S3 section's
+`TERMINAL CLASS` line and eligible-month count. No gross mean, net mean, Sharpe,
+interval, Gate-1, M1 or M2 value was viewed, and the recommendation has **zero
+degrees of freedom** — it is a rule application that would be identical under
+every terminal class. The disclosure is recorded here because a reader weighing
+the advice is entitled to it.
+
+### §12.5 What this transcription does NOT do
+
+```
+NO new Owner decision                NO result artifact modified
+NO machine result modified           NO trial count changed (F-MMV, m = 1)
+NO exposure row modified             NO classification changed
+NO programme status changed          NO reopening of the closed lineage
+```
+
+`CTA-EDGE-04-MMV` remains **TERMINAL**: `CLASS D — PREDICTIVE RESPONSE
+UNRESOLVED`, `PROGRAMME_STATUS = UNRESOLVED / LOW_POWER`, `research_status =
+unresolved`, `FAILURE_TYPE = INSUFFICIENT_EVIDENCE / LOW_POWER`, `EVIDENCE_CEILING
+= supported` as a **ceiling and not the achieved verdict**. `RESCUE_AUTHORIZED =
+NO`.
