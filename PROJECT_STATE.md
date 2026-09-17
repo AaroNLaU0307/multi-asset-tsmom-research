@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — S3 CORRECTED, CLASS D 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — CLOSED / TERMINAL 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -717,19 +717,74 @@ NOT COMPUTED        = per-ETF return rankings, per-leg PnL, growth/inflation/pol
                       complete return observation: 1313/3270 = 40.152905% PASS
                       stands. No search over sample endpoints was performed; the
                       single endpoint evaluated is the one MMV-OD-8 mandates.
-NEXT_OWNER_DECISION = CONTROLLER S4 VERDICT on a TERMINAL CLASS D. NO RESCUE,
-                      RETUNE OR COMPONENT SELECTION IS AUTHORIZED: series,
-                      transforms, coefficients, mappings, thresholds, cost, the
-                      +0.30 target, the bootstrap, the sample and the execution
-                      timing are all closed. Any further hypothesis requires a NEW
-                      LINEAGE with its own preregistration and seal, which is an
-                      Owner decision and not a continuation of this one.
-                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No scientific
-                      choice remains open. Still UNAUTHORIZED: any historical MMV
-                      feature, composite or position; the historical Gate 0.5
-                      evaluation; the first-release concordance cell; any return,
-                      Sharpe, bootstrap or interval; any RNG seed; any push, PR or
-                      merge.
+FINAL VERDICT       = **CTA-EDGE-04-MMV = TERMINAL**, closed 2026-09-17 by
+                      controller decision. Gate 0 PIT VALID. Gate 0.5 PASS
+                      (1313/3270 = 40.152905%, survived the >= 80.0% kill).
+                      Gate 1 FAIL on the valid 213-month sample: the 95%
+                      interval spans zero. TERMINAL_CLASS = D, PROGRAMME_STATUS
+                      = UNRESOLVED / LOW_POWER. Nothing was promoted.
+FAILURE SEMANTICS   = **FAILURE_TYPE = INSUFFICIENT_EVIDENCE / LOW_POWER.**
+                      MECHANISM_FALSIFIED = NO. PREDICTIVE_SIGN_RESOLVED = NO.
+                      TARGET_MARGIN_RELIABLY_EXCLUDED = NO.
+                      NOT_PROMOTED_DUE_TO_NEGATIVE_EFFECT = NO.
+                      **This is NOT a reliable negative result - that would be
+                      CLASS C, which was not matched because the Gate-1 upper
+                      endpoint is positive. It is an UNRESOLVED result.**
+                      Sealed section K assigns a FAILURE_TYPE only to class E,
+                      so the machine artifacts' `failure_type: NONE` is the
+                      SEALED field and was NOT edited; the substantive label is
+                      recorded in the closeout artifact.
+                      NOTE FOR FUTURE READERS: `INSUFFICIENT_EVIDENCE` is a
+                      FAILURE_TYPE label, NOT a research_status. The legal
+                      research_status vocabulary has no such token. This
+                      lineage's research_status = **unresolved**.
+M1 / M2 ROLE        = OBSERVED IN THE AUTHORIZED PRIMARY RUN BUT NOT CONSULTED
+                      FOR PROMOTION CLASSIFICATION after class D became terminal
+                      at Gate 1. Preserved for audit (net mean +0.00000230, 95%
+                      [-0.00443109, +0.00406748]; net Sharpe +0.00029, 95%
+                      [-0.531249, +0.545330]). Neither can rescue or worsen
+                      class D: classes E and F both require Gate 1 to pass first.
+                      Same treatment as BENB's Gate 2; spends no separate trial.
+EVIDENCE CEILING    = **supported is a CEILING, NOT THE ACHIEVED VERDICT.** The
+                      achieved state is UNRESOLVED / LOW_POWER. No result is
+                      upgraded to supported, confirmed or independently
+                      confirmed - and no independent verification of this lineage
+                      was ever obtained: everything here is BUILDER CLAIM plus
+                      MECHANICAL EVIDENCE.
+FIRST-RELEASE CELL  = **NOT RUN**, at any stage. It carries no promotion, rescue
+                      or kill power and the lineage is already terminal, so no
+                      further outcome or interpretive exposure is justified.
+TERMINAL-MONTH      = PROGRAMME LESSON RECORDED. Every future CTA-EDGE
+LESSON                preregistration must declare a TERMINAL_MONTH_POLICY
+                      BEFORE outcome exposure: a calendar month-end LABEL does
+                      not prove the underlying period is complete. Programme
+                      validation should ultimately test completeness against the
+                      authoritative final trading date for the month, not merely
+                      whether the panel holds observations in a later month - the
+                      MMV repair's panel-continuation guard is conservative at
+                      the boundary but would not catch a mid-panel gap. The
+                      accepted MMV repair is NOT altered on that basis: no such
+                      gap exists in any month it evaluated.
+CLOSEOUT ARTIFACT   = research/extensions/mmv/MMV_CLOSEOUT.md - pins the F5
+                      origin authority, MMV-OD-1..OD-8 (OD-7 NEVER CREATED, a
+                      real gap), the S1 seal, S2 build, policy freeze, Gate 0.5,
+                      the invalid S3, the repaired S3, the terminal verdict, the
+                      no-rescue rule and the terminal-month lesson.
+NEXT_OWNER_DECISION = NONE for this lineage. It is CLOSED. RESCUE_AUTHORIZED =
+                      NO: alternate inflation series, headline CPI, core PCE,
+                      FEDFUNDS, DGS2, alternate growth aggregation, alternate
+                      mapping, alternate LQD or GLD treatment, adding VNQ/RWX,
+                      alternate lookback, threshold, cost, bootstrap or endpoint,
+                      component selection, a longer sample and first-release
+                      rescue are ALL prohibited within CTA-EDGE-04-MMV. Any
+                      materially different future study requires a NEW LINEAGE
+                      with its own preregistration and seal, which is an Owner
+                      decision and not a continuation of this one. The ETF price
+                      panel stays REUSED / BURNED (KB-1, 6 of 6), N_trials NOT
+                      ASSERTED, D-ETF-COUNT UNKNOWN_PENDING_AARON_DECISION.
+                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO.
+                      Still UNAUTHORIZED: any further MMV run of any kind; the
+                      first-release concordance cell; any push, PR or merge.
 ```
 
 ## CTA-EDGE-03-PINS — physical inventory news × scarcity — S0 HOLD 2026-09-16
