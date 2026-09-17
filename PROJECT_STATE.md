@@ -125,7 +125,7 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
-## CTA-EDGE-04-MMV — macro momentum on vintage data — GATE 0.5 AUDITED 2026-09-17
+## CTA-EDGE-04-MMV — macro momentum on vintage data — S3 COMPLETE, CLASS D 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
 
@@ -567,11 +567,81 @@ EXPOSURE            = **ops/EXPOSURE_LEDGER.md row 56**, classification
                       REVEALED_TARGET_METRIC would have been WRONG - no return,
                       cost, Sharpe or drawdown exists. RETURN_TRIAL_SPENT = NO;
                       nothing written to TRIAL_LEDGER and no trial invented.
-NEXT_OWNER_DECISION = CONTROLLER REVIEW of the Gate 0.5 PASS. A HISTORICAL
-                      RETURN TEST IS STILL NOT AUTHORIZED. Gate 1, M1, M2, the
-                      calendar-year block bootstrap and the first-release
-                      concordance cell all remain CLOSED pending separate
-                      controller authorization.
+S3 RUN              = **COMPLETE 2026-09-17**. The controller accepted the Gate 0.5
+                      PASS and authorized MMV-AUTH-0002, the FIRST and ONLY primary
+                      historical return trial. It ran ONCE under run_id
+                      MMV-S3-20260917-01 (driver research/extensions/mmv/
+                      mmv_s3_run.py, commit 93d9a47; grant commit a6748e7) and is
+                      now CONSUMED. RERUN_PERFORMED = NO.
+RETURN ALIGNMENT    = **RECOVERED, NEVER INVENTED**. The sealed authority uniquely
+                      determines the return interval and the driver re-derives it
+                      from committed canonical code at run time, refusing to
+                      continue if the exact fragments are gone: month-end close ->
+                      month-end close (src/signals.py::to_monthly +
+                      src/performance.py::monthly_asset_returns), position held
+                      during month M = portfolio weight decided at month-end M-1
+                      (src/portfolio.py shift(1)), 2 bps one-way x turnover charged
+                      in the month the trade executes and subtracted ONCE.
+                      HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO.
+                      FABLE_OWNER_ADVICE_REQUIRED = NO.
+SAMPLE              = **214 eligible return months, 2008-09-30 .. 2026-06-30**, 15
+                      mapped instruments, VNQ/RWX absent. 218 canonical decision
+                      dates minus a 4-month wrapper warm-up (2008-05-31..2008-08-31):
+                      the canonical portfolio-vol estimate needs 60 daily returns of
+                      the MMV book itself before any leverage exists, so those months
+                      carry no position. STRUCTURAL, not chosen; nothing later is
+                      excluded. The final month is TRUNCATED - the frozen daily panel
+                      ends 2026-06-12 - and stands because section H forbids
+                      extending past the authoritative panel. 0 missing returns, 0
+                      duplicate months, 0 partial books.
+CAUSALITY           = TESTED, not asserted. The whole wrapper (asset vol, asset
+                      weights, portfolio vol, leverage, portfolio weights) was
+                      recomputed on price panels truncated at 2011-06-30, 2015-12-31,
+                      2019-09-30 and 2023-03-31 and is **BITWISE identical** up to
+                      each truncation date. held(M) == port_weight(M-1) exactly on
+                      all 218 months.
+PRIMARY RESULT      = **GATE 1 FAIL / M1 FAIL / M2 FAIL**, one calendar-year block
+                      bootstrap, 19 blocks, B = 10,000, ONE common draw set, seed
+                      **1963028087 DERIVED** as int(S1 seal sha256[:8], 16).
+                        GATE 1  gross mean  +0.00016410  95% [-0.00424423, +0.00420519]
+                        M1      net mean    +0.00002419  95% [-0.00439365, +0.00407023]
+                        M2      net Sharpe  +0.003056    95% [-0.527604, +0.547064]
+                      Aggregate turnover 149.7011, aggregate cost 0.029940 at the
+                      sealed 2 bps. gross mean - cost mean = net mean exactly.
+                      Reconciled against src/performance.py: gross BIT-IDENTICAL,
+                      turnover and net within one ULP (bound 1e-12, which is a
+                      floating-point identity check and NOT a research threshold).
+TERMINAL CLASS      = **D - PREDICTIVE RESPONSE UNRESOLVED**. PROGRAMME_STATUS =
+                      UNRESOLVED / LOW_POWER. FAILURE_TYPE = NONE. TERMINAL under
+                      section K: no retuning, no rescue, no second look. The Gate-1
+                      95% interval SPANS ZERO, so the sealed first-match order stops
+                      at D. It is NOT class C - the upper endpoint is positive - and
+                      it is NOT a falsification of the mechanism. It says the sealed
+                      design, on the sealed sample, cannot resolve the sign of the
+                      response. EVIDENCE_CEILING = supported, NEVER confirmed.
+LEDGERS             = TRIAL_LEDGER section 6.2 row **F-MMV** appended (the fourth
+                      declared family, declared in sealed section M before any member
+                      ran, TRANSCRIBED LATE at the run and disclosed as such);
+                      MMV_PRIMARY_RETURN_TRIAL_SPENT = YES, m = 1.
+                      ops/EXPOSURE_LEDGER.md **row 57**, REVEALED_TARGET_METRIC /
+                      TARGET_METRIC. Row 56, the PnL-free Gate 0.5 exposure, is NOT
+                      counted as a second return trial. N_trials on the ETF panel
+                      stays NOT ASSERTED; D-ETF-COUNT remains
+                      UNKNOWN_PENDING_AARON_DECISION.
+NOT COMPUTED        = per-ETF return rankings, per-leg PnL, growth/inflation/policy-
+                      only PnL, best or worst years or months, recession or crisis
+                      cells, drawdown, hit rate, rolling Sharpe, alternative start
+                      dates, lookbacks, costs, mappings or series. Not computed and
+                      withheld - NOT COMPUTED AT ALL. The first-release concordance
+                      diagnostic remains CLOSED. Gate 0.5 was NOT rerun and the S3
+                      driver reads NO canonical TSMOM sign at all.
+NEXT_OWNER_DECISION = CONTROLLER S4 VERDICT on a TERMINAL CLASS D. NO RESCUE,
+                      RETUNE OR COMPONENT SELECTION IS AUTHORIZED: series,
+                      transforms, coefficients, mappings, thresholds, cost, the
+                      +0.30 target, the bootstrap, the sample and the execution
+                      timing are all closed. Any further hypothesis requires a NEW
+                      LINEAGE with its own preregistration and seal, which is an
+                      Owner decision and not a continuation of this one.
                       HIGH_DIFFICULTY_OWNER_DECISION_REQUIRED = NO. No scientific
                       choice remains open. Still UNAUTHORIZED: any historical MMV
                       feature, composite or position; the historical Gate 0.5

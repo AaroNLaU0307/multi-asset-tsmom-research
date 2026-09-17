@@ -739,3 +739,94 @@ evidence ceiling is **supported** — never *confirmed*.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — MMV-AUTH-0002 — CONSUMED
+
+The single authorised CTA-EDGE-04-MMV primary historical return run executed
+exactly once, under `run_id` `MMV-S3-20260917-01`, and durably wrote its result
+artifact. The grant is now spent: no second run, no alternate `run_id` and no
+retry is authorized by it, and none was performed. The run driver refuses
+outright — in both `--execute` and `--preflight` modes — once a result artifact
+exists, and that refusal was verified before this record was written.
+
+**The primary return trial is SPENT.** Contract §M sets
+`PRIMARY TRIAL FAMILY = CTA-EDGE-04-MMV composite, m = 1`, and this run is that
+trial. `RETURN_OUTCOME_ACCESSED` is now `YES`.
+
+**Gate 0.5 was not rerun.** `MMV-AUTH-0001` remains CONSUMED. The accepted
+Gate-0.5 PASS was READ from the committed artifact and never recomputed; the S3
+driver reads no canonical TSMOM sign at all.
+
+**Terminal class D — PREDICTIVE RESPONSE UNRESOLVED.** The Gate-1 95 % interval
+for the mean monthly gross return spans zero, so the sealed first-match
+classification returns D and `PROGRAMME_STATUS = UNRESOLVED / LOW_POWER`. This
+is TERMINAL under §K: no retuning, no rescue, no second look. It is not a
+falsification of the mechanism and it is not CLASS C — the upper endpoint is
+positive.
+
+The seed was **derived, not chosen**: `int('75016e77', 16) = 1963028087`, the
+first eight hex characters of the S1 seal manifest hash, which was sealed before
+any return existed. The driver recomputed the derivation and would have refused
+on mismatch.
+
+```json
+{
+  "authorization_id": "MMV-AUTH-0002",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-17T00:00:00Z",
+  "lineage": "CTA-EDGE-04-MMV",
+  "evidence": {
+    "aggregate_cost": 0.029940217007577524,
+    "aggregate_turnover": 149.7010850378876,
+    "alternate_run_id_used": false,
+    "alternative_parameter_cell_run": false,
+    "authorization_commit": "a6748e704333248157fd0fe05d8b6357a81ca6ae",
+    "bootstrap_b": 10000,
+    "bootstrap_method": "calendar-year block bootstrap, 19 complete calendar-year blocks, one common draw matrix of shape (10000, 19) for Gate 1, M1 and M2",
+    "design_changed_after_exposure": false,
+    "eligible_return_months": 214,
+    "eligible_return_window": "2008-09-30 .. 2026-06-30",
+    "execution_count": 1,
+    "first_release_diagnostic_run": false,
+    "gate05_rerun_performed": false,
+    "gate1_ci95": [-0.004244234369167489, 0.004205186443632572],
+    "gate1_point": 0.00016410089070368697,
+    "gate1_result": "FAIL",
+    "gate1_rule": "lower 95% endpoint > 0, STRICT",
+    "m1_ci95": [-0.004393654819785108, 0.004070231647759436],
+    "m1_point": 2.419333459351149e-05,
+    "m1_result": "FAIL",
+    "m2_ci95": [-0.5276044314083963, 0.5470640069119694],
+    "m2_point": 0.0030560730180045743,
+    "m2_result": "FAIL",
+    "m2_target": 0.3,
+    "mapped_instrument_n": 15,
+    "per_instrument_return_diagnostics_run": false,
+    "per_leg_return_diagnostics_run": false,
+    "post_outcome_tuning": false,
+    "primary_return_trial_spent": true,
+    "rescue_analysis_performed": false,
+    "result_artifact": "research/extensions/mmv/s3/MMV_S3_RESULT.json",
+    "result_artifact_sha256": "70fc6f91ddcc9ce4888c76c4016d32684c8c273c9d9348754814a5860c306a5e",
+    "result_record": "research/extensions/mmv/MMV_S3_RESULT.md",
+    "result_record_sha256": "4ae4ad2a43345d86639a8f9a0b282c46d3c8af0f500fa72be612c1134b0d4d3f",
+    "return_outcome_accessed": true,
+    "reveal_count": 1,
+    "rng_seed": 1963028087,
+    "run_count": 1,
+    "run_driver_commit": "93d9a4768a387d1fd1ffe30deba1c24dffeb9206",
+    "second_run_performed": false,
+    "terminal_class": "D",
+    "evidence_ceiling": "supported",
+    "failure_type": "NONE",
+    "programme_status": "UNRESOLVED / LOW_POWER"
+  },
+  "reason": "the one governed primary historical return run MMV-S3-20260917-01 completed and durably wrote its result artifact; consumption is permanent",
+  "record_type": "LIFECYCLE",
+  "run_id": "MMV-S3-20260917-01",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  }
+}
+```
