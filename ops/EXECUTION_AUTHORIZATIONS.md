@@ -830,3 +830,98 @@ on mismatch.
   }
 }
 ```
+
+### MMV-AUTH-0003 — CTA-EDGE-04-MMV primary-sample CORRECTION (MMV-OD-8)
+
+ONE bounded correction of the **same** primary trial. The scope is `ONE_SHOT`: a
+single invocation of `research/extensions/mmv/mmv_s3_repair_run.py --execute`
+under `run_id` `MMV-S3-REPAIR-20260917-01`. Once that run durably writes its
+result artifact the authorization is CONSUMED and can never authorize another
+repair, another `run_id`, or a retry.
+
+**This is NOT a new research trial, NOT independent evidence and NOT a
+redesign.** `TRIAL_COUNT_INCREMENT = 0`. `F-MMV` stays at `m = 1`. The parent
+grant `MMV-AUTH-0002` remains CONSUMED and the parent artifacts are preserved
+unmodified for provenance.
+
+**MMV-OD-8 = `B_EXCLUDE`**, adopted by the programme controller. Its authority
+is **pre-existing**, not new: `research/extensions/LOCKBOX_PROCEDURE.md` §2.1 was
+written **2026-09-08**, nine days before the MMV seal of 2026-09-17. It verifies
+the frozen ETF panel's boundary at `2026-06-12` and states that the June 2026
+monthly row is *"a complete label over an incomplete period"*. Its rule gives an
+evaluation two paths: **(a)** truncate the terminal monthly row and state so, or
+**(b)** declare in its preregistration that a partial terminal month is included
+and why. The sealed MMV contract records the boundary in §P and **never
+exercises (b)**, so **(a) binds**. The parent run included the row and stated
+that it had, which is neither path. `NEW_SCIENTIFIC_CHOICE = NO`.
+
+**The decision grid is NOT altered.** The 218 canonical MMV decision dates stand,
+`2026-06-30` remains a valid decision-state date, and **Gate 0.5 is neither
+rerun nor reinterpreted** — it compares decision-date position states and never
+requires the following month to be a complete return observation.
+
+`rng_seed`, `B`, the execution convention, the wrapper, the cost model, the
+entry-trade treatment, the bootstrap implementation and the sealed classification
+are all **unchanged from the parent run**. The only permitted difference is the
+exclusion of the terminal primary return row labelled `2026-06-30`.
+
+```json
+{
+  "authority": "OWNER/CONTROLLER DECISION relayed by Aaron in session as the CTA-EDGE-04-MMV S3 PRIMARY-SAMPLE CORRECTION brief, accepting MMV-OD-8 = B_EXCLUDE",
+  "authorization_id": "MMV-AUTH-0003",
+  "authorized_utc": "2026-09-17T00:00:00Z",
+  "binding": {
+    "bootstrap_b": 10000,
+    "bootstrap_boundary_semantics": "a calendar year is ONE block whatever its month count; the 2026 block simply loses its terminal month and is drawn as a 5-month block. This is the same rule that already produced a 4-month 2008 block in the parent run, and it is the established programme implementation in research/extensions/benb/benb_inference.py::year_block_bootstrap, which groups by year over all observations and resamples len(years) indices. Contract section J's 'resample COMPLETE calendar years' names the resampling UNIT - a whole year rather than the monthly IID draw section J forbids - and is not a filter on which years qualify.",
+    "classification": "the sealed contract section K first-match classification, applied FROM SCRATCH; the parent's terminal class is NOT carried forward",
+    "execution_convention_unchanged": true,
+    "lineage": "CTA-EDGE-04-MMV",
+    "lockbox_authority": "research/extensions/LOCKBOX_PROCEDURE.md section 2.1, written 2026-09-08, pre-existing at the 2026-09-17 seal; frozen boundary 2026-06-12 VERIFIED from bytes; panel sha256 3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31",
+    "m": 1,
+    "mmv_od_8": "B_EXCLUDE",
+    "new_scientific_choice": false,
+    "parent_authorization": "MMV-AUTH-0002",
+    "parent_decisional_status": "NONDECISIONAL",
+    "parent_record_sha256": "4ae4ad2a43345d86639a8f9a0b282c46d3c8af0f500fa72be612c1134b0d4d3f",
+    "parent_result_commit": "e9c132b4297f0b39d301bc7ae70c8cdf9efbb54a",
+    "parent_result_sha256": "70fc6f91ddcc9ce4888c76c4016d32684c8c273c9d9348754814a5860c306a5e",
+    "parent_result_status": "INVALID_PRIMARY_SAMPLE",
+    "parent_run": "MMV-S3-20260917-01",
+    "permitted_code_difference": "ONLY the exclusion of the terminal primary return row labelled 2026-06-30, because its underlying data terminate on 2026-06-12. Supporting changes limited to correction-authorization handling, provenance/status writing, the explicit terminal-completeness assertion, and repair-specific guards. Any other outcome-affecting difference is a STOP.",
+    "permitted_operation": "exactly ONE invocation of research/extensions/mmv/mmv_s3_repair_run.py --execute",
+    "preflight": "research/extensions/mmv/mmv_s3_repair_run.py --preflight runs the authorization, diff audit, signal, structural and terminal-completeness phases only, produces no repaired statistic and consumes NOTHING; it is repeatable",
+    "prohibited": [
+      "a second repair run, an alternate run_id, a retry, or a silent re-execution after a technical failure",
+      "deleting, overwriting or rewriting the parent result artifacts, which are preserved immutably for provenance",
+      "altering the 218-date MMV decision grid",
+      "rerunning, recomputing or reinterpreting Gate 0.5, whose accepted result 1313/3270 = 40.152905 % PASS stands unchanged",
+      "carrying the parent's terminal class forward instead of classifying from scratch",
+      "any sample eligibility change beyond the one terminal row",
+      "per-ETF returns, per-leg returns, alternative sample endpoints, the first-release diagnostic, drawdown, hit rate, yearly rankings, rolling Sharpe, alternative costs, an alternate bootstrap, or any rescue analysis",
+      "representing the parent and repaired outcomes as independent evidence",
+      "incrementing the trial count, or creating m = 2",
+      "promotion, falsification, portfolio integration or any S4 action"
+    ],
+    "rng_seed": 1963028087,
+    "rng_seed_unchanged_from_parent": true,
+    "run_driver_commit": "cd41614781b4d56b1bf6c33f01ef86a95b8bfa5b",
+    "run_id": "MMV-S3-REPAIR-20260917-01",
+    "run_type": "PRIMARY_TRIAL_CORRECTION",
+    "s1_seal_manifest_sha256": "75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+    "sealed_prereg_sha256": "4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225",
+    "stop_rule": "if execution fails before a repaired result is produced: STOP and report the technical failure; do not silently retry",
+    "trial_count_increment": 0,
+    "trial_family": "F-MMV"
+  },
+  "grant_kind": "EXECUTION",
+  "lineage": "CTA-EDGE-04-MMV",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "mmv-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_PRIMARY_TRIAL_CORRECTION",
+  "status": "AUTHORIZED"
+}
+```
