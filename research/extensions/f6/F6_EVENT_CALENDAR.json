@@ -1,0 +1,3255 @@
+{
+ "cpi": {
+  "authority": "TA_MACRO_CALENDAR.csv (BLS annual schedules)",
+  "count_in_window": 185
+ },
+ "design_matrix": {
+  "auction_days": 373,
+  "auction_definition": {
+   "source": "TA_EVENT_CALENDAR.csv",
+   "tenors": [
+    "10-Year",
+    "30-Year"
+   ]
+  },
+  "columns": [
+   "const",
+   "weekday_Monday",
+   "weekday_Thursday",
+   "weekday_Tuesday",
+   "weekday_Wednesday",
+   "EVENT",
+   "TOM",
+   "HOLD",
+   "AUCTION"
+  ],
+  "event_days": 482,
+  "event_in_span_of_controls": false,
+  "full_rank": true,
+  "hold_distribution": {
+   "1.0": 3038,
+   "2.0": 40,
+   "3.0": 700,
+   "4.0": 104,
+   "5.0": 1
+  },
+  "rank": 9,
+  "rows": 3883,
+  "shape": [
+   3883,
+   9
+  ],
+  "tom_days": 743,
+  "tom_definition": {
+   "first": 3,
+   "last": 1,
+   "source": "src/seasonality.py::is_tom (sealed)"
+  }
+ },
+ "dgs3mo": {
+  "authority": "FRED DGS3MO, Board of Governors via the H.15 Selected Interest Rates release",
+  "day_basis": "NOT ESTABLISHED FROM SOURCE. H.15 does not state a day-count for constant-maturity yields and defers to Treasury yield-curve methodology; its 360-day footnote applies to other instruments. The /365 simple-accrual assumption is NOT confirmed by source and is flagged rather than adopted.",
+  "forward_fill": "mechanically valid - last available value uses only PAST observations, so it introduces no lookahead - but it inherits the 16:15 publication-lag finding above.",
+  "holidays": "H.15 is not posted on holidays or when the Board is closed; 167 of 4030 in-window rows are missing.",
+  "publication_timing": "H.15 is posted daily Monday-Friday at 4:15 p.m. ET, which is AFTER the 16:00 NYSE close. DGS3MO(d) is therefore NOT knowable at close(d).",
+  "quotation_basis": "INVESTMENT (coupon-equivalent) basis, NOT a discount basis",
+  "title": "Market Yield on U.S. Treasury Securities at 3-Month Constant Maturity, Quoted on an Investment Basis",
+  "units": "Percent, Not Seasonally Adjusted; daily"
+ },
+ "event_sessions": [
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-01-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-01-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-01-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-02-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-02-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-03-04"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-03-15"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-03-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-04-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-04-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-04-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-05-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-05-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-06-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-06-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-06-22"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-07-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-07-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-08-05"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-08-09"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-08-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-09-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-09-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-09-21"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-10-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-10-19"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-11-02"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-11-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-11-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2011-12-02"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2011-12-13"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2011-12-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-01-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-01-19"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-01-25"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-02-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-02-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-03-09"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-03-13"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-03-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-04-09"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-04-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-04-25"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-05-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-05-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-06-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-06-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-06-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-07-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-07-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-08-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-08-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-08-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-09-07"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-09-13"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-09-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-10-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-10-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-10-24"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-11-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-11-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2012-12-07"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2012-12-12"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2012-12-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-01-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-01-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-01-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-02-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-02-21"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-03-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-03-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-03-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-04-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-04-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-05-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-05-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-05-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-06-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-06-18"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-06-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-07-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-07-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-07-31"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-08-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-08-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-09-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-09-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-09-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-10-22"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2013-10-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-11-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-11-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2013-12-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2013-12-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2013-12-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-01-10"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-01-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-01-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-02-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-02-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-03-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-03-18"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-03-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-04-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-04-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-04-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-05-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-05-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-06-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-06-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-06-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-07-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-07-22"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-07-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-08-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-08-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-09-05"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2014-09-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-10-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-10-22"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2014-10-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-11-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2014-11-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2014-12-05"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2014-12-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-01-09"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-01-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-01-28"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-02-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-02-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-03-06"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-03-18"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-03-24"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-04-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-04-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-04-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-05-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-05-22"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-06-05"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-06-17"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-06-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-07-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-07-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-07-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-08-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-08-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-09-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-09-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-09-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-10-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-10-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-10-28"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-11-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-11-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2015-12-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2015-12-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2015-12-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-01-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-01-20"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-01-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-02-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-02-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-03-04"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2016-03-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-04-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-04-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-04-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-05-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-05-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-06-03"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-06-15"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-06-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-07-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-07-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-07-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-08-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-08-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-09-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-09-16"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-09-21"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-10-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-10-18"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-11-02"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-11-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-11-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2016-12-02"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2016-12-14"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2016-12-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-01-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-01-18"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2017-02-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-02-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-02-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-03-10"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2017-03-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-04-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-04-17"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2017-05-03"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-05-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-05-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-06-02"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2017-06-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-07-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-07-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2017-07-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-08-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-08-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-09-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-09-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2017-09-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-10-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-10-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2017-11-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-11-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2017-11-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2017-12-08"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2017-12-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-01-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-01-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-01-31"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-02-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-02-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-03-09"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-03-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-03-21"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-04-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-04-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-05-02"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-05-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-05-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-06-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-06-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-06-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-07-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-07-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-08-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-08-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-08-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-09-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-09-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-09-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-10-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-10-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-11-02"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-11-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-11-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2018-12-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2018-12-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2018-12-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-01-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-01-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-01-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-02-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-02-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-03-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-03-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-03-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-04-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-04-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-05-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-05-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-05-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-06-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-06-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-06-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-07-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-07-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-07-31"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-08-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-08-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-09-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-09-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-09-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-10-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-10-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2019-10-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-11-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2019-11-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2019-12-06"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2019-12-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-01-10"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-01-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-01-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-02-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-02-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-03-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-03-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-04-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-04-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-04-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-05-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-05-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-06-05"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2020-06-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-07-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-07-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-07-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-08-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-08-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-09-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-09-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-09-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-10-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-10-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-11-05"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-11-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-11-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2020-12-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2020-12-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2020-12-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-01-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-01-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-01-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-02-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-02-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-03-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-03-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-03-17"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-04-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-04-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-04-28"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-05-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-05-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-06-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-06-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-06-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-07-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-07-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-07-28"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-08-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-08-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-09-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-09-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-09-22"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-10-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-10-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-11-03"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-11-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-11-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2021-12-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2021-12-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2021-12-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-01-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-01-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-01-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-02-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-02-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-03-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-03-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-03-16"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-04-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-04-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-05-04"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-05-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-05-11"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-06-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-06-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-06-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-07-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-07-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-07-27"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-08-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-08-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-09-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-09-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-09-21"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-10-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-10-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-11-02"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-11-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-11-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2022-12-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2022-12-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2022-12-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-01-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-01-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-02-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-02-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-02-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-03-10"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-03-14"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-03-22"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-04-10"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-04-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-05-03"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-05-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-05-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-06-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-06-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-06-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-07-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-07-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-07-26"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-08-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-08-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-09-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-09-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-09-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-10-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-10-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-11-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-11-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-11-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2023-12-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2023-12-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2023-12-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-01-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-01-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-01-31"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-02-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-02-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-03-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-03-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-03-20"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-04-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-04-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-05-01"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-05-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-05-15"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-06-07"
+  },
+  {
+   "families": [
+    "CPI",
+    "FOMC"
+   ],
+   "session": "2024-06-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-07-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-07-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-07-31"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-08-02"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-08-14"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-09-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-09-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-09-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-10-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-10-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-11-01"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-11-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-11-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2024-12-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2024-12-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2024-12-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-01-10"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-01-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-01-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-02-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-02-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-03-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-03-12"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-03-19"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-04-04"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-04-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-05-02"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-05-07"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-05-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-06-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-06-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-06-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-07-03"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-07-15"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-07-30"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-08-01"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-08-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-09-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-09-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-09-17"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-10-24"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-10-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-11-20"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2025-12-10"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2025-12-16"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2025-12-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-01-09"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-01-13"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2026-01-28"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-02-11"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-02-13"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-03-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-03-11"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2026-03-18"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-04-06"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-04-10"
+  },
+  {
+   "families": [
+    "FOMC"
+   ],
+   "session": "2026-04-29"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-05-08"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-05-12"
+  },
+  {
+   "families": [
+    "NFP"
+   ],
+   "session": "2026-06-05"
+  },
+  {
+   "families": [
+    "CPI"
+   ],
+   "session": "2026-06-10"
+  }
+ ],
+ "family_label_counts": {
+  "CPI": 185,
+  "FOMC": 122,
+  "NFP": 185
+ },
+ "firewall": {
+  "beta_event_computed": false,
+  "f6b_computed": false,
+  "loyo_performance_computed": false,
+  "panel_opened_for_date_index_only": true,
+  "sharpe_computed": false,
+  "spy_return_computed": false,
+  "surprise_data_used": false,
+  "tlt_accessed": false
+ },
+ "fomc": {
+  "authority": "Federal Reserve own meeting calendars via mmv_policy_schedule_freeze.scheduled_meeting_end_dates()",
+  "notation_vote_note": "the reused scheduled_meeting_end_dates() treats a NOTATION VOTE as a scheduled meeting end. 2025-08-22 is the Statement on Longer-Run Goals and Monetary Policy Strategy, not a meeting policy statement. Verified against the Fed fomccalendars page, which lists exactly 8 scheduled 2025 meetings. The authority lacks a notation-vote filter; this is why FOMC is HOLD.",
+  "notation_votes_excluded": [
+   "2025-08-22"
+  ],
+  "scheduled_in_window": 122,
+  "sources": [
+   {
+    "sha256": "899151e491b8e671ac6c66f01907c61cc3ddca04fe4ef8f22e0b4634bc10d323",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2006.htm"
+   },
+   {
+    "sha256": "10273507189838280acb99705af23e2f7438e5426169dc2d1f0d8c914e65fe31",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2007.htm"
+   },
+   {
+    "sha256": "d1c7a939ab639e92b95a9350320a8e6aac2600f115eb8710dfcaa9e03226c9ec",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2008.htm"
+   },
+   {
+    "sha256": "30601c7a2a60134db3c27216122dc7e6e0c77269754861d22e0e901d058a3b9c",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2009.htm"
+   },
+   {
+    "sha256": "5b46299ba81bf5b8d5bd6d70bda18c3e9dd7d2e1b2b5aab27e1106cb3bab6ca9",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2010.htm"
+   },
+   {
+    "sha256": "477c81ecfd2160665267a7c3c57bba0656aced41bbaa472ac2ab57d8770c7e2b",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2011.htm"
+   },
+   {
+    "sha256": "a5e7c33415cba147712d5c14c03dc081741f867f4ca0314d2693d0061b5480f5",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2012.htm"
+   },
+   {
+    "sha256": "4a18e3afaf5b5c4518d83d80291156a170cdb1e1154f95aa40c7f20a7324090e",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2013.htm"
+   },
+   {
+    "sha256": "9e526baf534b595580163bf5feac56af232301c323c1f4d343af02ba09850108",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2014.htm"
+   },
+   {
+    "sha256": "25bcbd03a69292e548c304c7de7142d58c7aacff8a8eb53e9b993a375645f564",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2015.htm"
+   },
+   {
+    "sha256": "56a7f22dd36744f677fe0b802058e3eff0c93348fe355f024f6f9aee216db32d",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2016.htm"
+   },
+   {
+    "sha256": "636d32b85b4b3ae21edb34dc67b0baaf16c6e0b8219eedb65a2b9e94aab15dc5",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2017.htm"
+   },
+   {
+    "sha256": "286975151ecccf7308a7cb5f81e34b9ed0da738f2fd21686466a1e51b4b3f964",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2018.htm"
+   },
+   {
+    "sha256": "2aa5cdacdbedc18d380154007bce5c87a37d0eb1daf6d132ed8555a5c2df6b97",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2019.htm"
+   },
+   {
+    "sha256": "423e6dd9adf4e620e89272a6ea13b7e7181a17ba2739116382cc2ed3167aa886",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomchistorical2020.htm"
+   },
+   {
+    "sha256": "6d7f6371212dc5831919e71b1ad6bb5feac474d55937804c488f698ce18d29a1",
+    "url": "https://www.federalreserve.gov/monetarypolicy/fomccalendars.htm"
+   }
+  ],
+  "ta_calendar_crosscheck": {
+   "fed_scheduled_but_not_in_ta": [],
+   "in_ta_but_not_fed_scheduled": [
+    "2019-10-11",
+    "2020-03-03",
+    "2020-03-15",
+    "2020-03-23"
+   ],
+   "ta_rows_in_window": 126
+  },
+  "unscheduled_in_window_EXCLUDED": [
+   "2011-08-01",
+   "2011-11-28",
+   "2020-03-02",
+   "2020-03-15"
+  ]
+ },
+ "generated": "2026-09-20",
+ "nfp": {
+  "authority": "TA_MACRO_CALENDAR.csv (BLS annual schedules)",
+  "count_in_window": 185
+ },
+ "schedule_exceptions": {
+  "blocking_gap": "TA_MACRO_CALENDAR records ACTUAL release dates and carries NO field marking a date as originally-scheduled vs postponed, and no field for WHEN a postponement was announced. The frozen rule section 4 test - was the postponement known before close(t-1)? - therefore CANNOT be evaluated from the pinned authority alone. This is a named HOLD reason for CPI and NFP.",
+  "interpretation": "2013-10-22 is the October 2013 federal-shutdown postponement of the September employment report. The July Thursday releases are routine pre-Independence-Day scheduling. The 2025-10 NFP and 2025-11 CPI absences plus the late 2025-11-20 and 2025-12-16 NFP dates are consistent with a 2025 shutdown suspension. NONE of this is asserted as a cause; it is recorded as an exception requiring a BLS schedule document to classify.",
+  "method": "heuristic CROSS-CHECKS that raise exceptions, never used as authority (frozen rule section 1)",
+  "months_with_no_cpi_release": [
+   "2025-11"
+  ],
+  "months_with_no_nfp_release": [
+   "2025-10"
+  ],
+  "nfp_later_than_12th": [
+   "2013-10-22",
+   "2025-11-20",
+   "2025-12-16"
+  ],
+  "nfp_not_on_friday": [
+   "2013-10-22",
+   "2014-07-03",
+   "2015-07-02",
+   "2020-07-02",
+   "2025-07-03",
+   "2025-11-20",
+   "2025-12-16",
+   "2026-02-11"
+  ]
+ },
+ "schema": {
+  "name": "f6-event-schedule-metadata",
+  "version": 1
+ },
+ "session_mapping": {
+  "event_sessions": 482,
+  "first_event_session": "2011-01-07",
+  "last_event_session": "2026-06-10",
+  "multi_event_sessions": {
+   "2013-10-30": [
+    "CPI",
+    "FOMC"
+   ],
+   "2014-09-17": [
+    "CPI",
+    "FOMC"
+   ],
+   "2014-12-17": [
+    "CPI",
+    "FOMC"
+   ],
+   "2016-03-16": [
+    "CPI",
+    "FOMC"
+   ],
+   "2017-03-15": [
+    "CPI",
+    "FOMC"
+   ],
+   "2017-06-14": [
+    "CPI",
+    "FOMC"
+   ],
+   "2017-12-13": [
+    "CPI",
+    "FOMC"
+   ],
+   "2019-12-11": [
+    "CPI",
+    "FOMC"
+   ],
+   "2020-06-10": [
+    "CPI",
+    "FOMC"
+   ],
+   "2024-06-12": [
+    "CPI",
+    "FOMC"
+   ]
+  },
+  "releases_on_non_trading_day_mapped_forward": {
+   "CPI": [
+    [
+     "2017-04-14",
+     "2017-04-17"
+    ],
+    [
+     "2020-04-10",
+     "2020-04-13"
+    ]
+   ],
+   "FOMC": [],
+   "NFP": [
+    [
+     "2012-04-06",
+     "2012-04-09"
+    ],
+    [
+     "2015-04-03",
+     "2015-04-06"
+    ],
+    [
+     "2021-04-02",
+     "2021-04-05"
+    ],
+    [
+     "2023-04-07",
+     "2023-04-10"
+    ],
+    [
+     "2026-04-03",
+     "2026-04-06"
+    ]
+   ]
+  },
+  "session_calendar": "data/close_prices_raw.csv index"
+ },
+ "spy_metadata": {
+  "adjusted_close_limitation": "the panel is a single vendor (yfinance) ADJUSTED-close matrix with no separate raw/adjusted columns. Adjusted-close status is ACCEPTABLE_WITH_LIMITATION and is NOT proven perfect point-in-time, carried forward unchanged from the existing repository position.",
+  "event_sessions": 482,
+  "span": "1993-01-29 .. 2026-06-12",
+  "with_close_t": 482,
+  "with_close_t_minus_1": 482
+ },
+ "window": {
+  "hard_end": "2026-06-12",
+  "primary_start_rule": "first eligible event day on or after 2011-01-01",
+  "requested_lo": "2011-01-01"
+ },
+ "year_blocks": {
+  "count": 16,
+  "events_per_year": {
+   "2011": 32,
+   "2012": 32,
+   "2013": 31,
+   "2014": 30,
+   "2015": 32,
+   "2016": 31,
+   "2017": 29,
+   "2018": 32,
+   "2019": 31,
+   "2020": 30,
+   "2021": 32,
+   "2022": 32,
+   "2023": 32,
+   "2024": 31,
+   "2025": 30,
+   "2026": 15
+  },
+  "loyo_remaining_events": {
+   "2011": 450,
+   "2012": 450,
+   "2013": 451,
+   "2014": 452,
+   "2015": 450,
+   "2016": 451,
+   "2017": 453,
+   "2018": 450,
+   "2019": 451,
+   "2020": 452,
+   "2021": 450,
+   "2022": 450,
+   "2023": 450,
+   "2024": 451,
+   "2025": 452,
+   "2026": 467
+  },
+  "years": [
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025,
+   2026
+  ]
+ }
+}
