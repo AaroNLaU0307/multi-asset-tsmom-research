@@ -46,16 +46,6 @@
    "source": "src/seasonality.py::is_tom (sealed)"
   }
  },
- "dgs3mo": {
-  "authority": "FRED DGS3MO, Board of Governors via the H.15 Selected Interest Rates release",
-  "day_basis": "NOT ESTABLISHED FROM SOURCE. H.15 does not state a day-count for constant-maturity yields and defers to Treasury yield-curve methodology; its 360-day footnote applies to other instruments. The /365 simple-accrual assumption is NOT confirmed by source and is flagged rather than adopted.",
-  "forward_fill": "mechanically valid - last available value uses only PAST observations, so it introduces no lookahead - but it inherits the 16:15 publication-lag finding above.",
-  "holidays": "H.15 is not posted on holidays or when the Board is closed; 167 of 4030 in-window rows are missing.",
-  "publication_timing": "H.15 is posted daily Monday-Friday at 4:15 p.m. ET, which is AFTER the 16:00 NYSE close. DGS3MO(d) is therefore NOT knowable at close(d).",
-  "quotation_basis": "INVESTMENT (coupon-equivalent) basis, NOT a discount basis",
-  "title": "Market Yield on U.S. Treasury Securities at 3-Month Constant Maturity, Quoted on an Investment Basis",
-  "units": "Percent, Not Seasonally Adjusted; daily"
- },
  "event_sessions": [
   {
    "families": [
@@ -2979,8 +2969,21 @@
   "authority": "Federal Reserve own meeting calendars via mmv_policy_schedule_freeze.scheduled_meeting_end_dates()",
   "notation_vote_note": "the reused scheduled_meeting_end_dates() treats a NOTATION VOTE as a scheduled meeting end. 2025-08-22 is the Statement on Longer-Run Goals and Monetary Policy Strategy, not a meeting policy statement. Verified against the Fed fomccalendars page, which lists exactly 8 scheduled 2025 meetings. The authority lacks a notation-vote filter; this is why FOMC is HOLD.",
   "notation_votes_excluded": [
+   "2020-03-18",
+   "2020-03-19",
+   "2020-03-23",
+   "2020-03-31",
+   "2020-08-27",
    "2025-08-22"
   ],
+  "rejected_by_fed_annotation": {
+   "2020-03-18": "annotation:cancel",
+   "2020-03-19": "annotation:notation",
+   "2020-03-23": "annotation:notation",
+   "2020-03-31": "annotation:notation",
+   "2020-08-27": "annotation:notation",
+   "2025-08-22": "annotation:notation"
+  },
   "scheduled_in_window": 122,
   "sources": [
    {
@@ -3070,32 +3073,6 @@
   "authority": "TA_MACRO_CALENDAR.csv (BLS annual schedules)",
   "count_in_window": 185
  },
- "schedule_exceptions": {
-  "blocking_gap": "TA_MACRO_CALENDAR records ACTUAL release dates and carries NO field marking a date as originally-scheduled vs postponed, and no field for WHEN a postponement was announced. The frozen rule section 4 test - was the postponement known before close(t-1)? - therefore CANNOT be evaluated from the pinned authority alone. This is a named HOLD reason for CPI and NFP.",
-  "interpretation": "2013-10-22 is the October 2013 federal-shutdown postponement of the September employment report. The July Thursday releases are routine pre-Independence-Day scheduling. The 2025-10 NFP and 2025-11 CPI absences plus the late 2025-11-20 and 2025-12-16 NFP dates are consistent with a 2025 shutdown suspension. NONE of this is asserted as a cause; it is recorded as an exception requiring a BLS schedule document to classify.",
-  "method": "heuristic CROSS-CHECKS that raise exceptions, never used as authority (frozen rule section 1)",
-  "months_with_no_cpi_release": [
-   "2025-11"
-  ],
-  "months_with_no_nfp_release": [
-   "2025-10"
-  ],
-  "nfp_later_than_12th": [
-   "2013-10-22",
-   "2025-11-20",
-   "2025-12-16"
-  ],
-  "nfp_not_on_friday": [
-   "2013-10-22",
-   "2014-07-03",
-   "2015-07-02",
-   "2020-07-02",
-   "2025-07-03",
-   "2025-11-20",
-   "2025-12-16",
-   "2026-02-11"
-  ]
- },
  "schema": {
   "name": "f6-event-schedule-metadata",
   "version": 1
@@ -3182,13 +3159,6 @@
    ]
   },
   "session_calendar": "data/close_prices_raw.csv index"
- },
- "spy_metadata": {
-  "adjusted_close_limitation": "the panel is a single vendor (yfinance) ADJUSTED-close matrix with no separate raw/adjusted columns. Adjusted-close status is ACCEPTABLE_WITH_LIMITATION and is NOT proven perfect point-in-time, carried forward unchanged from the existing repository position.",
-  "event_sessions": 482,
-  "span": "1993-01-29 .. 2026-06-12",
-  "with_close_t": 482,
-  "with_close_t_minus_1": 482
  },
  "window": {
   "hard_end": "2026-06-12",

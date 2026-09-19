@@ -16,6 +16,27 @@ TASK_STATUS             = HOLD
 EVENT_SCHEDULE_PIT_GATE = HOLD
 ```
 
+> **CORRECTED IN PART — 2026-09-20. Appended; nothing below is edited.**
+> Two errors in THIS document are corrected in
+> [`F6_S0_REPAIR_RECORD.md`](F6_S0_REPAIR_RECORD.md), sha256 `feebb831d42a7f7a51012b43fd03104e62f7482d5ee329f99d4bc258d3330b96`:
+>
+> * **§6's cross-tabs and §7's LOYO counts were transcribed from the
+>   PRE-exclusion run** and sum to 483, not 482. The differing date is
+>   2025-08-22, a Friday — the notation vote this document itself excludes.
+>   Corrected weekday cells are **204**+164+56+51+7 = 482; TOM 400+82; AUCTION
+>   409+73; LOYO 450..467. The machine artifact was never wrong.
+> * **§3's claim that the two authorities “agree exactly”, with TA's four
+>   extras being “precisely unscheduled actions”, is WITHDRAWN as imprecise.**
+>   The Fed-parser unscheduled set and TA's extra set share only ONE member
+>   (2020-03-15); they are keyed to meeting dates versus statement-release
+>   dates over different universes. The accurate claim is that every TA extra
+>   is a NON-SCHEDULED statement release.
+>
+> The hard-coded 2025-08-22 exclusion is also replaced by a general,
+> source-based filter (`f6_fomc_filter.py`) that needs no count heuristic.
+> All headline counts in this document — 482 / 122 / 185 / 185 / 10 — remain
+> correct.
+
 HOLD, not PARK: all three families' event lists **can** be formed from source,
 the scheduled-before-entry test **is** satisfiable in principle, and the fixed
 control model is **full rank**. Each family carries a named, repairable metadata
