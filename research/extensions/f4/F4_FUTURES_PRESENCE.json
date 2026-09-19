@@ -1,0 +1,237 @@
+{
+ "corpus": {
+  "definition_files": 5031,
+  "definition_span": [
+   "2010-06-06",
+   "2026-06-30"
+  ],
+  "expiration_field_present_in_all_scanned": true
+ },
+ "f4_load_bearing_roots": [
+  "CL",
+  "HO",
+  "RB",
+  "NG",
+  "ZC",
+  "ZS",
+  "ZW",
+  "KE",
+  "ZM",
+  "ZL"
+ ],
+ "firewall": {
+  "basis_computed": false,
+  "ohlcv_opened": false,
+  "price_values_read": false,
+  "settlement_values_read": false,
+  "trend_return_computed": false
+ },
+ "generated": "2026-09-19",
+ "method": "stride scan every 21 definition files, then exact binary search of the first/last appearance per root",
+ "requested_roots_18": [
+  "CL",
+  "HO",
+  "RB",
+  "NG",
+  "GC",
+  "SI",
+  "HG",
+  "PL",
+  "PA",
+  "ZC",
+  "ZS",
+  "ZW",
+  "ZM",
+  "ZL",
+  "KE",
+  "LE",
+  "HE",
+  "GF"
+ ],
+ "roots": [
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "CL",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "HO",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "RB",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "NG",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "GC",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "SI",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "HG",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "PL",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "PA",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "ZC",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "ZS",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "ZW",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "ZM",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "ZL",
+   "stride_observations": 241
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2013-12-15",
+   "f4_load_bearing": true,
+   "present": true,
+   "requested": true,
+   "root": "KE",
+   "stride_observations": 188
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "LE",
+   "stride_observations": 240
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "HE",
+   "stride_observations": 240
+  },
+  {
+   "coverage_end": "2026-06-30",
+   "coverage_start": "2010-06-06",
+   "f4_load_bearing": false,
+   "present": true,
+   "requested": true,
+   "root": "GF",
+   "stride_observations": 240
+  }
+ ],
+ "schema": {
+  "name": "f4-futures-root-presence",
+  "version": 1
+ },
+ "settlement": {
+  "note": "stat_type codes only; NO settlement PRICE value was read",
+  "probe_file": "glbx-mdp3-20180621.statistics.dbn.zst",
+  "settlement_stat_type_3_present": true,
+  "stat_type_codes_present": [
+   1,
+   2,
+   3,
+   4,
+   5,
+   6,
+   7,
+   8,
+   9,
+   10
+  ],
+  "statistics_files": 5026
+ }
+}

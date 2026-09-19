@@ -15,6 +15,28 @@ TASK_STATUS                = HOLD
 LOAD_BEARING_F4_PIT_GATE   = HOLD
 ```
 
+> **SUPERSEDED IN PART — 2026-09-19. Appended; nothing below is edited.**
+> The frozen sample has since been executed. See
+> [`F4_FROZEN_SAMPLE_EXECUTION.md`](F4_FROZEN_SAMPLE_EXECUTION.md). Three
+> findings below are now known to be wrong or incomplete, and are corrected
+> there rather than rewritten here:
+>
+> * **Natural gas is class B, not D.** The revisions file is not a sparse
+>   revision log — it is a COMPLETE consecutive weekly series of originally
+>   published values, 565 weeks with zero gaps and zero duplicates, so first
+>   publication needs no inversion and no judgment.
+> * **The originals start 2015-06-19**, not “November 2015”; the November 2015
+>   date is when EIA began releasing the file, and it back-fills to June.
+> * **A NEW blocker was found that this report did not anticipate:** EIA's
+>   published same-week five-year reference for natural gas is NOT
+>   reconstructible as-of any release, in any era, because the revisions file
+>   carries no revision DATE. `NG_REFERENCE_PIT = E`.
+>
+> Also superseded: the WASDE archive starts **1973-09**, not December 1973,
+> per direct enumeration of the archive's own date facet; and the petroleum
+> five-year reference wording exists only from ~2018-08 — earlier vintages
+> publish a different, banded “average range” object.
+
 **HOLD, not PARK, and not PASS.** No load-bearing series is proven unreconstructible, so
 there is no blocker that would trigger the controller's PARK rule. Equally, no family is
 fully established, so nothing passes. The specific reason is named per series below.
