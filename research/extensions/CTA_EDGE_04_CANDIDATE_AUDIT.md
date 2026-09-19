@@ -17,6 +17,8 @@ HISTORICAL_OUTCOME_ACCESSED = NO   BACKTEST_RUN = NO   NEW_LINEAGE_OPENED = NO
 >
 > **F4 `INVENTORY_STATE_COMMODITY_CURVE` is the next candidate for PRE-S0 review. F4 S0 is NOT AUTHORIZED** — no lineage is opened by that note or by the F7 disposition.
 
+> **UPDATED 2026-09-19 — F4 IS NOW PARKED PRE-OUTCOME.** The note above records the state on 2026-09-18 and is retained unedited. F4 went through PRE-S0 review and an S0 **data-PIT feasibility audit**, which executed successfully and returned **`PARKED_PRE_OUTCOME`**, reason `LOAD_BEARING_NG_STATE_NOT_PIT_RECONSTRUCTIBLE`: EIA publishes no per-release vintage of the natural-gas same-week historical comparison and its revisions file carries no revision-date field, so the load-bearing NG inventory STATE cannot be reconstructed under the accepted F4 definition. **This is not a falsification of F4, of storage theory or of trend conditionality** — no F4 outcome was ever exposed and no primary trial was consumed. **`CTA-EDGE-05` is UNASSIGNED** after the park, and no next candidate is selected here. Record: [`f4/F4_PREOUTCOME_PARK_CLOSEOUT.md`](f4/F4_PREOUTCOME_PARK_CLOSEOUT.md).
+
 ---
 
 ## §1 Discovery authorities — located, not reconstructed

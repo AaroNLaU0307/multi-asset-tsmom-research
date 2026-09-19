@@ -15,6 +15,24 @@ TASK_STATUS              = HOLD
 LOAD_BEARING_F4_PIT_GATE = HOLD
 ```
 
+> **DISPOSITION CORRECTED TO PARK — 2026-09-19. Appended; nothing below is edited.**
+> This report's `HOLD` is **superseded**. Controller review corrected the
+> disposition to **`PARKED_PRE_OUTCOME`**, reason
+> `LOAD_BEARING_NG_STATE_NOT_PIT_RECONSTRUCTIBLE`.
+>
+> The reasoning that produced `HOLD` was too narrow: it classified each
+> series by whether its LEVEL could be recovered and treated the missing
+> natural-gas reference as an open question. But F4's inventory STATE is
+> working-gas storage **relative to** the source-defined same-week
+> comparison, and `NG_REFERENCE_PIT = E` means that state cannot be built in
+> any era. A level without its reference is not the state, ENERGY is
+> load-bearing, and NG may not be silently dropped.
+>
+> **Every finding below stands.** No F4 outcome was exposed, no primary trial
+> was consumed, and nothing here is evidence about F4's claim. See
+> [`F4_PREOUTCOME_PARK_CLOSEOUT.md`](F4_PREOUTCOME_PARK_CLOSEOUT.md), sha256
+> `a7c62762f61d751f6fe6fa7cb5b642090bb6f43ce112ae15e2c67d35887590be`.
+
 Not PARK: natural gas **can** be reconstructed, deterministically, over a
 defined span — so the controller's park trigger ("if NG cannot be reconstructed
 at all") is **not** met. Not PASS: one load-bearing object is now shown to be
