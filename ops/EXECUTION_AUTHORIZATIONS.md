@@ -1156,3 +1156,82 @@ evidence ceiling is **supported** — never *confirmed*.
   "status": "AUTHORIZED"
 }
 ```
+
+### LIFECYCLE — F6-AUTH-0001 — CONSUMED
+
+The single authorised CTA-EDGE-05 / F6 primary historical return run executed
+once on 2026-09-22 under `run_id` `CTA-EDGE-05-F6-S3-PRIMARY-001`, durably wrote
+its result artifact, and the grant is therefore **CONSUMED**. It can never
+authorize another run, another `run_id`, or a retry.
+
+Both sealed intervals span zero, so the mechanical terminal class is
+**UNRESOLVED** and `research_status = not_promoted`. **P3 was never executed**
+(`NOT_APPLICABLE_BY_SEAL`), because the sealed contract evaluates it only after
+P1 and P2 both pass. The result is **not** a falsification, **not** evidence of
+absence and **not** a low-power finding; no such label exists for F6.
+
+**Appended 2026-09-22 at the Round-1 repository closeout — a disclosed gap, not
+a silent fix.** Every other spent grant in this ledger carries a LIFECYCLE
+record; `F6-AUTH-0001` did not, because the S3 accounting commit recorded the
+exposure and the consumed trial in the two research ledgers but never wrote the
+authorization-axis lifecycle row. The grant was consumed **by its own stated
+terms** from the moment the result artifact was written, and the F6 closeout
+already recorded `F6_PRIMARY_TRIAL_CONSUMED = YES`. But the run guard reads
+*this* ledger, and until this row existed it still counted one live grant — so a
+second F6 historical run would not have been refused by the guard. That was a
+real defect and this row closes it. No scientific content is changed by it.
+
+```json
+{
+  "authorization_id": "F6-AUTH-0001",
+  "event": "CONSUMED",
+  "event_utc": "2026-09-22T00:00:00Z",
+  "evidence": {
+    "alternate_run_id_used": false,
+    "alternative_parameter_cell_run": false,
+    "authorization_commit": "67e3cc1d0d0fc06aaf3a5566db1ce9156e2d8c0c",
+    "bootstrap_b": 100000,
+    "bootstrap_method": "calendar-year block bootstrap, 15 complete calendar-year blocks 2011-2025, ONE common year draw shared by P1 and P2 in each replication",
+    "bootstrap_seed": 2540719150,
+    "build_commit": "43f0bb3156673402866f4c1e2d06f25044455d48",
+    "design_changed_after_exposure": false,
+    "eligible_event_sessions": 462,
+    "eligible_window": "2011-01-03 .. 2025-12-31, 3772 trading sessions",
+    "execution_count": 1,
+    "p1_ci95": [
+      -0.0006259059694773711,
+      0.001332307197050112
+    ],
+    "p1_point": 0.0003578382743124745,
+    "p1_result": "UNRESOLVED",
+    "p1_rule": "lower 95% endpoint > 0, STRICT",
+    "p2_beta_event_point": 0.00023075024953799804,
+    "p2_ci95": [
+      -0.0007881067847417797,
+      0.0012337519917944954
+    ],
+    "p2_result": "UNRESOLVED",
+    "p3_executed": false,
+    "p3_result": "NOT_APPLICABLE_BY_SEAL",
+    "per_family_diagnostics_run": false,
+    "post_outcome_tuning": false,
+    "post_result_research_performed": false,
+    "quantile_implementation": "numpy.percentile(..., method=\"linear\")",
+    "result_artifact": "research/extensions/f6/s3/F6_S3_RESULT.json",
+    "result_artifact_sha256": "033ed34a6c52e6febecbef942482d345fb7c2319c4f0e6dad154c91699f70401",
+    "result_commit": "0de947cf3c733a47e51b2d8f003fe81c9255b48b",
+    "run_id": "CTA-EDGE-05-F6-S3-PRIMARY-001",
+    "seal_commit": "0fd380682c6f0438c13ab25aa41c8fc9a3f5b70c",
+    "seal_id": "CTA-EDGE-05-F6-S1-2026-09-21",
+    "second_historical_run_performed": false,
+    "terminal_classification": "UNRESOLVED",
+    "tlt_or_f6b_or_2026_accessed": false
+  },
+  "lineage": "CTA-EDGE-05 / F6 MACRO_ANNOUNCEMENT_PREMIUM",
+  "record_type": "LIFECYCLE",
+  "schema": {
+    "name": "f6-execution-authorization",
+    "version": 1
+  }
+}
+```

@@ -4,6 +4,48 @@ Current **state** of this project under
 [`QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md) (cutover 2026-09-12) — state,
 never workflow authority (vNext §0).
 
+## PROGRAMME STATE — CTA / systematic-macro Discovery
+
+*Programme-level roll-up. Per-lineage state is in the sections below; dispositions and
+reasoning are in [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md), which is a DERIVED summary
+and never an authority.*
+
+```
+CANONICAL_TSMOM           = SUPPORTED — NOT INDEPENDENTLY CONFIRMED
+                            role = FROZEN RESEARCH BENCHMARK, unaffected by Round 1
+ROUND1_STATUS             = CLOSED / EXHAUSTED
+ROUND1_NEW_SUPPORTED_EDGE = NONE
+ROUND1_EXHAUSTED          = YES
+ROUND2_READY              = YES
+ROUND2_STARTED            = NO
+LIVE_EXECUTION_AUTHORIZATIONS = NONE — every grant is ONE_SHOT and spent
+```
+
+Round-1 candidates and terminal states:
+
+```
+F1 / TA    CTA-EDGE-01  CLOSED PRE-OUTCOME        outcome accessed = NO
+F3 / BENB  CTA-EDGE-02  NOT PROMOTED              outcome accessed = YES
+PINS       CTA-EDGE-03  PARKED PRE-OUTCOME (S0 HOLD)  outcome accessed = NO
+MMV        CTA-EDGE-04  UNRESOLVED / NOT PROMOTED outcome accessed = YES
+F4                      PARKED PRE-OUTCOME        outcome accessed = NO
+F7                      NON-RUN, CLOSED           outcome accessed = NO
+F6         CTA-EDGE-05  CLOSED_UNRESOLVED_NOT_PROMOTED   outcome accessed = YES
+F2 / F8 / F9 / F10      BLOCKED / PARKED / NOT STANDALONE   never opened
+```
+
+```
+7 of 10 candidates were resolved BEFORE any return outcome was touched.
+3 sealed primary trials were consumed (BENB, MMV, F6). 0 edges promoted.
+NO Round-1 candidate obtained INDEPENDENT_CONFIRMATION.
+```
+
+**Next programme step: Round-2 discovery — NOT STARTED.** No Round-2 candidate has been
+selected, no discovery map commissioned, no S0 opened and no new research design exists
+in this repository.
+
+---
+
 ```
 RESEARCH_QUESTION   = X01: does the commodity-sleeve TSMOM implementation transfer
                       to futures under the matched map (matched-map arm, cluster C1

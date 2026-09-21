@@ -22,15 +22,16 @@
 
 | | |
 |---|---|
-| Canonical TSMOM | **SUPPORTED — NOT INDEPENDENTLY CONFIRMED** |
-| Latest completed candidate | **TSMOM-VRP-01** (unconditional constant-maturity short VIX futures) |
-| Historical verdict | **UNRESOLVED / CLASS 3** — insufficient evidence / low power |
-| Practical portfolio diagnostic | **NOT_COMPELLING** (exploratory, no promotion power) |
-| Historical Stage B | **NOT RUN** — barred by the sealed stop rule |
-| Long-horizon prospective | **NOT ACTIVATED** — closed without activation, by Owner decision |
-| Fable follow-up | **NO** |
-| VRP lineage | **CLOSED** |
-| Programme next | final handoff → next CTA / TSMOM edge |
+| Canonical TSMOM | **SUPPORTED — NOT INDEPENDENTLY CONFIRMED** · role: **frozen research benchmark** |
+| CTA / systematic-macro Discovery **Round 1** | **CLOSED / EXHAUSTED** — [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) |
+| New supported edge from Round 1 | **NONE** |
+| Latest completed candidate | **CTA-EDGE-05 / F6** — scheduled macro announcement premium |
+| F6 terminal state | **CLOSED_UNRESOLVED_NOT_PROMOTED** — both nominal 95% intervals span zero |
+| F6 — falsified? | **NO.** Not falsified, not evidence of absence, not low power |
+| Sealed primary trials consumed in Round 1 | **3** (BENB, MMV, F6) — 7 of 10 candidates closed *before* outcome exposure |
+| Live execution authorizations | **NONE** — every grant is one-shot and spent |
+| **Round 2** | **READY / AUTHORIZED — NOT STARTED** |
+| Programme next | Round-2 discovery, not yet begun |
 
 ---
 
@@ -83,6 +84,13 @@ each case.
 | **B** | canonical TSMOM validation | see below |
 | **C** | next-edge discovery and adjudication | **COMPLETE** |
 | **D** | TSMOM-VRP-01 — the selected candidate, run to a verdict | **COMPLETE / CLOSED** |
+| **E** | **CTA / systematic-macro Discovery Round 1** — ten candidates triaged, five lineages opened, one sealed primary trial | **COMPLETE / CLOSED / EXHAUSTED** — **no new supported edge** |
+| **F** | **Discovery Round 2** | **READY / AUTHORIZED — NOT STARTED** |
+
+**Phase E — Round 1, in one line.** Ten Round-1 candidates were triaged; seven closed,
+parked or were blocked **before** any return outcome was touched; three ran to a
+preregistered verdict and none was promoted. Full dispositions:
+[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
 
 **Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT
 INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and
@@ -96,6 +104,45 @@ selected question was whether an **unconditional one-month constant-maturity sho
 futures sleeve earns enough compensation for its severe short-volatility risk**. A
 **Treasury auction / intermediation** candidate was identified as a reserve and is **not**
 started here.
+
+## Where things live
+
+One authority per question — these do not compete:
+
+| you want | go to | kind |
+|---|---|---|
+| the workflow rules | [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md) *(workspace root)* | **authority** |
+| current project state | [`PROJECT_STATE.md`](PROJECT_STATE.md) | **state** — never workflow authority |
+| Round-1 dispositions | [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) | derived summary |
+| the canonical TSMOM study | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) · §1 below | narrative |
+| why a design choice was made | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | record |
+| a specific lineage | `research/extensions/<lineage>/` | artifacts |
+| Owner decisions | [`ops/`](ops/) — `OWNER_DECISION_RECORD_*.md` | **authority** |
+| who may run what | [`ops/EXECUTION_AUTHORIZATIONS.md`](ops/EXECUTION_AUTHORIZATIONS.md) | **authority**, append-only |
+| trial accounting | [`research/extensions/TRIAL_LEDGER.md`](research/extensions/TRIAL_LEDGER.md) | append-only ledger |
+| what outcomes have been seen | [`ops/EXPOSURE_LEDGER.md`](ops/EXPOSURE_LEDGER.md) | append-only ledger |
+| sample reuse / evidence ceilings | [`research/extensions/SAMPLE_REUSE.md`](research/extensions/SAMPLE_REUSE.md) | **authority** |
+| independent reviews | [`research/extensions/review_history/`](research/extensions/review_history/) | reviews |
+
+### How provenance works here
+
+```
+SEAL       a preregistration is frozen and hashed BEFORE any outcome exists;
+           the seal record pins the contract, the event sample and the inputs
+AUTHORIZE  a real run needs a ONE_SHOT Owner record committed to
+           ops/EXECUTION_AUTHORIZATIONS.md. A seal is NOT authorization.
+RUN        the guard reads that ledger from COMMITTED git state and fails
+           closed; one grant authorizes exactly one run_id, once
+ACCOUNT     the consumed trial lands in TRIAL_LEDGER.md and the revealed
+           outcome in EXPOSURE_LEDGER.md, both append-only
+VERDICT     the terminal class comes from the sealed classifier, not from prose
+```
+
+Every lineage folder carries its own `S0 → S1 → S2 → S3 → S4` artifacts under that
+pattern. Where an older document and a newer one disagree, the newer one names the older
+as superseded — nothing is deleted or rewritten to make the record look tidier.
+
+---
 
 ## The research map
 
@@ -546,6 +593,48 @@ tests its arithmetic, not its correctness.
 
 → [defect record](research/extensions/vrp/diagnostics/VRP_DIAGNOSTIC_DEFECT_001.md)
 
+### 4d. CTA / systematic-macro Discovery **Round 1** — **CLOSED / EXHAUSTED, no new supported edge**
+
+Ten candidates from the Round-1 discovery map were triaged under the vNext lifecycle
+`S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`. Full dispositions and
+the artifact that decides each one: **[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)**.
+
+| candidate | outcome accessed? | terminal status |
+|---|---|---|
+| **F1 / TA** (CTA-EDGE-01) | no | closed pre-outcome — identification insufficient |
+| **F3 / BENB** (CTA-EDGE-02) | yes | not promoted — tradable primary failed its gate |
+| **PINS** (CTA-EDGE-03) | no | parked — PIT data authority not established |
+| **MMV** (CTA-EDGE-04) | yes | unresolved / not promoted — no rescue authorized |
+| **F4** | no | parked — load-bearing NG state not PIT reconstructible |
+| **F7** | no | non-run, closed — redesign would need a new lineage |
+| **F6** (CTA-EDGE-05) | **yes — one consumed sealed primary trial** | **`CLOSED_UNRESOLVED_NOT_PROMOTED`** |
+| **F2 / F8 / F9 / F10** | no | blocked, parked, or not standalone |
+
+**F6 was the only Round-1 candidate to reach a governed historical execution.** It ran
+exactly once under a committed one-shot Owner authorization:
+
+```
+P1  +0.00035784   nominal 95% [-0.00062591, +0.00133231]   UNRESOLVED
+P2  +0.00023075   nominal 95% [-0.00078811, +0.00123375]   UNRESOLVED
+P3  NOT_APPLICABLE_BY_SEAL — never executed, because P1 and P2 did not both pass
+```
+
+Both point estimates are positive; both nominal intervals span zero. The lower endpoint
+failing to clear zero is why nothing was promoted — the upper endpoint sitting above zero
+is why nothing was **excluded**.
+
+> **F6 is not a negative result.** `MECHANISM_FALSIFIED = NO`,
+> `ECONOMIC_EFFECT_RELIABLY_EXCLUDED = NO`, `LOW_POWER_ASSERTED = NO`. It must never be
+> described as falsified, as evidence of absence, as a negative edge, as low power, as a
+> causal failure, or as independently confirmed. See
+> [`F6_CLOSEOUT.md`](research/extensions/f6/F6_CLOSEOUT.md).
+
+Seven of ten candidates were resolved **without spending a return trial at all**. That is
+the S0 gate working, not a shortfall. No Round-1 candidate obtained independent
+confirmation, and `supported` remained a ceiling none of them reached.
+
+---
+
 ## 5. What this means
 
 The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
@@ -648,8 +737,14 @@ src/                              # library: engine + screening + diagnostic + d
   yields                                                                # yield-curve macro-regime premise (causal slope/tercile)
   xsmom xsmom_data xsmom_stats                                          # cross-sectional momentum (parallel study)
 research/                         # committed arc write-ups (reports + figures), per investigation
-  extensions/x01/                 # sealed X01 futures-wrapper study + immutable evidence
-  extensions/value/               # sealed Time-Series Value study + immutable evidence
+  extensions/x01/  extensions/value/   # sealed studies + immutable evidence
+  extensions/vrp/  extensions/ta/  extensions/benb/     # Round-1 lineages, closed
+  extensions/pins/ extensions/mmv/ extensions/f4/       # Round-1 lineages, parked/closed
+  extensions/f6/                  # CTA-EDGE-05 F6: S0-S4, sealed contract, engine, S3 result
+  extensions/review_history/      # independent reviews (Astra / X01)
+  extensions/TRIAL_LEDGER.md  extensions/SAMPLE_REUSE.md   # accounting authorities
+ops/                              # Owner decision records, exposure + authorization ledgers
+ROUND1_CLOSEOUT.md  PROJECT_STATE.md   # Round-1 dispositions  ·  current state
 tests/                           # no-look-ahead + reconciliation + causality
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
