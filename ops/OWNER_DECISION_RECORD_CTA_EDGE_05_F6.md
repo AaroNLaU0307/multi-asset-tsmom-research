@@ -376,3 +376,106 @@ gate report    ../research/extensions/f6/F6_SCHEDULE_PIT_FINAL_GATE.md
 final manifest ../research/extensions/f6/F6_FINAL_EVENT_MANIFEST.json
                sha256 49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382
 ```
+
+---
+
+## §12 S1 SEAL — Owner authorization and execution
+
+*Appended 2026-09-21. **Additive.** Nothing above this line is altered, no
+decision is renumbered, and no prior history is rewritten.*
+
+```
+OWNER_SEAL_AUTHORIZATION = YES
+AUTHORIZATION_LITERAL    = "seal"
+AUTHORIZED_BY            = Aaron (Owner)
+S1_SEAL_STATUS           = SEALED
+SEAL_ID                  = CTA-EDGE-05-F6-S1-2026-09-21
+SEAL_DATE                = 2026-09-21
+```
+
+```
+SEALED CONTRACT  ../research/extensions/f6/F6_S1_PREREGISTRATION_SEALED.md
+                 sha256 f26df71d4596dd8cacd261e571040b5b0e39fd37ef897c87422af31eeef275d9
+```
+
+### §12.1 Three sources, never collapsed
+
+```
+FABLE          constructive design advice        OD-1 · OD-2 · OD-TY / OD-CASH
+ASTRA          independent adversarial review    PASS,
+               B_READY_FOR_S1_SEAL_WITH_CLAIM_CAP_NARROWING,
+               sha256 23f723ed…ab589
+               S1_SEAL_AUTHORIZED_BY_THIS_REVIEW = NO
+AARON (OWNER)  adoption, and the SOLE seal authorization ("seal")
+```
+
+Advice is not review. Review is not authorization. **The independent review
+expressly declined to authorize the seal**; only Aaron's explicit `"seal"` did.
+These three remain three separate sources with three different authorities and
+must never be presented as one.
+
+### §12.2 What the seal did and did not change
+
+```
+SCIENTIFIC DESIGN CHANGED AT SEAL = NO
+```
+
+Instrument, SPY-only status, event families, pooled architecture, event
+manifest, the 462-event sample, the 2011–2025 window, the 2026 exclusion,
+entry, exit, position size, cost, cash proxy, the `/365` convention, P1, P2,
+P3, terminal classification, bootstrap blocks, `B`, seed, quantile
+implementation, TOM, AUCTION, the PIT exclusions, LOYO semantics and the claim
+cap are all **unchanged**.
+
+One parameterization was canonicalized, and it is not a design change:
+
+```
+WEEKDAY_REFERENCE = FRIDAY, with Monday/Tuesday/Wednesday/Thursday indicators
+and an intercept.
+```
+
+OD-2's prose described the same control space with Monday as reference **and in
+the same sentence recorded that δ is invariant to the choice of reference** —
+which is correct, since `beta_EVENT` is numerically identical whichever weekday
+is omitted from a full set alongside an intercept. The sealed contract carries
+the Friday reference only. **OD-2 is historical and is not rewritten**; it keeps
+its bytes and its pinned hash.
+
+### §12.3 Accounting at seal
+
+```
+TRIAL_LEDGER_CHANGED          = YES   exactly one prospective family row, F-F6
+F6_FAMILY_STATUS              = SEALED / NOT EXECUTED
+F6_PRIMARY_TRIAL_CONSUMED     = NO
+EXPOSURE_LEDGER_CHANGED       = NO
+F6_PERFORMANCE_EXPOSURE_ADDED = NO
+```
+
+No exposure row was created because no F6 return or target measurement has been
+revealed, and no new exposure type was invented to accommodate a seal.
+
+### §12.4 Evidence is not upgraded by sealing
+
+```
+SAMPLE_REUSE_CLASS       = T0_REUSED_DEPENDENT
+EVIDENCE_CEILING         = SUPPORTED
+INDEPENDENT_CONFIRMATION = NO
+```
+
+### §12.5 Post-seal authorization state
+
+```
+S1                       = SEALED
+S2_BUILD_AUTHORIZED      = YES
+S3_RUN_AUTHORIZED        = NO
+RETURN_REVEAL_AUTHORIZED = NO
+```
+
+S2 authorizes code and build work **only**. The historical run stays forbidden
+until S2 implementation is complete, implementation acceptance passes, and a
+**separate** S3 run authorization is issued by Aaron.
+
+```
+seal record     ../research/extensions/f6/F6_S1_SEAL_RECORD.md
+sealed manifest ../research/extensions/f6/F6_S1_SEALED_MANIFEST.json
+```
