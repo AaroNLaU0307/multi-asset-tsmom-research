@@ -1049,3 +1049,110 @@ figure bit-for-bit.
   }
 }
 ```
+
+### F6-AUTH-0001 — CTA-EDGE-05 / F6 primary historical return run (S3)
+
+The FIRST and ONLY primary historical return trial for CTA-EDGE-05 / F6. The
+scope is `ONE_SHOT`: a single invocation of
+`research/extensions/f6/f6_s3_run.py --execute` under `run_id`
+`CTA-EDGE-05-F6-S3-PRIMARY-001`. Once that run durably writes its result
+artifact the authorization is CONSUMED and can never authorize another run,
+another `run_id`, or a retry.
+
+`--preflight` is NOT an execution. It runs the structural, manifest, matrix and
+cash-mapping checks, touches no target value and produces no statistic, so it
+consumes nothing and may be repeated. Only `--execute` spends the trial.
+
+This grant is issued because Aaron issued the explicit Owner instruction
+**"run F6"** after accepting the S2 build. It is the first authorization to
+reveal the real historical F6 outcome.
+
+**The RNG seed is DERIVED, not chosen.** It is the first eight hexadecimal
+characters of `SHA256("CTA-EDGE-05|F6|S1_BOOTSTRAP|" +
+FINAL_EVENT_MANIFEST_SHA256)`, `97704c2e`, read as an unsigned 32-bit integer:
+**2540719150**. That source string is a function of metadata fixed before any
+F6 return existed. A seed chosen after an outcome, or chosen at all, would be a
+researcher degree of freedom; this one is not.
+
+**What this grant does NOT authorize.** No redesign, retuning, rescue cell,
+alternative model, alternative benchmark, alternative cost, alternative window
+or post-result exploration. No family-specific trial, no TLT, no F6.b, no 2026.
+No second historical run. No promotion, falsification or S4 action. The
+terminal class is whatever the sealed mechanical classifier returns, and the
+evidence ceiling is **supported** — never *confirmed*.
+
+```json
+{
+  "authority": "OWNER EXECUTION DECISION relayed by Aaron in session as the CTA-EDGE-05 / F6 S3 task brief. AUTHORIZATION_LITERAL = \"run F6\". This is the FIRST and ONLY authorization to reveal the real historical F6 outcome.",
+  "authorization_id": "F6-AUTH-0001",
+  "authorized_utc": "2026-09-22T00:00:00Z",
+  "binding": {
+    "authorized_scope": "SEALED_PRIMARY_ONLY",
+    "bootstrap": "calendar-year block bootstrap over 15 complete blocks 2011-2025, B = 100000, ONE common year draw shared by P1 and P2 in each replication, two-sided NOMINAL 95 % percentile interval via numpy.percentile(..., method=\"linear\") at [2.5, 97.5]. No BCa, no studentization, no alternate interval, no reduced B on real data.",
+    "build_commit": "43f0bb3156673402866f4c1e2d06f25044455d48",
+    "build_hash": "050bb3d73e7c95930d79ebb987797d5a720c5d5081f70b423c3ebeb0a9a05d49",
+    "cash_proxy": "DGS3MO, rf_hold = (annual percent / 100) * HOLD_calendar_days / 365. The /365 divisor is OWNER-CHOSEN and is NOT attributed to Treasury, H.15 or FRED. Carry only across source-explained non-publication; an unexplained gap is an IMPLEMENTATION HOLD, never a substituted series.",
+    "cost": "0.0004 round trip = 2 bps entry + 2 bps exit, charged on EVENT sessions in P1 ONLY. P2 is GROSS of event transaction cost.",
+    "driver_commit": "c47fb2283b7056a1a8aedb9aeadc90e51b68c533",
+    "event_manifest_sha256": "49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+    "fixed_p2_model": "r_excess(d) = intercept + beta_EVENT*EVENT + Monday + Tuesday + Wednesday + Thursday + TOM + HOLD + AUCTION + error. FRIDAY is the reference level. No interactions, no HC or cluster fallback, no matched control, no alternate weekday base, no variable dropping, no automatic collinearity repair, no regularization.",
+    "lineage": "CTA-EDGE-05 / F6 MACRO_ANNOUNCEMENT_PREMIUM",
+    "m": 1,
+    "no_refetch": "live or re-downloaded data is NOT authorized; a pinned-hash mismatch is a STRUCTURAL STOP, never a substitution",
+    "owner": "Aaron",
+    "owner_literal": "run F6",
+    "permitted_inputs": [
+      "research/extensions/f6/F6_S1_PREREGISTRATION_SEALED.md sha256 f26df71d4596dd8cacd261e571040b5b0e39fd37ef897c87422af31eeef275d9",
+      "research/extensions/f6/F6_S1_SEALED_MANIFEST.json sha256 7e61af335eae8a3b236c13724d9705cbb269bfa393894d43f2d6fcdfa4c841c7",
+      "research/extensions/f6/F6_S1_SEAL_RECORD.md sha256 d88d851685a6a41ca5d8a39dcba93141acd335166c515e83b3ae06c37d1ca878",
+      "research/extensions/f6/F6_FINAL_EVENT_MANIFEST.json sha256 49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+      "research/extensions/f6/F6_S2_BUILD_MANIFEST.json sha256 74656451be12c784fa0630bc4bd097ae4efce5752bb26142f7fe399e2184cb4b",
+      "data/close_prices_raw.csv sha256 3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31 (SPY column ONLY)",
+      "data/DGS3MO.csv sha256 50da2bfbb25e3e3241af7a4ad16e5a1bb5f08cdfb46bcb92f224954dce054319",
+      "research/extensions/ta/TA_EVENT_CALENDAR.csv sha256 b27be5b1d94cfc13fc8310e0d5216675e097a2245fc954e4b12ed282563f7cb6",
+      "src/seasonality.py sha256 43a75588b95f6ec42b090bc6b02fa2edc761f4fc82525288a544195ebab2a806"
+    ],
+    "permitted_operation": "exactly ONE invocation of research/extensions/f6/f6_s3_run.py --execute, which runs the accepted S2 production pipeline f6_pipeline.run_real once and writes one result artifact",
+    "preflight": "research/extensions/f6/f6_s3_run.py --preflight performs structural checks only, accesses NO target value, produces NO statistic and consumes NOTHING; it is repeatable. Only --execute spends the trial.",
+    "primary_trial_family": "F-F6",
+    "primary_years": [
+      2011,
+      2025
+    ],
+    "prohibited": [
+      "a second historical run, an alternate run_id, a retry, or a silent re-execution after a technical failure",
+      "any variant, alternative model, alternative regression or fallback specification",
+      "family-specific FOMC / CPI / NFP trials, or any per-family rescue",
+      "TLT in any role, and any F6.b pre-FOMC drift quantity",
+      "any use of 2026 data in an F6 outcome quantity",
+      "reinstating any of the six PIT-excluded releases",
+      "an alternative benchmark, cash proxy, day-count, cost, window, start date or event weighting",
+      "changing the bootstrap block definition, B, seed, quantile method or interval type",
+      "adding or dropping a control, or any post-result model repair",
+      "a reduced-B or 'quick' preliminary run on real data, and any exploratory or debug output of historical target metrics",
+      "deletion-level significance gating in P3",
+      "promotion, falsification, closure or any S4 action"
+    ],
+    "rng_seed": 2540719150,
+    "rng_seed_derivation": "int(sha256(\"CTA-EDGE-05|F6|S1_BOOTSTRAP|\" + FINAL_EVENT_MANIFEST_SHA256)[:8], 16) = int('97704c2e', 16) = 2540719150. DERIVED from a metadata hash fixed before any return existed, never chosen and never derived from returns. The engine recomputes the derivation and the preflight refuses on mismatch.",
+    "run_id": "CTA-EDGE-05-F6-S3-PRIMARY-001",
+    "run_type": "PRIMARY_HISTORICAL_RETURN",
+    "sample": "SPY ONLY; 462 sealed event sessions; 3772 trading sessions 2011-2025 with NO row dropped; the first 2011 session takes its lagged close, interval boundary and HOLD from 2010-12-31, which is an INPUT BOUNDARY OBSERVATION and never a regression row.",
+    "seal_commit": "0fd380682c6f0438c13ab25aa41c8fc9a3f5b70c",
+    "seal_id": "CTA-EDGE-05-F6-S1-2026-09-21",
+    "sealed_manifest_sha256": "7e61af335eae8a3b236c13724d9705cbb269bfa393894d43f2d6fcdfa4c841c7",
+    "sealed_prereg_sha256": "f26df71d4596dd8cacd261e571040b5b0e39fd37ef897c87422af31eeef275d9",
+    "stop_rule": "a failure BEFORE the first real target read is HOLD_PRE_EXPOSURE and consumes nothing; a failure AFTER it is RUN_FAILED_AFTER_EXPOSURE, the trial is CONSUMED, the exposure must be recorded, and there is NO rerun."
+  },
+  "grant_kind": "EXECUTION",
+  "lineage": "CTA-EDGE-05 / F6 MACRO_ANNOUNCEMENT_PREMIUM",
+  "owner": "Aaron",
+  "record_type": "AUTHORIZATION",
+  "schema": {
+    "name": "f6-execution-authorization",
+    "version": 1
+  },
+  "scope": "ONE_SHOT_SINGLE_PRIMARY_RETURN_RUN",
+  "status": "AUTHORIZED"
+}
+```
