@@ -386,6 +386,28 @@ ASSERTED** — `D-ETF-COUNT` stays `UNKNOWN_PENDING_AARON_DECISION`, and the sea
 design uses no DSR and no trial-count deflation, so this execution changes no deflated
 figure anywhere.
 
+**Appended 2026-09-22 (CTA-EDGE-05 / F6 S4 verdict and closeout) — APPEND ONLY.** The
+Controller accepted S3 and issued the terminal verdict. `F-F6` is now **TERMINAL**:
+terminal scientific class **UNRESOLVED**, `research_status = not_promoted`,
+`MECHANISM_FALSIFIED = NO`, `ECONOMIC_EFFECT_RELIABLY_EXCLUDED = NO`, `LOW_POWER = NOT
+ASSERTED`, `INDEPENDENT_CONFIRMATION = NO`.
+
+**No row was edited by this closeout.** The `F-F6` status cell already records the
+executed trial and the UNRESOLVED verdict truthfully, so the only new fact — that S4
+accepted it and the lineage is closed — is recorded here rather than by rewriting the
+row a second time. The earlier in-place status update at the S3 run is disclosed in the
+note above it and is not repeated.
+
+`F6_PRIMARY_TRIAL_CONSUMED = YES`, `PRIMARY_EXECUTION_COUNT = 1`,
+`SECOND_HISTORICAL_RUN_PERFORMED = NO`. No variant attempt, family-specific trial, TLT
+trial, F6.b trial or 2026 trial was created at any stage. The primary trial is spent and
+**no rerun, corrected primary run, parameter adjustment or renamed F6 variant on the
+same exposed historical sample is permitted**; a future study needs a genuinely new
+governed lineage or a separately sealed prospective objective, and may not retroactively
+promote this result. `N_trials` on the ETF panel remains **NOT ASSERTED**.
+
+Closeout artifact `research/extensions/f6/F6_CLOSEOUT.md` sha256 `f81390f804a5fde0a3ea1d8239fe424d00a75d83cb64aebf60a35917a41c5c8e`.
+
 
 It is **not** a post-hoc family construction, which §1.1 prohibition 2 forbids: nothing about the membership, the multiplicity treatment or `m = 1` was decided after seeing a result, and every element above is readable in the sealed contract at its pinned hash. A reader who doubts that should verify §M against `4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225` rather than take this row's word for it.
 

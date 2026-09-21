@@ -479,3 +479,74 @@ until S2 implementation is complete, implementation acceptance passes, and a
 seal record     ../research/extensions/f6/F6_S1_SEAL_RECORD.md
 sealed manifest ../research/extensions/f6/F6_S1_SEALED_MANIFEST.json
 ```
+
+---
+
+## §13 S4 VERDICT AND CLOSEOUT
+
+*Appended 2026-09-22. **Additive.** Nothing above this line is altered and no
+decision is renumbered.*
+
+```
+S4                  = COMPLETE
+TERMINAL CLASS      = UNRESOLVED
+PROMOTION STATUS    = NOT_PROMOTED
+F6_LINEAGE_STATUS   = CLOSED / UNRESOLVED / NOT_PROMOTED
+ROUND1_F6_ACTIVE    = NO
+```
+
+The one authorized primary ran once under `F6-AUTH-0001`
+(`CTA-EDGE-05-F6-S3-PRIMARY-001`). Both point estimates are positive and both
+nominal 95 % intervals span zero:
+
+```
+P1  +0.00035784   [-0.00062591, +0.00133231]   UNRESOLVED
+P2  +0.00023075   [-0.00078811, +0.00123375]   UNRESOLVED
+P3  NOT_APPLICABLE_BY_SEAL — never executed
+```
+
+```
+MECHANISM_FALSIFIED               = NO
+ECONOMIC_EFFECT_RELIABLY_EXCLUDED = NO
+LOW_POWER                         = NOT ASSERTED
+INDEPENDENT_CONFIRMATION          = NO
+SAMPLE_REUSE                      = T0_REUSED_DEPENDENT
+```
+
+The study did not establish the declared edge, and equally did not exclude one.
+It must never be described as falsified, as evidence of absence, as a negative
+edge, as low power, as a causal failure, or as independently confirmed.
+
+### §13.1 Execution governance reservation
+
+```
+POST_S2_EXECUTION_WRAPPER_ADDED = YES   commit c47fb228
+SCIENTIFIC_COMPUTATION_CHANGED  = NO
+S3_RESULT_INVALIDATED           = NO
+GOVERNANCE_RESERVATION          = YES
+```
+
+An S3 orchestration driver was added after S2 acceptance and before exposure. It
+performs orchestration only; the accepted S2 pipeline at build `43f0bb31`
+remained the estimator, and the driver re-verified the accepted module hashes
+before running. The first `--execute` invocation never launched Python — the
+shell failed a log redirect into a missing directory — and caused **no** target
+access; it is not counted as a historical execution. Neither fact is to be
+rewritten away.
+
+### §13.2 What remains closed
+
+```
+2026_F6_OUTCOME_ACCESSED = NO — and 2026 carries no confirmation, rescue or
+promotion power for this closed primary. Any future use needs separate
+prospective governance.
+
+RERUN = NOT PERMITTED. The primary trial is consumed.
+
+NEXT_EDGE_STARTED = NO. ROUND2_AUTHORIZED = NO. Control returns to the
+programme Controller for next-edge selection.
+```
+
+```
+closeout   ../research/extensions/f6/F6_CLOSEOUT.md sha256 f81390f804a5fde0a3ea1d8239fe424d00a75d83cb64aebf60a35917a41c5c8e
+```

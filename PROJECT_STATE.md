@@ -125,6 +125,75 @@ NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
                       not authorization to execute.
 ```
 
+## CTA-EDGE-05-F6 — scheduled macro announcement premium — CLOSED / UNRESOLVED 2026-09-22
+
+*State only, never workflow authority (vNext §0).*
+
+```
+RESEARCH_QUESTION   = Do scheduled macro announcement sessions (FOMC statement, CPI,
+                      Employment Situation) carry a positive risk premium in SPY,
+                      harvestable by a fixed prior-close-to-event-close long rule, and
+                      specific to announcement days rather than to ordinary calendar
+                      structure?
+RESEARCH_ID · LANE  = CTA-EDGE-05 / F6 · not assigned
+ORIGIN              = Fable Round-1 discovery map, family F6 MACRO_ANNOUNCEMENT_PREMIUM.
+                      Authority 2026-09-15-cta-edge-discovery-r1-mechanism-feature-map-
+                      fable-01.md sha256 02ca5f45fe41763e55a353090645c3b2a98b6dcf5fce
+                      572623ede604e569344a, re-verified at S0 and at the seal.
+S0 FRAME            = COMPLETE. Schedule-PIT feasibility, repair and completion records,
+                      then the FINAL fail-closed eligibility gate
+                      research/extensions/f6/F6_SCHEDULE_PIT_FINAL_GATE.md.
+                      462 archive-eligible event sessions (FOMC 119 + CPI 176 + NFP 176
+                      = 471 labels, 9 overlaps). Six PIT-unresolved releases excluded
+                      PRE-OUTCOME and never reinstated.
+S1 DESIGN+SEAL      = **COMPLETE / SEALED 2026-09-21**. SEAL_ID
+                      CTA-EDGE-05-F6-S1-2026-09-21, seal commit 0fd38068. Contract
+                      research/extensions/f6/F6_S1_PREREGISTRATION_SEALED.md sha256
+                      f26df71d4596dd8cacd261e571040b5b0e39fd37ef897c87422af31eeef275d9.
+                      Owner decisions: ops/OWNER_DECISION_RECORD_CTA_EDGE_05_F6.md
+S2 BUILD            = ACCEPTED 2026-09-22, build commit 43f0bb31, build hash
+                      050bb3d73e7c95930d79ebb987797d5a720c5d5081f70b423c3ebeb0a9a05d49.
+                      114 tests, outcome-blind. GOVERNANCE_RESERVATION: an S3
+                      orchestration wrapper was added post-acceptance in c47fb228;
+                      scientific computation UNCHANGED, S3 result NOT invalidated.
+S3 RUN              = ONE execution, run_id CTA-EDGE-05-F6-S3-PRIMARY-001 under
+                      F6-AUTH-0001 (commit 67e3cc1d), result commit 0de947cf.
+                      B = 100000, seed 2540719150 derived from the event-manifest hash.
+                      The first shell invocation never launched Python and caused NO
+                      target access; it is not counted as a historical execution.
+S4 VERDICT          = **COMPLETE 2026-09-22 — UNRESOLVED / NOT_PROMOTED**
+                      P1 +0.00035784, nominal 95pct [-0.00062591, +0.00133231] UNRESOLVED
+                      P2 +0.00023075, nominal 95pct [-0.00078811, +0.00123375] UNRESOLVED
+                      P3 NOT_APPLICABLE_BY_SEAL — never executed, because P1 and P2
+                      did not both pass.
+                      Both point estimates positive; both nominal intervals span zero.
+                      MECHANISM_FALSIFIED = NO. ECONOMIC_EFFECT_RELIABLY_EXCLUDED = NO.
+                      LOW_POWER = NOT ASSERTED. Never to be called falsified, evidence
+                      of absence, a negative edge, low power, a causal failure or
+                      independently confirmed.
+                      Closeout research/extensions/f6/F6_CLOSEOUT.md sha256 f81390f804a5fde0a3ea1d8239fe424d00a75d83cb64aebf60a35917a41c5c8e
+TRIAL_ACCOUNTING    = F-F6 declared at the seal, EXECUTED once. TRIAL_COUNT_INCREMENT 1,
+                      m = 1, no DSR. N_trials on the ETF panel remains NOT ASSERTED
+                      (D-ETF-COUNT = UNKNOWN_PENDING_AARON_DECISION).
+OUTCOME_EXPOSURE    = ONE performance exposure, EXPOSURE_LEDGER row 61
+                      (REVEALED_TARGET_METRIC), covering the whole sealed primary.
+                      Row 62 is the NO_OUTCOME closeout row and contributes 0.
+SAMPLE_REUSE        = T0_REUSED_DEPENDENT. EVIDENCE_CEILING = supported, a CEILING and
+                      NOT the achieved verdict. INDEPENDENT_CONFIRMATION = NO — the
+                      pre-S0 adjudication was never persisted and is not recovered, and
+                      the 2026-09-21 Astra review was a pre-S1 DESIGN review that saw
+                      no outcome.
+2026                = **UNEXPOSED.** 2026_F6_OUTCOME_ACCESSED = NO. No confirmation,
+                      rescue or promotion role for this closed primary; any future use
+                      needs separate prospective governance.
+RERUN               = NOT PERMITTED. The primary trial is consumed. No corrected run,
+                      parameter adjustment or renamed F6 variant on the exposed sample.
+                      A future study needs a genuinely new governed lineage.
+STATUS              = **CLOSED / UNRESOLVED / NOT_PROMOTED. ROUND1_F6_ACTIVE = NO.**
+                      No next edge started; Round 2 NOT authorized. Control returns to
+                      the programme Controller for next-edge selection.
+```
+
 ## CTA-EDGE-04-MMV — macro momentum on vintage data — CLOSED / TERMINAL 2026-09-17
 
 *State only, never workflow authority (vNext §0).*
