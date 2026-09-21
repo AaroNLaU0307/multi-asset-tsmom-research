@@ -1,5 +1,10 @@
 # Multi-Asset Time-Series Momentum — a research project
 
+![Round 1](https://img.shields.io/badge/Round%201-closed%20%C2%B7%20exhausted-6e7781)
+![Round 2](https://img.shields.io/badge/Round%202-ready%20%C2%B7%20not%20started-8250df)
+![Benchmark](https://img.shields.io/badge/canonical%20TSMOM-supported%20%C2%B7%20frozen%20benchmark-1f6feb)
+![Lifecycle](https://img.shields.io/badge/lifecycle-S0%20%E2%86%92%20S4%20sealed-57606a)
+
 > **Workflow (cutover 2026-09-12).** This project runs under
 > [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md):
 > `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`.
@@ -19,6 +24,17 @@
 > mechanical diagnostics, and a `qros` HOLD is information, not a gate.
 
 ## Current state
+
+```mermaid
+flowchart TD
+    P["<b>Quant research programme</b>"]
+
+    P --> BM["<b>Canonical multi-asset TSMOM</b><br/>SUPPORTED - not independently confirmed<br/>role: FROZEN RESEARCH BENCHMARK"]
+    P --> DISC["<b>CTA / systematic-macro edge discovery</b>"]
+
+    DISC --> R1["<b>Round 1</b><br/>CLOSED / EXHAUSTED<br/>NEW SUPPORTED EDGE = NONE"]
+    DISC --> R2["<b>Round 2</b><br/>READY / NOT STARTED"]
+```
 
 | | |
 |---|---|
@@ -87,9 +103,62 @@ each case.
 | **E** | **CTA / systematic-macro Discovery Round 1** — ten candidates triaged, five lineages opened, one sealed primary trial | **COMPLETE / CLOSED / EXHAUSTED** — **no new supported edge** |
 | **F** | **Discovery Round 2** | **READY / AUTHORIZED — NOT STARTED** |
 
-**Phase E — Round 1, in one line.** Ten Round-1 candidates were triaged; seven closed,
-parked or were blocked **before** any return outcome was touched; three ran to a
-preregistered verdict and none was promoted. Full dispositions:
+**Phase E — Round 1, in one line.** Eleven candidate objects were triaged; **eight**
+closed, parked, were blocked or were ruled non-standalone **before** any return outcome
+was touched; **three** proceeded to governed historical evaluation and **none was
+promoted**. Full dispositions: [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
+
+### The lifecycle every candidate runs
+
+```mermaid
+flowchart LR
+    D["Discovery<br/>candidate map"] --> S0["<b>S0 FRAME</b><br/>is the question<br/>answerable at all"]
+    S0 --> S1["<b>S1 DESIGN + SEAL</b><br/>contract frozen and hashed<br/>BEFORE any outcome exists"]
+    S1 --> S2["<b>S2 BUILD</b><br/>implement and test<br/>outcome-blind"]
+    S2 --> S3["<b>S3 RUN</b><br/>one-shot Owner authorization<br/>guard reads committed state"]
+    S3 --> S4["<b>S4 VERDICT</b><br/>sealed classifier only<br/>never prose"]
+    S4 --> STOP["<b>STOP</b><br/>close, promote,<br/>or move to the next edge"]
+
+    S0 -. halt .-> PRE["<b>PRE-OUTCOME EXIT</b><br/>parked, closed or blocked<br/>NO trial spent"]
+    S1 -. halt .-> PRE
+    S2 -. halt .-> PRE
+
+    S4 -. no rescue, no rerun .-> NEWLIN["A materially different study<br/>is a <b>NEW lineage</b><br/>with its own seal"]
+```
+
+Progression is one-way. The contract is sealed before any outcome exists, a real run needs
+a separate one-shot authorization, and the terminal class comes from the sealed classifier.
+**There is no post-result rescue inside the same primary lineage** — a consumed primary
+trial stays consumed.
+
+### Round 1 at a glance
+
+```mermaid
+flowchart TD
+    R1["<b>Round 1</b><br/>11 candidate objects"]
+
+    R1 --> TESTED["<b>TESTED</b> - 3<br/>governed historical evaluation"]
+    R1 --> PREOUT["<b>PRE-OUTCOME</b> - 8<br/>no return outcome touched"]
+
+    TESTED --> T1["F3 / BENB<br/>NOT PROMOTED"]
+    TESTED --> T2["F5 / MMV<br/>UNRESOLVED - NOT PROMOTED"]
+    TESTED --> T3["<b>F6</b><br/>UNRESOLVED - NOT PROMOTED<br/>one sealed primary trial"]
+
+    PREOUT --> P1["F1 / TA<br/>PRE-OUTCOME CLOSE<br/>identification insufficient"]
+    PREOUT --> P2["PINS<br/>PARKED<br/>PIT data authority not established"]
+    PREOUT --> P3["F4<br/>PARKED<br/>PIT reconstruction failure"]
+    PREOUT --> P4["F7<br/>PRE-OUTCOME CLOSE<br/>non-run"]
+    PREOUT --> P5["F8<br/>PARKED<br/>prerequisite unmet"]
+    PREOUT --> P6["F2<br/>BLOCKED<br/>not standalone under proxy authority"]
+    PREOUT --> P7["F9<br/>NOT STANDALONE"]
+    PREOUT --> P8["F10<br/>NOT STANDALONE<br/>overlapping - price-derived"]
+
+    TESTED --> OUT["<b>NEW SUPPORTED EDGE FROM ROUND 1 = NONE</b>"]
+    PREOUT --> OUT
+```
+
+Eight of eleven were resolved without spending a return trial at all — that is the S0 gate
+working, not a shortfall. Per-candidate reasoning and the artifact that decides each one:
 [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
 
 **Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT

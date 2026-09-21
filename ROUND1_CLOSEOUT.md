@@ -24,10 +24,11 @@ DATE                      = 2026-09-22
 NO NEW STANDALONE EDGE WAS PROMOTED IN ROUND 1.
 ```
 
-Ten candidates from the Round-1 discovery map were triaged. **One** reached a
-sealed primary historical trial and returned `UNRESOLVED`. Two others were run
-to a preregistered verdict and not promoted. The rest closed, parked or were
-blocked **before** any return outcome was touched.
+Eleven candidate objects from the Round-1 discovery map were triaged. **One**
+reached a sealed primary historical trial and returned `UNRESOLVED`. Two others
+were run to a preregistered verdict and not promoted. The remaining **eight**
+closed, parked, were blocked or were ruled non-standalone **before** any return
+outcome was touched.
 
 The canonical multi-asset TSMOM core is unaffected by all of this:
 
@@ -121,16 +122,16 @@ negative-space results that cost little because most candidates were stopped
 **before** outcome exposure:
 
 ```
-candidates triaged                         10
+candidate objects triaged                  11
 lineages opened                             5   (TA, BENB, PINS, MMV, F6)
 historical return outcomes accessed         3   (BENB, MMV, F6)
 sealed primary trials consumed              3
 new supported edges                         0
-candidates closed BEFORE outcome exposure   7
+closed / parked / blocked PRE-OUTCOME       8
 ```
 
-Seven of ten candidates were resolved without spending a return trial at all.
-That is the point of the S0 gate, not a shortfall.
+Eight of eleven candidate objects were resolved without spending a return trial
+at all. That is the point of the S0 gate, not a shortfall.
 
 ### §5.1 Recurring reasons a candidate died
 
