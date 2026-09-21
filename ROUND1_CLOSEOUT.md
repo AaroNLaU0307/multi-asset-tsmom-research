@@ -12,9 +12,8 @@ DATE                      = 2026-09-22
 > **This document is a programme-level summary, not an authority.** Each row
 > points at the artifact that actually decides it. Where this page and a lineage
 > artifact disagree, **the lineage artifact wins** and this page is stale.
-> Workflow authority is
-> [`QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md); per-project *state* is
-> [`PROJECT_STATE.md`](PROJECT_STATE.md).
+> Workflow authority is `../QUANT_WORKFLOW_VNEXT.md` — workspace-local, **not published
+> in this repository**. Per-project *state* is [`PROJECT_STATE.md`](PROJECT_STATE.md).
 
 ---
 
@@ -79,9 +78,11 @@ and the idea registry; they never became lineages and never touched a return.
 
 ---
 
-## §4 F6 — the one sealed primary trial of Round 1
+## §4 F6 — the final active Round-1 lineage
 
-F6 is the only Round-1 candidate that reached a governed historical execution.
+F6 was the final active Round-1 candidate and one of three candidate objects that
+proceeded to governed historical evaluation, alongside BENB and MMV. This section focuses
+on F6 because it was the last Round-1 lineage to close.
 
 ```
 SEAL_ID                           CTA-EDGE-05-F6-S1-2026-09-21
@@ -124,10 +125,11 @@ negative-space results that cost little because most candidates were stopped
 ```
 candidate objects triaged                  11
 lineages opened                             5   (TA, BENB, PINS, MMV, F6)
-historical return outcomes accessed         3   (BENB, MMV, F6)
-sealed primary trials consumed              3
+governed historical evaluations             3   (BENB, MMV, F6)
+primary trials consumed                     3
 new supported edges                         0
-closed / parked / blocked PRE-OUTCOME       8
+pre-outcome dispositions                    8   closed, parked, blocked,
+                                                or ruled not standalone
 ```
 
 Eight of eleven candidate objects were resolved without spending a return trial
@@ -210,7 +212,8 @@ Carry-forward constraints for whoever opens Round 2:
 ## §8 Navigation
 
 ```
-workflow authority      ../QUANT_WORKFLOW_VNEXT.md        (workspace root)
+workflow authority      ../QUANT_WORKFLOW_VNEXT.md        (workspace-local;
+                                                          NOT in this repository)
 project state           PROJECT_STATE.md
 this summary            ROUND1_CLOSEOUT.md                (programme-level, derived)
 canonical study         STUDY_SUMMARY.md · README.md §1

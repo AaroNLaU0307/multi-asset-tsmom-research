@@ -6,7 +6,8 @@
 ![Lifecycle](https://img.shields.io/badge/lifecycle-S0%20%E2%86%92%20S4%20sealed-57606a)
 
 > **Workflow (cutover 2026-09-12).** This project runs under
-> [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md):
+> `../QUANT_WORKFLOW_VNEXT.md` — workspace-local workflow authority, **not published
+> in this repository** —
 > `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`.
 > Current **state** — never workflow authority — lives in
 > [`PROJECT_STATE.md`](PROJECT_STATE.md). Read that first.
@@ -44,7 +45,7 @@ flowchart TD
 | Latest completed candidate | **CTA-EDGE-05 / F6** — scheduled macro announcement premium |
 | F6 terminal state | **CLOSED_UNRESOLVED_NOT_PROMOTED** — both nominal 95% intervals span zero |
 | F6 — falsified? | **NO.** Not falsified, not evidence of absence, not low power |
-| Sealed primary trials consumed in Round 1 | **3** (BENB, MMV, F6) — 7 of 10 candidates closed *before* outcome exposure |
+| Governed historical evaluations in Round 1 | **3** (BENB, MMV, F6) — 8 of 11 candidate objects reached a terminal pre-outcome disposition: closed, parked, blocked or ruled not standalone |
 | Live execution authorizations | **NONE** — every grant is one-shot and spent |
 | **Round 2** | **READY / AUTHORIZED — NOT STARTED** |
 | Programme next | Round-2 discovery, not yet begun |
@@ -79,8 +80,10 @@ each case.
 - **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
   control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
 - **CI-verified test suite** run on every push (badge above) — not a self-reported count.
-  The suite is **green: 101 passed, 0 failed** (`python -m pytest -q`). Three legacy XSMOM
-  tests *previously* failed under an earlier pandas API-drift environment; they pass now.
+  It is **not currently all-green**: `python -m pytest -q` reports **98 passed, 3 failed**.
+  The three failures are pre-existing `OutOfBoundsDatetime` fixture failures in
+  `tests/test_xsmom_universes.py`, unrelated to any research verdict and reproducible at
+  earlier commits. See [Validation status](#how-to-run-reproducible) for the full picture.
 - **Three sealed extension studies, all closed under preregistration** — the X01
   futures-wrapper study (`INSUFFICIENT_EVIDENCE`), the Time-Series Value sleeve (standalone
   `MATERIALLY_ADVERSE`, diversification candidacy failed, `not_promoted`) and TSMOM-VRP-01
@@ -100,7 +103,7 @@ each case.
 | **B** | canonical TSMOM validation | see below |
 | **C** | next-edge discovery and adjudication | **COMPLETE** |
 | **D** | TSMOM-VRP-01 — the selected candidate, run to a verdict | **COMPLETE / CLOSED** |
-| **E** | **CTA / systematic-macro Discovery Round 1** — ten candidates triaged, five lineages opened, one sealed primary trial | **COMPLETE / CLOSED / EXHAUSTED** — **no new supported edge** |
+| **E** | **CTA / systematic-macro Discovery Round 1** — 11 candidate objects triaged, 8 pre-outcome dispositions, 3 governed historical evaluations | **COMPLETE / CLOSED / EXHAUSTED** — **0 new supported edges** |
 | **F** | **Discovery Round 2** | **READY / AUTHORIZED — NOT STARTED** |
 
 **Phase E — Round 1, in one line.** Eleven candidate objects were triaged; **eight**
@@ -142,7 +145,7 @@ flowchart TD
 
     TESTED --> T1["F3 / BENB<br/>NOT PROMOTED"]
     TESTED --> T2["F5 / MMV<br/>UNRESOLVED - NOT PROMOTED"]
-    TESTED --> T3["<b>F6</b><br/>UNRESOLVED - NOT PROMOTED<br/>one sealed primary trial"]
+    TESTED --> T3["<b>F6</b><br/>UNRESOLVED - NOT PROMOTED<br/>final active Round-1 lineage"]
 
     PREOUT --> P1["F1 / TA<br/>PRE-OUTCOME CLOSE<br/>identification insufficient"]
     PREOUT --> P2["PINS<br/>PARKED<br/>PIT data authority not established"]
@@ -180,7 +183,7 @@ One authority per question — these do not compete:
 
 | you want | go to | kind |
 |---|---|---|
-| the workflow rules | [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md) *(workspace root)* | **authority** |
+| the workflow rules | `../QUANT_WORKFLOW_VNEXT.md` *(workspace-local; not published in this repository)* | **authority** |
 | current project state | [`PROJECT_STATE.md`](PROJECT_STATE.md) | **state** — never workflow authority |
 | Round-1 dispositions | [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) | derived summary |
 | the canonical TSMOM study | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) · §1 below | narrative |
@@ -321,10 +324,20 @@ attribution reconciliation, daily↔monthly reconciliation, regime/premise causa
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-**Validation status — green.** `python -m pytest -q` reports **101 passed, 0 failed**
-(verified on this branch, pandas 3.0.3). The checks belonging to the closed Time-Series
-Value and TSMOM-VRP-01 lineages pass, as do the sealed-contract conformance, data
-provenance and synthetic end-to-end rehearsal suites.
+**Validation status — not all-green, stated plainly.** `python -m pytest -q` reports
+**98 passed, 3 failed** (verified on this branch, pandas 2.3.3, Python 3.13.14). The three
+failures are **pre-existing and unrelated to any research verdict**: `OutOfBoundsDatetime`
+on synthetic fixture dates in `tests/test_xsmom_universes.py`, reproducible identically at
+earlier commits. The checks belonging to the closed Time-Series Value and TSMOM-VRP-01
+lineages pass, as do the sealed-contract conformance, data provenance and synthetic
+end-to-end rehearsal suites.
+
+The CTA-EDGE-05 / F6 lifecycle suite is **not** collected by the default pytest patterns
+and is run explicitly: `python -m pytest research/extensions/f6/f6_tests.py` reports
+**113 passed, 1 failed**. That one failure is expected and correct —
+`test_o02_no_f6_result_artifact_exists_in_the_repository` asserts an S2-era precondition
+that is *false* now the authorized S3 run has produced a result. `f6_tests.py` is
+hash-pinned in the accepted S2 build manifest and was deliberately not edited.
 
 *History, no longer current:* three tests in `tests/test_xsmom_universes.py` **previously**
 failed under an earlier pandas API-drift environment — a library-compatibility issue, never
@@ -664,9 +677,11 @@ tests its arithmetic, not its correctness.
 
 ### 4d. CTA / systematic-macro Discovery **Round 1** — **CLOSED / EXHAUSTED, no new supported edge**
 
-Ten candidates from the Round-1 discovery map were triaged under the vNext lifecycle
-`S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`. Full dispositions and
-the artifact that decides each one: **[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)**.
+Eleven candidate objects from the Round-1 discovery map were triaged under the vNext
+lifecycle `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`: **8** reached
+a terminal pre-outcome disposition and **3** proceeded to governed historical evaluation.
+Full dispositions and the artifact that decides each one:
+**[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)**.
 
 | candidate | outcome accessed? | terminal status |
 |---|---|---|
@@ -679,8 +694,9 @@ the artifact that decides each one: **[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)
 | **F6** (CTA-EDGE-05) | **yes — one consumed sealed primary trial** | **`CLOSED_UNRESOLVED_NOT_PROMOTED`** |
 | **F2 / F8 / F9 / F10** | no | blocked, parked, or not standalone |
 
-**F6 was the only Round-1 candidate to reach a governed historical execution.** It ran
-exactly once under a committed one-shot Owner authorization:
+**F6 was the final active Round-1 lineage, and one of three candidate objects that
+proceeded to governed historical evaluation** (with BENB and MMV). It ran exactly once
+under a committed one-shot Owner authorization:
 
 ```
 P1  +0.00035784   nominal 95% [-0.00062591, +0.00133231]   UNRESOLVED
@@ -698,8 +714,8 @@ is why nothing was **excluded**.
 > causal failure, or as independently confirmed. See
 > [`F6_CLOSEOUT.md`](research/extensions/f6/F6_CLOSEOUT.md).
 
-Seven of ten candidates were resolved **without spending a return trial at all**. That is
-the S0 gate working, not a shortfall. No Round-1 candidate obtained independent
+Eight of eleven candidate objects were resolved **without spending a return trial at
+all**. That is the S0 gate working, not a shortfall. No Round-1 candidate obtained independent
 confirmation, and `supported` remained a ceiling none of them reached.
 
 ---
