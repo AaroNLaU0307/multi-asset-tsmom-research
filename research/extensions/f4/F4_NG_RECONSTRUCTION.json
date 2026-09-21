@@ -1,0 +1,62 @@
+{
+ "duplicate_original_weeks": 0,
+ "history_region_sum_mismatches": 189,
+ "history_saltnonsalt_mismatches": 152,
+ "history_span": [
+  "2010-01-01",
+  "2026-09-11"
+ ],
+ "history_weeks_after_last_original": 22,
+ "history_weeks_before_first_original": 285,
+ "history_weeks_with_no_original_row": 0,
+ "originals_consecutive_no_gaps": true,
+ "originals_distinct_weeks": 565,
+ "originals_region_sum_mismatches": 185,
+ "originals_rows": 565,
+ "originals_saltnonsalt_mismatches": 151,
+ "originals_span": [
+  "2015-06-19",
+  "2026-04-10"
+ ],
+ "overlap_history_weeks": 565,
+ "per_field_revised_counts": {
+  "East Region": 12,
+  "Midwest Region": 25,
+  "Mountain Region": 36,
+  "NonSalt": 22,
+  "Pacific Region": 13,
+  "Salt": 31,
+  "South Central Region": 25,
+  "Total Lower 48": 69
+ },
+ "reconciliation_residuals_bcf": {
+  "interpretation": "consistent with independent rounding to the nearest Bcf; two non-rounding outliers (+4 and -6) flagged, not explained",
+  "region_sum_vs_total": {
+   "-1": 95,
+   "-2": 2,
+   "0": 380,
+   "1": 86,
+   "2": 1,
+   "4": 1
+  },
+  "salt_nonsalt_vs_south_central": {
+   "-1": 74,
+   "-6": 1,
+   "0": 414,
+   "1": 76
+  }
+ },
+ "revised_weeks_with_explanation": 16,
+ "revised_weeks_without_any_note": 56,
+ "revision_date_column_present": false,
+ "schema": {
+  "name": "f4-ng-first-publication-determinism",
+  "version": 1
+ },
+ "trailing_uncovered_span": [
+  "2026-04-17",
+  "2026-09-11"
+ ],
+ "weeks_any_field_revised": 72,
+ "weeks_compared": 565
+}

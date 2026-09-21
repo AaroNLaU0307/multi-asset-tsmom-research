@@ -1,0 +1,115 @@
+{
+ "basis_data_provenance_warning": "RECONSTRUCTED_HISTORICAL_SERIES_WITH_NON-VINTAGE_LIMITATION. The ETF price leg is REUSED / BURNED context; the NAV leg is a new external source. Combined provenance is MIXED / DEPENDENT: a new NAV leg does NOT launder a reused price sample.",
+ "beta_N": {
+  "lower": -4.876396829847669,
+  "point": 0.3394307627063907,
+  "replicates": 10000,
+  "upper": 9.30733812029901,
+  "valid_replicates": 10000
+ },
+ "beta_O": {
+  "lower": -8.083991504876758,
+  "point": -1.130113919282227,
+  "replicates": 10000,
+  "upper": 6.990397103610605,
+  "valid_replicates": 10000
+ },
+ "beta_T": {
+  "lower": 9996.723377942619,
+  "point": 10001.46954468199,
+  "replicates": 10000,
+  "upper": 10009.47694209112,
+  "valid_replicates": 10000
+ },
+ "bootstrap_replicates_used": 10000,
+ "calendarised_sharpe": {
+  "lower": 1.9797096027118324,
+  "point": 8.536955685955636,
+  "replicates": 10000,
+  "upper": 8.536955685955636,
+  "valid_replicates": 10000
+ },
+ "classification_flags": {
+  "gate1_supported": true,
+  "loyo_ok": true,
+  "m1_operator": "STRICT >",
+  "m1_supported": true,
+  "m1_value": 0.0,
+  "m2_operator": "STRICT >",
+  "m2_supported": true,
+  "m2_value": 0.3
+ },
+ "contract_id": "CTA-EDGE-02-BENB-PREREG-01",
+ "data_kind": "SYNTHETIC",
+ "discount_observation_count": 300,
+ "evidence_ceiling": "supported",
+ "example_artifact": true,
+ "final_class": "S",
+ "forbidden_interpretations": "REDUCED-FORM PREDICTIVE / MARKET-STRUCTURE CLAIM ONLY. A supported result does NOT prove authorised-participant causality, dealer-balance-sheet causality, that NAV is inefficient generally, that credit is mispriced generally, crisis diversification, or any TSMOM improvement. A stale-NAV result does NOT prove ETFs are inefficient or that issuer NAV is wrong in any legal or accounting sense. An overnight-convergence result is NOT a harvestable edge under this signal timing. Evidence ceiling is `supported` on a reused price sample - never confirmed, never independently confirmed.",
+ "generated_at_utc": "2026-09-14T19:40:22Z",
+ "lineage": "CTA-EDGE-02-BENB",
+ "loyo_beta_T": {
+  "min_beta_T": 9998.099094123574,
+  "min_year": 2013,
+  "passes": true,
+  "per_year_beta_T": {
+   "2010": 10001.049994341187,
+   "2011": 10003.389929358107,
+   "2012": 10003.712775572712,
+   "2013": 9998.099094123574,
+   "2014": 10001.25678640595
+  }
+ },
+ "lqd_secondary": {
+  "beta_T": {
+   "lower": 9996.723377942619,
+   "point": 10001.46954468199,
+   "replicates": 10000,
+   "upper": 10009.47694209112,
+   "valid_replicates": 10000
+  },
+  "n_discount": 300,
+  "note": "declared secondary replication; identical sealed definitions; cannot rescue, promote or qualify the HYG verdict",
+  "promotion_power": "NONE",
+  "rescue_power": "NONE",
+  "ticker": "LQD"
+ },
+ "mean_net_trade_return_bps": {
+  "lower": 54.640171982995135,
+  "point": 58.0039601953136,
+  "replicates": 10000,
+  "upper": 61.73433161720815,
+  "valid_replicates": 10000
+ },
+ "month_grid": {
+  "first": "2010-12",
+  "last": "2014-05",
+  "months": 42
+ },
+ "nav_hashes": {
+  "HYG_nav_daily.csv": "7735da958ef10522e39c9138b8cf8c686206585f3b805c327588fb61e9eae5de",
+  "LQD_nav_daily.csv": "3d78dbd80b92e9715eb9f6249597d65556d12b6517aad6832640e7296698007a",
+  "ishares_HYG_fund_download.xml": "10dcd91e095a56d83762019738aa5b14374ea5d1f723616636b52170150ec533",
+  "ishares_LQD_fund_download.xml": "d0cc3b0121806b20a227b00ae50d3f8523e6cc560e7bae16d715824b50ce0a47"
+ },
+ "premium_descriptive": {
+  "n_premium_eligible": 603.0
+ },
+ "production_bootstrap_replicates": 10000,
+ "qualifier": "",
+ "raw_price_hashes": {
+  "HYG_raw_ohlc.csv": "1ed30697cd0c665d9abe3d60abfe8c03314fb8889f3a459df207c5b85cb3bce8",
+  "LQD_raw_ohlc.csv": "9d120233fd18bbd28188c18ce5a99b8347416f58b903d7452b83b47d011fe036"
+ },
+ "research_status": "supported",
+ "run_authorization_id": null,
+ "schema_version": "BENB-RESULT-1",
+ "seal_commit": "c1a3f8155a9fdb86d55b620c33498f604fcbf8d0",
+ "seal_manifest_sha256": "6aa0d21401b9887f4a44ab6559fa10d7a59ae5a8b512e1ad306543c061483703",
+ "sealed_prereg_sha256": "1b7ca2122ba14c4097e4d76d7a733bf0c77ab9c0d02dd93a38c25bc1be5160cf",
+ "structural_eligible_count": 903,
+ "synthetic_only": "YES",
+ "synthetic_world": "SYNTHETIC_TRADABLE_CONVERGENCE_FIXTURE",
+ "synthetic_world_note": "Every number in this file is a property of a CONSTRUCTED FIXTURE. It is not a HYG result, not evidence about HYG, and not a backtest. The headline world is the one that populates every schema field, including the Gate-2 flags.",
+ "years_with_discount": 5
+}

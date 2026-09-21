@@ -1,0 +1,310 @@
+{
+  "REAL_PERFORMANCE_REVEALED": "NO",
+  "REAL_RUN_AUTHORIZED": "NO",
+  "REAL_STAGE_A_COMPUTED": "NO",
+  "REAL_STAGE_B_COMPUTED": "NO",
+  "S3_AUTHORIZED": "NO",
+  "acceptance_suite": {
+    "failed": 0,
+    "passed": 100,
+    "total": 100
+  },
+  "ca_access_audit": {
+    "CANONICAL_FORWARD_RETURN_COMPUTED": "NO",
+    "C_A_POSITION_LAYER_ACCESSED": "NO",
+    "C_A_PROSPECTIVE_OUTCOME_ACCESSED": "NO",
+    "C_A_PROTECTED_STORE_ACCESSED": "NO",
+    "C_A_RETURN_LAYER_ACCESSED": "NO",
+    "findings": [],
+    "lineage": "TSMOM-VRP-01",
+    "pass": true,
+    "vrp_protected_store": "C:/Users/Aaron/OneDrive/Desktop/Quant trade/multi-asset-tsmom-research/data/vrp_protected",
+    "vrp_protected_store_is_its_own": true
+  },
+  "commit": null,
+  "contract_id": "TSMOM-VRP-01-PREREG-01",
+  "generated_utc": "2026-09-14T13:07:22Z",
+  "items": [
+    {
+      "evidence_prefix": "test_i01_",
+      "failing_tests": 0,
+      "item": 1,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "Data hashes"
+    },
+    {
+      "evidence_prefix": "test_i02_",
+      "failing_tests": 0,
+      "item": 2,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "Specification-history tests"
+    },
+    {
+      "evidence_prefix": "test_i03_",
+      "failing_tests": 0,
+      "item": 3,
+      "level": 1,
+      "result": "PASS",
+      "tests": 5,
+      "title": "Contract identity"
+    },
+    {
+      "evidence_prefix": "test_i04_",
+      "failing_tests": 0,
+      "item": 4,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "Roll-weight determinism"
+    },
+    {
+      "evidence_prefix": "test_i05_",
+      "failing_tests": 0,
+      "item": 5,
+      "level": 1,
+      "result": "PASS",
+      "tests": 4,
+      "title": "Missing-data branch tests"
+    },
+    {
+      "evidence_prefix": "test_i06_",
+      "failing_tests": 0,
+      "item": 6,
+      "level": 1,
+      "result": "PASS",
+      "tests": 7,
+      "title": "Cost rule tests"
+    },
+    {
+      "evidence_prefix": "test_i07_",
+      "failing_tests": 0,
+      "item": 7,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "2007 rescaling tests"
+    },
+    {
+      "evidence_prefix": "test_i08_",
+      "failing_tests": 0,
+      "item": 8,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "Tick-history tests"
+    },
+    {
+      "evidence_prefix": "test_i09_",
+      "failing_tests": 0,
+      "item": 9,
+      "level": 1,
+      "result": "PASS",
+      "tests": 2,
+      "title": "Stress identity"
+    },
+    {
+      "evidence_prefix": "test_i10_",
+      "failing_tests": 0,
+      "item": 10,
+      "level": 2,
+      "result": "PASS",
+      "tests": 2,
+      "title": "Granularity gate"
+    },
+    {
+      "evidence_prefix": "test_i11_",
+      "failing_tests": 0,
+      "item": 11,
+      "level": 2,
+      "result": "PASS",
+      "tests": 2,
+      "title": "Stressed-margin gate"
+    },
+    {
+      "evidence_prefix": "test_i12_",
+      "failing_tests": 0,
+      "item": 12,
+      "level": 1,
+      "result": "PASS",
+      "tests": 5,
+      "title": "Stage-A accounting oracle"
+    },
+    {
+      "evidence_prefix": "test_i13_",
+      "failing_tests": 0,
+      "item": 13,
+      "level": 1,
+      "result": "PASS",
+      "tests": 4,
+      "title": "Self-financing Stage-B ledger oracle"
+    },
+    {
+      "evidence_prefix": "test_i14_",
+      "failing_tests": 0,
+      "item": 14,
+      "level": 1,
+      "result": "PASS",
+      "tests": 3,
+      "title": "Forced-liquidation oracle"
+    },
+    {
+      "evidence_prefix": "test_i15_",
+      "failing_tests": 0,
+      "item": 15,
+      "level": 1,
+      "result": "PASS",
+      "tests": 2,
+      "title": "Book-exhaustion oracle"
+    },
+    {
+      "evidence_prefix": "test_i16_",
+      "failing_tests": 0,
+      "item": 16,
+      "level": 1,
+      "result": "PASS",
+      "tests": 9,
+      "title": "Bootstrap reproducibility"
+    },
+    {
+      "evidence_prefix": "test_i17_",
+      "failing_tests": 0,
+      "item": 17,
+      "level": 1,
+      "result": "PASS",
+      "tests": 13,
+      "title": "Every result state synthetically reachable"
+    },
+    {
+      "evidence_prefix": "test_sab_",
+      "failing_tests": 0,
+      "item": 18,
+      "level": 1,
+      "result": "PASS",
+      "tests": 17,
+      "title": "Sabotage tests"
+    },
+    {
+      "evidence_prefix": "test_i19_",
+      "failing_tests": 0,
+      "item": 19,
+      "level": 1,
+      "result": "PASS",
+      "tests": 1,
+      "title": "C-A access audit"
+    },
+    {
+      "evidence_prefix": "test_i20_",
+      "failing_tests": 0,
+      "item": 20,
+      "level": 1,
+      "result": "PASS",
+      "tests": 1,
+      "title": "Frozen-constant transcription"
+    },
+    {
+      "evidence_prefix": "test_i21_",
+      "failing_tests": 0,
+      "item": 21,
+      "level": 1,
+      "result": "PASS",
+      "tests": 6,
+      "title": "No generated outcome before acceptance"
+    }
+  ],
+  "lineage": "TSMOM-VRP-01",
+  "overall": "PASS",
+  "recorded_at_head_before_commit": "72499019ce9ef97f16d1ddf3b3982697a4e6c4cc",
+  "s1_seal_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
+  "s2a_counts": {
+    "CALENDAR_DECLARED_CFE_ONLY_SESSIONS": 3,
+    "CALENDAR_MISMATCH_COUNT": 0,
+    "CHAIN_DAYS": 5617,
+    "CONTRACT_COUNT": 268,
+    "EXCHANGE_SESSIONS": 5654,
+    "EXPIRY_RULE_BREAK_COUNT": 1,
+    "EXPIRY_RULE_MATCH_COUNT": 264,
+    "FIRST_AVAILABLE_DATE": "2004-03-26",
+    "INELIGIBLE_MONTHS_BEFORE_FIRST": [
+      "2004-05",
+      "2004-07",
+      "2004-08",
+      "2004-10",
+      "2005-01",
+      "2005-03",
+      "2005-06",
+      "2005-10",
+      "2005-11",
+      "2006-01",
+      "2006-02",
+      "2006-04",
+      "2006-05",
+      "2006-07",
+      "2006-08"
+    ],
+    "LAST_AVAILABLE_DATE": "2026-09-11",
+    "MONTHLY_CONTRACT_COUNT_IN_WINDOW": 242,
+    "NEVER_LISTED_MONTHS": [
+      "2004-12",
+      "2005-04",
+      "2005-07",
+      "2005-09"
+    ],
+    "NUMBER_OF_CONTRACTS_WITH_GAPS_IN_WINDOW": 0,
+    "NUMBER_OF_DUPLICATES": 0,
+    "NUMBER_OF_MISSING_SETTLEMENTS_IN_WINDOW": 0,
+    "NUMBER_OF_ROWS": 47160,
+    "NUMBER_OF_SETTLED_ROWS": 46331,
+    "SPECIFICATION_BREAK_COUNT": 1,
+    "STAGE_A_FIRST_MONTH": "2006-09",
+    "STAGE_A_LAST_MONTH": "2026-08",
+    "STAGE_A_MONTHS": 240,
+    "TICK_HISTORY_BREAK_COUNT": 1
+  },
+  "s2a_status": "PASS",
+  "secret_scan": {
+    "files_scanned": 36,
+    "findings": [],
+    "result": "PASS"
+  },
+  "validators": [
+    {
+      "check": "sealed S1 artifacts unmodified",
+      "detail": "unchanged: 4 artifacts",
+      "pass": true
+    },
+    {
+      "check": "frozen constants match the sealed text",
+      "detail": "27 constants + 7 identities verified against the sealed text",
+      "pass": true
+    },
+    {
+      "check": "descriptive c0=0.05 isolated from the primary path",
+      "detail": "no primary module references the c0 = 0.05 variant",
+      "pass": true
+    },
+    {
+      "check": "no last-trade / SOQ price on any primary path",
+      "detail": "settlement-only; loader reads Futures,Open Interest,Settle,Total Volume,Trade Date",
+      "pass": true
+    },
+    {
+      "check": "no funding charge in any ledger",
+      "detail": "no funding charge, interest or borrowing in either ledger",
+      "pass": true
+    },
+    {
+      "check": "no loss clipping in any ledger",
+      "detail": "no clip / floor at -1.0 in either ledger",
+      "pass": true
+    },
+    {
+      "check": "seed protocol matches the seal manifest",
+      "detail": "SeedSequence(7).spawn(4) children in the sealed order",
+      "pass": true
+    }
+  ]
+}

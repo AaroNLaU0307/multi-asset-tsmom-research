@@ -1,0 +1,207 @@
+{
+  "gates": [
+    {
+      "check": "canonical base (main) is an ancestor of HEAD",
+      "detail": "d232d3361b23",
+      "pass": true
+    },
+    {
+      "check": "S1 seal is an ancestor of HEAD",
+      "detail": "16d84545ba13",
+      "pass": true
+    },
+    {
+      "check": "S2 build is an ancestor of HEAD",
+      "detail": "72499019ce9e",
+      "pass": true
+    },
+    {
+      "check": "S2 governance closure is an ancestor of HEAD",
+      "detail": "f196cfdc3a86",
+      "pass": true
+    },
+    {
+      "check": "main is unmoved at the canonical base",
+      "detail": "d232d3361b23",
+      "pass": true
+    },
+    {
+      "check": "all four sealed S1 artifacts byte-identical to the seal",
+      "detail": "unchanged: 4 artifacts",
+      "pass": true
+    },
+    {
+      "check": "VRP_S1_MECHANICAL_ERRATUM_01.md matches the authorised hash",
+      "detail": "b8a089ac2f1d3f26",
+      "pass": true
+    },
+    {
+      "check": "the engine implements the SIGNED VM convention of the erratum",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "post-S2 validator content checks still PASS",
+      "detail": "45 PASS of 47",
+      "pass": true
+    },
+    {
+      "check": "the ONLY post-S2 failures are the enumerated S3-state assertions",
+      "detail": "no single-use Owner EXECUTION authorisation is committed; the governed-run entry gate REFUSES a real run",
+      "pass": true
+    },
+    {
+      "check": "the original S1 validator still reports 113 content checks PASS",
+      "detail": "exit 1",
+      "pass": true
+    },
+    {
+      "check": "S2A data gate PASSES (raw hashes re-verified)",
+      "detail": "exit 0",
+      "pass": true
+    },
+    {
+      "check": "first eligible complete month is the sealed 2006-09",
+      "detail": "2006-09",
+      "pass": true
+    },
+    {
+      "check": "the eligible window is EXACTLY the sealed window",
+      "detail": "2006-09..2026-08",
+      "pass": true
+    },
+    {
+      "check": "month count is exactly 240",
+      "detail": "240 months",
+      "pass": true
+    },
+    {
+      "check": "the window contains no month at or after the cutoff 2026-09-01",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "September 2026 is excluded",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "months are contiguous with no gap month",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "no month exceeds 2 carry-forward days per contract",
+      "detail": "worst = 0",
+      "pass": true
+    },
+    {
+      "check": "every held contract has a settlement on every day of the window",
+      "detail": "5032 chain days",
+      "pass": true
+    },
+    {
+      "check": "roll weights sum to 1 within 1e-12",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "front weight is 0 on the last settlement before final settlement",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "daily transfer is exactly 1/dt",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "expiry identity holds for every expired contract",
+      "detail": "264 expired contracts, 0 mismatches",
+      "pass": true
+    },
+    {
+      "check": "calendar consistency: zero unexplained differences",
+      "detail": "3 declared CFE-only session(s), 0 unexplained",
+      "pass": true
+    },
+    {
+      "check": "official settlement only; no last-trade or SOQ on any primary path",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "specification break table covers the window with no gaps",
+      "detail": "None",
+      "pass": true
+    },
+    {
+      "check": "stressed-margin gate (1-b)K >= R_J",
+      "detail": "slack = 0.20*K",
+      "pass": true
+    },
+    {
+      "check": "integer granularity within +/-10 %% at the sealed research book",
+      "detail": "2 standard / 20 mini contracts, 0.0 % error",
+      "pass": true
+    },
+    {
+      "check": "stress identity Loss_J = 0.30*K",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "static C-A access audit PASSES",
+      "detail": "21 files, 0 findings",
+      "pass": true
+    },
+    {
+      "check": "the ONLY acceptance-suite failures are the enumerated S3-state assertions",
+      "detail": "test_i21_no_execution_authorization_exists; test_i21_real_stage_a_is_refused_during_s2",
+      "pass": true
+    },
+    {
+      "check": "every other acceptance test still passes",
+      "detail": "2 failed, 98 passed",
+      "pass": true
+    },
+    {
+      "check": "secret scan clean",
+      "detail": "36 files, 0 finding(s)",
+      "pass": true
+    },
+    {
+      "check": "acceptance log is committed and all items PASS",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "a single-use Owner EXECUTION grant is committed",
+      "detail": "VRP-AUTH-0001",
+      "pass": true
+    },
+    {
+      "check": "no REVEAL grant is committed yet (reveal comes after verification)",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "the VRP protected store is its own, never the C-A store",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "the protected store is EMPTY (no prior governed run)",
+      "detail": "0 file(s)",
+      "pass": true
+    },
+    {
+      "check": "the protected store path is git-ignored",
+      "detail": "",
+      "pass": true
+    }
+  ],
+  "generated_utc": "2026-09-14T13:24:00Z",
+  "result": "PASS",
+  "run_id": "VRP-STAGE-A-RUN-0001"
+}

@@ -1,0 +1,103 @@
+{
+  "gates": [
+    {
+      "check": "RUN_COUNT = 1 (exactly one protected result exists)",
+      "detail": "1 file(s)",
+      "pass": true
+    },
+    {
+      "check": "SAMPLE_MATCH",
+      "detail": "2006-09..2026-08",
+      "pass": true
+    },
+    {
+      "check": "MONTH_COUNT = 240",
+      "detail": "240",
+      "pass": true
+    },
+    {
+      "check": "monthly series length matches the month count",
+      "detail": "240",
+      "pass": true
+    },
+    {
+      "check": "SEALED_CONSTANTS_MATCH",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "OWNER_VALUES_MATCH (constants re-asserted against the sealed text)",
+      "detail": "27 constants + 7 identities verified against the sealed text",
+      "pass": true
+    },
+    {
+      "check": "RAW_HASHES_MATCH",
+      "detail": "274 files",
+      "pass": true
+    },
+    {
+      "check": "raw manifest hash unchanged since the run",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "CODE_COMMIT_MATCH (the run recorded the commit it actually ran at)",
+      "detail": "run 2ef4700497dd vs HEAD 2ef4700497dd",
+      "pass": true
+    },
+    {
+      "check": "the run's seal / build / closure pins match this lineage",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "S1_HASHES_MATCH",
+      "detail": "unchanged: 4 artifacts",
+      "pass": true
+    },
+    {
+      "check": "ERRATUM_HASH_MATCH",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "RNG_MATCH (seed, streams, block, replicates, floor)",
+      "detail": "seed 7, stream stage_a_historical",
+      "pass": true
+    },
+    {
+      "check": "bootstrap valid-replicate floor met",
+      "detail": "10000 valid / 10000",
+      "pass": true
+    },
+    {
+      "check": "NO_STAGE_B_EXECUTION",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "NO_C_A_ACCESS",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "TRIAL_LEDGER_INCREMENT = EXACTLY_1",
+      "detail": "",
+      "pass": true
+    },
+    {
+      "check": "PROTECTED_RESULT_HASHED and reproducible",
+      "detail": "baa0a07d647b4d1b",
+      "pass": true
+    },
+    {
+      "check": "RESULT_STATE = GENERATED_NOT_SEEN",
+      "detail": "",
+      "pass": true
+    }
+  ],
+  "generated_utc": "2026-09-14T13:24:32Z",
+  "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+  "result": "PASS",
+  "run_id": "VRP-STAGE-A-RUN-0001"
+}

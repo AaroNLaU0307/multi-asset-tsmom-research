@@ -1,0 +1,590 @@
+{
+ "SEAL_STATUS": "DRAFT / OWNER_APPROVAL_REQUIRED",
+ "accounting": {
+  "exposure_ledger_changed": false,
+  "exposure_ledger_reason": "An EXPOSURE_EVENT is a computation or read that REVEALS OUTCOMES OR MEASUREMENTS. No F6 outcome or measurement exists, so there is no row to append.",
+  "f6_primary_trial_consumed": false,
+  "ledger_preseal_owner_review_required": false,
+  "trial_ledger_changed": false,
+  "trial_ledger_reason": "The HYPOTHESIS_FAMILY schema declares a family AT THE SEAL ('appended here at the seal, before any member has run' \u2014 F-TA, F-BENB). F6 is NOT SEALED, so the F-F6 row is not yet due. The row is DRAFTED in the preregistration draft section 16.1 so it can be appended at the seal rather than transcribed late as F-MMV was."
+ },
+ "bootstrap": {
+  "B": 100000,
+  "blocks": 15,
+  "estimand_weighting": "EVENT-WEIGHTED / SESSION-WEIGHTED, NOT equally weighted annual means",
+  "executed": false,
+  "interval": "two-sided nominal 95% percentile-bootstrap",
+  "interval_wording": "NOMINAL 95% PERCENTILE-BOOTSTRAP INTERVAL. Never 'exact 95% coverage'.",
+  "lower_quantile": 0.025,
+  "numpy_version": "2.5.0",
+  "pandas_version": "2.3.3",
+  "procedure": [
+   "draw 15 calendar-year labels WITH REPLACEMENT from {2011..2025}",
+   "concatenate the complete year blocks, duplicating a year's rows if drawn more than once",
+   "compute the EVENT-WEIGHTED P1 mean on the replicated event rows",
+   "refit the EXACT fixed P2 OLS on the replicated daily rows",
+   "retain the P1 mean and beta_EVENT"
+  ],
+  "python_version": "3.13.14",
+  "quantile_implementation": "numpy.percentile(..., method=\"linear\")",
+  "same_draw_for_p1_and_p2": true,
+  "seed_first8_hex": "97704c2e",
+  "seed_literal_uint32": 2540719150,
+  "seed_provenance": "derived from FINAL_EVENT_MANIFEST_SHA256 (metadata) per the current Owner instruction, which SUPERSEDES OD-2's seal-derived seed. NEVER derived from returns or from a post-result artifact.",
+  "seed_sha256": "97704c2ecdc530a56386c0a6b1a878bdf3083ad992011d6b946fd2a3bedcb180",
+  "seed_source_string": "CTA-EDGE-05|F6|S1_BOOTSTRAP|49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+  "upper_quantile": 0.975,
+  "years": [
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ]
+ },
+ "bootstrap_rank_owner_review_required": false,
+ "cash_proxy": {
+  "daycount_attribution": "THE /365 CONVENTION IS OWNER-CHOSEN. It must NEVER be attributed to Treasury, H.15 or FRED.",
+  "formula": "rf_hold(d) = (DGS3MO annual percent / 100) * HOLD_calendar_days(d) / 365",
+  "mapping_rule": "last official observation dated on or before the benchmark date, carrying forward ONLY across source-explained non-publication. NO arbitrary 7-day rule.",
+  "not_role": [
+   "signal",
+   "eligibility input",
+   "position input",
+   "sizing input"
+  ],
+  "role": "OWNER-CHOSEN EX-POST CASH OPPORTUNITY-COST PROXY",
+  "series": "DGS3MO",
+  "unexplained_gap_behaviour": "IMPLEMENTATION HOLD. Do not substitute another cash series.",
+  "validation": {
+   "carry_distribution": {
+    "0": 3744,
+    "1": 8,
+    "3": 20
+   },
+   "max_carry_calendar_days": 3,
+   "pass": true,
+   "sessions": 3772,
+   "unexplained_gaps": []
+  }
+ },
+ "claim_cap": {
+  "must_not_claim": [
+   "causal uncertainty compensation",
+   "independent confirmation",
+   "individual FOMC alpha",
+   "individual CPI alpha",
+   "individual NFP alpha",
+   "TLT premium",
+   "pre-FOMC drift",
+   "post-2015 persistence",
+   "future persistence",
+   "buy-and-hold dominance",
+   "significance after every LOYO deletion",
+   "production-grade fills",
+   "exact finite-sample 95% coverage"
+  ],
+  "qualifiers": [
+   "HISTORICAL",
+   "DEPENDENT",
+   "T0",
+   "SUPPORTED",
+   "adjusted-close execution proxy",
+   "Owner-chosen cash proxy",
+   "approximate 15-year-block inference"
+  ],
+  "strongest_success_claim": "On the frozen single-vendor adjusted-close SPY panel for 2011-2025, the predeclared prior-close-to-event-session-close pooled rule on the 462 archive-eligible scheduled FOMC, CPI and Employment Situation sessions met its fixed promotion criteria: its mean event payoff, after the Owner-chosen DGS3MO cash opportunity-cost proxy and 4 bps round-trip cost, had a nominal 95% calendar-year percentile-bootstrap lower endpoint above zero; the EVENT coefficient in the fixed gross cash-excess return regression with weekday, TOM, holding-length and 10y/30y-auction controls also had a nominal lower endpoint above zero; and both point estimates remained positive after each single-calendar-year deletion."
+ },
+ "claim_identity": {
+  "evidence_ceiling": "SUPPORTED",
+  "f6b_pre_fomc_drift": "SEPARATE FUTURE LINEAGE; NOT COMPUTED",
+  "f6c_era_split": "DESCRIPTIVE ONLY; NO PROMOTION; NO RESCUE",
+  "global_pooling": "MATERIAL PRE-OUTCOME DESIGN COMPLETION, NOT ORIGINAL PROMOTION AUTHORITY",
+  "independent_confirmation": false,
+  "promotion_instrument": "SPY ONLY",
+  "sample_reuse_class": "T0_REUSED_DEPENDENT",
+  "scientific_object": "historical pooled scheduled-macro-announcement-day edge in SPY",
+  "tlt": "STRUCK ENTIRELY FROM CTA-EDGE-05 OUTCOME COMPUTATION"
+ },
+ "diagnostics": {
+  "additional_promotion_capable_diagnostics": "FORBIDDEN",
+  "f6b": "NONE",
+  "new_lofo_or_regime_diagnostics": "FORBIDDEN \u2014 not added merely because the reviewer mentioned them illustratively",
+  "per_family_summaries": "permitted ONLY where already adopted by Owner authority; PROMOTION_POWER = NONE, RESCUE_POWER = NONE, no alternate weighting, no family-deletion rescue",
+  "tlt": "NONE",
+  "y2026_performance": "NONE"
+ },
+ "event_universe": {
+  "families": [
+   "FOMC",
+   "CPI",
+   "NFP"
+  ],
+  "family_labels": {
+   "CPI": 176,
+   "FOMC": 119,
+   "NFP": 176
+  },
+  "family_labels_total": 471,
+  "final_primary_event_count": 462,
+  "multi_event_sessions": 9,
+  "overlap_adjustment": 9,
+  "pit_exclusions_permanent": [
+   "NFP 2013-10-22",
+   "CPI 2013-10-30 (label only)",
+   "CPI 2013-11-20",
+   "NFP 2025-11-20",
+   "NFP 2025-12-16",
+   "CPI 2025-12-18"
+  ],
+  "post_seal_reinstatement": "FORBIDDEN",
+  "primary_years": [
+   2011,
+   2025
+  ],
+  "same_day_rule": "ONE trade, ONE unit, ONE return, ONE primary observation. Diagnostic labels may be multiple. NO DOUBLE NOTIONAL.",
+  "y2026": "NO F6 OUTCOME QUANTITY MAY BE FORMED"
+ },
+ "final_independent_review": {
+  "byte_identical_to_source": true,
+  "final_class": "B_READY_FOR_S1_SEAL_WITH_CLAIM_CAP_NARROWING",
+  "imported": true,
+  "rewritten_or_normalized": false,
+  "seal_authorized_by_this_review": false,
+  "sha256": "23f723ed100ca71e11bc8b99f03a2ddf86988b0654ebb7b66e1537daf23ab589",
+  "sidecar": "F6_FINAL_INDEPENDENT_REVIEW_2026-09-21_ASTRA_01.md.sha256, copied verbatim from the source workspace. The repository's own convention is MANIFEST PINNING (it carried no checksum sidecars before this one), so THIS MANIFEST ENTRY is the binding pin and the sidecar is a faithful copy of the accompanying artifact.",
+  "source_path": "C:\\Users\\Aaron\\OneDrive\\Documents\\ChatGPT\\multi-asset-tsmom-research\\reviews\\F6_FINAL_INDEPENDENT_REVIEW_2026-09-21_ASTRA_01.md",
+  "status": "PASS"
+ },
+ "firewall": {
+  "beta_event_computed": false,
+  "bootstrap_executed": false,
+  "ci_computed": false,
+  "f6b_accessed": false,
+  "loyo_performance_computed": false,
+  "nq_accessed": false,
+  "price_panel_use": "DATE INDEX and column PRESENCE (notna) only",
+  "price_values_read": false,
+  "r_excess_computed": false,
+  "r_net_computed": false,
+  "sharpe_computed": false,
+  "spy_return_computed": false,
+  "tlt_accessed": false,
+  "y2026_outcome_accessed": false
+ },
+ "fixed_p2_model": {
+  "auction_source": "TA_EVENT_CALENDAR.csv, tenor_family in {10-Year, 30-Year} nominal coupon auctions",
+  "columns": [
+   "const",
+   "weekday_Monday",
+   "weekday_Thursday",
+   "weekday_Tuesday",
+   "weekday_Wednesday",
+   "EVENT",
+   "TOM",
+   "HOLD",
+   "AUCTION"
+  ],
+  "event_in_span_of_controls": false,
+  "forbidden": [
+   "interactions",
+   "matched-control alternative",
+   "alternate regression",
+   "variable selection",
+   "fallback model",
+   "post-result model repair"
+  ],
+  "full_rank": true,
+  "interpretation": "CONDITIONAL LINEAR ASSOCIATION, not causal identification. The control is NOT called conservative.",
+  "rank": 9,
+  "shape": [
+   3772,
+   9
+  ],
+  "specification": "r_excess(d) = a + beta_EVENT*EVENT(d) + weekday dummies + TOM(d) + HOLD(d) + AUCTION(d) + error(d)",
+  "tom_source": "src/seasonality.py::is_tom (sealed), SEAS_TOM_LAST / SEAS_TOM_FIRST from config",
+  "weekday_baseline": "Friday"
+ },
+ "gates": {
+  "P1": "lower endpoint of the nominal 95% calendar-year percentile-bootstrap interval for mean r_net > 0",
+  "P2": "lower endpoint of the nominal 95% calendar-year percentile-bootstrap interval for beta_EVENT > 0",
+  "P3": "ONLY if P1 and P2 pass. Delete one complete calendar year at a time, refit the identical objects; EVERY P1 point estimate AND every P2 beta_EVENT point estimate must remain STRICTLY > 0. No deletion-specific significance requirement.",
+  "P3_failure": "ONE_YEAR_FRAGILITY / NOT_PROMOTED. NOT mechanism falsification.",
+  "promotion_uses": "LOWER ENDPOINT ONLY"
+ },
+ "generated": "2026-09-21",
+ "git_head_at_generation": "523687f1adbfcd801847b3fe169de6c26125edc6",
+ "historical_provenance_reservation": {
+  "blocking": false,
+  "note": "The pre-S0 independent artifact was NEVER PERSISTED and is NOT RECOVERED. The transcript pinned above is a controller-supplied reconstruction with no original hash. Nothing here claims recovery or retrospective certification.",
+  "value": true
+ },
+ "individual_year_matrix_rank_pass": true,
+ "inference_limitation": [
+  "15 year blocks imply approximate, assumption-dependent inference.",
+  "A large event count does not create additional independent year clusters.",
+  "The bootstrap does NOT establish finite-sample calibrated 95% coverage.",
+  "The bootstrap does NOT establish cross-regime replication.",
+  "The bootstrap does NOT establish future persistence.",
+  "LOYO does NOT validate bootstrap coverage.",
+  "LOYO does NOT establish stable magnitudes."
+ ],
+ "lineage": "CTA-EDGE-05 / F6 MACRO_ANNOUNCEMENT_PREMIUM",
+ "p2_population": {
+  "opening_2011_row_rule_validated": true,
+  "opening_boundary": {
+   "boundary_role": "INPUT BOUNDARY OBSERVATION \u2014 supplies the lagged close, the interval boundary and HOLD for the first 2011 session. It is NOT a 2010 regression row.",
+   "first_primary_session": "2011-01-03",
+   "lag_boundary_session": "2010-12-31",
+   "rows_dropped_for_undefined_HOLD": 0
+  },
+  "rows": 3772,
+  "rule": "EVERY trading session in calendar years 2011-2025. NO ROW DROPPED."
+ },
+ "per_year_rank": {
+  "2011": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2012": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  },
+  "2013": {
+   "cols": 9,
+   "events": 29,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2014": {
+   "cols": 9,
+   "events": 30,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2015": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2016": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2017": {
+   "cols": 9,
+   "events": 29,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2018": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2019": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2020": {
+   "cols": 9,
+   "events": 30,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 253
+  },
+  "2021": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2022": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2023": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  },
+  "2024": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2025": {
+   "cols": 9,
+   "events": 27,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  }
+ },
+ "pins": {
+  "dgs3mo_authority": {
+   "path": "data/DGS3MO.csv",
+   "role": "Owner-chosen ex-post cash opportunity-cost proxy source",
+   "root": "repository",
+   "sha256": "50da2bfbb25e3e3241af7a4ad16e5a1bb5f08cdfb46bcb92f224954dce054319"
+  },
+  "exposure_ledger": {
+   "path": "ops/EXPOSURE_LEDGER.md",
+   "role": "UNCHANGED; no outcome revealed, so no EXPOSURE_EVENT exists",
+   "root": "repository",
+   "sha256": "ed3c5bf93a8c768b30237b9772f6c2e8ddec2c9bd9ea199992352c486ae72730"
+  },
+  "final_event_manifest": {
+   "path": "research/extensions/f6/F6_FINAL_EVENT_MANIFEST.json",
+   "role": "the authoritative 462-session event sample",
+   "root": "repository",
+   "sha256": "49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382"
+  },
+  "final_independent_astra_review": {
+   "path": "research/extensions/review_history/F6_FINAL_INDEPENDENT_REVIEW_2026-09-21_ASTRA_01.md",
+   "role": "ACTIVE pre-S1 independent review authority; PASS / B_READY_FOR_S1_SEAL_WITH_CLAIM_CAP_NARROWING",
+   "root": "repository",
+   "sha256": "23f723ed100ca71e11bc8b99f03a2ddf86988b0654ebb7b66e1537daf23ab589"
+  },
+  "final_schedule_pit_gate": {
+   "path": "research/extensions/f6/F6_SCHEDULE_PIT_FINAL_GATE.md",
+   "role": "the fail-closed eligibility ruling that produced it",
+   "root": "repository",
+   "sha256": "de24eec7bd4f2be15181d93611e7e4e17305027c23cffb8e6c2c72230f769b2d"
+  },
+  "frozen_metadata_audit_rule": {
+   "path": "research/extensions/f6/F6_METADATA_AUDIT_RULE.md",
+   "role": "frozen pre-retrieval audit rule, immutable",
+   "root": "repository",
+   "sha256": "5063fe3b35deb09674cbb32078744822c2db403959317996c18f93aade32be11"
+  },
+  "independent_adjudication_transcript": {
+   "path": "research/extensions/f6/F6_INDEPENDENT_ADJUDICATION_CONTROLLER_TRANSCRIPT.md",
+   "role": "controller-supplied RECONSTRUCTION of the missing pre-S0 review. NOT the original bytes, carries NO original hash, NOT independent evidence",
+   "root": "repository",
+   "sha256": "7fa226d0a2a5574a5fe0e3e96b3e9f689943c1dddc5434fa22daf370319755f3"
+  },
+  "od_1a_1h": {
+   "path": "Research Reports/2026-09-20-cta-edge-05-f6-od-1a-1h-s0-design-decisions-fable-01.md",
+   "role": "OD-1 S0 design decisions",
+   "root": "workspace",
+   "sha256": "0066584e7c4267926a6977eb0159a5b978057865baafc00df31f6ed62abcac10"
+  },
+  "od_2a_2h": {
+   "path": "Research Reports/2026-09-20-cta-edge-05-f6-od-2a-2h-pooling-control-gates-fable-01.md",
+   "role": "OD-2 pooling and control gates",
+   "root": "workspace",
+   "sha256": "4adaadc8f5be6ce0bc2a928cf1d68ffad296ff8ec2b146a50af9248a9e6b34b1"
+  },
+  "od_ty_od_cash": {
+   "path": "Research Reports/2026-09-21-cta-edge-05-f6-od-3a-3b-terminal-year-cash-return-object-fable-01.md",
+   "role": "F6-OD-TY / F6-OD-CASH, filed under its historical od-3a-3b name",
+   "root": "workspace",
+   "sha256": "bf1642efd43ccdabbe95a8ba3f6b0bced808932c2c7c2934482c4eb2d3832a23"
+  },
+  "owner_decision_record": {
+   "path": "ops/OWNER_DECISION_RECORD_CTA_EDGE_05_F6.md",
+   "role": "current F6 Owner decisions, including F6-OD-TY / F6-OD-CASH / F6-OD-PIT",
+   "root": "repository",
+   "sha256": "0912398432ee730fdea7ee6b48137c0633e5e631a51685ce5f614d8209e0917f"
+  },
+  "preseal_validation_evidence": {
+   "path": "research/extensions/f6/F6_S1_PRESEAL_VALIDATION.json",
+   "role": "machine output of the pre-seal validation",
+   "root": "repository",
+   "sha256": "40b389068431067ae32f04ffb9f9098654cb633190df8a666f5949e67b618df9"
+  },
+  "preseal_validation_script": {
+   "path": "research/extensions/f6/f6_s1_preseal_validate.py",
+   "role": "the validator that produced it",
+   "root": "repository",
+   "sha256": "e35a1ba97872795b5064c5a4173e92ecbce7428d1dabc0f5133174f96f26bbba"
+  },
+  "round1_f6_authority": {
+   "path": "2026-09-15-cta-edge-discovery-r1-mechanism-feature-map-fable-01.md",
+   "role": "original Round-1 F6 fields 1-15",
+   "root": "workspace",
+   "sha256": "02ca5f45fe41763e55a353090645c3b2a98b6dcf5fce572623ede604e569344a"
+  },
+  "s0_completion_record": {
+   "path": "research/extensions/f6/F6_S0_COMPLETION_RECORD.md",
+   "role": "S0 completion; its 467 count is SUPERSEDED by the final manifest",
+   "root": "repository",
+   "sha256": "40a84ed9ac4dd749be19fa9d5d376053b6b1e25536aa31816863376b9dd39003"
+  },
+  "s0_feasibility_report": {
+   "path": "research/extensions/f6/F6_EVENT_SCHEDULE_PIT_REPORT.md",
+   "role": "S0 schedule-PIT feasibility",
+   "root": "repository",
+   "sha256": "5a516516bc4bcbad1b25219ba0b3d5386fe7559858b941f4eecb2a879788e506"
+  },
+  "s0_repair_record": {
+   "path": "research/extensions/f6/F6_S0_REPAIR_RECORD.md",
+   "role": "S0 repair pass",
+   "root": "repository",
+   "sha256": "feebb831d42a7f7a51012b43fd03104e62f7482d5ee329f99d4bc258d3330b96"
+  },
+  "s1_preregistration_draft": {
+   "path": "research/extensions/f6/F6_S1_PREREGISTRATION_DRAFT.md",
+   "role": "THIS DRAFT. NOT SEALED.",
+   "root": "repository",
+   "sha256": "5731b3fa1f4b6b779570e67936d40b011307f1d9e97cd75a3a284e04c9f9af00"
+  },
+  "sample_reuse": {
+   "path": "research/extensions/SAMPLE_REUSE.md",
+   "role": "T0_REUSED_DEPENDENT classification authority",
+   "root": "repository",
+   "sha256": "5c3b11372fcf44e8e820866e182008f4c56d91afc564897206869f28e4be0218"
+  },
+  "spy_panel_authority": {
+   "path": "data/close_prices_raw.csv",
+   "role": "frozen single-vendor adjusted-close panel; EXECUTION PROXY",
+   "root": "repository",
+   "sha256": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31"
+  },
+  "ta_auction_authority_contract": {
+   "path": "research/extensions/ta/TA_PREREGISTRATION.md",
+   "role": "sealed TA object pinning the 10y/30y auction definition",
+   "root": "repository",
+   "sha256": "3b495fcb220a86b9c4226e308e4814bdfdd871d1c69ce352e99b78977436d35b"
+  },
+  "ta_auction_calendar": {
+   "path": "research/extensions/ta/TA_EVENT_CALENDAR.csv",
+   "role": "auction dates used to build AUCTION(d)",
+   "root": "repository",
+   "sha256": "b27be5b1d94cfc13fc8310e0d5216675e097a2245fc954e4b12ed282563f7cb6"
+  },
+  "tom_authority_contract": {
+   "path": "research/seasonality/PREREGISTRATION.md",
+   "role": "sealed seasonality contract defining TOM",
+   "root": "repository",
+   "sha256": "d6f1909bd57b5c6fb1876613a9141a1d5203b66fdd64068dba5ee8908f33f7f1"
+  },
+  "tom_authority_implementation": {
+   "path": "src/seasonality.py",
+   "role": "sealed is_tom implementation reused verbatim",
+   "root": "repository",
+   "sha256": "43a75588b95f6ec42b090bc6b02fa2edc761f4fc82525288a544195ebab2a806"
+  },
+  "trial_ledger": {
+   "path": "research/extensions/TRIAL_LEDGER.md",
+   "role": "UNCHANGED at pre-seal; the F-F6 row is due AT SEAL",
+   "root": "repository",
+   "sha256": "711d4ab41eac6ef53985b260835b186e7fd95eea0a452ba8f05ab99e08b2d0e2"
+  }
+ },
+ "preseal_validation": {
+  "cross_tabs": {
+   "auction": {
+    "0": 394,
+    "1": 68
+   },
+   "tom": {
+    "0": 381,
+    "1": 81
+   },
+   "weekday": {
+    "Friday": 198,
+    "Monday": 6,
+    "Thursday": 54,
+    "Tuesday": 47,
+    "Wednesday": 157
+   }
+  },
+  "failing_checks": [],
+  "result_contingent_branch_found": false,
+  "result_contingent_note": "Every branch in the gate and terminal tables is fixed pre-outcome and is terminal or vetoing, never selective. P3 is evaluated only after a passing pair and can solely downgrade. No branch chooses a different estimator, weight, sample, cost or model as a function of a result. The independent review concurred.",
+  "validated": true
+ },
+ "return_objects": {
+  "R": "AdjClose(d) / AdjClose(prev(d)) - 1",
+  "computed": false,
+  "cost_decomposition": "2 bps entry + 2 bps exit",
+  "p1_target": "event-weighted arithmetic mean of r_net over the 462 eligible event sessions",
+  "p2_cost_treatment": "GROSS of event transaction cost. Do NOT subtract a hypothetical strategy cost from control sessions.",
+  "p2_dependent": "r_excess(d) over ALL 2011-2025 trading sessions",
+  "r_excess": "R(d) - rf_hold(d)",
+  "r_net": "r_excess(t) - 0.0004",
+  "round_trip_cost": 0.0004
+ },
+ "schema": {
+  "name": "f6-s1-preseal-manifest",
+  "version": 1
+ },
+ "seal_note": "This manifest pins the inputs a seal would freeze. It IS NOT a seal. Aaron alone performs the irreversible seal action. On seal this manifest is SUPERSEDED by the seal manifest.",
+ "sealed": false,
+ "terminal_classification": {
+  "P1 economically excluded": "NOT_PROMOTED regardless of P2",
+  "P1 harvestable + P2 absent": "POSITIVE_PAYOFF_NOT_ANNOUNCEMENT_SPECIFIC / NOT_PROMOTED",
+  "P1 harvestable + P2 specific + P3 fail": "ONE_YEAR_FRAGILITY / NOT_PROMOTED",
+  "P1 harvestable + P2 specific + P3 pass": "SUPPORTED_HISTORICAL_EDGE",
+  "P1 harvestable + P2 unresolved": "UNRESOLVED",
+  "P1 unresolved + P2 absent": "NOT_ANNOUNCEMENT_SPECIFIC / NOT_PROMOTED, payoff itself unresolved",
+  "P1 unresolved + P2 specific": "UNRESOLVED",
+  "P1 unresolved + P2 unresolved": "UNRESOLVED",
+  "definitions": {
+   "excluded_absent": "upper endpoint <= 0",
+   "positive": "lower endpoint > 0",
+   "unresolved": "lower endpoint <= 0 < upper endpoint"
+  },
+  "forbidden_labels": [
+   "LOW_POWER",
+   "observed-power calculation",
+   "mechanism-falsified from these gates"
+  ]
+ },
+ "trade": {
+  "entry": "prior eligible trading-session close",
+  "excluded_inputs": [
+   "consensus",
+   "actual macro print",
+   "surprise",
+   "post-release reaction",
+   "NQ signal",
+   "TLT signal"
+  ],
+  "execution_status": "EXECUTION PROXY. NOT production-grade fill evidence.",
+  "exit": "eligible event-session close",
+  "leverage": "none",
+  "otherwise": "flat",
+  "position": "long 1 unit notional SPY on every eligible event session",
+  "price_representation": "frozen single-vendor adjusted-close SPY panel"
+ }
+}

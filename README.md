@@ -1,7 +1,13 @@
 # Multi-Asset Time-Series Momentum — a research project
 
+![Round 1](https://img.shields.io/badge/Round%201-closed%20%C2%B7%20exhausted-6e7781)
+![Round 2](https://img.shields.io/badge/Round%202-ready%20%C2%B7%20not%20started-8250df)
+![Benchmark](https://img.shields.io/badge/canonical%20TSMOM-supported%20%C2%B7%20frozen%20benchmark-1f6feb)
+![Lifecycle](https://img.shields.io/badge/lifecycle-S0%20%E2%86%92%20S4%20sealed-57606a)
+
 > **Workflow (cutover 2026-09-12).** This project runs under
-> [`../QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md):
+> `../QUANT_WORKFLOW_VNEXT.md` — workspace-local workflow authority, **not published
+> in this repository** —
 > `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`.
 > Current **state** — never workflow authority — lives in
 > [`PROJECT_STATE.md`](PROJECT_STATE.md). Read that first.
@@ -17,6 +23,34 @@
 > documents here that still use that vocabulary are provenance records, not
 > current instructions. `qros check` / `qros status` survive as **on-demand**
 > mechanical diagnostics, and a `qros` HOLD is information, not a gate.
+
+## Current state
+
+```mermaid
+flowchart TD
+    P["<b>Quant research programme</b>"]
+
+    P --> BM["<b>Canonical multi-asset TSMOM</b><br/>SUPPORTED - not independently confirmed<br/>role: FROZEN RESEARCH BENCHMARK"]
+    P --> DISC["<b>CTA / systematic-macro edge discovery</b>"]
+
+    DISC --> R1["<b>Round 1</b><br/>CLOSED / EXHAUSTED<br/>NEW SUPPORTED EDGE = NONE"]
+    DISC --> R2["<b>Round 2</b><br/>READY / NOT STARTED"]
+```
+
+| | |
+|---|---|
+| Canonical TSMOM | **SUPPORTED — NOT INDEPENDENTLY CONFIRMED** · role: **frozen research benchmark** |
+| CTA / systematic-macro Discovery **Round 1** | **CLOSED / EXHAUSTED** — [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) |
+| New supported edge from Round 1 | **NONE** |
+| Latest completed candidate | **CTA-EDGE-05 / F6** — scheduled macro announcement premium |
+| F6 terminal state | **CLOSED_UNRESOLVED_NOT_PROMOTED** — both nominal 95% intervals span zero |
+| F6 — falsified? | **NO.** Not falsified, not evidence of absence, not low power |
+| Governed historical evaluations in Round 1 | **3** (BENB, MMV, F6) — 8 of 11 candidate objects reached a terminal pre-outcome disposition: closed, parked, blocked or ruled not standalone |
+| Live execution authorizations | **NONE** — every grant is one-shot and spent |
+| **Round 2** | **READY / AUTHORIZED — NOT STARTED** |
+| Programme next | Round-2 discovery, not yet begun |
+
+---
 
 [![Tests](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml/badge.svg)](https://github.com/AaroNLaU0307/multi-asset-tsmom-research/actions/workflows/tests.yml)
 
@@ -46,12 +80,141 @@ each case.
 - **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
   control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
 - **CI-verified test suite** run on every push (badge above) — not a self-reported count.
-  Three legacy XSMOM tests currently fail on pandas API drift; see *Validation status* in §2.
-- **Two sealed extension studies, both closed under preregistration** — the X01 futures-wrapper
-  study (`INSUFFICIENT_EVIDENCE`) and the Time-Series Value sleeve (standalone `MATERIALLY_ADVERSE`,
-  diversification candidacy failed, `not_promoted`). Both ran exactly one authorized execution
-  against a sealed contract.
+  It is **not currently all-green**: `python -m pytest -q` reports **98 passed, 3 failed**.
+  The three failures are pre-existing `OutOfBoundsDatetime` fixture failures in
+  `tests/test_xsmom_universes.py`, unrelated to any research verdict and reproducible at
+  earlier commits. See [Validation status](#how-to-run-reproducible) for the full picture.
+- **Three sealed extension studies, all closed under preregistration** — the X01
+  futures-wrapper study (`INSUFFICIENT_EVIDENCE`), the Time-Series Value sleeve (standalone
+  `MATERIALLY_ADVERSE`, diversification candidacy failed, `not_promoted`) and TSMOM-VRP-01
+  (short VIX futures, `UNRESOLVED`). Each ran exactly one authorized execution against a
+  sealed contract.
+- **A third sealed study, TSMOM-VRP-01 (short VIX futures), closed `UNRESOLVED`** — the 95%
+  interval contains the preregistered +7.5% margin, so the study neither establishes that the
+  sleeve clears the required compensation nor reliably excludes it. Its exploratory 80/20
+  portfolio diagnostic is **`NOT_COMPELLING`**: see §4c.
 - **Costs always modelled; negatives are first-class results**, reported as plainly as the one positive.
+
+## Programme roadmap
+
+| Phase | What it was | Status |
+|---|---|---|
+| **A** | research / status cleanup | **COMPLETE** |
+| **B** | canonical TSMOM validation | see below |
+| **C** | next-edge discovery and adjudication | **COMPLETE** |
+| **D** | TSMOM-VRP-01 — the selected candidate, run to a verdict | **COMPLETE / CLOSED** |
+| **E** | **CTA / systematic-macro Discovery Round 1** — 11 candidate objects triaged, 8 pre-outcome dispositions, 3 governed historical evaluations | **COMPLETE / CLOSED / EXHAUSTED** — **0 new supported edges** |
+| **F** | **Discovery Round 2** | **READY / AUTHORIZED — NOT STARTED** |
+
+**Phase E — Round 1, in one line.** Eleven candidate objects were triaged; **eight**
+closed, parked, were blocked or were ruled non-standalone **before** any return outcome
+was touched; **three** proceeded to governed historical evaluation and **none was
+promoted**. Full dispositions: [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
+
+### The lifecycle every candidate runs
+
+```mermaid
+flowchart LR
+    D["Discovery<br/>candidate map"] --> S0["<b>S0 FRAME</b><br/>is the question<br/>answerable at all"]
+    S0 --> S1["<b>S1 DESIGN + SEAL</b><br/>contract frozen and hashed<br/>BEFORE any outcome exists"]
+    S1 --> S2["<b>S2 BUILD</b><br/>implement and test<br/>outcome-blind"]
+    S2 --> S3["<b>S3 RUN</b><br/>one-shot Owner authorization<br/>guard reads committed state"]
+    S3 --> S4["<b>S4 VERDICT</b><br/>sealed classifier only<br/>never prose"]
+    S4 --> STOP["<b>STOP</b><br/>close, promote,<br/>or move to the next edge"]
+
+    S0 -. halt .-> PRE["<b>PRE-OUTCOME EXIT</b><br/>parked, closed or blocked<br/>NO trial spent"]
+    S1 -. halt .-> PRE
+    S2 -. halt .-> PRE
+
+    S4 -. no rescue, no rerun .-> NEWLIN["A materially different study<br/>is a <b>NEW lineage</b><br/>with its own seal"]
+```
+
+Progression is one-way. The contract is sealed before any outcome exists, a real run needs
+a separate one-shot authorization, and the terminal class comes from the sealed classifier.
+**There is no post-result rescue inside the same primary lineage** — a consumed primary
+trial stays consumed.
+
+### Round 1 at a glance
+
+```mermaid
+flowchart TD
+    R1["<b>Round 1</b><br/>11 candidate objects"]
+
+    R1 --> TESTED["<b>TESTED</b> - 3<br/>governed historical evaluation"]
+    R1 --> PREOUT["<b>PRE-OUTCOME</b> - 8<br/>no return outcome touched"]
+
+    TESTED --> T1["F3 / BENB<br/>NOT PROMOTED"]
+    TESTED --> T2["F5 / MMV<br/>UNRESOLVED - NOT PROMOTED"]
+    TESTED --> T3["<b>F6</b><br/>UNRESOLVED - NOT PROMOTED<br/>final active Round-1 lineage"]
+
+    PREOUT --> P1["F1 / TA<br/>PRE-OUTCOME CLOSE<br/>identification insufficient"]
+    PREOUT --> P2["PINS<br/>PARKED<br/>PIT data authority not established"]
+    PREOUT --> P3["F4<br/>PARKED<br/>PIT reconstruction failure"]
+    PREOUT --> P4["F7<br/>PRE-OUTCOME CLOSE<br/>non-run"]
+    PREOUT --> P5["F8<br/>PARKED<br/>prerequisite unmet"]
+    PREOUT --> P6["F2<br/>BLOCKED<br/>not standalone under proxy authority"]
+    PREOUT --> P7["F9<br/>NOT STANDALONE"]
+    PREOUT --> P8["F10<br/>NOT STANDALONE<br/>overlapping - price-derived"]
+
+    TESTED --> OUT["<b>NEW SUPPORTED EDGE FROM ROUND 1 = NONE</b>"]
+    PREOUT --> OUT
+```
+
+Eight of eleven were resolved without spending a return trial at all — that is the S0 gate
+working, not a shortfall. Per-candidate reasoning and the artifact that decides each one:
+[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
+
+**Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT
+INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and
+**live under passive monthly accrual** in its existing state; nothing here touches it. The
+independent verification study (**C-D**) is **closed at HOLD** with strong evidence and one
+unresolved cross-vendor residual.
+
+**Phase C — next-edge discovery.** Claude Fable 5.1 and GPT-6 Astra were used for candidate
+discovery and adversarial challenge; neither may later certify what it helped design. The
+selected question was whether an **unconditional one-month constant-maturity short VX
+futures sleeve earns enough compensation for its severe short-volatility risk**. A
+**Treasury auction / intermediation** candidate was identified as a reserve and is **not**
+started here.
+
+## Where things live
+
+One authority per question — these do not compete:
+
+| you want | go to | kind |
+|---|---|---|
+| the workflow rules | `../QUANT_WORKFLOW_VNEXT.md` *(workspace-local; not published in this repository)* | **authority** |
+| current project state | [`PROJECT_STATE.md`](PROJECT_STATE.md) | **state** — never workflow authority |
+| Round-1 dispositions | [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) | derived summary |
+| the canonical TSMOM study | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) · §1 below | narrative |
+| why a design choice was made | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | record |
+| a specific lineage | `research/extensions/<lineage>/` | artifacts |
+| Owner decisions | [`ops/`](ops/) — `OWNER_DECISION_RECORD_*.md` | **authority** |
+| who may run what | [`ops/EXECUTION_AUTHORIZATIONS.md`](ops/EXECUTION_AUTHORIZATIONS.md) | **authority**, append-only |
+| trial accounting | [`research/extensions/TRIAL_LEDGER.md`](research/extensions/TRIAL_LEDGER.md) | append-only ledger |
+| what outcomes have been seen | [`ops/EXPOSURE_LEDGER.md`](ops/EXPOSURE_LEDGER.md) | append-only ledger |
+| sample reuse / evidence ceilings | [`research/extensions/SAMPLE_REUSE.md`](research/extensions/SAMPLE_REUSE.md) | **authority** |
+| independent reviews | [`research/extensions/review_history/`](research/extensions/review_history/) | reviews |
+
+### How provenance works here
+
+```
+SEAL       a preregistration is frozen and hashed BEFORE any outcome exists;
+           the seal record pins the contract, the event sample and the inputs
+AUTHORIZE  a real run needs a ONE_SHOT Owner record committed to
+           ops/EXECUTION_AUTHORIZATIONS.md. A seal is NOT authorization.
+RUN        the guard reads that ledger from COMMITTED git state and fails
+           closed; one grant authorizes exactly one run_id, once
+ACCOUNT     the consumed trial lands in TRIAL_LEDGER.md and the revealed
+           outcome in EXPOSURE_LEDGER.md, both append-only
+VERDICT     the terminal class comes from the sealed classifier, not from prose
+```
+
+Every lineage folder carries its own `S0 → S1 → S2 → S3 → S4` artifacts under that
+pattern. Where an older document and a newer one disagree, the newer one names the older
+as superseded — nothing is deleted or rewritten to make the record look tidier.
+
+---
 
 ## The research map
 
@@ -161,13 +324,26 @@ attribution reconciliation, daily↔monthly reconciliation, regime/premise causa
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-**Validation status.** The checks belonging to the recently closed Time-Series Value
-lineage are green — sealed-contract conformance, data provenance, the synthetic
-end-to-end rehearsal and its own suite all pass. Three tests in
-`tests/test_xsmom_universes.py` currently fail in this environment on pandas API drift;
-they reproduce unchanged at commit `c63114a0` and predate the Value work, so they are a
-library-compatibility issue rather than a research finding. XSMOM's recorded status
-(`falsified`) rests on its published results, not on these tests. Not repaired here.
+**Validation status — not all-green, stated plainly.** `python -m pytest -q` reports
+**98 passed, 3 failed** (verified on this branch, pandas 2.3.3, Python 3.13.14). The three
+failures are **pre-existing and unrelated to any research verdict**: `OutOfBoundsDatetime`
+on synthetic fixture dates in `tests/test_xsmom_universes.py`, reproducible identically at
+earlier commits. The checks belonging to the closed Time-Series Value and TSMOM-VRP-01
+lineages pass, as do the sealed-contract conformance, data provenance and synthetic
+end-to-end rehearsal suites.
+
+The CTA-EDGE-05 / F6 lifecycle suite is **not** collected by the default pytest patterns
+and is run explicitly: `python -m pytest research/extensions/f6/f6_tests.py` reports
+**113 passed, 1 failed**. That one failure is expected and correct —
+`test_o02_no_f6_result_artifact_exists_in_the_repository` asserts an S2-era precondition
+that is *false* now the authorized S3 run has produced a result. `f6_tests.py` is
+hash-pinned in the accepted S2 build manifest and was deliberately not edited.
+
+*History, no longer current:* three tests in `tests/test_xsmom_universes.py` **previously**
+failed under an earlier pandas API-drift environment — a library-compatibility issue, never
+a research finding, reproducing unchanged at commit `c63114a0` and predating the Value work.
+That file now passes 16/16. XSMOM's recorded status (`falsified`) always rested on its
+published results, not on these tests.
 
 ## 3. The research arc — one diagnostic, four overlays not promoted, one parallel study
 
@@ -273,10 +449,10 @@ trend. The question — does relative-strength add anything time-series momentum
 
 ## 4. Sealed extension studies (vNext)
 
-Two later studies ran under the `S0 → S1 SEAL → S2 → S3 → S4` lifecycle: a
+Three later studies ran under the `S0 → S1 SEAL → S2 → S3 → S4` lifecycle: a
 preregistration is sealed and hashed *before* any target computation, exactly one
 execution is authorized, and the verdict follows mechanically from rules fixed in advance.
-Both are closed. Neither changes the core result above.
+All three are closed. None changes the core result above.
 
 ### 4a. X01 — futures wrapper vs the ETF commodity sleeve — **INSUFFICIENT_EVIDENCE, CLOSED**
 
@@ -374,6 +550,176 @@ or other portfolio constructions.
 [provenance correction](research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json) ·
 final verdict in [`PROJECT_STATE.md`](PROJECT_STATE.md)
 
+### 4c. TSMOM-VRP-01 — unconditional short VIX futures — **UNRESOLVED (Class 3), CLOSED**
+
+**The question.** Does a standalone, unconditional, one-month constant-maturity **short**
+position in listed monthly VX futures, held at a frozen stress-budgeted size, earn enough
+compensation for its severe short-volatility risk? Everything real was modelled: actual
+monthly contracts, a calendar-only deterministic roll, official Cboe settlements, daily
+variation margin, spread-plus-slippage and per-side commissions, and collateral.
+
+| | |
+|---|---|
+| Sample | **2006-09 … 2026-08**, **240 months** (first month fixed mechanically by the sealed rule) |
+| Annualised arithmetic mean net excess return on committed capital | **+7.3224 %** |
+| 95 % stationary-bootstrap interval | **[+0.3906 %, +13.6081 %]** |
+| Predeclared economic usefulness margin | **+7.5 %** |
+| Verdict | **UNRESOLVED** |
+| Failure class | **Class 3 — INSUFFICIENT EVIDENCE / LOW POWER** |
+| Evidence context | `DESIGN_INFORMED_FIRST_LOCAL_USE` |
+
+**What that means, precisely:** the interval *contains* the +7.5 % margin, so the study
+neither establishes that the sleeve clears the required compensation nor reliably excludes
+it. The endpoints classify; the point estimate never does. It is not "almost passed", not
+"failed", not supported, and not falsified.
+
+**Headline descriptives** — *descriptive only, no promotion power, and they cannot change
+the verdict above*:
+
+| descriptive | value |
+|---|---|
+| worst 1-day sleeve loss | ≈ **−15.7 %** of committed capital `K` |
+| worst 5-day sleeve loss | ≈ **−32.5 %** |
+| worst monthly sleeve loss | ≈ **−32.2 %** |
+| capital-exhaustion events | **0** in the historical sample |
+
+**Stage B was never run.** The sealed rule allowed a historical Stage B *only if* Stage A
+came out `SUPPORTED`. It came out `UNRESOLVED`, so the confirmatory Stage B was never
+executed and **never spent a trial**.
+
+**Prospective confirmation is closed without activation.** `VRP-A prospective =
+NOT ACTIVATED BY OWNER DECISION`. No scheduler, daemon, background accrual or 120-month
+clock was ever started. This is not pending work.
+
+→ [historical closure](research/extensions/vrp/VRP_HISTORICAL_CLOSURE.md) ·
+[Stage-A run record](research/extensions/vrp/s3/VRP_STAGE_A_RUN_RECORD.md) ·
+[final handoff](research/extensions/vrp/VRP_FINAL_HANDOFF.md)
+
+#### EXPLORATORY / NO PROMOTION POWER — the 80/20 portfolio diagnostic
+
+> **This is not Stage B and not a preregistered claim.** It is a separate descriptive
+> lineage (`VRP-PORTFOLIO-DIAGNOSTIC-01`) answering one practical question at **one**
+> allocation that was fixed *before* any outcome was seen. No weight was searched, no
+> parameter swept. `PROMOTION_POWER = NONE`. It **does not change** the verdict above.
+
+Fixed **80 % canonical TSMOM + 20 % VRP**, common sample **2008-05 … 2026-05, 217 months**:
+
+| | ann. return | ann. vol | Sharpe | max drawdown |
+|---|---|---|---|---|
+| **CORE** (canonical TSMOM) | +7.74 % | 10.31 % | **0.751** | −15.60 % |
+| **VRP** (excess of cash) | +8.00 % | 16.57 % | 0.483 | −43.82 % |
+| **80/20 combined** | +7.77 % | 8.56 % | **0.908** | −9.57 % |
+
+```
+monthly correlation CORE vs VRP = -0.105
+Delta Sharpe                    = +0.157
+95 % paired block-bootstrap CI  = [-0.005, +0.311]
+```
+
+**The Sharpe improvement is NOT robustly established, because the interval includes zero.**
+That is the main practical reason for rejection — the rule was fixed in advance and
+"−0.005 is nearly zero" is not a finding.
+
+The second reason is the tail. Over **SPY bottom-decile months**:
+
+```
+CORE mean      = +0.86 %
+COMBINED mean  = -0.93 %
+difference     = -1.78 percentage points per tail month
+```
+
+and across the declared crisis windows:
+
+| window | CORE | COMBINED |
+|---|---|---|
+| 2008 GFC | **+14.4 %** | **+1.7 %** |
+| COVID (2020-02…03) | **+7.9 %** | **−0.5 %** |
+
+**All six declared crisis windows were worse with the VRP sleeve.** So the sleeve improves
+*unconditional* volatility and drawdown statistics while materially eroding the
+**crisis-positive behaviour for which a CTA / TSMOM core is valuable** — it buys calm
+precisely where calm is least wanted. Hence:
+
+```
+PRACTICAL_CLASSIFICATION = NOT_COMPELLING
+```
+
+→ [full diagnostic](research/extensions/vrp/diagnostics/VRP_PORTFOLIO_DIAGNOSTIC_01.md)
+
+#### A research-engineering lesson: cross-month state continuity
+
+The diagnostic's own reconstruction gate — which requires the ledger to reproduce an
+independently sealed monthly series *before* any metric is computed — caught a real defect
+(`VRP-DIAG-DEFECT-001`) in the Stage-B book ledger. It:
+
+- recreated position state at every calendar-month boundary;
+- discarded the first-day cross-boundary variation margin;
+- effectively re-entered the sleeve from flat each month; and
+- applied the new month's sensitivity reset *after* that first mark.
+
+The original synthetic fixture **could not have detected it**, because every synthetic month
+used new contract keys and restarted prices, so no boundary ever carried a live position.
+The repaired cross-month fixture genuinely carries one across the boundary and is required
+to separate the repaired ledger from the old behaviour.
+
+```
+PREVIOUS_ITEM_13 = PASS_BUT_FIXTURE_INSUFFICIENT
+CURRENT_ITEM_13  = PASS
+```
+
+**No sealed scientific result was affected**, because the confirmatory Stage B this ledger
+serves was already barred and never ran. The generalisable point: in a multi-period ledger
+the *position* is continuous state and the *accounts* are periodic state — they have
+different lifetimes — and an identity built only from an object's own intermediate values
+tests its arithmetic, not its correctness.
+
+→ [defect record](research/extensions/vrp/diagnostics/VRP_DIAGNOSTIC_DEFECT_001.md)
+
+### 4d. CTA / systematic-macro Discovery **Round 1** — **CLOSED / EXHAUSTED, no new supported edge**
+
+Eleven candidate objects from the Round-1 discovery map were triaged under the vNext
+lifecycle `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`: **8** reached
+a terminal pre-outcome disposition and **3** proceeded to governed historical evaluation.
+Full dispositions and the artifact that decides each one:
+**[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)**.
+
+| candidate | outcome accessed? | terminal status |
+|---|---|---|
+| **F1 / TA** (CTA-EDGE-01) | no | closed pre-outcome — identification insufficient |
+| **F3 / BENB** (CTA-EDGE-02) | yes | not promoted — tradable primary failed its gate |
+| **PINS** (CTA-EDGE-03) | no | parked — PIT data authority not established |
+| **MMV** (CTA-EDGE-04) | yes | unresolved / not promoted — no rescue authorized |
+| **F4** | no | parked — load-bearing NG state not PIT reconstructible |
+| **F7** | no | non-run, closed — redesign would need a new lineage |
+| **F6** (CTA-EDGE-05) | **yes — one consumed sealed primary trial** | **`CLOSED_UNRESOLVED_NOT_PROMOTED`** |
+| **F2 / F8 / F9 / F10** | no | blocked, parked, or not standalone |
+
+**F6 was the final active Round-1 lineage, and one of three candidate objects that
+proceeded to governed historical evaluation** (with BENB and MMV). It ran exactly once
+under a committed one-shot Owner authorization:
+
+```
+P1  +0.00035784   nominal 95% [-0.00062591, +0.00133231]   UNRESOLVED
+P2  +0.00023075   nominal 95% [-0.00078811, +0.00123375]   UNRESOLVED
+P3  NOT_APPLICABLE_BY_SEAL — never executed, because P1 and P2 did not both pass
+```
+
+Both point estimates are positive; both nominal intervals span zero. The lower endpoint
+failing to clear zero is why nothing was promoted — the upper endpoint sitting above zero
+is why nothing was **excluded**.
+
+> **F6 is not a negative result.** `MECHANISM_FALSIFIED = NO`,
+> `ECONOMIC_EFFECT_RELIABLY_EXCLUDED = NO`, `LOW_POWER_ASSERTED = NO`. It must never be
+> described as falsified, as evidence of absence, as a negative edge, as low power, as a
+> causal failure, or as independently confirmed. See
+> [`F6_CLOSEOUT.md`](research/extensions/f6/F6_CLOSEOUT.md).
+
+Eight of eleven candidate objects were resolved **without spending a return trial at
+all**. That is the S0 gate working, not a shortfall. No Round-1 candidate obtained independent
+confirmation, and `supported` remained a ceiling none of them reached.
+
+---
+
 ## 5. What this means
 
 The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
@@ -396,6 +742,17 @@ the **cross-sectional counterpart (XSMOM)** — not an overlay, but the same cor
 relative-strength instead of trend — was *also* falsified (0/5 universes), for the most telling reason
 of all: at liquid-ETF granularity it is largely the **same source** the time-series core already
 harvests (corr +0.42; the XSMOM-only lead-lag term not shown to be non-trivial).
+
+**And the most recent candidate did not settle either way.** TSMOM-VRP-01 asked whether a
+short-volatility sleeve — a genuinely *different* risk, not another trend variant — could
+pay for itself. The historical answer is `UNRESOLVED`: twenty years of monthly data were not
+enough to separate "clears +7.5 %" from "does not". The exploratory portfolio check then
+found that at the one pre-fixed allocation the sleeve trades the core's crisis-positive
+behaviour for unconditional calm, without a robust Sharpe gain to show for it. Both results
+are recorded as they came out, and neither is retuned into something friendlier.
+
+**Next:** final handoff, then the next CTA / TSMOM edge. A Treasury auction / intermediation
+candidate is held in reserve from the Phase-C map; no new research is authorised here.
 
 ## 6. Research lessons carried forward
 
@@ -465,8 +822,14 @@ src/                              # library: engine + screening + diagnostic + d
   yields                                                                # yield-curve macro-regime premise (causal slope/tercile)
   xsmom xsmom_data xsmom_stats                                          # cross-sectional momentum (parallel study)
 research/                         # committed arc write-ups (reports + figures), per investigation
-  extensions/x01/                 # sealed X01 futures-wrapper study + immutable evidence
-  extensions/value/               # sealed Time-Series Value study + immutable evidence
+  extensions/x01/  extensions/value/   # sealed studies + immutable evidence
+  extensions/vrp/  extensions/ta/  extensions/benb/     # Round-1 lineages, closed
+  extensions/pins/ extensions/mmv/ extensions/f4/       # Round-1 lineages, parked/closed
+  extensions/f6/                  # CTA-EDGE-05 F6: S0-S4, sealed contract, engine, S3 result
+  extensions/review_history/      # independent reviews (Astra / X01)
+  extensions/TRIAL_LEDGER.md  extensions/SAMPLE_REUSE.md   # accounting authorities
+ops/                              # Owner decision records, exposure + authorization ledgers
+ROUND1_CLOSEOUT.md  PROJECT_STATE.md   # Round-1 dispositions  ·  current state
 tests/                           # no-look-ahead + reconciliation + causality
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative

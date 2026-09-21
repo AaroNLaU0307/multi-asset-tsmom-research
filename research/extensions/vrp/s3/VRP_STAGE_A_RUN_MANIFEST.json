@@ -1,0 +1,66 @@
+{
+  "K": 200000.0,
+  "code_commit": "2ef4700497ddc119daf79418c941fd3f5a53af4b",
+  "dgs3mo_sha256": "50da2bfbb25e3e3241af7a4ad16e5a1bb5f08cdfb46bcb92f224954dce054319",
+  "erratum_sha256": "b8a089ac2f1d3f26d0493684bb3512cfe564b4f82d49690c3b7daa77b28e8f1a",
+  "lineage": "TSMOM-VRP-01",
+  "prereg_sha256": "dd5822440bedbe58f49940651bddf656f4dbb593295b59c4eff2b45b89cf53e6",
+  "protected_result_path": "data/vrp_protected/TSMOM-VRP-01_stage_a_historical_20260914T132408Z.json",
+  "protected_result_sha256": "baa0a07d647b4d1be082a569022dbcc09d1eb23e5f64b76374449a8139fce1bc",
+  "raw_contract_file_count": 274,
+  "raw_manifest_sha256": "fe5bba6d356010123a5373f8017dfb5f2011111f3cec1ce8b664407d506d1509",
+  "result_state": "REVEALED_ONCE",
+  "reveal_count": 1,
+  "reveal_timestamp_utc": "2026-09-14T13:24:57Z",
+  "rng": {
+    "block_p": 0.08333333333333333,
+    "floor": 9500,
+    "master_seed": 7,
+    "replicates": 10000,
+    "spawned_entropy": [
+      {
+        "entropy": 7,
+        "name": "stage_a_historical",
+        "spawn_key": [
+          0
+        ]
+      },
+      {
+        "entropy": 7,
+        "name": "stage_b_historical",
+        "spawn_key": [
+          1
+        ]
+      },
+      {
+        "entropy": 7,
+        "name": "vrp_a_prospective",
+        "spawn_key": [
+          2
+        ]
+      },
+      {
+        "entropy": 7,
+        "name": "vrp_b_prospective",
+        "spawn_key": [
+          3
+        ]
+      }
+    ],
+    "stream": "stage_a_historical"
+  },
+  "run_count": 1,
+  "run_id": "VRP-STAGE-A-RUN-0001",
+  "run_timestamp_utc": "2026-09-14T13:24:08Z",
+  "s2_build_commit": "72499019ce9ef97f16d1ddf3b3982697a4e6c4cc",
+  "s2_closure_commit": "f196cfdc3a866f64ca8d12d5b91bd9433b327d06",
+  "sample": {
+    "chain_days": 5032,
+    "first_month": "2006-09",
+    "last_month": "2026-08",
+    "month_count": 240
+  },
+  "seal_commit": "16d84545ba1385a482dbac7e776b31275f6fa5f7",
+  "stage_b_authorized": false,
+  "stage_b_executed": false
+}

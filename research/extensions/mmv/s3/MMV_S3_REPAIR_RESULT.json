@@ -1,0 +1,273 @@
+{
+ "authorization_id": "MMV-AUTH-0003",
+ "correction": {
+  "added_return_rows": [],
+  "all_earlier_months_identical": true,
+  "authoritative_last_price_date": "2026-06-12",
+  "frozen_files_verified_byte_identical": 14,
+  "original_eligible_return_months": 214,
+  "outcome_affecting_diffs": "TERMINAL_ROW_ONLY",
+  "position_identity_verified": true,
+  "removed_return_rows": [
+   "2026-06-30"
+  ],
+  "repaired_eligible_return_months": 213,
+  "reused_parent_functions": [
+   "build_book",
+   "classify",
+   "load_prices",
+   "phase1",
+   "phase2",
+   "phase3",
+   "phase4",
+   "phase5",
+   "sharpe"
+  ],
+  "rule_is_structural_not_a_hardcoded_date": true,
+  "signal_identity_verified": true,
+  "terminal_completeness_rule": "month M is eligible only if the authoritative price panel contains a date strictly after M's last calendar day; a panel that stops inside M cannot establish M's final trading close, so M fails closed"
+ },
+ "cost_accounting": {
+  "aggregate_cost": 0.02991641425152764,
+  "aggregate_turnover": 149.5820712576382,
+  "canonical_reconciliation_max_abs_deviation": {
+   "gross_vs_canonical": 0.0,
+   "gross_vs_canonical_zero_cost": 0.0,
+   "net_vs_canonical": 6.938893903907228e-18,
+   "turnover_vs_canonical": 8.881784197001252e-16
+  },
+  "mean_monthly_cost": 0.0001404526490682049,
+  "mean_monthly_turnover": 0.7022632453410245,
+  "one_way_bps": 2.0,
+  "reconciliation_bound_is_not_a_research_threshold": true,
+  "reconciliation_identity_bound": 1e-12
+ },
+ "executed_utc": "2026-09-17T15:03:13Z",
+ "execution_convention": {
+  "changed_from_parent": false,
+  "cost_rule": "2.0 bps one-way x turnover, charged in the month the trade executes, subtracted once",
+  "entry_trade_boundary_month": "2008-09-30",
+  "execution_lag": "held(M) = portfolio weight decided at month-end M-1 (shift(1))",
+  "information_cutoff": "15:45:00 America/New_York",
+  "return_interval": "month-end close to month-end close, label ME"
+ },
+ "firewall": {
+  "ALTERNATE_BOOTSTRAP_RUN": false,
+  "ALTERNATIVE_COST_RUN": false,
+  "ALTERNATIVE_PARAMETER_CELL_RUN": false,
+  "ALTERNATIVE_SAMPLE_ENDPOINT_RUN": false,
+  "DRAWDOWN_COMPUTED": false,
+  "FIRST_RELEASE_DIAGNOSTIC_RUN": false,
+  "GATE05_RERUN": false,
+  "HIT_RATE_COMPUTED": false,
+  "PARENT_ARTIFACT_MODIFIED": false,
+  "PER_INSTRUMENT_RETURN_DIAGNOSTICS_RUN": false,
+  "PER_LEG_RETURN_DIAGNOSTICS_RUN": false,
+  "RESCUE_ANALYSIS_PERFORMED": false,
+  "RETURN_OUTCOME_ACCESSED": true,
+  "ROLLING_SHARPE_COMPUTED": false,
+  "YEARLY_RANKINGS_COMPUTED": false
+ },
+ "gate05_accepted": {
+  "pooled_agreement_exact": "1313/3270",
+  "recomputed_at_repair": false,
+  "result": "PASS",
+  "why_unaffected": "Gate 0.5 compares DECISION-DATE position states and never requires the following month to be a complete return observation"
+ },
+ "gate1": {
+  "lower": -0.004286240713916944,
+  "point": 0.00014275289566708215,
+  "replicates": 10000,
+  "result": "FAIL",
+  "rule": "lower 95% endpoint > 0, STRICT",
+  "statistic": "mean monthly GROSS MMV portfolio return",
+  "upper": 0.004202827325279314,
+  "valid_replicates": 10000
+ },
+ "inference": {
+  "B": 10000,
+  "boundary_block_semantics": "a calendar year is ONE block whatever its month count; the 2026 block loses its terminal month and is drawn as a 5-month block. This is the same rule that already produced a 4-month 2008 block in the parent run",
+  "boundary_semantics_unambiguous": true,
+  "common_draw_set": true,
+  "hac_or_second_bootstrap": false,
+  "interval": "95% percentile (2.5 / 97.5)",
+  "method": "calendar-year block bootstrap over FROZEN monthly strategy tuples, unchanged from the parent run",
+  "rng_seed": 1963028087
+ },
+ "inputs": {
+  "data/close_prices_raw.csv": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31",
+  "data/mmv/CPILFENS.observations.realtime.json": "75c3c36306c109b11683d808471b30aa8061a2dfc0a4141a6668e6fe8b9ad2f4",
+  "data/mmv/INDPRO.observations.realtime.json": "3f53f959e399e21a060c6c7ab04392b82950c916826a1c964472d8c78682ddd9",
+  "data/mmv/PAYEMS.observations.realtime.json": "c773c5681807fe0057dd66814aa18bfc03b8c0201be57a50f425b48e7c471bd6",
+  "output/monthly_signal_panel.csv": "fa154e01ec597070729b5489ee4f8ed0e588add30c70d33196d7bf3c8069173f",
+  "research/extensions/mmv/MMV_GATE05_AUDIT.md": "029a5618182a9043680f14102b57de25386ce6bf87569c717d3520185fbee713",
+  "research/extensions/mmv/MMV_GATE05_RESULT.md": "05e20ef8740ccd55b051c4be31b0b85e1b38e9479ef703009037dcd1d8062440",
+  "research/extensions/mmv/MMV_POLICY_ANNOUNCEMENT_SCHEDULE.csv": "ae34bf1e192c4355fb71136a3e3017dfd07525ac8e48d7d3ea102130fa6a11da",
+  "research/extensions/mmv/MMV_PREREGISTRATION.md": "4bad9f0bcdb7e4991ab920d12e24a60f4d237205e5a43af693a8dadadb56b225",
+  "research/extensions/mmv/MMV_S3_RESULT.md": "4ae4ad2a43345d86639a8f9a0b282c46d3c8af0f500fa72be612c1134b0d4d3f",
+  "research/extensions/mmv/MMV_SEAL_MANIFEST.md": "75016e778ad58e8fe16e4833cf91c19eb52448b4d42138ab265460f371e8c0d5",
+  "research/extensions/mmv/gate05/MMV_GATE05_RESULT.json": "1fa8df006574199cef2a6153f57f354d6fa93475b07c5c576036cebb09b6c3d8",
+  "research/extensions/mmv/s3/MMV_S3_RESULT.json": "70fc6f91ddcc9ce4888c76c4016d32684c8c273c9d9348754814a5860c306a5e"
+ },
+ "lineage": "CTA-EDGE-04-MMV",
+ "m1": {
+  "lower": -0.004431085840831862,
+  "point": 2.3002465988771495e-06,
+  "replicates": 10000,
+  "result": "FAIL",
+  "rule": "lower 95% endpoint > 0, STRICT",
+  "statistic": "mean monthly NET MMV portfolio return",
+  "upper": 0.004067483738628035,
+  "valid_replicates": 10000
+ },
+ "m2": {
+  "lower": -0.5312487229028113,
+  "point": 0.0002899012843825078,
+  "replicates": 10000,
+  "result": "FAIL",
+  "rule": "lower 95% endpoint > +0.30, STRICT",
+  "statistic": "annualised NET Sharpe, rf = 0, ddof = 1, x sqrt(12)",
+  "target": 0.3,
+  "upper": 0.5453296278695587,
+  "valid_replicates": 10000
+ },
+ "mmv_od_8": {
+  "authority": "research/extensions/LOCKBOX_PROCEDURE.md \u00a72.1 (written 2026-09-08, pre-existing at the 2026-09-17 seal) + the sealed month-end-close execution convention",
+  "decision": "B_EXCLUDE",
+  "decision_grid_altered": false,
+  "lockbox_option_a": "truncate the terminal monthly row and state so",
+  "lockbox_option_b": "declare in the preregistration that a partial terminal month is included and why",
+  "new_scientific_choice": false,
+  "rule": "a primary monthly return requires the close of the final trading day of that calendar month",
+  "sealed_contract_exercised_option_b": false,
+  "therefore": "option (a) binds; the parent run did neither, having included the row and merely stated that it had"
+ },
+ "no_rescue": "No series, transform, coefficient, mapping, threshold, cost, target, bootstrap, sample rule or execution rule may be changed after this result. Any further hypothesis requires a NEW LINEAGE with its own preregistration and seal.",
+ "risk_wrapper": {
+  "MAX_ASSET_WEIGHT": 2.0,
+  "MAX_GROSS_LEVERAGE": 3.0,
+  "PORT_TARGET_VOL_ANNUAL": 0.1,
+  "TARGET_VOL_ANNUAL": 0.1,
+  "TRANSACTION_COST_BPS": 2.0,
+  "VOL_WINDOW_DAYS": 60
+ },
+ "run_id": "MMV-S3-REPAIR-20260917-01",
+ "run_type": "PRIMARY_TRIAL_CORRECTION",
+ "sample": {
+  "block_months": {
+   "2008": 4,
+   "2009": 12,
+   "2010": 12,
+   "2011": 12,
+   "2012": 12,
+   "2013": 12,
+   "2014": 12,
+   "2015": 12,
+   "2016": 12,
+   "2017": 12,
+   "2018": 12,
+   "2019": 12,
+   "2020": 12,
+   "2021": 12,
+   "2022": 12,
+   "2023": 12,
+   "2024": 12,
+   "2025": 12,
+   "2026": 5
+  },
+  "calendar_year_blocks": [
+   2008,
+   2009,
+   2010,
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025,
+   2026
+  ],
+  "decision_grid_unchanged": true,
+  "decision_months": 218,
+  "eligible_return_months": 213,
+  "first_return_month": "2008-09-30",
+  "last_return_month": "2026-05-31",
+  "mapped_instrument_n": 15,
+  "mapped_instruments": [
+   "DBA",
+   "EEM",
+   "EWJ",
+   "FXY",
+   "GLD",
+   "HYG",
+   "LQD",
+   "SHY",
+   "SPY",
+   "TLT",
+   "UNG",
+   "USO",
+   "UUP",
+   "XLE",
+   "XLU"
+  ],
+  "terminal_partial_month_excluded": [
+   "2026-06-30"
+  ],
+  "unmapped": [
+   "RWX",
+   "VNQ"
+  ],
+  "wrapper_warmup_months_excluded": [
+   "2008-05-31",
+   "2008-06-30",
+   "2008-07-31",
+   "2008-08-31"
+  ]
+ },
+ "schema": {
+  "name": "mmv-s3-repair-result",
+  "version": 1
+ },
+ "supersedes": {
+  "independent_evidence": false,
+  "note": "The two results are the SAME primary trial, one of them computed on an invalid sample. They are never to be presented as two pieces of evidence.",
+  "parent_authorization": "MMV-AUTH-0002",
+  "parent_decisional_status": "NONDECISIONAL",
+  "parent_preserved_unmodified": true,
+  "parent_result_artifact": "research/extensions/mmv/s3/MMV_S3_RESULT.json",
+  "parent_result_sha256": "70fc6f91ddcc9ce4888c76c4016d32684c8c273c9d9348754814a5860c306a5e",
+  "parent_result_status": "INVALID_PRIMARY_SAMPLE",
+  "parent_run": "MMV-S3-20260917-01",
+  "statement": "THIS RESULT SUPERSEDES THE PRIOR PRIMARY VERDICT FOR DECISIONAL PURPOSES."
+ },
+ "trial_accounting": {
+  "is_independent_evidence": false,
+  "is_new_trial": false,
+  "m": 1,
+  "trial_count_increment": 0,
+  "trial_family": "F-MMV"
+ },
+ "verdict": {
+  "class_label": "PREDICTIVE RESPONSE UNRESOLVED",
+  "classification_rule": "contract section K, FIRST MATCH WINS, applied from scratch; the parent's class was NOT carried forward",
+  "evidence_ceiling": "supported",
+  "failure_type": "NONE",
+  "never": [
+   "confirmed",
+   "independently confirmed"
+  ],
+  "new_result_decisional": true,
+  "old_result_decisional": false,
+  "programme_status": "UNRESOLVED / LOW_POWER",
+  "terminal_class": "D"
+ }
+}

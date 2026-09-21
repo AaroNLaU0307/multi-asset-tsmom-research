@@ -58,3 +58,12 @@ qros-state.yaml text eol=lf
 research/extensions/value/VALUE_EVIDENCE.json -text
 research/extensions/value/VALUE_EVIDENCE_PROVENANCE_CORRECTION_001.json -text
 research/extensions/value/VALUE_S3_AUTHORIZATION.json -text
+
+# Checksum sidecars. `F6_FINAL_INDEPENDENT_REVIEW_2026-09-21_ASTRA_01.md.sha256`
+# is the first one committed here; the repository's own convention is manifest
+# pinning, and that manifest entry remains the binding pin. But a sidecar whose
+# entire job is checksum verification must not itself be EOL-rewritten on
+# checkout: `git add` warned "LF will be replaced by CRLF the next time Git
+# touches it" on exactly this file. Same narrow treatment as the named text
+# types above, for the same reason.
+*.sha256 text eol=lf

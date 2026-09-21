@@ -1,0 +1,230 @@
+{
+ "bootstrap": {
+  "B": 100000,
+  "blocks": 15,
+  "interval": "two-sided nominal 95% percentile-bootstrap",
+  "lower_quantile": 0.025,
+  "numpy_version": "2.5.0",
+  "pandas_version": "2.3.3",
+  "python_version": "3.13.14",
+  "quantile_implementation": "numpy.percentile(..., method=\"linear\")",
+  "seed_first8_hex": "97704c2e",
+  "seed_literal_uint32": 2540719150,
+  "seed_sha256": "97704c2ecdc530a56386c0a6b1a878bdf3083ad992011d6b946fd2a3bedcb180",
+  "seed_source_string": "CTA-EDGE-05|F6|S1_BOOTSTRAP|49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+  "upper_quantile": 0.975,
+  "years": [
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ]
+ },
+ "constants": {
+  "rf_daycount_owner_chosen": 365,
+  "round_trip_cost": 0.0004
+ },
+ "cross_tabs": {
+  "auction": {
+   "0": 394,
+   "1": 68
+  },
+  "tom": {
+   "0": 381,
+   "1": 81
+  },
+  "weekday": {
+   "Friday": 198,
+   "Monday": 6,
+   "Thursday": 54,
+   "Tuesday": 47,
+   "Wednesday": 157
+  }
+ },
+ "dgs3mo": {
+  "carry_distribution": {
+   "0": 3744,
+   "1": 8,
+   "3": 20
+  },
+  "max_carry_calendar_days": 3,
+  "pass": true,
+  "sessions": 3772,
+  "unexplained_gaps": []
+ },
+ "failing_checks": [],
+ "family_labels": {
+  "CPI": 176,
+  "FOMC": 119,
+  "NFP": 176
+ },
+ "family_labels_total": 471,
+ "final_event_count": 462,
+ "firewall": {
+  "beta_event_computed": false,
+  "bootstrap_executed": false,
+  "ci_computed": false,
+  "f6b_accessed": false,
+  "loyo_performance_computed": false,
+  "nq_accessed": false,
+  "price_panel_use": "DATE INDEX and column PRESENCE (notna) only",
+  "price_values_read": false,
+  "r_excess_computed": false,
+  "r_net_computed": false,
+  "sharpe_computed": false,
+  "spy_return_computed": false,
+  "tlt_accessed": false,
+  "y2026_outcome_accessed": false
+ },
+ "individual_year_matrix_rank_pass": true,
+ "multi_event_sessions": 9,
+ "opening_boundary": {
+  "boundary_role": "INPUT BOUNDARY OBSERVATION \u2014 supplies the lagged close, the interval boundary and HOLD for the first 2011 session. It is NOT a 2010 regression row.",
+  "first_primary_session": "2011-01-03",
+  "lag_boundary_session": "2010-12-31",
+  "rows_dropped_for_undefined_HOLD": 0
+ },
+ "overlap_adjustment": 9,
+ "p2_rows": 3772,
+ "per_year_rank": {
+  "2011": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2012": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  },
+  "2013": {
+   "cols": 9,
+   "events": 29,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2014": {
+   "cols": 9,
+   "events": 30,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2015": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2016": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2017": {
+   "cols": 9,
+   "events": 29,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2018": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2019": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2020": {
+   "cols": 9,
+   "events": 30,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 253
+  },
+  "2021": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2022": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 251
+  },
+  "2023": {
+   "cols": 9,
+   "events": 32,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  },
+  "2024": {
+   "cols": 9,
+   "events": 31,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 252
+  },
+  "2025": {
+   "cols": 9,
+   "events": 27,
+   "full_rank": true,
+   "rank": 9,
+   "rows": 250
+  }
+ },
+ "pooled_design": {
+  "columns": [
+   "const",
+   "weekday_Monday",
+   "weekday_Thursday",
+   "weekday_Tuesday",
+   "weekday_Wednesday",
+   "EVENT",
+   "TOM",
+   "HOLD",
+   "AUCTION"
+  ],
+  "event_in_span_of_controls": false,
+  "full_rank": true,
+  "rank": 9,
+  "shape": [
+   3772,
+   9
+  ],
+  "weekday_baseline": "Friday"
+ },
+ "rank_deficient_years": [],
+ "validated": true
+}
