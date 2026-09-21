@@ -1,0 +1,130 @@
+{
+ "claim_cap": {
+  "cash_proxy": "DGS3MO, /365 OWNER-CHOSEN; never attributed to Treasury, H.15 or FRED",
+  "evidence_ceiling": "SUPPORTED",
+  "execution_status": "adjusted-close EXECUTION PROXY; NOT production-grade fill evidence",
+  "independent_confirmation": false,
+  "must_not_claim": [
+   "causal uncertainty compensation",
+   "independent confirmation",
+   "individual FOMC alpha",
+   "individual CPI alpha",
+   "individual NFP alpha",
+   "TLT premium",
+   "F6.b pre-FOMC drift",
+   "post-2015 persistence",
+   "future persistence",
+   "buy-and-hold dominance",
+   "LOYO significance",
+   "stable LOYO magnitudes",
+   "production-grade fills",
+   "exact finite-sample 95% coverage"
+  ],
+  "sample_reuse_class": "T0_REUSED_DEPENDENT"
+ },
+ "data_kind": "REAL",
+ "gate": {
+  "p1_class": "UNRESOLVED",
+  "p1_rule": "lower endpoint of the nominal 95% interval for mean r_net > 0",
+  "p2_class": "UNRESOLVED",
+  "p2_rule": "lower endpoint of the nominal 95% interval for beta_EVENT > 0",
+  "p3_evaluated": false,
+  "p3_pass": "NOT_APPLICABLE_BY_SEAL",
+  "p3_rule": "evaluated ONLY after P1 and P2 pass; every LOYO P1 and beta_EVENT point estimate STRICTLY > 0; NO deletion-level significance requirement",
+  "p3_year_results": "NOT_APPLICABLE_BY_SEAL"
+ },
+ "inference": {
+  "bootstrap_B": 100000,
+  "bootstrap_seed_literal": 2540719150,
+  "bootstrap_seed_source": "CTA-EDGE-05|F6|S1_BOOTSTRAP|49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+  "coverage_claim": "NOMINAL / APPROXIMATE. NOT exact finite-sample 95% coverage. 15 year blocks imply approximate, assumption-dependent inference; a large event count creates no additional clusters.",
+  "interval": "two-sided nominal 95% percentile bootstrap",
+  "lower_quantile": 0.025,
+  "p1_lower": -0.0006259059694773711,
+  "p1_upper": 0.001332307197050112,
+  "p2_lower": -0.0007881068341206288,
+  "p2_upper": 0.0012337520377499896,
+  "pinned_environment": {
+   "numpy": "2.5.0",
+   "pandas": "2.3.3",
+   "python": "3.13.14"
+  },
+  "quantile_implementation": "numpy.percentile(..., method=\"linear\")",
+  "upper_quantile": 0.975,
+  "year_blocks": [
+   2011,
+   2012,
+   2013,
+   2014,
+   2015,
+   2016,
+   2017,
+   2018,
+   2019,
+   2020,
+   2021,
+   2022,
+   2023,
+   2024,
+   2025
+  ]
+ },
+ "measurement": {
+  "event_count": 462,
+  "family_labels": {
+   "CPI": 176,
+   "FOMC": 119,
+   "NFP": 176
+  },
+  "multi_event_sessions": 9,
+  "p1_estimate": 0.00035783829591742855,
+  "p2_beta_event": 0.00023075018102263964,
+  "p2_rows": 3772,
+  "year_count": 15
+ },
+ "provenance": {
+  "authorization_id": "F6-AUTH-0001",
+  "bootstrap_execution_count": 1,
+  "build_commit": "43f0bb3156673402866f4c1e2d06f25044455d48",
+  "build_hash": "050bb3d73e7c95930d79ebb987797d5a720c5d5081f70b423c3ebeb0a9a05d49",
+  "cash_sha256": "50da2bfbb25e3e3241af7a4ad16e5a1bb5f08cdfb46bcb92f224954dce054319",
+  "event_manifest_sha256": "49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382",
+  "f6_auth_commit": "67e3cc1d0d0fc06aaf3a5566db1ce9156e2d8c0c",
+  "f6_primary_trial_consumed": true,
+  "finished_utc": "2026-09-21T17:04:20.227679+00:00",
+  "lineage": "CTA-EDGE-05 / F6 MACRO_ANNOUNCEMENT_PREMIUM",
+  "panel_sha256": "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31",
+  "primary_execution_count": 1,
+  "runtime": {
+   "numpy": "2.5.0",
+   "pandas": "2.3.3",
+   "python": "3.13.14"
+  },
+  "seal_commit": "0fd380682c6f0438c13ab25aa41c8fc9a3f5b70c",
+  "seal_id": "CTA-EDGE-05-F6-S1-2026-09-21",
+  "sealed_class_tokens": {
+   "p1": "unresolved",
+   "p2": "unresolved"
+  },
+  "sealed_manifest_sha256": "7e61af335eae8a3b236c13724d9705cbb269bfa393894d43f2d6fcdfa4c841c7",
+  "sealed_preregistration_sha256": "f26df71d4596dd8cacd261e571040b5b0e39fd37ef897c87422af31eeef275d9",
+  "started_utc": "2026-09-21T17:00:42.193992+00:00"
+ },
+ "run_id": "CTA-EDGE-05-F6-S3-PRIMARY-001",
+ "run_state": "COMPLETE",
+ "schema": {
+  "name": "f6-s3-result",
+  "version": 1
+ },
+ "verdict": {
+  "forbidden_states": [
+   "LOW_POWER",
+   "MECHANISM_FALSIFIED",
+   "INSUFFICIENT_EVIDENCE",
+   "CONFIRMED"
+  ],
+  "qualifier": "a failure to establish positivity is NOT a reliable negative",
+  "research_status": "not_promoted",
+  "terminal_classification": "UNRESOLVED"
+ }
+}

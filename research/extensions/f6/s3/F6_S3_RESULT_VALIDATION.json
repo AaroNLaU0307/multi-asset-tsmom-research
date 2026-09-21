@@ -1,0 +1,18 @@
+{
+ "failing_checks": [],
+ "historical_panel_reread": false,
+ "oracle_agrees": true,
+ "p3_applicable": false,
+ "recomputed_p1_class": "unresolved",
+ "recomputed_p2_class": "unresolved",
+ "result_artifact_sha256": "033ed34a6c52e6febecbef942482d345fb7c2319c4f0e6dad154c91699f70401",
+ "run_id": "CTA-EDGE-05-F6-S3-PRIMARY-001",
+ "s3_result_validation": "PASS",
+ "schema": {
+  "name": "f6-s3-result-validation",
+  "version": 1
+ },
+ "second_historical_run_performed": false,
+ "sentinel_sha256": "a9e157ff860e30c07e11ddd403d9250b87526e206f0934b91a46bc3f15991549",
+ "terminal_classification": "UNRESOLVED"
+}

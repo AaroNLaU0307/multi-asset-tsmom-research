@@ -1,0 +1,20 @@
+{
+ "authorization_id": "F6-AUTH-0001",
+ "build_commit": "43f0bb3156673402866f4c1e2d06f25044455d48",
+ "build_hash": "050bb3d73e7c95930d79ebb987797d5a720c5d5081f70b423c3ebeb0a9a05d49",
+ "completed_utc": "2026-09-21T17:04:20.227679+00:00",
+ "f6_auth_commit": "67e3cc1d0d0fc06aaf3a5566db1ce9156e2d8c0c",
+ "f6_outcome_exposure_occurred": true,
+ "f6_primary_trial_consumed": true,
+ "note": "NOT A RESULT. This exists so a process crash cannot make exposure status ambiguous. Once this file exists and the real target load has begun, the primary trial is treated as CONSUMED unless it can be PROVEN the target load never occurred.",
+ "result_artifact": "research/extensions/f6/s3/F6_S3_RESULT.json",
+ "run_id": "CTA-EDGE-05-F6-S3-PRIMARY-001",
+ "schema": {
+  "name": "f6-s3-run-sentinel",
+  "version": 1
+ },
+ "seal_commit": "0fd380682c6f0438c13ab25aa41c8fc9a3f5b70c",
+ "seal_id": "CTA-EDGE-05-F6-S1-2026-09-21",
+ "state": "TARGET_ACCESS_COMPLETED",
+ "timestamp_utc": "2026-09-21T17:00:42.193583+00:00"
+}
