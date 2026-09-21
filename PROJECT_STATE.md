@@ -1,8 +1,8 @@
 # PROJECT_STATE — multi-asset TSMOM extensions
 
-Current **state** of this project under
-[`QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md) (cutover 2026-09-12) — state,
-never workflow authority (vNext §0).
+Current **state** of this project under `../QUANT_WORKFLOW_VNEXT.md` (cutover
+2026-09-12) — workspace-local workflow authority, **not published in this repository**.
+This file records **state**, never workflow authority (vNext §0).
 
 ## PROGRAMME STATE — CTA / systematic-macro Discovery
 
@@ -21,7 +21,8 @@ ROUND2_STARTED            = NO
 LIVE_EXECUTION_AUTHORIZATIONS = NONE — every grant is ONE_SHOT and spent
 ```
 
-Round-1 candidates and terminal states:
+Round-1 candidate objects and terminal states — **11 objects**, the final line
+grouping four that never became lineages:
 
 ```
 F1 / TA    CTA-EDGE-01  CLOSED PRE-OUTCOME        outcome accessed = NO
@@ -35,8 +36,11 @@ F2 / F8 / F9 / F10      BLOCKED / PARKED / NOT STANDALONE   never opened
 ```
 
 ```
-7 of 10 candidates were resolved BEFORE any return outcome was touched.
-3 sealed primary trials were consumed (BENB, MMV, F6). 0 edges promoted.
+11 candidate objects were triaged.
+ 8 reached a terminal PRE-OUTCOME disposition: closed, parked, blocked, or
+   ruled not standalone. No return outcome was touched for any of them.
+ 3 proceeded to GOVERNED HISTORICAL EVALUATION: BENB, MMV, F6.
+ 0 new supported edges were promoted.
 NO Round-1 candidate obtained INDEPENDENT_CONFIRMATION.
 ```
 
@@ -137,8 +141,14 @@ NO_FUTURE_X01_RUN   = X01-AUTH-0001 is CONSUMED and active_authorizations is 0.
                       change, resampling, universe expansion, arm substitution or
                       repackaging of X01 follows from it. Any further work needs a
                       separate Owner decision and a genuinely new question.
-ACTIVE_HYPOTHESIS   = X01 matched-map transfer; sealed contract at
-                      research/extensions/x01/X01_PREREGISTRATION_DRAFT.md
+ACTIVE_HYPOTHESIS   = NONE for this lineage. X01 is CLOSED and
+                      CURRENT_VNEXT_STAGE = STOPPED, so nothing here is active.
+                      The sealed contract at
+                      research/extensions/x01/X01_PREREGISTRATION_DRAFT.md is
+                      retained as the historical record of what was tested.
+                      SUPERSEDED (dated 2026-09-13, at the S4 verdict): this
+                      line previously read "X01 matched-map transfer", which was
+                      accurate while the lineage was open.
 DATA_GRANT          = existing Databento + ETF panels only; the Databento ceiling
                       (ops/EXECUTION_AUTHORIZATIONS.md) is unchanged; no purchase
                       authorized
@@ -154,17 +164,36 @@ OUTCOME_EXPOSURE    = TARGET_METRIC / HISTORICAL_CUMULATIVE (ops/EXPOSURE_LEDGER
 TARGET_EXECUTION_AUTHORIZED = NO — the one grant on record is CONSUMED; there is
                       no active authorization. A seal is not authorization, and a
                       spent authorization is not a licence to run again.
-TARGET_X01_OUTCOME_ACCESSED = NO — the evidence artifact has been GENERATED and
-                      stored, and NOT seen. No Sharpe, ΔS, confidence interval,
-                      bootstrap statistic or verdict has been read by any session.
-X01_FIRST_EXECUTION_EXPOSURE_CLASSIFICATION = GENERATED_NOT_SEEN (Owner-sealed)
+TARGET_X01_OUTCOME_ACCESSED = YES — revealed 2026-09-12 under Aaron's Owner
+                      decision AUTHORIZE REVEAL OF X01-RUN-0001 AND ENTER S4
+                      VERDICT. The Sharpe figures, ΔS, the 95 % interval and the
+                      verdict are all recorded above and in
+                      ops/EXPOSURE_LEDGER.md. See the finalized
+                      TARGET_X01_OUTCOME_ACCESSED entry earlier in this block,
+                      which this line now agrees with.
+                      SUPERSEDED (dated 2026-09-12, at the reveal): this line
+                      previously read "NO — the evidence artifact has been
+                      GENERATED and stored, and NOT seen", which was accurate
+                      between the run and the authorized reveal.
+X01_FIRST_EXECUTION_EXPOSURE_CLASSIFICATION = REVEALED_TARGET_METRIC — the
+                      exposure for X01-RUN-0001 moved GENERATED_NOT_SEEN ->
+                      REVEALED_TARGET_METRIC at the authorized reveal of
+                      2026-09-12 and is recorded in ops/EXPOSURE_LEDGER.md.
+                      SUPERSEDED (dated 2026-09-12): the Owner-sealed
+                      classification at first execution was GENERATED_NOT_SEEN.
 OPEN_MATERIAL_BLOCKERS = NONE recorded. The X01 draft reports
                       TECHNICAL_BLOCKERS = NONE and OWNER_DECISIONS_REMAINING = NONE.
-NEXT_OWNER_DECISION = AUTHORIZE ONE REAL SEALED X01 EXECUTION under
-                      GENERATED_NOT_SEEN — after housekeeping and a green rerun of
-                      the minimal S3 readiness check. X01 target execution is NOT
-                      authorized: zero authorization records exist, and a seal is
-                      not authorization to execute.
+NEXT_OWNER_DECISION = NONE for this lineage. It is CLOSED, the verdict is
+                      INSUFFICIENT_EVIDENCE, X01-AUTH-0001 is CONSUMED and
+                      active_authorizations is 0. Per NO_FUTURE_X01_RUN above,
+                      no rerun, retune, boundary change, resampling, universe
+                      expansion or arm substitution follows from that verdict;
+                      any further work needs a separate Owner decision and a
+                      genuinely new question.
+                      SUPERSEDED (dated 2026-09-12, at the S3 run): this line
+                      previously read "AUTHORIZE ONE REAL SEALED X01 EXECUTION
+                      under GENERATED_NOT_SEEN", which was the correct next
+                      decision before that one authorized execution happened.
 ```
 
 ## CTA-EDGE-05-F6 — scheduled macro announcement premium — CLOSED / UNRESOLVED 2026-09-22
@@ -232,8 +261,11 @@ RERUN               = NOT PERMITTED. The primary trial is consumed. No corrected
                       parameter adjustment or renamed F6 variant on the exposed sample.
                       A future study needs a genuinely new governed lineage.
 STATUS              = **CLOSED / UNRESOLVED / NOT_PROMOTED. ROUND1_F6_ACTIVE = NO.**
-                      No next edge started; Round 2 NOT authorized. Control returns to
-                      the programme Controller for next-edge selection.
+                      No next edge started. Round 2 is READY / NOT STARTED. Control
+                      returns to the programme Controller for next-edge selection.
+                      (At F6 S4 closeout this line read "Round 2 NOT authorized",
+                      which was accurate then and is superseded by the Round-1
+                      closeout; the F6 verdict itself is unchanged.)
 ```
 
 ## CTA-EDGE-04-MMV — macro momentum on vintage data — CLOSED / TERMINAL 2026-09-17
