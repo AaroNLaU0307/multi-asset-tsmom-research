@@ -1,8 +1,8 @@
 # PROJECT_STATE — multi-asset TSMOM extensions
 
-Current **state** of this project under
-[`QUANT_WORKFLOW_VNEXT.md`](../QUANT_WORKFLOW_VNEXT.md) (cutover 2026-09-12) — state,
-never workflow authority (vNext §0).
+Current **state** of this project under `../QUANT_WORKFLOW_VNEXT.md` (cutover
+2026-09-12) — workspace-local workflow authority, **not published in this repository**.
+This file records **state**, never workflow authority (vNext §0).
 
 ## PROGRAMME STATE — CTA / systematic-macro Discovery
 
@@ -21,7 +21,8 @@ ROUND2_STARTED            = NO
 LIVE_EXECUTION_AUTHORIZATIONS = NONE — every grant is ONE_SHOT and spent
 ```
 
-Round-1 candidates and terminal states:
+Round-1 candidate objects and terminal states — **11 objects**, the final line
+grouping four that never became lineages:
 
 ```
 F1 / TA    CTA-EDGE-01  CLOSED PRE-OUTCOME        outcome accessed = NO
@@ -35,8 +36,11 @@ F2 / F8 / F9 / F10      BLOCKED / PARKED / NOT STANDALONE   never opened
 ```
 
 ```
-7 of 10 candidates were resolved BEFORE any return outcome was touched.
-3 sealed primary trials were consumed (BENB, MMV, F6). 0 edges promoted.
+11 candidate objects were triaged.
+ 8 reached a terminal PRE-OUTCOME disposition: closed, parked, blocked, or
+   ruled not standalone. No return outcome was touched for any of them.
+ 3 proceeded to GOVERNED HISTORICAL EVALUATION: BENB, MMV, F6.
+ 0 new supported edges were promoted.
 NO Round-1 candidate obtained INDEPENDENT_CONFIRMATION.
 ```
 
@@ -232,8 +236,11 @@ RERUN               = NOT PERMITTED. The primary trial is consumed. No corrected
                       parameter adjustment or renamed F6 variant on the exposed sample.
                       A future study needs a genuinely new governed lineage.
 STATUS              = **CLOSED / UNRESOLVED / NOT_PROMOTED. ROUND1_F6_ACTIVE = NO.**
-                      No next edge started; Round 2 NOT authorized. Control returns to
-                      the programme Controller for next-edge selection.
+                      No next edge started. Round 2 is READY / NOT STARTED. Control
+                      returns to the programme Controller for next-edge selection.
+                      (At F6 S4 closeout this line read "Round 2 NOT authorized",
+                      which was accurate then and is superseded by the Round-1
+                      closeout; the F6 verdict itself is unchanged.)
 ```
 
 ## CTA-EDGE-04-MMV — macro momentum on vintage data — CLOSED / TERMINAL 2026-09-17
