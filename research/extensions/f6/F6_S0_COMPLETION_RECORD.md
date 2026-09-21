@@ -294,3 +294,18 @@ were never joined to a price.
 ```
 
 None of these authorizes return access.
+
+---
+
+## ADDITIVE NOTE — 2026-09-21, superseded event count
+
+The `PRIMARY_EVENT_COUNT = 467` recorded above was **provisional**. The final
+schedule-PIT gate excluded 6 unresolved reschedules (5 whole sessions), giving
+`FINAL_PRIMARY_EVENT_COUNT = 462`.
+
+```
+this record is RETAINED UNCHANGED as the correct PRE-GATE state.
+superseded by  F6_SCHEDULE_PIT_FINAL_GATE.md
+final manifest F6_FINAL_EVENT_MANIFEST.json
+               sha256 49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382
+```

@@ -281,3 +281,98 @@ F6_PRIMARY_TRIAL_CONSUMED = NO.
 Still open before S1 sealing: the independent-adjudication artifact (§9), the
 residual schedule-knowability items recorded in the S0 completion record, and
 the S1 seal itself.
+
+---
+
+## §11 Final schedule-PIT event eligibility — `SCHEDULE_PIT_FAIL_CLOSED_RULE`
+
+*Appended 2026-09-21. **Additive.** Nothing above this line is altered, and no
+decision is renumbered.*
+
+```
+F6-OD-PIT   = SCHEDULE_PIT_FAIL_CLOSED_RULE   (new alias, §2 convention)
+```
+
+### §11.1 The adopted rule
+
+```
+A release whose date CHANGED is admissible ONLY IF the change was announced by
+an authoritative contemporaneous source strictly before the entry decision at
+close(t-1). Where the announcement timing CANNOT be established, the release is
+PIT_UNRESOLVED_EVENT and is EXCLUDED from the primary sample, PRE-OUTCOME.
+
+The ACTUAL release date is NEVER substituted for the announcement date merely
+because it is known ex post.
+```
+
+Forbidden as evidence of announcement timing, and not used: a page's current
+last-modified date · the actual release date · a weekday heuristic · media
+recollection or the release contents.
+
+```
+THIS IS A SCHEDULE-AUTHORITY EXCLUSION.
+It is NOT outcome filtering, NOT a mechanism failure, NOT return-based.
+```
+
+### §11.2 The ruling
+
+```
+BLS_RESCHEDULE_CASES_TOTAL = 8
+  CHANGED_BEFORE_ENTRY     = 2   admissible at the ACTUAL date
+                                 NFP 2013-11-08  (BLS blog 2013-10-31)
+                                 CPI 2025-10-24  (BLS notice 2025-10-10)
+  CHANGED_AFTER_ENTRY      = 0   none ESTABLISHED; not a claim that none exists
+  PIT_UNRESOLVED_EXCLUDED  = 6   NFP 2013-10-22 · CPI 2013-10-30 (label only)
+                                 CPI 2013-11-20 · NFP 2025-11-20
+                                 NFP 2025-12-16 · CPI 2025-12-18
+CANCELLED_ENTIRELY         = 2   NFP and CPI reference month 2025-10.
+                                 No event ever existed; not an exclusion.
+```
+
+The excluded object is a **release**, not necessarily a session. **2013-10-30**
+loses only its CPI label and **survives as an FOMC event**, because that FOMC
+statement was independently scheduled and knowable.
+
+### §11.3 Final counts — generated mechanically, asserted in code
+
+```
+PROVISIONAL_PRIMARY_EVENT_COUNT = 467   (superseded, retained, not rewritten)
+FINAL_PRIMARY_EVENT_COUNT       = 462
+
+FOMC 119 · CPI 176 · NFP 176 = 471 labels · 9 multi-event · 471 - 9 = 462
+weekday / TOM / AUCTION event cells each sum to 462   ASSERTED, PASS
+control matrix (3771, 9) rank 9 FULL RANK; EVENT not in span of controls
+YEAR_BLOCKS = 15 (2011..2025); LOYO REMAINDERS = 430 .. 435
+```
+
+### §11.4 Release-time authority
+
+```
+CPI / NFP  08:30 ET, NO REGIME CHANGE LOCATED — contemporaneously attested at
+           both ends of the window (USDL-13-2076 embargo line; BLS blog
+           2013-10-31; 2025 reschedule notices). This is "none located", NOT
+           "verified year by year".
+FOMC       regime change LOCATED. From 2013-03-20: 2:00 p.m. ET, VERIFIED
+           (Fed press release 2013-03-13 + frozen 2018-01-31 statement).
+           Before it: 2:15 p.m. ET is an UNVERIFIED CARRY-OVER.
+           ELIGIBILITY IMPACT = NONE — both times fall inside the session, so a
+           close(t-1)->close(t) trade is unaffected either way.
+```
+
+### §11.5 Status
+
+```
+F6_PRIMARY_TRIAL_CONSUMED                 = NO
+F6 outcome quantities computed            = NONE
+EXACT_ADJUDICATION_TRANSCRIPT_STILL_OWED  = YES
+F6_INDEPENDENT_ADJUDICATION_PROVENANCE_GAP= YES   (unchanged, still open)
+```
+
+This gate **finalizes event eligibility only**. It does not seal F6, does not
+write S1 preregistration, and does not close the provenance gap in §9.
+
+```
+gate report    ../research/extensions/f6/F6_SCHEDULE_PIT_FINAL_GATE.md
+final manifest ../research/extensions/f6/F6_FINAL_EVENT_MANIFEST.json
+               sha256 49ff27bfc20eb98265c440bac7368e92022b356d77647dce9151f012e40ed382
+```
