@@ -126,3 +126,13 @@ the unit of observation does not change the MDE in Sharpe terms. What an event o
 sparse design can change is the *plausible effect size in Sharpe terms*: a strategy
 exposed only on events is not diluted by idle periods. The inventory records where
 such designs are available.
+
+## DL-011 · recorded 2026-09-25T19:55Z · delegate · Round 2 PARKED_PRE_OUTCOME
+
+Verbatim:
+
+> CHECKPOINT R2-2 (02c35cf): ACCEPTED. REPRODUCED: the inventory file and commit; MDE arithmetic for JST (140y → 0.24), GSW (0.36), BIS (0.32), CFTC (0.46) recomputes; DL-010 present. REASONED and accepted: century-tested families are seen-outcome tests capped at `supported`; the new-and-resolvable intersection in free data is nearly empty.
+>
+> DELEGATE DECISION (delegated scope; Aaron informed, may override): Round 2 is PARKED — programme disposition PARKED_PRE_OUTCOME at a programme-level identifiability ceiling. No trial spent, no outcome touched, no Round-1 verdict changed. Revival requires a new S0 under one of your three conditions: (a) an a-priori annual-horizon mechanism absent from the century literature, tested on JST with exposure disclosed (delegate gate, free data); (b) Aaron funds long-history futures data (Owner gate); (c) an honest prospective lineage with its MDE stated up front. Record the decision verbatim in the log, write a short R2 closeout beside the two round-2 files, set PROJECT_STATE to Round 2 PARKED with the three revival conditions and NEXT_DECISION = Aaron (whether to fund long-history data), commit locally, no push. Then no further research under the standing mandate until a revival S0 is opened. Finish the public-repository rewrite, report its local commit, and push once Aaron approves in your window; after that, stop and report.
+
+Closeout: `research/round2/R2_CLOSEOUT.md`.

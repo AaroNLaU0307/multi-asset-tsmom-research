@@ -15,13 +15,21 @@ whose authoritative home was that file.
 **Decisions from 2026-09-26 onward** are in [`ops/DECISION_LOG.md`](ops/DECISION_LOG.md).
 
 ```
-UPDATED            = 2026-09-26 — v2 state cut (DL-002) and C-A closure (DL-008)
+UPDATED            = 2026-09-26 — Round 2 PARKED (DL-011); earlier: state cut DL-002,
+                     C-A closure DL-008
 RESEARCH_QUESTION  = find, and honestly falsify, standalone systematic-macro / CTA
                      edges beyond the frozen canonical TSMOM benchmark
-MANDATE            = standing research-mode authorization, effective with this
-                     commit: ops/MANDATE_2026-09-26_AGI_RESEARCH_MODE.md (DL-009)
-STAGE              = Round 1 CLOSED / EXHAUSTED; Round 2 NOT STARTED — no candidate,
-                     no discovery map, no S0 open
+MANDATE            = standing research-mode authorization (DL-009,
+                     ops/MANDATE_2026-09-26_AGI_RESEARCH_MODE.md); DORMANT — no
+                     research under it until a revival S0 is opened (DL-011)
+STAGE              = STOPPED. Round 1 CLOSED / EXHAUSTED. Round 2 PARKED_PRE_OUTCOME
+                     at a programme-level identifiability ceiling (DL-011;
+                     research/round2/R2_CLOSEOUT.md); no trial spent
+REVIVAL            = a new S0 under one of: (a) an a-priori annual-horizon mechanism
+                     absent from the century literature, on JST, exposure disclosed
+                     (delegate gate); (b) Aaron funds long-history futures data
+                     (Owner gate); (c) an honest prospective lineage, MDE stated
+                     up front
 CANONICAL_TSMOM    = SUPPORTED — NOT INDEPENDENTLY CONFIRMED; frozen research
                      benchmark (STUDY_SUMMARY.md)
 ACTIVE_LINEAGES    = NONE
@@ -34,8 +42,8 @@ TRIAL_ACCOUNTING   = research/extensions/TRIAL_LEDGER.md (view) ·
                      ASSERTED (D-ETF-COUNT = UNKNOWN_PENDING_AARON_DECISION); every
                      candidate on it is T0_REUSED_DEPENDENT, ceiling `supported`
 OPEN_BLOCKERS      = NONE
-NEXT_DECISION      = builder: next research step under the mandate. Open, not due:
-                     D-ETF-COUNT (delegate)
+NEXT_DECISION      = Aaron: whether to fund long-history futures data (revival b).
+                     Open, not due: D-ETF-COUNT (delegate)
 ```
 
 **Round-2 carry-forward constraints:** see [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) §7.
