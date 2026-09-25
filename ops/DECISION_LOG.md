@@ -110,3 +110,19 @@ grants broad method autonomy under v2. It changes no gate:
 - Owner-retained gates stay with Aaron.
 - Delegated gates stay with the delegate.
 - The builder never authorizes its own run, reveal or verdict.
+
+## DL-010 · recorded 2026-09-25T18:30Z · delegate · R2-1 accepted; long-history inventory approved
+
+Verbatim:
+
+> CHECKPOINT R2-1 (b8e4e48): ACCEPTED. REPRODUCED: the script runs from the repository with no data read; the MDE table follows from z(0.975)+z(0.80)=2.80 over sqrt(T) with the Sharpe-variance correction (delegate's independent recomputation without the correction gives 0.66 / 0.70 / 0.60 / 0.89 and 87 / 49 years, consistent). The finding stands: sample span, not candidate supply, binds a standalone portfolio-Sharpe design. No Round-1 verdict is reinterpreted.
+>
+> DELEGATE DECISION (delegated scope, Aaron informed): (1) The no-cost, read-only desk inventory of free long-history series, their point-in-time integrity and prior exposure is APPROVED as method; log it. No dataset download and no purchase under this decision; any acquisition returns as a separate request (free = delegate; paid or credentialed = Aaron). (2) The park-Round-2 decision is DEFERRED until the inventory returns; report it as a checkpoint with a recommendation. (3) Finding handed back as a fact, not an agenda: the span limit applies to designs whose unit of evidence is a calendar year of portfolio returns; designs whose unit is an event or a cross-sectional observation sit in a different MDE regime, and your inventory may note where that is or is not available. The public-repository rewrite remains queued behind Aaron's clone approval in your session.
+
+**Builder note on (3), as a fact rather than a dispute.** For any claim that maps to a
+tradable return stream, the evidence is the same whatever the unit. An event study's
+t-statistic equals `SR_annual × sqrt(T_years)`, because N events = k per year × T. So
+the unit of observation does not change the MDE in Sharpe terms. What an event or a
+sparse design can change is the *plausible effect size in Sharpe terms*: a strategy
+exposed only on events is not diluted by idle periods. The inventory records where
+such designs are available.
