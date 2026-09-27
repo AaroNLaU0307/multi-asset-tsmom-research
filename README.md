@@ -336,7 +336,8 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
   read-only) before any P&L is fit. All four overlays below were rejected at this gate.
 - **Pre-registration + multiplicity control.** Calendar/seasonality is a multiple-comparisons
   minefield, so the seasonality study (3d) **pre-registered** its 18-test family and decision rule
-  *before computing anything*, and corrected with **BH-FDR** across the whole family — the machinery
+  (the pre-registration first appears in the same commit as its results, so the ordering is
+  self-attested; [`ERRATA`](research/ERRATA_2026-09-27.md) §3), and corrected with **BH-FDR** across the whole family — the machinery
   kept a tempting calendar effect from being promoted (below).
 - **Falsification standard for any overlay** (demonstrated in the XSMOM study, §3·parallel): once a premise
   survives, a **paired-difference bootstrap** of Δ-Sharpe vs the core with **BH-FDR** across
@@ -349,7 +350,7 @@ seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, 
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
 **Validation status (one pinned environment).** With Python 3.13.12 and the exact pins in
-[`requirements.txt`](requirements.txt), `python -m pytest -q` reports **167 passed**. CI runs
+[`requirements.txt`](requirements.txt), `python -m pytest -q` reports **169 passed**. CI runs
 that suite plus the three sealed-lineage suites that need no git-ignored data:
 `research/extensions/benb/benb_tests.py` (63 passed, 2 skipped),
 `research/extensions/value/value_tests.py` (11 passed) and
@@ -414,7 +415,8 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   different direction entirely from the drawdown-motivated overlays above.
 - **Gate (descriptive, pre-registered).** Seasonality is the **highest-overfitting-risk** direction
   tested — calendar slicing has many dimensions, and *any* return series shows *some* "significant"
-  pattern by chance — so the family and decision rule were **pre-registered before any computation**:
+  pattern by chance — so the family and decision rule were **pre-registered** (committed together with
+  the results, so the ordering is self-attested):
   3 a-priori effects × (pooled + 5 sleeves) = **18 cells**, each required to clear a **5-gate
   conjunction** — survive **BH-FDR q = 0.10** across the whole family **and** match the prior sign
   **and** clear a **≥ 5 bps/day** economic-magnitude bar **and** be **sub-period / year stable** **and**
@@ -896,7 +898,7 @@ Part of a falsification-first research series applying the same protocol across 
 and strategy families:
 
 - [`quant-backtest-framework`](https://github.com/AaroNLaU0307/quant-backtest-framework) - multi-instrument SMC price-action study, **falsified** on its engine as it stood before a 2026-09-27 look-ahead fix (0/210 cross-instrument BH-FDR across 5 instruments x 42 configs; re-run pending).
-- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **not promoted** (0/20 cells survive BH-FDR; no OOS return statistic computed or reported).
+- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **null** for H1 and H2 and **underpowered** for H3 and H6 under its pre-registered outcome classes (0/20 cells survive BH-FDR; no OOS return statistic computed or reported).
 - [`spot-mfi-btc-perp-research`](https://github.com/AaroNLaU0307/spot-mfi-btc-perp-research) - spot money-flow signals for BTC perps, base study **falsified** (0/42 BH-FDR); funding-divergence follow-up **inconclusive, leaning falsified**.
 
 The series' base rate is the point: a supported result is earned against the same gates that falsify everything else.

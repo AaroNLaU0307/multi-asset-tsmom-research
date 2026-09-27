@@ -1,7 +1,7 @@
 {
   "schema": "headline/v1",
   "repo": "AaroNLaU0307/multi-asset-tsmom-research",
-  "source_commit": "b8404e7c14234e92da2e13cc7886fd37888176c4",
+  "source_commit": "487a50ccdd2d0bd9eebf0911215f3ff839728a27",
   "as_of": "2026-09-27",
   "rows": [
     {
@@ -233,6 +233,14 @@
           "value": null,
           "artifact": "research/yield_spread/yield_spread_premise_family.csv",
           "locator": "delta_drop_2022_24_ann / delta_ann over the 6 rows",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "cells keeping their sign without 2022–24",
+          "display": "6/6",
+          "value": 6,
+          "artifact": "research/yield_spread/yield_spread_premise_family.csv",
+          "locator": "columns delta_ann and delta_drop_2022_24_ann: same sign in every row",
           "provenance": "reproduced"
         },
         {

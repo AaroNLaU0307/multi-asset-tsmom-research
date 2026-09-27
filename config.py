@@ -251,7 +251,7 @@ RP_EQUITY_PNG = OUTPUT_DIR / "risk_parity_equity_curves.png"
 
 # --------------------------------------------------------------------------- #
 # DRAWDOWN ATTRIBUTION DIAGNOSTIC (descriptive — NOT a backtest / not optimized).
-# Characterizes WHERE the confirmed TSMOM strategy bleeds: chop/whipsaw vs
+# Characterizes WHERE the core TSMOM strategy bleeds: chop/whipsaw vs
 # turning-point momentum crashes, decomposable per sleeve. Reuses the exact
 # vol-scaled positions from the main pipeline (no re-parameterization). All knobs
 # are conventional descriptive choices, never tuned to a target.

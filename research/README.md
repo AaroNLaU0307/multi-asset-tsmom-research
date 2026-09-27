@@ -29,7 +29,8 @@ the dated reports here are in [`ERRATA_2026-09-27.md`](ERRATA_2026-09-27.md).
 - **Premise before strategy** — overlays are gated: verify the premise exists (cheap, read-only)
   before building anything. All four overlays were killed at the premise gate, before any P&L fitting.
 - **Pre-registration + multiplicity control** — for the seasonality study (the highest-overfitting-risk
-  direction), the full 18-test family and decision rule were **written down before any computation**, and
+  direction), the full 18-test family and decision rule were **pre-registered** (first committed together with the
+  results, so the ordering is self-attested; [`ERRATA`](ERRATA_2026-09-27.md) §3), and
   corrected with **BH-FDR** across the whole family; under it the tempting Monday cell (significant in
   isolation) does not survive, and it also fails the magnitude and stability gates.
 - **Honest evaluation** — pre-registered thresholds, robustness across a neighborhood (not a menu

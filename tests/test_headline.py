@@ -132,6 +132,10 @@ RECOMPUTE = {
         lambda: (v := int(_yield_family()["CONFIRMED"].sum()), f"{v}/{len(_yield_family())}"),
     ("yield-curve", "BH-FDR adjusted p"): _yield_p_fdr,
     ("yield-curve", "share of the effect kept without 2022–24"): _yield_kept_share,
+    ("yield-curve", "cells keeping their sign without 2022–24"):
+        lambda: (v := int((_yield_family()["delta_drop_2022_24_ann"]
+                           * _yield_family()["delta_ann"] > 0).sum()),
+                 f"{v}/{len(_yield_family())}"),
     ("yield-curve", "episodes in the tested flat state"):
         lambda: (None, _rng(_yield_episode_counts().min(), _yield_episode_counts().max(), "d")),
     ("yield-curve", "2022–24 share of flat-state days"):

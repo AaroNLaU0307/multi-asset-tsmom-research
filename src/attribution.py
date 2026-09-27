@@ -2,7 +2,7 @@
 episode identification, and chop-vs-turning-point-crash classification.
 
 DESCRIPTIVE ONLY. This module does not tune, optimize, or add any overlay. It
-reuses the *exact* vol-scaled positions produced by the confirmed TSMOM pipeline
+reuses the *exact* vol-scaled positions produced by the core TSMOM pipeline
 (``portfolio.build_portfolio`` -> ``positions``) and characterizes the realized
 equity curve. The single question it answers: are the strategy's drawdowns driven
 by (a) choppy/range-bound whipsaw or (b) held-trend momentum crashes — overall and
