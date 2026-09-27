@@ -67,6 +67,14 @@
           "artifact": "research/xsmom/xsmom_crisis_windows.csv",
           "locator": "row 'COVID 2020' (2020-02..2020-04), column cum_return_tsmom",
           "provenance": "reproduced"
+        },
+        {
+          "label": "prospective test (C-A) live since",
+          "display": "2026-09-13",
+          "value": null,
+          "artifact": "research/extensions/ca/prospective/CA_OPERATIONAL_STATE.json",
+          "locator": "key pipeline_go_live_timestamp_utc = 2026-09-13T18:33:11Z (also PROJECT_STATE.md:1342)",
+          "provenance": "repo-reported, not reproduced"
         }
       ],
       "caveats": [
