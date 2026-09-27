@@ -24,6 +24,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from src import xsmom as xs                      # noqa: E402
 from src import xsmom_stats as xst               # noqa: E402
 import xsmom_universes as uni                    # noqa: E402
+import run_xsmom_universes as R
 
 
 # --------------------------------------------------------------------------- #
@@ -201,3 +202,84 @@ def test_tercile_n_side_matches_family():
     assert uni.tercile_n_side(18) == 6
     assert uni.tercile_n_side(6) == 2
     assert uni.tercile_n_side(7) == 2
+
+
+# --------------------------------------------------------------------------- #
+# 5. Report mechanism labels are computed from the CIs, not typed in
+# --------------------------------------------------------------------------- #
+def _dec(t1, t2, t3):
+    """Decomposition CI dict from (point, lo, hi) triples."""
+    return {k: {"point": p, "lo": lo, "hi": hi}
+            for k, (p, lo, hi) in zip(("term1_autocov", "term2_leadlag", "term3_dispersion"),
+                                      (t1, t2, t3))}
+
+
+# term1 and term2 CIs contain 0, term3 excludes 0 — the shape of the committed study.
+_DEC_T1_CONTAINS_0 = _dec((1e-5, -4e-4, 3e-4), (-6e-5, -4e-4, 2e-4), (7e-6, 3e-6, 2e-5))
+_DEC_T1_EXCLUDES_0 = _dec((4e-4, 1e-4, 8e-4), (2e-5, -1e-4, 1e-4), (7e-6, 3e-6, 2e-5))
+
+# (rank baseline, demeaned) Sharpes: U1/U2/U5 rise, U3 ~ flat, U4 collapses.
+_DEMEAN = {"U1": (0.0144, 0.0792), "U2": (-0.1357, 0.0258), "U3": (0.0267, 0.0248),
+           "U4": (0.3128, -0.0671), "U5": (0.0137, 0.0244)}
+
+
+def _fake_result(u, decomp, base, dem):
+    common = pd.date_range("2008-05-31", periods=24, freq="ME")
+    reg = pd.DataFrame({"cum_return": [0.01] * len(uni.REGIMES)}, index=list(uni.REGIMES))
+    return {
+        "u": u, "kept": list(u.candidates), "drops": [], "N": len(u.candidates), "n_side": 2,
+        "common": common, "turn": 10.0,
+        "m_terc": {"sharpe": 0.1, "ann_return": 0.01, "ann_vol": 0.10, "max_drawdown": -0.2},
+        "m_rank": {"sharpe": base}, "m_ts": {"sharpe": 0.3},
+        "ci": {"lo": -0.4, "hi": 0.5, "crosses_0": True}, "pval": 0.7, "qvalue": 0.9,
+        "bh_reject": False, "confirmed": False, "blocks_pos": 3, "blocks_tot": 5, "wf_pos": True,
+        "nbhd": {3: 0.1, 6: 0.1, 9: 0.1, 12: 0.1}, "same_sign": True, "rho": 0.2, "s1": 0.2,
+        "s2": 0.3, "rho_legs": 0.2, "s_combo": 0.25, "rho_star": 0.1, "reg_xs": reg, "reg_ts": reg,
+        "conf": {"rank baseline": (base, True), "demeaned": (dem, True)},
+        "cost_ceiling": 5.0, "decomp": decomp,
+    }
+
+
+def _fake_family(decomp):
+    return [_fake_result(u, decomp, *_DEMEAN[u.key]) for u in uni.FAMILY]
+
+
+def test_demean_collapse_is_relative_to_the_baseline():
+    assert R.demean_collapses(0.3128, -0.0671)          # U4: positive baseline falls below half
+    assert R.demean_collapses(0.30, 0.14)               # halves -> collapse
+    assert not R.demean_collapses(0.0144, 0.0792)       # rises -> no collapse
+    assert not R.demean_collapses(-0.1357, 0.0258)      # non-positive baseline -> no collapse
+    assert not R.demean_collapses(0.0267, 0.0248)       # ~unchanged -> no collapse
+    assert R.demean_label(0.0144, 0.0792) == "no collapse (+0.01 → +0.08)"
+
+
+def test_term_presence_sentence_follows_the_term1_cis():
+    s = R.term_presence_sentence([_DEC_T1_CONTAINS_0] * 5)
+    assert "term1 (own-autocorrelation, the channel TSMOM harvests) has a CI that contains 0 in 5/5" in s
+    assert s.startswith("Only term3 (cross-sectional dispersion of means) has")
+    s = R.term_presence_sentence([_DEC_T1_EXCLUDES_0] * 5)
+    assert "contains 0" not in s
+    assert s.startswith("Only term1 (own-autocorrelation, the channel TSMOM harvests) and term3")
+
+
+def test_report_mechanism_labels_are_computed_from_the_cis(tmp_path, monkeypatch):
+    """The generated report must not assert a reliably-present term1 when every term1 CI
+    contains 0, and must not label a demeaned Sharpe at/above its baseline a collapse."""
+    monkeypatch.setattr(uni, "REPORT_MD", tmp_path / "XSMOM_UNIVERSES_REPORT.md")
+    results = _fake_family(_DEC_T1_CONTAINS_0)
+    keys = [u.key for u in uni.FAMILY]
+    bh = {"reject": [False] * 5, "qvalues": [0.9] * 5, "threshold": -np.inf, "alpha": 0.05}
+    dsr = {"dsr": 0.78, "sr_star": 0.07, "psr_vs0": 0.96, "n_trials": 5}
+    cross = pd.DataFrame(np.eye(5), index=keys, columns=keys)
+    R._write_report(results, bh, dsr, results[3], cross)
+    text = uni.REPORT_MD.read_text(encoding="utf-8")
+
+    assert "reliably-present term is term1" not in text
+    assert "contains 0 in 5/5 universes" in text
+    rows = {ln.split("|")[1].strip(): ln for ln in text.splitlines()
+            if ln.startswith("| U") and "own-autocov" not in ln and "[" in ln and "×|t1|" in ln}
+    assert rows["U1"].rstrip().endswith("| no collapse (+0.01 → +0.08) |")
+    assert rows["U2"].rstrip().endswith("| no collapse (-0.14 → +0.03) |")
+    assert rows["U4"].rstrip().endswith("| collapses (+0.31 → -0.07) |")
+    assert "Demeaning collapses the rank-weight Sharpe" in text and "**1/5** universes (U4)" in text
+    assert "negative control U5 (predicted to collapse hardest under demeaning): **not confirmed**" in text
