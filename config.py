@@ -138,6 +138,15 @@ FETCH_PERIOD = "max"
 FETCH_RETRIES = 4
 FETCH_SLEEP_SEC = 1.0            # polite pause between tickers / retries
 
+# Published core window. The fetch has no end date (FETCH_PERIOD = "max"), so the core
+# runner truncates the panel here: a fresh pull cannot silently extend the published
+# 2008-05 -> 2026-06 (218-month) window. The frozen panel data/close_prices_raw.csv
+# (git-ignored) ends on this date and has this SHA-256 (the pin in PROJECT_STATE.md and
+# research/extensions/SAMPLE_REUSE.md). `python run_backtest.py --verify-panel` refuses
+# to run on any other panel; without the flag a mismatch is reported, not fatal.
+CORE_END_DATE = "2026-06-12"
+CORE_PANEL_SHA256 = "3d2a7a56dbd92d4ff8138cfd894c87f5ac5ac088a11165db870673e0c05c3c31"
+
 # Reproducibility
 RANDOM_SEED = 7
 

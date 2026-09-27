@@ -5,20 +5,22 @@ Authoritative asset list for step 2 (momentum signals) and beyond. Import
 
 Provenance
 ----------
-Derived from the 30-ETF correlation / clustering screening
-(``output/ANALYSIS_REPORT.md``) and the 19→17 window analysis
-(``output/FINAL_UNIVERSE_REPORT.md``). Confirmed by the user:
+Derived from the 30 candidates in ``config.TICKERS`` by a correlation screen plus
+discretionary trims, then a sample-window step — the three steps are listed
+separately at the bottom of this file (``CORRELATION_SCREEN_DROPS``,
+``DISCRETIONARY_TRIMS``, ``SAMPLE_WINDOW_DROPS``). The screening outputs
+(``output/ANALYSIS_REPORT.md``, ``output/FINAL_UNIVERSE_REPORT.md``) are
+git-ignored and not committed; the correlations below are the ones recorded
+from them.
 
 * CPER dropped — 2011 inception caps the backtest and loses 2008; copper partly
   proxied by equity/EEM; also had bad-print spike-and-revert data errors.
 * WEAT, CORN dropped — they were the *only* assets blocking the 2008 sample
-  (2011/2010 inceptions). Agriculture exposure is retained via DBA. Trading two
-  moderately-correlated single-grain factors for full 2008 + ~4 extra years of
-  history (incl. the GFC, where time-series momentum is most tested) is the
-  deliberate tradeoff.
+  (2011/2010 inceptions). Agriculture exposure is retained via DBA.
 
-Common data window (all 17 overlap): ~2007-04-18 → today, bound by UNG's
-inception; covers both the 2008 GFC and the 2020 COVID crash.
+Common data window (all 17 overlap): 2007-04-18 → ``config.CORE_END_DATE``
+(2026-06-12), bound by UNG's inception; covers both the 2008 GFC and the 2020
+COVID crash.
 """
 
 from __future__ import annotations
@@ -92,3 +94,28 @@ EXCLUDED: dict[str, str] = {
     "CORN": "2010-06 inception — blocked the 2008 sample; agriculture kept via DBA "
             "(DBA-CORN only 0.60)",
 }
+
+# --------------------------------------------------------------------------- #
+# The 30 -> 17 steps, kept apart so none is described as something it was not.
+#
+# 1. CORRELATION SCREEN (the fixed rule): drop a candidate whose |daily-return
+#    correlation| with a kept representative of the same factor is
+#    >= config.HIGH_CORR_STRONG (0.80). Values: |r| against that representative.
+# 2. DISCRETIONARY TRIMS: dropped by judgement BELOW that threshold. Their |r|
+#    sits in the [config.BORDERLINE_CORR, config.HIGH_CORR_STRONG) = [0.70, 0.80)
+#    band that the screen only flags as optional further-trim candidates, so the
+#    greedy filter (src/recommend.py) would have kept them. Which other borderline
+#    candidates were flagged and kept is recorded only in the git-ignored
+#    screening report.
+# 3. SAMPLE-WINDOW DROPS: inceptions after 2008 that would block the 2008 sample.
+# --------------------------------------------------------------------------- #
+CORRELATION_SCREEN_DROPS: dict[str, float] = {
+    "QQQ": 0.93, "XLK": 0.92, "IWM": 0.87, "XLF": 0.85, "EFA": 0.85,   # vs SPY
+    "IEF": 0.92,                                                         # vs TLT
+    "FXE": 0.94,                                                         # vs UUP (r = -0.94)
+}
+DISCRETIONARY_TRIMS: dict[str, float] = {
+    "XLV": 0.79,                                                         # vs SPY
+    "GDX": 0.77, "SLV": 0.79,                                            # vs GLD
+}
+SAMPLE_WINDOW_DROPS: tuple[str, ...] = ("CPER", "WEAT", "CORN")

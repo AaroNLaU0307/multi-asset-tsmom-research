@@ -12,16 +12,55 @@ Design notes
 * Results are cached to ``data/close_prices_raw.csv`` (wide, union of all
   trading days). Re-runs read the cache unless ``force=True`` so we do not hammer
   Yahoo on every analysis run.
+* The pull has no end date, so a cache is only comparable to a published result
+  after ``truncate_to_end`` and a ``file_sha256`` check against the recorded pin
+  (``config.CORE_END_DATE`` / ``config.CORE_PANEL_SHA256`` for the core).
 """
 
 from __future__ import annotations
 
+import hashlib
 import time
 from dataclasses import dataclass
+from pathlib import Path
 
 import pandas as pd
 
 import config
+
+
+def truncate_to_end(prices: pd.DataFrame, end: str | pd.Timestamp) -> pd.DataFrame:
+    """Drop every row dated after ``end`` (``end`` itself is kept)."""
+    return prices.loc[prices.index <= pd.Timestamp(end)]
+
+
+def file_sha256(path: str | Path) -> str:
+    """SHA-256 of a file's bytes."""
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def check_file_sha256(path: str | Path, expected: str, *, strict: bool = False,
+                      label: str = "panel") -> bool:
+    """Compare ``path``'s SHA-256 with the recorded pin ``expected``.
+
+    Returns True on a match. On a mismatch (or a missing file) it raises ``ValueError``
+    when ``strict`` and otherwise prints a warning and returns False — results computed
+    from a different file will not reproduce the published numbers byte-for-byte."""
+    path = Path(path)
+    got = file_sha256(path) if path.exists() else "missing"
+    if got == expected:
+        print(f"[fetch] {label} sha256 matches the recorded pin ({expected[:12]}…)")
+        return True
+    msg = (f"{label} {path.name} sha256 {got[:12]}… differs from the recorded pin "
+           f"{expected[:12]}…; results will not reproduce the published numbers exactly")
+    if strict:
+        raise ValueError(msg)
+    print(f"[fetch] WARNING: {msg}")
+    return False
 
 
 @dataclass

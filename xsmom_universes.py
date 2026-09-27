@@ -109,6 +109,12 @@ OUTPUT_DIR = config.OUTPUT_DIR
 DATA_DIR = config.DATA_DIR
 UNIVERSES_PRICES_CSV = DATA_DIR / "xsmom_universes_prices.csv"     # NEW cache (not the engine's)
 UNIVERSES_FETCH_META_CSV = DATA_DIR / "xsmom_universes_fetch_meta.csv"
+# The snapshot behind the committed results (research/xsmom/): 47 tickers
+# (ALL_TICKERS), 1996-03-18 → 2026-06-18, 5,638,059 bytes. It is not in the repo
+# (Yahoo data; see data/README.md); a re-pull is cut at this end date and its
+# SHA-256 is compared with this pin.
+UNIVERSES_PRICES_END = "2026-06-18"
+UNIVERSES_PRICES_SHA256 = "5b098a2c0eaa9d90524c46b100ed98302cbc732f146a301b49c8fb03464fd1d7"
 
 REPORT_MD = OUTPUT_DIR / "XSMOM_UNIVERSES_REPORT.md"
 MAP_CSV = OUTPUT_DIR / "xsmom_universes_map.csv"

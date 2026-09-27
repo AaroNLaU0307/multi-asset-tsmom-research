@@ -34,6 +34,11 @@ def fetch_universe_prices(tickers: list[str] = uni.ALL_TICKERS,
 
     Cached to ``xsmom_universes_prices.csv`` (wide, union of trading days). Re-runs read
     the cache unless ``force=True``. Per-ticker fetch makes any failure explicit.
+
+    The panel is cut at ``uni.UNIVERSES_PRICES_END`` (the end of the snapshot behind the
+    committed results) and the cache's SHA-256 is compared with
+    ``uni.UNIVERSES_PRICES_SHA256``; a mismatch is reported, not fatal (a re-pull differs
+    whenever Yahoo has re-adjusted history).
     """
     config.DATA_DIR.mkdir(parents=True, exist_ok=True)
     if not force and uni.UNIVERSES_PRICES_CSV.exists():
@@ -41,7 +46,9 @@ def fetch_universe_prices(tickers: list[str] = uni.ALL_TICKERS,
         missing = [t for t in tickers if t not in px.columns]
         if not missing:
             print(f"[xsmom-data] loaded cached prices: {uni.UNIVERSES_PRICES_CSV}")
-            return px.reindex(columns=tickers)
+            fetch_data.check_file_sha256(uni.UNIVERSES_PRICES_CSV, uni.UNIVERSES_PRICES_SHA256,
+                                         label="XSMOM universes prices")
+            return fetch_data.truncate_to_end(px.reindex(columns=tickers), uni.UNIVERSES_PRICES_END)
         print(f"[xsmom-data] cache missing {missing} — refetching all")
 
     series: dict[str, pd.Series] = {}
@@ -58,9 +65,12 @@ def fetch_universe_prices(tickers: list[str] = uni.ALL_TICKERS,
     if not series:
         raise RuntimeError("No universe tickers fetched — aborting.")
     px = pd.concat(series.values(), axis=1).sort_index().reindex(columns=tickers)
+    px = fetch_data.truncate_to_end(px, uni.UNIVERSES_PRICES_END)
     px.index.name = "Date"
     px.to_csv(uni.UNIVERSES_PRICES_CSV)
     print(f"[xsmom-data] saved {uni.UNIVERSES_PRICES_CSV}  shape={px.shape}")
+    fetch_data.check_file_sha256(uni.UNIVERSES_PRICES_CSV, uni.UNIVERSES_PRICES_SHA256,
+                                 label="XSMOM universes prices")
     return px
 
 

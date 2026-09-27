@@ -21,3 +21,15 @@ jobs:
 
       - name: Run tests
         run: pytest -q
+
+      # The sealed-lineage suites under research/extensions/ are named *_tests.py, so the
+      # default collection above skips them. These three need no git-ignored data. The
+      # others (f6, vrp, ta, ca, x01 construction/contract/execution) read git-ignored
+      # vendor data (data/close_prices_raw.csv, data/vix/, FRED files) or the sibling
+      # commodity-carry-research checkout, so they cannot run on a clean clone.
+      - name: Run extension suites that need no git-ignored data
+        run: >-
+          pytest -q
+          research/extensions/benb/benb_tests.py
+          research/extensions/value/value_tests.py
+          research/extensions/x01/x01_inference_tests.py

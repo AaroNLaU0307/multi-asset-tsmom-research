@@ -10,6 +10,34 @@ New, self-contained (the repo had no DSR/PSR utility). Three blocks:
    block-bootstrap CIs.
 
 Determinism: all resampling uses ``config.RANDOM_SEED``.
+
+Provenance
+----------
+* Origin: written for this project (folded in verbatim with the XSMOM study, commit
+  f03b5a1); not vendored from anywhere. It is the code that produced the sealed XSMOM
+  results in ``research/xsmom/``.
+* BH-FDR: ``benjamini_hochberg`` defaults to **alpha = 0.05**, the level the XSMOM family
+  uses. (``src/seasonality.bh_fdr`` is a separate implementation at q = 0.10.)
+* CI / p-value methods: decomposition CIs are a moving-block bootstrap (12-month blocks,
+  percentile 95%, seed ``config.RANDOM_SEED``); ``sharpe_pvalue_vs0`` is
+  2·min(frac>0, 1−frac) of the iid bootstrap in ``src/validation.bootstrap_ci`` (not
+  null-centred). PSR/DSR: Bailey & López de Prado (2012, 2014), per-period (monthly) units.
+* Downstream copies: spot-mfi-btc-perp-research ``src/stats.py`` adapts PSR /
+  expected-max-Sharpe / DSR / BH from this file (modified, not byte-identical).
+* SHA-256 of each function's normalised source (``inspect.getsource``, trailing
+  whitespace stripped per line, joined with "\\n", UTF-8) — cite these when vendoring:
+    benjamini_hochberg             f771d541e068aa7d4110f40edd6d33ea733c8e7fc24904ad7434a76e533cc3dd
+    _per_period_sharpe_moments     897f14d8b131a84dd561451bd1bc7eae95ff96c63877c0c895e64c3b94abb40c
+    probabilistic_sharpe_ratio     f4d5667ad64a1886949e3aae09274eb9fdfb468046dc36d8669b6c39a8bd6d7d
+    expected_max_sharpe            70366e46becab8a6d1e62f7d6b4f5411e4c8aba41953d4068015abc211a43c43
+    deflated_sharpe_ratio          382a84b652a70f9223b9aa9977c7a870b866c7a9c7a69564329939dbb008f4be
+    sharpe_pvalue_vs0              3dfeddff745063807823329d7127fc2fb1c2f36b6b990cb2468ddacb23d53878
+    lo_mackinlay_decomposition     433678d2ccd67b36a931e4f6cdd0a2a14f83fa7ba22656b9c41795b58623e097
+    decomposition_block_bootstrap  dcc95d7d34d8206c315f633137053706afcb306007eda6cf095678744c373bf9
+    term2_contains_zero            2cd73fceefd306f4763e494efab97b54fa9a5083e552277ec3cc1ddc40ab72dc
+    term2_precision                53008fc41576b7a66551b673bb7b12fec91414ee7afcf2ed2af348bf6f36f172
+  Pinned in ``tests/test_stats_provenance.py``: any edit to these functions must update
+  the pinned hash (and this list) in the same commit.
 """
 
 from __future__ import annotations

@@ -15,8 +15,29 @@ import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import config
+import universe
 from src.data_quality import detect_spike_revert  # noqa: E402
 from src.recommend import greedy_filter  # noqa: E402
+
+
+def test_universe_steps_account_for_every_candidate():
+    final, excluded = set(universe.FINAL_UNIVERSE), set(universe.EXCLUDED)
+    assert len(final) == 17 and len(config.TICKERS) == 30
+    assert final | excluded == set(config.TICKERS) and not final & excluded
+    steps = [set(universe.CORRELATION_SCREEN_DROPS), set(universe.DISCRETIONARY_TRIMS),
+             set(universe.SAMPLE_WINDOW_DROPS)]
+    assert set().union(*steps) == excluded
+    assert sum(len(s) for s in steps) == len(excluded)                 # the steps are disjoint
+
+
+def test_screen_drops_meet_the_rule_and_trims_do_not():
+    assert all(r >= config.HIGH_CORR_STRONG for r in universe.CORRELATION_SCREEN_DROPS.values())
+    assert all(config.BORDERLINE_CORR <= r < config.HIGH_CORR_STRONG
+               for r in universe.DISCRETIONARY_TRIMS.values())
+    # the recorded |r| is the one stated in each asset's reason
+    for t, r in {**universe.CORRELATION_SCREEN_DROPS, **universe.DISCRETIONARY_TRIMS}.items():
+        assert f"{r:.2f}" in universe.EXCLUDED[t], t
 
 
 def _corr(d: dict[tuple[str, str], float], labels: list[str]) -> pd.DataFrame:

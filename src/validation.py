@@ -3,6 +3,19 @@ Monte Carlo path risk. Standard methodology, implemented fresh here so the
 project stays self-contained (no cross-project imports).
 
 Determinism: all resampling uses a fixed seed (config.RANDOM_SEED).
+
+Provenance
+----------
+* Origin: written for this project; not vendored from anywhere.
+* ``bootstrap_ci`` — the method behind the core headline CI: an **iid percentile
+  bootstrap** of monthly returns (``config.BOOTSTRAP_N`` = 10,000 resamples, seed
+  ``config.RANDOM_SEED`` = 7, 95%), Sharpe annualised by √12 with rf = 0. No multiplicity
+  correction lives here (no BH).
+* SHA-256 of ``bootstrap_ci``'s normalised source (``inspect.getsource``, trailing
+  whitespace stripped per line, joined with "\\n", UTF-8):
+    bootstrap_ci  df91388430ef1c20ed4a166112ae9697ce58b2bb68575b848ce5a1e34f26f9b6
+  Pinned in ``tests/test_stats_provenance.py``: any edit must update the pinned hash in
+  the same commit.
 """
 
 from __future__ import annotations

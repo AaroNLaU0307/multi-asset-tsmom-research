@@ -283,3 +283,25 @@ def test_report_mechanism_labels_are_computed_from_the_cis(tmp_path, monkeypatch
     assert rows["U4"].rstrip().endswith("| collapses (+0.31 → -0.07) |")
     assert "Demeaning collapses the rank-weight Sharpe" in text and "**1/5** universes (U4)" in text
     assert "negative control U5 (predicted to collapse hardest under demeaning): **not confirmed**" in text
+
+
+def test_refetch_is_cut_at_the_snapshot_end_and_checked_against_the_pin(tmp_path, monkeypatch):
+    from src import fetch_data
+    from src import xsmom_data as xd
+
+    cache = tmp_path / "xsmom_universes_prices.csv"
+    monkeypatch.setattr(uni, "UNIVERSES_PRICES_CSV", cache)
+    monkeypatch.setattr(xd.config, "FETCH_SLEEP_SEC", 0.0)
+    idx = pd.bdate_range("2026-05-01", "2026-09-25")          # runs past the snapshot end
+
+    def fake_fetch(t):
+        return pd.Series(np.linspace(1.0, 2.0, len(idx)), index=idx, name=t), ""
+
+    monkeypatch.setattr(fetch_data, "_fetch_one", fake_fetch)
+    checked = []
+    monkeypatch.setattr(fetch_data, "check_file_sha256",
+                        lambda path, expected, **kw: checked.append((path, expected)) or False)
+    px = xd.fetch_universe_prices(tickers=["AAA", "BBB"], force=True)
+    assert px.index.max() == pd.Timestamp(uni.UNIVERSES_PRICES_END)
+    assert pd.read_csv(cache, index_col=0, parse_dates=True).index.max() == px.index.max()
+    assert checked == [(cache, uni.UNIVERSES_PRICES_SHA256)]

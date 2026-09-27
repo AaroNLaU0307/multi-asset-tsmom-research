@@ -39,7 +39,7 @@ def _net_at_cost(gross: pd.Series, turnover: pd.Series, bps: float) -> pd.Series
 def main():
     config.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     prices, _ = fetch_data.fetch_universe(force=False)
-    px = prices[universe.TICKERS]
+    px = fetch_data.truncate_to_end(prices[universe.TICKERS], config.CORE_END_DATE)
     mpx = signals.to_monthly(px)
 
     port = portfolio.build_portfolio(px, method="B")          # default params
