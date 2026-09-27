@@ -61,29 +61,34 @@ were run to a preregistered verdict and closed.** The deliverable is not a singl
 it is the discipline: keep what survives, reject what doesn't, and explain *why* in
 each case.
 
-> 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 (CI excludes
-> zero) · a drawdown diagnostic · four overlays not promoted · a parallel cross-sectional study (XSMOM, falsified)
-> · a CI-verified test suite · strict
+> 17 ETFs across 5 sleeves · monthly TSMOM, vol-targeted · net Sharpe ≈ 0.75 at 2 bps (CI
+> excludes zero; not deflated) · a drawdown diagnostic · four overlays not promoted · a parallel
+> cross-sectional study (XSMOM, falsified) · a CI-verified test suite · strict
 > no-look-ahead, reconciled at every step.
 
 ## TL;DR (60 seconds)
 
-- **Supported core** (*not* independently confirmed): multi-asset TSMOM, 17 ETFs / 5 sleeves,
-  monthly + vol-targeted — historical-baseline net Sharpe **0.75** (95% bootstrap CI [0.29, 1.23],
-  excludes 0), with genuine crisis alpha (GFC +11.6%, COVID +7.3%).
-- **Four overlays tested to extend it, none promoted — each rejected at the cheapest premise stage** —
-  crash-defense (trigger anti-aligned with drawdowns), vol-compression breakout (no directional
-  premise), seasonality (0/18, BH-FDR multiplicity), yield-curve macro regime (0/6, single-episode
-  illusion) — each with a stated mechanism, not just "it didn't work."
+- **Supported core** (**SUPPORTED — CI excludes 0; not independently confirmed**): multi-asset
+  TSMOM, 17 ETFs / 5 sleeves, monthly + vol-targeted — historical-baseline net Sharpe **0.75** at
+  2 bps (95% bootstrap CI [0.29, 1.23]) and **0.70** at 5 bps (CI [0.24, 1.18]); neither CI is
+  deflated, because the historical trial count for this panel is unknown
+  ([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2). Crisis windows: GFC +11.6%,
+  COVID +7.3% (raw cumulative return). The core was not pre-registered; its prospective test
+  (C-A) has been live since 2026-09-13.
+- **Four overlays tested to extend it, none promoted (`not_promoted`) — each rejected at its
+  premise gate** — crash-defense (trigger anti-aligned with drawdowns) and vol-compression
+  breakout (no directional premise), both *premise not supported* on a descriptive comparison
+  with no inference; seasonality (0/18 under BH-FDR); yield-curve macro regime (0/6, no cell
+  significant) — each with a stated mechanism, not just "it didn't work."
 - **A parallel cross-sectional study (XSMOM)** — also falsified: Sharpe 0.28 (CI crosses 0),
   +0.42-correlated with TSMOM (no diversification), 0/5 universes in the FDR-controlled map.
-- **Methodology, not just numbers:** pre-registration before any result, BH-FDR multiplicity
-  control, no-look-ahead *proven* by truncation-invariance tests — not asserted.
-- **CI-verified test suite** run on every push (badge above) — not a self-reported count.
-  It is **not currently all-green**: `python -m pytest -q` reports **98 passed, 3 failed**.
-  The three failures are pre-existing `OutOfBoundsDatetime` fixture failures in
-  `tests/test_xsmom_universes.py`, unrelated to any research verdict and reproducible at
-  earlier commits. See [Validation status](#how-to-run-reproducible) for the full picture.
+- **Methodology, not just numbers:** decision rules pre-registered for the seasonality,
+  yield-curve and XSMOM studies and the sealed extension studies (the core, crash-defense and
+  breakout were not pre-registered), BH-FDR within each registered family, no-look-ahead
+  checked by truncation-invariance tests — not asserted.
+- **CI-verified test suite** run on every push (badge above) — not a self-reported count. In
+  the pinned environment (`requirements.txt`, Python 3.13) the suite passes in full; see
+  [Validation status](#2-the-methodology-spine-used-everywhere).
 - **Three sealed extension studies, all closed under preregistration** — the X01
   futures-wrapper study (`INSUFFICIENT_EVIDENCE`), the Time-Series Value sleeve (standalone
   `MATERIALLY_ADVERSE`, diversification candidacy failed, `not_promoted`) and TSMOM-VRP-01
@@ -165,10 +170,11 @@ working, not a shortfall. Per-candidate reasoning and the artifact that decides 
 [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
 
 **Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT
-INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and
-**live under passive monthly accrual** in its existing state; nothing here touches it. The
-independent verification study (**C-D**) is **closed at HOLD** with strong evidence and one
-unresolved cross-vendor residual.
+INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and has
+been **live under passive monthly accrual since 2026-09-13** (`PROJECT_STATE.md`, C-A
+section); no month has been scored yet, and nothing here touches it. The independent
+verification study (**C-D**) is **closed at HOLD**; its detailed artifacts are not published
+in this repository, so its findings cannot be checked here.
 
 **Phase C — next-edge discovery.** Claude Fable 5.1 and GPT-6 Astra were used for candidate
 discovery and adversarial challenge; neither may later certify what it helped design. The
@@ -220,13 +226,13 @@ as superseded — nothing is deleted or rewritten to make the record look tidier
 
 ```mermaid
 flowchart TD
-    CORE["<b>Canonical 17-ETF TSMOM</b><br/>SUPPORTED - not independently confirmed<br/>historical baseline Sharpe 0.75, CI excludes 0"]
+    CORE["<b>Canonical 17-ETF TSMOM</b><br/>SUPPORTED - not independently confirmed<br/>historical baseline Sharpe 0.75, CI excludes 0<br/>not deflated"]
 
     CORE --> OV["<b>Overlay program</b> - premise-gated"]
     OV --> O1["Crash-defense<br/>trigger anti-aligned<br/>not promoted"]
     OV --> O2["Vol-compression breakout<br/>no directional premise<br/>not promoted"]
     OV --> O3["Seasonality<br/>0/18 under BH-FDR<br/>not promoted"]
-    OV --> O4["Yield-curve slope<br/>0/6, single-episode illusion<br/>not promoted"]
+    OV --> O4["Yield-curve slope<br/>0/6, no cell significant<br/>not promoted"]
 
     CORE -. parallel study .-> X["XSMOM cross-sectional<br/>0/5 universes, corr +0.42<br/>falsified"]
 
@@ -264,9 +270,11 @@ trending down, size each to equal risk, then scale the book to a target volatili
 
 - **Universe (17 ETFs, 5 sleeves):** Equity (SPY, EEM, EWJ, XLE, XLU) · Fixed income
   (TLT, SHY, LQD, HYG) · Commodity (USO, UNG, GLD, DBA) · FX (UUP, FXY) · Real estate
-  (VNQ, RWX). Screened from 30 by *independent risk factor* (daily-return correlation +
-  hierarchical clustering), not hand-picking. Common window **2007-04 → 2026-06**, covering
-  the 2008 and 2020 crises.
+  (VNQ, RWX). Screened from 30 by a correlation screen (daily-return correlation, a greedy
+  `|r| ≥ 0.80` filter, hierarchical clustering) plus discretionary trims (XLV, GDX, SLV were
+  dropped at `|r|` 0.77–0.79, below the threshold) and a sample-window step (CPER, WEAT,
+  CORN); all three lists are in [`universe.py`](universe.py). Common window
+  **2007-04 → 2026-06-12** (`config.CORE_END_DATE`), covering the 2008 and 2020 crises.
 - **Signal** (monthly, per asset): mean of the signs of `{1,3,6,12}`-month returns —
   continuous in [−1,+1]. Lookbacks are conventional and **never optimized**.
 - **Sizing:** `weight = signal × target_vol / asset_vol` (60-day vol, 10% target, capped ±2).
@@ -282,14 +290,30 @@ trending down, size each to equal risk, then scale the book to a target volatili
 | Max drawdown | −15.6% | −34.8% |
 | Crisis (GFC 2008 / COVID 2020) | **+11.6% / +7.3%** | −27.4% / −13.0% |
 
+**The headline at two cost levels:**
+
+| One-way cost | Net Sharpe | 95% CI | Source |
+| --- | --- | --- | --- |
+| 2 bps (`config.TRANSACTION_COST_BPS`) | **0.75** | [0.29, 1.23] | recomputed from the committed [`research/xsmom/xsmom_monthly_returns.csv`](research/xsmom/xsmom_monthly_returns.csv), column `tsmom_net`, with `src/validation.py` (file SHA-256 below) |
+| 5 bps (the repo's "realistic blend") | **0.70** | [0.24, 1.18] | repo-reported, not reproduced: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) §5.2–5.3, from `cost_analysis.py` / `rp_comparison.py` runs whose turnover output is git-ignored |
+
+Neither CI is deflated for selection: the historical trial count for this panel is unknown
+([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2). Sharpe uses rf = 0, and the
+218 months include a partial June 2026 (the panel ends 2026-06-12). The core pipeline's own
+`output/monthly_returns.csv` is git-ignored; the committed series above is the `tsmom_net`
+column that `run_xsmom.py` writes from the same engine (file SHA-256
+`90cf79b698f74e11ea94af7133f7aeb11d788986fb1a36c946d9181812d77c77`). An excess-return Sharpe
+with DGS3MO is not reported: no DGS3MO series is committed. Machine-readable headline:
+[`results/headline.json`](results/headline.json).
+
 A **supported but modest** edge with genuine **crisis alpha** (momentum can go short;
 buy & hold cannot). Honest caveats are kept, not hidden: the CI is wide (lower bound ~0.29),
 the edge is cost-sensitive (marginal by ~20 bps one-way), and Monte-Carlo shows a 20%+
 drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md).
 
-**Two honest design choices worth flagging** (both *cost* the headline number, deliberately):
+**Two design choices worth flagging:**
 - **Dropped CPER/WEAT/CORN** despite their diversification — their 2010–11 inceptions would
-  have blocked the **2008 sample**, where TSMOM is most tested. Keeping the GFC mattered more.
+  have blocked the **2008 sample**, where TSMOM is most tested.
 - **Equal-weight over covariance optimization** — a 17×17 covariance is noisily estimated and
   spikes toward 1 in crises; equal-weight, inverse-vol, and ERC are statistically
   indistinguishable here, so the simplest, most robust choice wins (control experiment in
@@ -301,7 +325,7 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
 
 - **Anti-overfitting first.** Conventional parameters, never tuned on results. A clean
   **negative is a first-class outcome**, reported as plainly as a positive.
-- **No look-ahead, proven by tests.** Every fragile primitive has a **truncation-invariance**
+- **No look-ahead, tested.** Every fragile primitive has a **truncation-invariance**
   test (recompute on a data prefix `[:t]` ⇒ identical values at `t`). Positions are always the
   prior period's decision (`shift(1)`).
 - **Reuse + reconcile.** Each downstream study reuses the *exact* vol-scaled positions of the
@@ -313,7 +337,7 @@ drawdown is plausible. Full core write-up: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md
 - **Pre-registration + multiplicity control.** Calendar/seasonality is a multiple-comparisons
   minefield, so the seasonality study (3d) **pre-registered** its 18-test family and decision rule
   *before computing anything*, and corrected with **BH-FDR** across the whole family — the machinery
-  actively caught a tempting false positive (below).
+  kept a tempting calendar effect from being promoted (below).
 - **Falsification standard for any overlay** (demonstrated in the XSMOM study, §3·parallel): once a premise
   survives, a **paired-difference bootstrap** of Δ-Sharpe vs the core with **BH-FDR** across
   pre-registered variants. In practice all four overlays failed earlier, at the premise gate, so no
@@ -324,26 +348,19 @@ attribution reconciliation, daily↔monthly reconciliation, regime/premise causa
 seasonality labellers/BH-FDR/HAC primitives, the causal yield-curve primitives, and the XSMOM
 signal / dollar-neutral / decomposition primitives). Run `python -m pytest -q`.
 
-**Validation status — not all-green, stated plainly.** `python -m pytest -q` reports
-**98 passed, 3 failed** (verified on this branch, pandas 2.3.3, Python 3.13.14). The three
-failures are **pre-existing and unrelated to any research verdict**: `OutOfBoundsDatetime`
-on synthetic fixture dates in `tests/test_xsmom_universes.py`, reproducible identically at
-earlier commits. The checks belonging to the closed Time-Series Value and TSMOM-VRP-01
-lineages pass, as do the sealed-contract conformance, data provenance and synthetic
-end-to-end rehearsal suites.
-
-The CTA-EDGE-05 / F6 lifecycle suite is **not** collected by the default pytest patterns
-and is run explicitly: `python -m pytest research/extensions/f6/f6_tests.py` reports
-**113 passed, 1 failed**. That one failure is expected and correct —
-`test_o02_no_f6_result_artifact_exists_in_the_repository` asserts an S2-era precondition
-that is *false* now the authorized S3 run has produced a result. `f6_tests.py` is
-hash-pinned in the accepted S2 build manifest and was deliberately not edited.
-
-*History, no longer current:* three tests in `tests/test_xsmom_universes.py` **previously**
-failed under an earlier pandas API-drift environment — a library-compatibility issue, never
-a research finding, reproducing unchanged at commit `c63114a0` and predating the Value work.
-That file now passes 16/16. XSMOM's recorded status (`falsified`) always rested on its
-published results, not on these tests.
+**Validation status (one pinned environment).** With Python 3.13.12 and the exact pins in
+[`requirements.txt`](requirements.txt), `python -m pytest -q` reports **167 passed**. CI runs
+that suite plus the three sealed-lineage suites that need no git-ignored data:
+`research/extensions/benb/benb_tests.py` (63 passed, 2 skipped),
+`research/extensions/value/value_tests.py` (11 passed) and
+`research/extensions/x01/x01_inference_tests.py` (20 passed). The other sealed-lineage
+suites (`f6`, `vrp`, `ta`, `ca`, and x01 construction / contract / execution) read
+git-ignored vendor data (`data/close_prices_raw.csv`, `data/vix/`, FRED files) or the
+sibling `commodity-carry-research` checkout, so they cannot run on a clean clone and are not
+in CI. `f6_tests.py` also keeps one S2-era assertion,
+`test_o02_no_f6_result_artifact_exists_in_the_repository`, that is false now the authorized
+S3 run has produced its result; the file is hash-pinned in the accepted S2 build manifest
+and was deliberately not edited.
 
 ## 3. The research arc — one diagnostic, four overlays not promoted, one parallel study
 
@@ -367,19 +384,25 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   (~80%), but cross-sleeve correlation **does not spike** in drawdowns (+0.16 → +0.12). The
   causal systemic-risk signal is maxed (vol %ile 0.94–0.95) **in 2008/2020 — the strategy's
   biggest *profit* windows** — and only average (0.49) in the real drawdowns. A de-grossing
-  trigger would therefore **amputate the crisis alpha and miss the actual drawdowns.** Clean no-go.
+  trigger would therefore **amputate the crisis alpha and miss the actual drawdowns.**
+- **Premise not supported (descriptive comparison, no inference):** the figures are plain
+  means over 7 (GFC) and 3 (COVID) month-ends against 47 drawdown months, with no CI or test,
+  and the decision rule was set at analysis time, not pre-registered.
 → [`research/crash_defense/`](research/crash_defense/PHASE0_SYSTEMIC_VERIFICATION.md)
 
 ### 3c. Vol-compression breakout overlay — **`not_promoted`** (rejected at Phase 1B)
 - **Premise:** after volatility compresses, a directional breakout follows — and it sits in the
   ordinary-vol regime where the core bleeds, so it's orthogonal to the crash-defense failure.
 - **Gate (descriptive):** does compression actually precede *directional* expansion, above base rate?
-- **Why it failed — no directional premise.** Compression *is* followed by vol expansion (~1.3×,
-  expected) but **not direction**: the post-move efficiency ratio is ≈ baseline (Δ ~0.00), and
+- **Why it failed — no directional premise.** Compression *is* followed by vol expansion (~1.31×
+  against an unconditional ~1.10×, expected) but **not direction**: the post-move efficiency ratio is ≈ baseline (Δ ~0.00), and
   follow-through *quality* given a breakout improves only ~1pp on a 67% base (bonds/REITs
   flat-to-negative). The one large positive was a **mechanical narrow-channel artifact** (low vol
   ⇒ tight channel ⇒ more breakouts either way), and the effect **did not strengthen at tighter
   compression** — the signature of a real edge is absent.
+- **Premise not supported (descriptive comparison, no inference):** point estimates on ~24k
+  overlapping windows with no CI, against a +0.02 decision bar set at analysis time (only the
+  compression threshold and horizons were fixed beforehand).
 - **Scope (data constraint):** this tests **close-to-close** compression only; the data is
   adjusted-close (no intraday H/L), so a true **intraday-ATR squeeze remains untested** (would
   need OHLC data) — stated, not glossed.
@@ -398,13 +421,15 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   be **non-concentrated** (year-level jackknife for the annual effect).
 - **Why it failed — nothing survives the multiplicity tax. 0 of 18 cells** clear the conjunction.
   Turn-of-month and Halloween are essentially **absent** here (Δ mostly 0–5 bps, p > 0.20).
-- **The instructive near-miss — an *actively-caught false positive*.** The **Monday** effect had the
-  **correct (negative) sign in all six scopes** and looked "significant" in isolation (Bond *p* = 0.026)
-  — but the smallest raw *p* in the family (0.026) sits far above the BH rank-1 threshold (≈ 0.0056), so
-  it **evaporates once the 18-test multiplicity tax is paid**. This is exactly the false positive the
-  pre-registration + FDR existed to catch — *before* any modeling cost was spent. Flattening it to
-  "Monday wasn't significant" would miss the point: in isolation it *was*; the discipline is what
-  rejected it.
+- **The instructive near-miss — what a multiple-testing null looks like.** The **Monday** effect had
+  the **correct (negative) sign in all six scopes**, and one cell looked "significant" in isolation
+  (Bond *p* = 0.026). One raw *p* < 0.05 among 18 tests is about what noise alone produces, and 0.026
+  sits far above the BH rank-1 threshold (≈ 0.0056). The Bond cell also fails the pre-registered
+  magnitude (3.4 < 5 bps/day) and stability gates, so the conjunction rejects it even before the
+  correction; the pooled Monday cell was never significant (*p* = 0.118). BH-FDR is the only binding
+  gate for one cell, RealEstate Monday (*p* = 0.078), which clears magnitude and stability
+  (`research/seasonality/seasonality_premise_family.csv`). All of it was settled *before* any
+  modeling cost was spent.
 - **Mechanism cross-link.** The textbook **equity** turn-of-month premium is ~**+0.5 bps** here — it has
   essentially **arbitraged away at liquid-ETF granularity**, echoing the **XSMOM** finding (the parallel study below) that
   effects visible in large single-name universes dissipate at ETF granularity. Same mechanism family.
@@ -417,19 +442,24 @@ split structurally leans "crash" for a slow trend-follower; the robust facts are
   (the term structure of rates is not a function of the ETF price paths), unlike the three price-based ones.
 - **Gate (descriptive, pre-registered).** A small **6-cell** family (2 spreads × 3 forward horizons
   {21, 63, 126}d × a causal trailing-percentile **tercile** state, conditioned at **t−1**), **BH-FDR
-  q = 0.10** across all six, plus a **≥ 4%/yr** economic-magnitude bar and — the load-bearing gate — an
-  **event-level leave-one-episode-out jackknife, ranked *above* the significance test**.
-- **Why it failed — a nominal-sample-size illusion. 0 of 6 cells** confirm: nothing is significant
-  (BH-FDR *p* 0.60–0.67; every bootstrap CI crosses 0), and the weak negative tilt is **carried entirely
-  by the single 2022-24 inversion episode** — it collapses below the magnitude bar when that one episode
-  is dropped (the larger 2017-20 flat stretch contributes ≈ 0). Reported as a **clean null with no
-  claimable direction**: the H− "whipsaw-side" tilt is noise-level and jackknife-fragile — *not*
-  "flatness predicts whipsaw".
-- **Distinct pitfall vs the prior three.** The trap here is **nominal sample size, not statistical
-  significance**: ~4,800 trading days, but the curve's inverted/flat state is effectively **one** macro
-  episode (2022-24 = 97% of the 10Y-2Y inverted days), so any apparent effect is indistinguishable from a
-  single-episode coincidence. The **episode jackknife** is what exposes it — a different
-  statistical-pitfall dimension than the earlier overlays caught.
+  q = 0.10** across all six, plus a **≥ 4%/yr** economic-magnitude bar and an **event-level
+  leave-one-episode-out jackknife**.
+- **Why it failed — no cell is significant. 0 of 6 cells** confirm: BH-FDR *p* 0.60–0.67 and
+  every bootstrap CI crosses 0. Reported as a **clean null with no claimable direction**: the weak
+  H− "whipsaw-side" tilt is noise-level — *not* "flatness predicts whipsaw".
+- **How much one episode carries.** Dropping the 2022-24 episode keeps **26–68%** of the point
+  estimate, with the sign unchanged in all 6 cells; it takes the two h = 126 cells, the only ones
+  above the 4%/yr bar, below it (−4.61 → −3.16 and −4.87 → −2.94 %/yr). The tested tercile-flat
+  state spans **12–13 episodes**; 2022-24 is 19–21% of its days, and the largest episode (2017-20)
+  contributes ≈ 0 on its own (`yield_spread_premise_family.csv`, `yield_spread_episodes.csv`).
+- **Jackknife disclosure.** The binding-episode rule was changed after the first run
+  (`run_yield_premise.py:94-96` drops the most-weakening episode; the registered rule,
+  `PREREGISTRATION.md:164-166`, drops the largest-|ΔΔ| one). Under the registered rule **3 of 6**
+  cells pass the jackknife; none is confirmed either way, because none passes BH-FDR. See
+  [`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §1–3.
+- **The lesson kept.** ~4,800 trading days are not ~4,800 independent observations of a slow macro
+  state: the tested state changed only a dozen times, so the episode count, not the day count,
+  bounds the evidence.
 → [`research/yield_spread/`](research/yield_spread/PHASE1_PREMISE.md) · pre-registration:
 [`research/yield_spread/PREREGISTRATION.md`](research/yield_spread/PREREGISTRATION.md)
 
@@ -440,10 +470,14 @@ trend. The question — does relative-strength add anything time-series momentum
 - **Phase 1 (head-to-head):** XSMOM net **Sharpe 0.28**, 95% CI [−0.18, 0.75] → **crosses 0**; and the
   punchline **`corr(XSMOM, TSMOM) = +0.42`** → the 50/50 mix (0.66) *dilutes* rather than diversifies
   (below TSMOM's 0.75). Part of the modest edge is a **static risk premium** (Sharpe halves under demeaning).
-- **Phase 2 (5-universe, FDR-controlled map):** **0/5** universes survive BH-FDR + walk-forward +
-  Deflated-Sharpe. The **Lo–MacKinlay decomposition** shows the XSMOM-only **lead-lag term is not shown
-  to be non-trivial anywhere** — the mechanism: at liquid-ETF granularity, rank-relative and
-  trend-absolute momentum are largely the **same source** the core already harvests.
+- **Phase 2 (5-universe, FDR-controlled map):** **0/5** universes pass BH-FDR (α = 0.05) +
+  walk-forward + 3/6/9/12 sign consistency (the best, U4, has Deflated Sharpe 0.779). The
+  **Lo–MacKinlay decomposition cannot separate the terms**: the XSMOM-only lead-lag term's CI
+  contains 0 in 5/5 universes, and so does the own-autocorrelation term (term1) that TSMOM
+  harvests; only static dispersion (term3) excludes 0. Demeaning collapses the Sharpe in 1/5
+  universes (U4), and the U5 negative control did not collapse. The "same source" reading rests on
+  the +0.42 correlation, not on the decomposition (correction to the dated report:
+  [`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §4).
 → [`research/xsmom/`](research/xsmom/XSMOM_README.md) (Phase 1) ·
 [`research/xsmom/XSMOM_UNIVERSES_README.md`](research/xsmom/XSMOM_UNIVERSES_README.md) (Phase 2)
 
@@ -722,26 +756,26 @@ confirmation, and `supported` remained a ceiling none of them reached.
 
 ## 5. What this means
 
-The confirmed-but-modest TSMOM core has **no obvious complementary overlay in the four
-directions tested** — and establishing that, *with the mechanism of each failure*, is itself
-the result. Crash-defense fails because the strategy's pain is not a contagion regime;
-vol-compression breakout fails because close-to-close compression carries no directional
-information here; seasonality fails because the textbook calendar effects have essentially
-arbitraged away at liquid-ETF granularity; and the yield-curve slope — the one genuinely macro,
-orthogonal direction — fails because its apparent regime effect is a **nominal-sample-size illusion**,
-carried entirely by the single 2022-24 inversion episode and gone under a leave-one-episode-out
-jackknife. All four were rejected before any curve-fitting, at the cheapest possible stage; a broader
-macro-regime overlay was then **pre-emptively closed at the event-count level** for the same sparsity
-reason, rather than spend the test budget reproducing a foregone conclusion. That is the point of the
-project: the same honest validation machinery that **confirms** a real edge also **rejects**
-plausible-sounding additions — and along the way caught two *different* statistical illusions the
-discipline exists to catch: a tempting **false positive** (seasonality's Monday, dissolved by the
-pre-registered multiplicity correction) and a **nominal-sample-size illusion** (yield-spread's
-single-episode effect, dissolved by the episode jackknife) — both before a dollar of P&L was fit. And
-the **cross-sectional counterpart (XSMOM)** — not an overlay, but the same core seen through
-relative-strength instead of trend — was *also* falsified (0/5 universes), for the most telling reason
-of all: at liquid-ETF granularity it is largely the **same source** the time-series core already
-harvests (corr +0.42; the XSMOM-only lead-lag term not shown to be non-trivial).
+The supported-but-modest TSMOM core (CI excludes 0; not independently confirmed) has **no
+obvious complementary overlay in the four directions tested** — and establishing that, *with the
+mechanism of each failure*, is itself the result. Crash-defense's premise is not supported: on a
+descriptive comparison, the strategy's pain does not look like a contagion regime;
+vol-compression breakout's premise is not supported either: close-to-close compression carries
+no directional information here (again descriptive, no inference); seasonality fails because the
+textbook calendar effects have essentially arbitraged away at liquid-ETF granularity; and the
+yield-curve slope — the one genuinely macro, orthogonal direction — shows no significant regime
+effect in any of its 6 cells, and a slow macro state offers only a dozen episodes however many
+days it spans. All four were rejected before any curve-fitting, at the cheapest possible stage; a
+broader macro-regime overlay was then **pre-emptively closed at the event-count level** for the
+same sparsity reason, rather than spend the test budget reproducing a foregone conclusion. That is
+the point of the project: the same honest validation machinery that **supports** the core edge
+also **rejects** plausible-sounding additions — and along the way declined a tempting **calendar
+effect** (seasonality's Monday: one raw *p* < 0.05 in 18 tests, about what noise alone produces; no
+cell survives BH-FDR) before
+a dollar of P&L was fit. And the **cross-sectional counterpart (XSMOM)** — not an overlay, but the
+same core seen through relative-strength instead of trend — was *also* falsified (0/5 universes):
+it is +0.42-correlated with the time-series core, and its decomposition cannot separate the terms
+(the lead-lag and own-autocorrelation CIs both contain 0).
 
 **And the most recent candidate did not settle either way.** TSMOM-VRP-01 asked whether a
 short-volatility sleeve — a genuinely *different* risk, not another trend variant — could
@@ -779,6 +813,9 @@ candidate is held in reserve from the Phase-C map; no new research is authorised
 
 ## How to run (reproducible)
 
+Requires **Python 3.13** (matches CI); every dependency is pinned in
+[`requirements.txt`](requirements.txt).
+
 ```powershell
 python -m venv .venv ; .\.venv\Scripts\Activate.ps1 ; pip install -r requirements.txt
 
@@ -804,7 +841,10 @@ python -m pytest -q                       # full test suite
 ```
 
 First core run downloads daily ETF data from Yahoo Finance and caches it to `data/`
-(git-ignored); later runs are instant. Reports/figures/CSVs write to `output/` (git-ignored,
+(git-ignored); later runs are instant. The pull has no end date, so `run_backtest.py` cuts the
+panel at `config.CORE_END_DATE` (2026-06-12) and checks its SHA-256 against the frozen panel's
+pin (`--verify-panel` makes a mismatch fatal); [`data/README.md`](data/README.md) lists every
+cache file with its date range and pin. Reports/figures/CSVs write to `output/` (git-ignored,
 regenerable); the committed arc write-ups live in [`research/`](research/README.md).
 
 ## Project layout
@@ -831,7 +871,8 @@ research/                         # committed arc write-ups (reports + figures),
 ops/                              # Owner decision records, exposure + authorization ledgers
 ROUND1_CLOSEOUT.md  PROJECT_STATE.md   # Round-1 dispositions  ·  current state
 tests/                           # no-look-ahead + reconciliation + causality
-assets/                          # tracked key figures   ·   data/ output/  (git-ignored)
+assets/                          # tracked key figures   ·   data/ output/  (git-ignored; data/README.md pins the caches)
+results/headline.json            # machine-readable headline (tests/test_headline.py recomputes it)
 STUDY_SUMMARY.md                 # full core-TSMOM research narrative
 ```
 
@@ -854,11 +895,11 @@ does not guarantee future results.**
 Part of a falsification-first research series applying the same protocol across asset classes
 and strategy families:
 
-- [`quant-backtest-framework`](https://github.com/AaroNLaU0307/quant-backtest-framework) - multi-instrument SMC price-action study, **falsified** (0/210 cross-instrument BH-FDR across 5 instruments x 42 configs).
-- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **not promoted** (0/20 cells survive BH-FDR; 18-month OOS never opened).
+- [`quant-backtest-framework`](https://github.com/AaroNLaU0307/quant-backtest-framework) - multi-instrument SMC price-action study, **falsified** on its engine as it stood before a 2026-09-27 look-ahead fix (0/210 cross-instrument BH-FDR across 5 instruments x 42 configs; re-run pending).
+- [`orderflow-research-engine`](https://github.com/AaroNLaU0307/orderflow-research-engine) - order-flow footprint signals on BTC/ETH perps, **not promoted** (0/20 cells survive BH-FDR; no OOS return statistic computed or reported).
 - [`spot-mfi-btc-perp-research`](https://github.com/AaroNLaU0307/spot-mfi-btc-perp-research) - spot money-flow signals for BTC perps, base study **falsified** (0/42 BH-FDR); funding-divergence follow-up **inconclusive, leaning falsified**.
 
-The series' base rate is the point: confirmations are earned against the same gates that falsify everything else.
+The series' base rate is the point: a supported result is earned against the same gates that falsify everything else.
 
 ---
 

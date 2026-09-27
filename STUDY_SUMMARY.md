@@ -33,7 +33,8 @@ and the statistics are sound.
 ### 2.1 Universe construction (30 → 17, by independent factor, not by count)
 
 Starting from 30 candidate ETFs across equities, bonds, commodities, FX and real
-estate, the universe was screened **objectively** rather than hand-picked:
+estate, the universe was cut by a correlation screen plus discretionary trims, then a
+sample-window step (all three lists are in [`universe.py`](universe.py)):
 
 - **Daily-return correlation matrix** (not price levels — price correlation is
   spuriously inflated by shared trends).
@@ -44,13 +45,16 @@ estate, the universe was screened **objectively** rather than hand-picked:
   XLF/EFA are ~0.85–0.97 correlated with SPY (the US-equity factor is already
   represented), IEF is 0.92 with TLT, FXE is −0.94 with UUP (the euro is the inverse of
   the USD factor).
+- Three more were dropped by **discretionary trim below that threshold**: XLV (0.79 with
+  SPY), GDX (0.77) and SLV (0.79, both with GLD). The greedy filter would have kept them;
+  this was judgement, not the fixed rule.
 - Three more were dropped for a **deliberate sample-window trade-off** (see §3): CPER,
   WEAT, CORN — the only assets whose 2010–2011 inceptions blocked the **2008 crisis**
   sample.
 
 **Final universe: 17 ETFs** spanning equities (SPY, EEM, EWJ, XLE, XLU), bonds (TLT,
 SHY, LQD, HYG), commodities (USO, UNG, GLD, DBA), FX (UUP, FXY) and real estate (VNQ,
-RWX). Common data window **2007-04-18 → 2026-06**, bound by UNG's inception, covering
+RWX). Common data window **2007-04-18 → 2026-06-12** (`config.CORE_END_DATE`), bound by UNG's inception, covering
 **both the 2008 GFC and the 2020 COVID crash**.
 
 ### 2.2 The five-step pipeline
@@ -100,8 +104,10 @@ live. `rf = 0` (disclosed; ~1–2% cash would trim Sharpe slightly).
 | Calmar | 0.48 | 0.08 |
 | Win rate (months) | 62% | 63% |
 
-- **Bootstrap 95% CI on Sharpe: [0.29, 1.23] — does not cross 0** (100% of 10,000
-  resamples > 0). Annualized-return CI [2.5%, 12.6%] also excludes 0.
+- **Bootstrap 95% CI on Sharpe: [0.29, 1.23] — does not cross 0** (99.95% of 10,000
+  resamples > 0). Annualized-return CI [2.5%, 12.6%] also excludes 0. Not deflated: the
+  historical trial count for this panel is unknown
+  ([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2).
 - **Crisis alpha** — the core of TSMOM's value (it can go short; buy & hold cannot):
 
   | Regime | TSMOM cum. return | Buy & hold |
@@ -113,9 +119,11 @@ live. `rf = 0` (disclosed; ~1–2% cash would trim Sharpe slightly).
 - **Walk-forward stability** (no parameters fit): sub-period Sharpes 0.78 / 0.71 / 0.74 /
   0.58 / 1.06 — every block positive; the edge is not one lucky stretch.
 
-→ **This is a confirmable edge at the 95% level — materially different from the
-single-instrument null.** It is *real but modest*; the CI is wide and the lower bound
-(0.29) is only mildly positive.
+→ **SUPPORTED — the CI excludes 0; not independently confirmed.** No held-out or
+independent confirmation exists; the core was not pre-registered, and its prospective test
+(C-A) has been live since 2026-09-13 with no month scored yet. Materially different from the
+single-instrument null, but *modest*: the CI is wide and the lower bound (0.29) is only
+mildly positive.
 
 ---
 
@@ -164,8 +172,8 @@ fewer parameters, lower turnover, no covariance dependence.
 ## 6. Honest limitations (not hidden)
 
 - **Wide confidence interval.** Sharpe CI lower bound is 0.29; 218 months ≈ one full
-  regime cycle — limited statistical power. The edge is real but its *magnitude* is
-  uncertain.
+  regime cycle — limited statistical power. The edge is supported but its *magnitude* is
+  uncertain, and the CI is not deflated for the (unknown) number of historical trials.
 - **Cost sensitivity.** Survives to ~10 bps; at a pessimistic 20 bps (illiquid ETFs like
   UNG/RWX/DBA) the CI crosses 0.
 - **Monte-Carlo tail risk.** Realized max drawdown (−15.6%) was on the benign side:
@@ -182,7 +190,8 @@ fewer parameters, lower turnover, no covariance dependence.
 ## 7. Transferable conclusions
 
 1. **Signal-to-noise is the deciding variable.** The same honest methodology falsified a
-   single-instrument strategy and confirmed a diversified multi-asset one. Diversifying
+   single-instrument strategy and supported (CI excludes 0; not independently confirmed) a
+   diversified multi-asset one. Diversifying
    across *independent* factors — not adding correlated names — is what made the edge
    detectable.
 2. **Point estimates lie; look at the distribution.** A single Sharpe number is
@@ -207,52 +216,55 @@ One honest validation methodology, applied at two levels.
 - **SMC / breakout on XAUUSD (single instrument)** → *falsified* (CI crosses 0); low
   signal-to-noise is a mathematical inevitability for one instrument.
   [github.com/AaroNLaU0307/quant-backtest-framework](https://github.com/AaroNLaU0307/quant-backtest-framework)
-- **Multi-asset TSMOM (this project)** → *confirmed* a modest, cost-capped edge with
-  genuine crisis alpha, via cross-factor diversification.
+- **Multi-asset TSMOM (this project)** → *supported* (CI excludes 0; not independently
+  confirmed) a modest, cost-capped edge with genuine crisis alpha, via cross-factor
+  diversification.
 - **Cross-sectional momentum (XSMOM)** — *now folded into this repo*
   ([`research/xsmom/`](research/xsmom/XSMOM_README.md)) → did *not* confirm at ETF granularity:
-  standalone Sharpe 0.28 (CI crosses 0), **+0.42-correlated** with the confirmed TSMOM core (no
+  standalone Sharpe 0.28 (CI crosses 0), **+0.42-correlated** with the supported TSMOM core (no
   diversification), and **0/5** universes in the Phase-2 FDR-controlled map. The cross-sectional
   premium that large single-name universes show dissipates across liquid ETFs.
 
-**Within this project** — having confirmed the modest core, **four orthogonal overlay
-families** were tested to extend it, **each falsified at the cheapest premise stage** (full
-write-ups in [`research/`](research/README.md)):
+**Within this project** — with the modest core supported, **four orthogonal overlay
+families** were tested to extend it, **each rejected at the cheapest premise stage and recorded
+as `not_promoted`** (full write-ups in [`research/`](research/README.md)):
 
-- **Crash-defense** — falsified: the strategy's pain is not a systemic-risk-spike regime; the
-  trigger maxes out in the 2008/2020 *profit* windows and is silent in the real drawdowns.
-- **Vol-compression breakout** — falsified: close-to-close compression precedes vol expansion
+- **Crash-defense** — `not_promoted` (rejected at Phase 0; premise not supported, a descriptive
+  comparison with no inference): the strategy's pain does not look like a systemic-risk-spike
+  regime; the trigger maxes out in the 2008/2020 *profit* windows and is average in the real
+  drawdowns.
+- **Vol-compression breakout** — `not_promoted` (rejected at Phase 1B; premise not supported, a
+  descriptive comparison with no inference): close-to-close compression precedes vol expansion
   but **not direction**; the apparent edge was a narrow-channel counting artifact.
-- **Seasonality / calendar effects** — falsified: **0 of 18** pre-registered cells survived the
+- **Seasonality / calendar effects** — `not_promoted` (rejected at premise, 0/18): **0 of 18** pre-registered cells survived the
   BH-FDR + magnitude + stability conjunction. The textbook equity turn-of-month premium is
   ~+0.5 bps at ETF granularity (arbitraged away — the same mechanism as the XSMOM finding), and
   the one tempting near-miss — the **Monday** effect, "significant" in isolation (Bond *p*=0.026)
-  — was an **actively-caught false positive** that the pre-registered 18-test multiplicity
-  correction dissolved *before any P&L was fit*.
-- **Yield-curve slope (macro regime)** — falsified: a single economy-wide curve slope (10Y-3M
-  primary, 10Y-2Y robustness) as a **portfolio-regime conditioner**; **0 of 6** pre-registered cells
-  confirmed (BH-FDR *p* = 0.60–0.67, every bootstrap CI crosses 0). The weak whipsaw-side (H−) tilt is
-  **noise-level and carried entirely by the single 2022-24 inversion episode** — it collapses below the
-  4%/yr bar when that one episode is dropped (the largest flat stretch, 2017-20, contributes ≈0) — so it
-  is a **clean null with no claimable direction**. Distinct lesson vs the prior three: the trap is
-  **nominal sample size, not statistical significance** — ~4,800 trading days, but the inverted state is
-  effectively **one** macro episode (2022-24 = 97% of 10Y-2Y inverted days), so any apparent effect is
-  indistinguishable from a single-episode coincidence; the **episode jackknife, ranked above the
-  significance test**, is what exposed it.
+  — is one raw *p* < 0.05 in 18 tests, about what noise alone produces; that cell also fails the
+  pre-registered magnitude and stability gates, and no cell survives BH-FDR — all settled *before
+  any P&L was fit*.
+- **Yield-curve slope (macro regime)** — `not_promoted` (rejected at premise, 0/6): a single
+  economy-wide curve slope (10Y-3M primary, 10Y-2Y robustness) as a **portfolio-regime
+  conditioner**; **0 of 6** pre-registered cells confirmed (BH-FDR *p* = 0.60–0.67, every bootstrap
+  CI crosses 0) — a **clean null with no claimable direction**. Dropping the 2022-24 episode keeps
+  26–68% of the weak whipsaw-side (H−) tilt, sign unchanged in all 6 cells, and takes the two
+  h = 126 cells below the 4%/yr bar; the tested tercile-flat state spans 12–13 episodes, of which
+  2022-24 is 19–21% of the days. The binding-episode jackknife rule was changed after the first run;
+  under the registered rule 3 of 6 cells pass it, so the null rests on BH-FDR, not on the jackknife
+  ([`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §1–2). Lesson kept: ~4,800
+  trading days of a slow macro state are only about a dozen independent episodes.
 
 **The meta-point.** The modest TSMOM edge has **no obvious orthogonal extension in the four
 directions tested** — three price-based (crash-defense, vol-breakout, seasonality) and one genuinely
 macro / orthogonal to the price paths (yield-curve slope) — and establishing that, *with each
-failure's mechanism*, is itself the deliverable. The same machinery that **confirmed** the core also
-**rejected** every plausible addition, and along the way caught two *different* statistical illusions
-the discipline exists to catch: a tempting **false positive** (seasonality's Monday, dissolved by the
-BH-FDR multiplicity tax) and a **nominal-sample-size illusion** (yield-spread's single-episode effect,
-dissolved by the episode jackknife). A broader **macro-regime overlay** was deliberately not separately
-tested — pre-emptively ruled out at the event-count level: as the same class of slow, economy-wide signal
-as the yield curve, its regime transitions are equally sparse in-sample, so it would hit the identical
-single-episode wall; declining to test a direction already known to fail for the same reason is
-disciplined budget allocation, not an untested gap. Negatives are first-class results here, reported as
-plainly as the one positive.
+failure's mechanism*, is itself the deliverable. The same machinery that **supported** the core also
+**rejected** every plausible addition, and along the way declined a tempting **calendar effect**
+(seasonality's Monday: one raw *p* < 0.05 in 18 tests, as noise predicts; none survives BH-FDR). A broader **macro-regime overlay**
+was deliberately not separately tested — pre-emptively ruled out at the event-count level: as the same
+class of slow, economy-wide signal as the yield curve, its regime transitions are equally sparse
+in-sample, so it would face the same shortage of independent episodes; declining to test a direction
+already known to be this sparse is disciplined budget allocation, not an untested gap. Negatives are
+first-class results here, reported as plainly as the one positive.
 
 **Future work:** true futures data (remove ETF roll/expense bias and extend the history
 pre-2008); an explicit transaction-cost-aware execution layer; and combining trend with

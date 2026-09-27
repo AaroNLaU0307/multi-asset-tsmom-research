@@ -1,0 +1,301 @@
+{
+  "schema": "headline/v1",
+  "repo": "AaroNLaU0307/multi-asset-tsmom-research",
+  "source_commit": "b8404e7c14234e92da2e13cc7886fd37888176c4",
+  "as_of": "2026-09-27",
+  "rows": [
+    {
+      "id": "tsmom-core",
+      "section": "archive",
+      "hypothesis": "Multi-asset TSMOM core (17 ETFs, vol-targeted)",
+      "verdict": "SUPPORTED",
+      "verdict_detail": "CI excludes 0; not independently confirmed; prospective test live since 2026-09-13",
+      "mechanism": "diversified trend premium; positive in the 2008 and 2020 crisis windows (raw return, not benchmark-adjusted)",
+      "stats": [
+        {
+          "label": "net Sharpe (2 bps)",
+          "display": "0.75",
+          "value": 0.7496,
+          "artifact": "research/xsmom/xsmom_monthly_returns.csv",
+          "locator": "column tsmom_net, 218 months 2008-05-31..2026-06-30, src/performance.sharpe_ratio (sqrt 12, rf = 0); file sha256 90cf79b698f74e11ea94af7133f7aeb11d788986fb1a36c946d9181812d77c77",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "95% CI low (2 bps)",
+          "display": "0.29",
+          "value": 0.2919,
+          "artifact": "research/xsmom/xsmom_monthly_returns.csv",
+          "locator": "column tsmom_net, src/validation.bootstrap_ci (iid percentile bootstrap, 10,000 resamples, seed 7)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "95% CI high (2 bps)",
+          "display": "1.23",
+          "value": 1.2294,
+          "artifact": "research/xsmom/xsmom_monthly_returns.csv",
+          "locator": "column tsmom_net, src/validation.bootstrap_ci (iid percentile bootstrap, 10,000 resamples, seed 7)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "net Sharpe (5 bps)",
+          "display": "0.70",
+          "value": 0.7,
+          "artifact": "STUDY_SUMMARY.md",
+          "locator": "section 5.2 cost table, row '5 bps (realistic blend)' (from cost_analysis.py; its turnover series is git-ignored)",
+          "provenance": "repo-reported, not reproduced"
+        },
+        {
+          "label": "95% CI (5 bps)",
+          "display": "[0.24, 1.18]",
+          "value": null,
+          "artifact": "STUDY_SUMMARY.md",
+          "locator": "section 5.3 table, row 'Equal-weight (main)', net @ 5 bps (from rp_comparison.py; output git-ignored)",
+          "provenance": "repo-reported, not reproduced"
+        },
+        {
+          "label": "GFC 2008 window return",
+          "display": "+11.6%",
+          "value": 0.1158,
+          "artifact": "research/xsmom/xsmom_crisis_windows.csv",
+          "locator": "row 'GFC 2008' (2008-09..2009-03), column cum_return_tsmom",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "COVID 2020 window return",
+          "display": "+7.3%",
+          "value": 0.0728,
+          "artifact": "research/xsmom/xsmom_crisis_windows.csv",
+          "locator": "row 'COVID 2020' (2020-02..2020-04), column cum_return_tsmom",
+          "provenance": "reproduced"
+        }
+      ],
+      "caveats": [
+        "2 bps one-way cost (config.TRANSACTION_COST_BPS); the 5 bps figures are repo-reported and cannot be reproduced from committed files",
+        "CI not deflated; the historical trial count for this panel is unknown (research/extensions/TRIAL_LEDGER.md section 3.2)",
+        "The core was not pre-registered; the prospective C-A test went live 2026-09-13T18:33:11Z and has scored 0 months",
+        "rf = 0 and no financing cost on up to 3x gross exposure",
+        "The 218 months include a partial June 2026 (panel ends 2026-06-12)",
+        "Series source: the tsmom_net column of the XSMOM study's committed CSV; the core pipeline's own output/monthly_returns.csv is git-ignored",
+        "Crisis figures are raw cumulative returns over two fixed windows (config.REGIMES), not benchmark-adjusted alpha"
+      ]
+    },
+    {
+      "id": "crash-defense",
+      "section": "archive",
+      "hypothesis": "Crash-defense overlay (de-gross when systemic risk spikes)",
+      "verdict": "not_promoted",
+      "verdict_detail": "rejected at Phase 0; premise not supported (descriptive comparison, no inference)",
+      "mechanism": "the causal systemic-risk trigger (portfolio-vol percentile) reads 0.94–0.95 in the 2008 and 2020 crisis windows, where the core made money, and 0.49 in its actual drawdown months",
+      "stats": [
+        {
+          "label": "trigger percentile, GFC 2008",
+          "display": "0.95",
+          "value": 0.95,
+          "artifact": "research/crash_defense/PHASE0_SYSTEMIC_VERIFICATION.md",
+          "locator": "section 5 table, row 'GFC 2008', column port_vol_pctile",
+          "provenance": "repo-reported, not reproduced"
+        },
+        {
+          "label": "trigger percentile, COVID 2020",
+          "display": "0.94",
+          "value": 0.94,
+          "artifact": "research/crash_defense/PHASE0_SYSTEMIC_VERIFICATION.md",
+          "locator": "section 5 table, row 'COVID 2020', column port_vol_pctile",
+          "provenance": "repo-reported, not reproduced"
+        },
+        {
+          "label": "trigger percentile, drawdown months",
+          "display": "0.49",
+          "value": 0.49,
+          "artifact": "research/crash_defense/PHASE0_SYSTEMIC_VERIFICATION.md",
+          "locator": "section 5 table, row 'drawdowns', column port_vol_pctile",
+          "provenance": "repo-reported, not reproduced"
+        }
+      ],
+      "caveats": [
+        "Means over 7 (GFC) and 3 (COVID) month-ends against 47 drawdown months; no CI or test",
+        "Not pre-registered; the decision rule was set at analysis time",
+        "Generated by verify_systemic.py from the git-ignored price panel"
+      ]
+    },
+    {
+      "id": "vol-breakout",
+      "section": "archive",
+      "hypothesis": "Vol-compression breakout overlay",
+      "verdict": "not_promoted",
+      "verdict_detail": "rejected at Phase 1B; premise not supported (descriptive comparison, no inference)",
+      "mechanism": "compression is followed by more volatility (1.31× vs an unconditional 1.10×) but not by direction (efficiency-ratio change ≈ 0)",
+      "stats": [
+        {
+          "label": "vol expansion after compression",
+          "display": "1.31×",
+          "value": 1.3107,
+          "artifact": "research/vol_breakout/breakout_premise_by_sleeve.csv",
+          "locator": "row scope=Pooled, horizon=10, threshold=0.2, column expansion_comp",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "vol expansion, unconditional",
+          "display": "1.10×",
+          "value": 1.0989,
+          "artifact": "research/vol_breakout/breakout_premise_by_sleeve.csv",
+          "locator": "row scope=Pooled, horizon=10, threshold=0.2, column expansion_all",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "efficiency-ratio change",
+          "display": "+0.004",
+          "value": 0.004,
+          "artifact": "research/vol_breakout/breakout_premise_by_sleeve.csv",
+          "locator": "row scope=Pooled, horizon=10, threshold=0.2, column ER_delta",
+          "provenance": "reproduced"
+        }
+      ],
+      "caveats": [
+        "Point estimates on ~24k overlapping windows; no CI or test",
+        "Not pre-registered beyond the compression threshold; the +0.02 decision bar was set at analysis time",
+        "Close-to-close compression only (no intraday high/low data)"
+      ]
+    },
+    {
+      "id": "seasonality",
+      "section": "archive",
+      "hypothesis": "Seasonality / calendar-effects overlay",
+      "verdict": "not_promoted",
+      "verdict_detail": "rejected at premise, 0/18",
+      "mechanism": "no calendar cell survives BH-FDR (q = 0.10) across the pre-registered 18-cell family; 1 of 18 raw p < 0.05, as expected under noise",
+      "stats": [
+        {
+          "label": "cells passing BH-FDR",
+          "display": "0/18",
+          "value": 0,
+          "artifact": "research/seasonality/seasonality_premise_family.csv",
+          "locator": "column p_raw through src/seasonality.bh_fdr (q = 0.10); matches column fdr_reject",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "smallest BH-adjusted p",
+          "display": "0.48",
+          "value": 0.4757,
+          "artifact": "research/seasonality/seasonality_premise_family.csv",
+          "locator": "column p_raw through src/seasonality.bh_fdr; matches column p_bh",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "cells with raw p < 0.05",
+          "display": "1/18",
+          "value": 1,
+          "artifact": "research/seasonality/seasonality_premise_family.csv",
+          "locator": "column p_raw (row E3_Monday, Bond, p = 0.026)",
+          "provenance": "reproduced"
+        }
+      ],
+      "caveats": [
+        "The one raw p < 0.05 cell (Monday, Bond) also fails the pre-registered magnitude and stability gates",
+        "The pre-registration first appears in the same commit as the results (ff807fa); its earlier timing is not verifiable from this history"
+      ]
+    },
+    {
+      "id": "yield-curve",
+      "section": "archive",
+      "hypothesis": "Yield-curve slope as a macro-regime conditioner",
+      "verdict": "not_promoted",
+      "verdict_detail": "rejected at premise, 0/6",
+      "mechanism": "no cell significant (BH-FDR p 0.60–0.67); dropping the 2022–24 episode keeps 26–68% of the point estimate, sign preserved in 6/6 cells",
+      "stats": [
+        {
+          "label": "cells confirmed",
+          "display": "0/6",
+          "value": 0,
+          "artifact": "research/yield_spread/yield_spread_premise_family.csv",
+          "locator": "column CONFIRMED",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "BH-FDR adjusted p",
+          "display": "0.60–0.67",
+          "value": null,
+          "artifact": "research/yield_spread/yield_spread_premise_family.csv",
+          "locator": "column p_raw through src/seasonality.bh_fdr (q = 0.10); matches column p_fdr",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "share of the effect kept without 2022–24",
+          "display": "26–68%",
+          "value": null,
+          "artifact": "research/yield_spread/yield_spread_premise_family.csv",
+          "locator": "delta_drop_2022_24_ann / delta_ann over the 6 rows",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "episodes in the tested flat state",
+          "display": "12–13",
+          "value": null,
+          "artifact": "research/yield_spread/yield_spread_episodes.csv",
+          "locator": "episodes per (spread, h)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "2022–24 share of flat-state days",
+          "display": "19–21%",
+          "value": null,
+          "artifact": "research/yield_spread/yield_spread_episodes.csv",
+          "locator": "n_flat_obs of the episode spanning 2023-06-01 / total n_flat_obs, per (spread, h)",
+          "provenance": "reproduced"
+        }
+      ],
+      "caveats": [
+        "The binding-episode jackknife rule was changed after the first run; under the pre-registered rule 3 of 6 cells pass the jackknife (CONFIRMED stays 0/6: no cell passes BH-FDR)",
+        "The FRED inputs have no fetch script or pin; the CSVs cannot be regenerated from a clean clone",
+        "The pre-registration first appears in the same commit as the results (2c8fdc5); its earlier timing is not verifiable from this history"
+      ]
+    },
+    {
+      "id": "xsmom",
+      "section": "archive",
+      "hypothesis": "XSMOM adds an independent edge",
+      "verdict": "falsified",
+      "verdict_detail": "0/5 universes (BH-FDR at α = 0.05 + walk-forward + 3/6/9/12 sign)",
+      "mechanism": "+0.42 corr with TSMOM; decomposition cannot separate the terms (term1 and lead-lag CIs contain 0)",
+      "stats": [
+        {
+          "label": "universes confirmed",
+          "display": "0/5",
+          "value": 0,
+          "artifact": "research/xsmom/xsmom_universes_map.csv",
+          "locator": "column confirmed",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "corr with TSMOM (17 ETFs)",
+          "display": "+0.42",
+          "value": 0.4189,
+          "artifact": "research/xsmom/xsmom_monthly_returns.csv",
+          "locator": "corr(xsmom_tercile_net, tsmom_net), 218 months",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "term1 (own-autocorrelation) CI contains 0",
+          "display": "5/5",
+          "value": 5,
+          "artifact": "research/xsmom/xsmom_universes_decomposition.csv",
+          "locator": "rows term=term1_autocov, lo <= 0 <= hi",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "term2 (lead-lag) CI contains 0",
+          "display": "5/5",
+          "value": 5,
+          "artifact": "research/xsmom/xsmom_universes_decomposition.csv",
+          "locator": "rows term=term2_leadlag, lo <= 0 <= hi",
+          "provenance": "reproduced"
+        }
+      ],
+      "caveats": [
+        "Only static dispersion (term3) has a CI excluding 0 (5/5); demeaning collapses the Sharpe in 1/5 universes (U4) and the U5 negative control did not collapse",
+        "Per-universe correlation with TSMOM is +0.12 to +0.31 (xsmom_universes_map.csv)",
+        "The pre-registration first appears in the same commit as the results (f03b5a1, a file copy from an archived repo); its earlier timing is not verifiable from this history"
+      ]
+    }
+  ]
+}
