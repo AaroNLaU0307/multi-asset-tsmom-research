@@ -1,0 +1,31 @@
+ticker,factor,decision,nearest_kept,corr_with_kept,reason
+SPY,Equity/US-LargeCap,KEEP,,,anchor — first asset processed for its factor
+QQQ,Equity/US-Nasdaq100,DROP (candidate),SPY,0.931,|corr|=0.93 with kept SPY (Equity/US-LargeCap) — factor already represented
+IWM,Equity/US-SmallCap,DROP (candidate),SPY,0.87,|corr|=0.87 with kept SPY (Equity/US-LargeCap) — factor already represented
+EFA,Equity/DevelopedExUS,DROP (candidate),SPY,0.846,|corr|=0.85 with kept SPY (Equity/US-LargeCap) — factor already represented
+EEM,Equity/EmergingMkts,KEEP,SPY,0.753,"kept, but borderline: |corr|=0.75 with SPY (<0.80) — optional further-trim candidate"
+EWJ,Equity/Japan,KEEP,SPY,0.72,"kept, but borderline: |corr|=0.72 with SPY (<0.80) — optional further-trim candidate"
+TLT,Bond/US-Treasury-Long,KEEP,SPY,-0.217,distinct: nearest kept asset SPY only |corr|=0.22
+IEF,Bond/US-Treasury-Interm,DROP (candidate),TLT,0.916,|corr|=0.92 with kept TLT (Bond/US-Treasury-Long) — factor already represented
+SHY,Bond/US-Treasury-Short,KEEP,TLT,0.575,distinct: nearest kept asset TLT only |corr|=0.57
+LQD,Bond/US-IG-Credit,KEEP,TLT,0.695,distinct: nearest kept asset TLT only |corr|=0.69
+HYG,Bond/US-HY-Credit,KEEP,SPY,0.76,"kept, but borderline: |corr|=0.76 with SPY (<0.80) — optional further-trim candidate"
+USO,Commodity/Energy-Oil,KEEP,SPY,0.282,distinct: nearest kept asset SPY only |corr|=0.28
+UNG,Commodity/Energy-NatGas,KEEP,USO,0.127,distinct: nearest kept asset USO only |corr|=0.13
+XLE,Equity/Sector-Energy,KEEP,SPY,0.623,distinct: nearest kept asset SPY only |corr|=0.62
+GLD,Commodity/Metal-Gold,KEEP,TLT,0.222,distinct: nearest kept asset TLT only |corr|=0.22
+SLV,Commodity/Metal-Silver,KEEP,GLD,0.793,"kept, but borderline: |corr|=0.79 with GLD (<0.80) — optional further-trim candidate"
+CPER,Commodity/Metal-Copper,KEEP,EEM,0.325,distinct: nearest kept asset EEM only |corr|=0.33
+DBA,Commodity/Agri-Broad,KEEP,USO,0.259,distinct: nearest kept asset USO only |corr|=0.26
+WEAT,Commodity/Agri-Wheat,KEEP,DBA,0.554,distinct: nearest kept asset DBA only |corr|=0.55
+CORN,Commodity/Agri-Corn,KEEP,WEAT,0.637,distinct: nearest kept asset WEAT only |corr|=0.64
+UUP,FX/USD-Bull,KEEP,GLD,-0.432,distinct: nearest kept asset GLD only |corr|=0.43
+FXE,FX/EUR,DROP (candidate),UUP,-0.945,|corr|=0.94 with kept UUP (FX/USD-Bull) — factor already represented
+FXY,FX/JPY,KEEP,UUP,-0.552,distinct: nearest kept asset UUP only |corr|=0.55
+VNQ,RealEstate/US-REIT,KEEP,SPY,0.715,"kept, but borderline: |corr|=0.71 with SPY (<0.80) — optional further-trim candidate"
+RWX,RealEstate/ExUS-REIT,KEEP,EEM,0.722,"kept, but borderline: |corr|=0.72 with EEM (<0.80) — optional further-trim candidate"
+XLF,Equity/Sector-Financials,DROP (candidate),SPY,0.85,|corr|=0.85 with kept SPY (Equity/US-LargeCap) — factor already represented
+XLK,Equity/Sector-Technology,DROP (candidate),SPY,0.921,|corr|=0.92 with kept SPY (Equity/US-LargeCap) — factor already represented
+XLV,Equity/Sector-Healthcare,KEEP,SPY,0.791,"kept, but borderline: |corr|=0.79 with SPY (<0.80) — optional further-trim candidate"
+XLU,Equity/Sector-Utilities,KEEP,VNQ,0.704,"kept, but borderline: |corr|=0.70 with VNQ (<0.80) — optional further-trim candidate"
+GDX,Equity/GoldMiners,KEEP,GLD,0.768,"kept, but borderline: |corr|=0.77 with GLD (<0.80) — optional further-trim candidate"

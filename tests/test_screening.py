@@ -100,3 +100,20 @@ def test_spike_revert_ignores_real_one_sided_move():
     rets = pd.Series([0.0, 0.30, 0.02, -0.01, 0.0], index=idx)
     hits = detect_spike_revert(rets, 0.25)
     assert len(hits) == 0
+
+
+# The kept representative each screen drop or trim was measured against (universe.py).
+_REPRESENTATIVE = {"QQQ": "SPY", "XLK": "SPY", "IWM": "SPY", "XLF": "SPY", "EFA": "SPY",
+                   "IEF": "TLT", "FXE": "UUP", "XLV": "SPY", "GDX": "GLD", "SLV": "GLD"}
+
+
+def test_recorded_correlations_match_the_committed_screening_matrix():
+    """universe.py's |r| for every correlation-screen drop and discretionary trim equals the
+    committed output/correlation_matrix.csv (run_analysis.py, 30 candidates, common window),
+    to the two decimals recorded."""
+    corr = pd.read_csv(Path(__file__).resolve().parents[1] / "output" / "correlation_matrix.csv",
+                       index_col=0)
+    recorded = {**universe.CORRELATION_SCREEN_DROPS, **universe.DISCRETIONARY_TRIMS}
+    assert set(recorded) == set(_REPRESENTATIVE)
+    for ticker, r in recorded.items():
+        assert round(abs(corr.loc[ticker, _REPRESENTATIVE[ticker]]), 2) == r, ticker

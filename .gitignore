@@ -28,6 +28,11 @@ data_cache/
 output/*
 !output/monthly_returns.csv
 !output/BACKTEST_REPORT.md
+# The universe screen (research/ERRATA_2026-09-27.md section 9).
+!output/ANALYSIS_REPORT.md
+!output/recommendations.csv
+!output/correlation_matrix.csv
+!output/FINAL_UNIVERSE_REPORT.md
 
 # --- XSMOM quarantine (separated cross-sectional-momentum research) ---
 # Held on disk for reference but kept OUT of this clean TSMOM repo.
