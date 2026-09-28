@@ -11,8 +11,9 @@ optional.*
 A prior pair of projects backtested **single-instrument** trend / Smart-Money-Concept
 strategies on XAUUSD ([quant-backtest-framework](https://github.com/AaroNLaU0307/quant-backtest-framework))
 and, using walk-forward and Monte-Carlo validation, **honestly
-falsified them**: the Sharpe confidence intervals crossed zero — no confirmable edge (on that
-repository's engine as it stood before a 2026-09-27 look-ahead fix; its re-run is pending).
+falsified them**: the Sharpe confidence intervals crossed zero — no confirmable edge (the verdict held
+in the re-run on the engine corrected on 2026-09-27: 0/42 BH-FDR survivors on XAUUSD,
+[`output/grid/master_table.csv`](https://github.com/AaroNLaU0307/quant-backtest-framework/blob/main/output/grid/master_table.csv)).
 The lesson was not "trend doesn't work" but that a **single instrument has too low a
 signal-to-noise ratio** for a confirmable edge to survive honest statistics.
 
@@ -214,7 +215,7 @@ One honest validation methodology, applied at two levels.
 
 **Across projects** — signal-to-noise is the deciding variable:
 
-- **SMC / breakout on XAUUSD (single instrument)** → *falsified* (CI crosses 0; pre-fix engine, re-run pending); low
+- **SMC / breakout on XAUUSD (single instrument)** → *falsified* (CI crosses 0; held in the 2026-09-27 corrected-engine re-run, [`output/grid/master_table.csv`](https://github.com/AaroNLaU0307/quant-backtest-framework/blob/main/output/grid/master_table.csv)); low
   signal-to-noise is a mathematical inevitability for one instrument.
   [github.com/AaroNLaU0307/quant-backtest-framework](https://github.com/AaroNLaU0307/quant-backtest-framework)
 - **Multi-asset TSMOM (this project)** → *supported* (CI excludes 0; not independently
