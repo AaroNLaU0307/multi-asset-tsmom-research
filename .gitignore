@@ -19,9 +19,13 @@ data_cache/
 *.parquet
 
 # --- Generated analysis artifacts (re-creatable via the pipeline) ---
-# The whole output/ folder is regenerable and git-ignored. The key figures the
+# The output/ folder is regenerable and git-ignored. The key figures the
 # README/STUDY_SUMMARY reference are copied into assets/ (which IS tracked).
-output/
+# Exceptions: the core backtest's return series and report, which the headline
+# cites (research/ERRATA_2026-09-27.md section 7).
+output/*
+!output/monthly_returns.csv
+!output/BACKTEST_REPORT.md
 
 # --- XSMOM quarantine (separated cross-sectional-momentum research) ---
 # Held on disk for reference but kept OUT of this clean TSMOM repo.

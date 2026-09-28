@@ -300,10 +300,15 @@ trending down, size each to equal risk, then scale the book to a target volatili
 
 Neither CI is deflated for selection: the historical trial count for this panel is unknown
 ([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2). Sharpe uses rf = 0, and the
-218 months include a partial June 2026 (the panel ends 2026-06-12). The core pipeline's own
-`output/monthly_returns.csv` is git-ignored; the committed series above is the `tsmom_net`
-column that `run_xsmom.py` writes from the same engine (file SHA-256
-`90cf79b698f74e11ea94af7133f7aeb11d788986fb1a36c946d9181812d77c77`). An excess-return Sharpe
+218 months include a partial June 2026 (the panel ends 2026-06-12). The committed series above
+is the `tsmom_net` column that `run_xsmom.py` writes from the same engine (file SHA-256
+`90cf79b698f74e11ea94af7133f7aeb11d788986fb1a36c946d9181812d77c77`). The core pipeline's own
+output is committed too: [`output/monthly_returns.csv`](output/monthly_returns.csv) (SHA-256
+`09388a99569ca61de15ea3e65ddf0df1a16787369bfb247cc8f24de475fe0a8b`) and
+[`output/BACKTEST_REPORT.md`](output/BACKTEST_REPORT.md) (SHA-256
+`2d0e2d209418c1e3808fa50304fc25322cf524dc08ed6f7117326f0ac8b1571f`), from
+`python run_backtest.py --verify-panel` on the pinned panel. Its `net` column equals `tsmom_net`
+in every one of the 218 months (`tests/test_core_series.py`). An excess-return Sharpe
 with DGS3MO is not reported: no DGS3MO series is committed. Machine-readable headline:
 [`results/headline.json`](results/headline.json).
 
