@@ -7,7 +7,7 @@ This file records **state**, never workflow authority (vNext §0).
 ## PROGRAMME STATE — CTA / systematic-macro Discovery
 
 *Programme-level roll-up. Per-lineage state is in the sections below; dispositions and
-reasoning are in [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md), which is a DERIVED summary
+reasoning are in [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md), which is a DERIVED summary
 and never an authority.*
 
 ```

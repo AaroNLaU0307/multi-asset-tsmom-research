@@ -40,7 +40,7 @@ flowchart TD
 | | |
 |---|---|
 | Canonical TSMOM | **SUPPORTED — NOT INDEPENDENTLY CONFIRMED** · role: **frozen research benchmark** |
-| CTA / systematic-macro Discovery **Round 1** | **CLOSED / EXHAUSTED** — [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) |
+| CTA / systematic-macro Discovery **Round 1** | **CLOSED / EXHAUSTED** — [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md) |
 | New supported edge from Round 1 | **NONE** |
 | Latest completed candidate | **CTA-EDGE-05 / F6** — scheduled macro announcement premium |
 | F6 terminal state | **CLOSED_UNRESOLVED_NOT_PROMOTED** — both nominal 95% intervals span zero |
@@ -114,7 +114,7 @@ each case.
 **Phase E — Round 1, in one line.** Eleven candidate objects were triaged; **eight**
 closed, parked, were blocked or were ruled non-standalone **before** any return outcome
 was touched; **three** proceeded to governed historical evaluation and **none was
-promoted**. Full dispositions: [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
+promoted**. Full dispositions: [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md).
 
 ### The lifecycle every candidate runs
 
@@ -167,7 +167,7 @@ flowchart TD
 
 Eight of eleven were resolved without spending a return trial at all — that is the S0 gate
 working, not a shortfall. Per-candidate reasoning and the artifact that decides each one:
-[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md).
+[`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md).
 
 **Phase B — canonical TSMOM validation.** The core remains **`SUPPORTED — NOT
 INDEPENDENTLY CONFIRMED`**. Its prospective confirmation study (**C-A**) is sealed and has
@@ -191,7 +191,8 @@ One authority per question — these do not compete:
 |---|---|---|
 | the workflow rules | `../QUANT_WORKFLOW_VNEXT.md` *(workspace-local; not published in this repository)* | **authority** |
 | current project state | [`PROJECT_STATE.md`](PROJECT_STATE.md) | **state** — never workflow authority |
-| Round-1 dispositions | [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) | derived summary |
+| Round-1 dispositions | [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md) | derived summary |
+| process history (governance records, not research results) | [`docs/governance/`](docs/governance/) | record |
 | the canonical TSMOM study | [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) · §1 below | narrative |
 | why a design choice was made | [`DESIGN_DECISIONS.md`](DESIGN_DECISIONS.md) | record |
 | a specific lineage | `research/extensions/<lineage>/` | artifacts |
@@ -717,7 +718,7 @@ Eleven candidate objects from the Round-1 discovery map were triaged under the v
 lifecycle `S0 FRAME → S1 DESIGN+SEAL → S2 BUILD → S3 RUN → S4 VERDICT → STOP`: **8** reached
 a terminal pre-outcome disposition and **3** proceeded to governed historical evaluation.
 Full dispositions and the artifact that decides each one:
-**[`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md)**.
+**[`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md)**.
 
 | candidate | outcome accessed? | terminal status |
 |---|---|---|
@@ -871,7 +872,8 @@ research/                         # committed arc write-ups (reports + figures),
   extensions/review_history/      # independent reviews (Astra / X01)
   extensions/TRIAL_LEDGER.md  extensions/SAMPLE_REUSE.md   # accounting authorities
 ops/                              # Owner decision records, exposure + authorization ledgers
-ROUND1_CLOSEOUT.md  PROJECT_STATE.md   # Round-1 dispositions  ·  current state
+PROJECT_STATE.md                  # current state
+docs/governance/ROUND1_CLOSEOUT.md   # Round-1 dispositions
 tests/                           # no-look-ahead + reconciliation + causality
 assets/                          # tracked key figures   ·   data/ output/  (git-ignored; data/README.md pins the caches)
 results/headline.json            # machine-readable headline (tests/test_headline.py recomputes it)
