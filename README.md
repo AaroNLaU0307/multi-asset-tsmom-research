@@ -297,6 +297,7 @@ trending down, size each to equal risk, then scale the book to a target volatili
 | --- | --- | --- | --- |
 | 2 bps (`config.TRANSACTION_COST_BPS`) | **0.75** | [0.29, 1.23] | recomputed from the committed [`research/xsmom/xsmom_monthly_returns.csv`](research/xsmom/xsmom_monthly_returns.csv), column `tsmom_net`, with `src/validation.py` (file SHA-256 below) |
 | 5 bps (the repo's "realistic blend") | **0.70** | [0.24, 1.18] | repo-reported, not reproduced: [`STUDY_SUMMARY.md`](STUDY_SUMMARY.md) §5.2–5.3, from `cost_analysis.py` / `rp_comparison.py` runs whose turnover output is git-ignored |
+| 2 bps, **sensitivity: net of 3-month T-bill, whole book** | 0.61 | [0.15, 1.09] | not the headline: `net − rf` with rf from the committed [`data/DGS3MO.csv`](data/DGS3MO.csv) (`ca_rf.py` rule), [`run_excess_sharpe.py`](run_excess_sharpe.py) → [`output/excess_return_sensitivity.csv`](output/excess_return_sensitivity.csv), column `excess` |
 
 Neither CI is deflated for selection: the historical trial count for this panel is unknown
 ([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2). Sharpe uses rf = 0, and the
@@ -308,11 +309,10 @@ output is committed too: [`output/monthly_returns.csv`](output/monthly_returns.c
 [`output/BACKTEST_REPORT.md`](output/BACKTEST_REPORT.md) (SHA-256
 `2d0e2d209418c1e3808fa50304fc25322cf524dc08ed6f7117326f0ac8b1571f`), from
 `python run_backtest.py --verify-panel` on the pinned panel. Its `net` column equals `tsmom_net`
-in every one of the 218 months (`tests/test_core_series.py`). An excess-return Sharpe
-is not reported. The DGS3MO series it needs is now committed ([`data/README.md`](data/README.md)),
-but the core pipeline has no excess-return computation, and choosing one (for example `rf` on
-the whole book, or on each position's weight, with gross exposure up to 3×) is an open
-methodology decision ([`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §8). Machine-readable headline:
+in every one of the 218 months (`tests/test_core_series.py`). The T-bill row is a
+sensitivity, not the headline: each month's net return minus that month's 3-month T-bill
+rate, once for the whole book, with no financing of positions or leverage (gross exposure
+reaches 3×). Definition in [`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §11. Machine-readable headline:
 [`results/headline.json`](results/headline.json).
 
 A **supported but modest** edge with genuine **crisis alpha** (momentum can go short;

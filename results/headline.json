@@ -37,6 +37,22 @@
           "provenance": "reproduced"
         },
         {
+          "label": "net Sharpe, sensitivity: net of 3-month T-bill, whole book",
+          "display": "0.61",
+          "value": 0.6109,
+          "artifact": "output/excess_return_sensitivity.csv",
+          "locator": "column excess = net - rf_t, rf_t from data/DGS3MO.csv under research/extensions/ca/prospective/ca_rf.py (Y/100/12, 7-day freshness, locked at the prior month-end), whole book, 218 months; run_excess_sharpe.py; src/performance.sharpe_ratio (sqrt 12)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "95% CI, sensitivity: net of 3-month T-bill, whole book",
+          "display": "[0.15, 1.09]",
+          "value": null,
+          "artifact": "output/excess_return_sensitivity.csv",
+          "locator": "column excess = net - rf_t, rf_t from data/DGS3MO.csv under research/extensions/ca/prospective/ca_rf.py (Y/100/12, 7-day freshness, locked at the prior month-end), whole book, 218 months; run_excess_sharpe.py; src/validation.bootstrap_ci (iid percentile bootstrap, 10,000 resamples, seed 7)",
+          "provenance": "reproduced"
+        },
+        {
           "label": "net Sharpe (5 bps)",
           "display": "0.70",
           "value": 0.7,
