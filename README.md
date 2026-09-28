@@ -309,7 +309,10 @@ output is committed too: [`output/monthly_returns.csv`](output/monthly_returns.c
 `2d0e2d209418c1e3808fa50304fc25322cf524dc08ed6f7117326f0ac8b1571f`), from
 `python run_backtest.py --verify-panel` on the pinned panel. Its `net` column equals `tsmom_net`
 in every one of the 218 months (`tests/test_core_series.py`). An excess-return Sharpe
-with DGS3MO is not reported: no DGS3MO series is committed. Machine-readable headline:
+is not reported. The DGS3MO series it needs is now committed ([`data/README.md`](data/README.md)),
+but the core pipeline has no excess-return computation, and choosing one (for example `rf` on
+the whole book, or on each position's weight, with gross exposure up to 3×) is an open
+methodology decision ([`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §8). Machine-readable headline:
 [`results/headline.json`](results/headline.json).
 
 A **supported but modest** edge with genuine **crisis alpha** (momentum can go short;
