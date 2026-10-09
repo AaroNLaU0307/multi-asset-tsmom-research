@@ -54,6 +54,136 @@ def _md_table(rows, header) -> str:
     return "\n".join([h, s, b])
 
 
+# --------------------------------------------------------------------------- #
+# Result-derived labels. Every sentence of the report that states a mechanism
+# result is computed here from this run's CIs and Sharpes, never typed in: a
+# hand-typed conclusion repeats itself on a re-run whatever the data says.
+# --------------------------------------------------------------------------- #
+DECOMP_TERMS: tuple[str, ...] = ("term1_autocov", "term2_leadlag", "term3_dispersion")
+_TERM_DESC = {
+    "term1_autocov": "term1 (own-autocorrelation, the channel TSMOM harvests)",
+    "term2_leadlag": "term2 (lead-lag, XSMOM-only)",
+    "term3_dispersion": "term3 (cross-sectional dispersion of means)",
+}
+
+
+def ci_excludes_zero(ci: dict) -> bool:
+    """True iff a ``{'lo', 'hi'}`` interval lies strictly on one side of 0."""
+    return bool(ci["lo"] > 0.0 or ci["hi"] < 0.0)
+
+
+def terms_excluding_zero(decomps: list[dict]) -> dict[str, int]:
+    """Per decomposition term, the number of universes whose block-bootstrap CI excludes 0."""
+    return {t: sum(ci_excludes_zero(d[t]) for d in decomps) for t in DECOMP_TERMS}
+
+
+def demean_collapses(baseline: float, demeaned: float) -> bool:
+    """Demean-test label, defined RELATIVE TO THE RANK BASELINE.
+
+    A collapse is a positive rank-weight Sharpe that at least halves once the signal is
+    demeaned (``demeaned <= baseline / 2``). A demeaned Sharpe at or above the baseline,
+    or a non-positive baseline, is not a collapse. Whether the demeaned CI crosses 0 is
+    deliberately NOT the criterion: when the baseline CI already crosses 0, a demeaned CI
+    that crosses 0 says nothing about a collapse."""
+    return bool(baseline > 0.0 and demeaned <= baseline / 2.0)
+
+
+def demean_label(baseline: float, demeaned: float) -> str:
+    word = "collapses" if demean_collapses(baseline, demeaned) else "no collapse"
+    return f"{word} ({baseline:+.2f} → {demeaned:+.2f})"
+
+
+def _demean_pair(r: dict) -> tuple[float, float]:
+    return float(r["conf"]["rank baseline"][0]), float(r["conf"]["demeaned"][0])
+
+
+def term2_sentence(results: list[dict]) -> str:
+    """The lead-lag (term2) statement, from the term2 CIs and the precision fork."""
+    n = len(results)
+    decomps = [r["decomp"] for r in results]
+    n_contain = sum(xst.term2_contains_zero(d) for d in decomps)
+    n_imprecise = sum(xst.term2_precision(d)["verdict"] == "imprecise" for d in decomps)
+    widest = max(results, key=lambda r: r["decomp"]["term2_leadlag"]["hi"]
+                 - r["decomp"]["term2_leadlag"]["lo"])
+    if n_contain == n:
+        head = ("In **no** universe is term2 statistically distinguishable from 0 (every "
+                "block-bootstrap CI contains 0) — a statement about the lead-lag channel itself, "
+                "independent of the Sharpe-test power.")
+    else:
+        excl = [r["u"].key for r in results if not xst.term2_contains_zero(r["decomp"])]
+        head = (f"term2's block-bootstrap CI excludes 0 in **{n - n_contain}/{n}** universes "
+                f"({', '.join(excl)}).")
+    where = "every universe" if n_imprecise == n else f"{n_imprecise}/{n} universes"
+    return (f"{head} **But** term2 is *imprecisely* estimated (its CI admits magnitudes ≥ "
+            f"|term1| in {where}; widest at N={widest['N']}), so the honest reading is "
+            "**\"term2 not shown to be non-trivial\"**, not \"term2 ≈ 0.\"")
+
+
+def term_presence_sentence(decomps: list[dict]) -> str:
+    """Which decomposition terms the CIs show as present, stated from the CIs."""
+    n = len(decomps)
+    k = terms_excluding_zero(decomps)
+    every = [t for t in DECOMP_TERMS if k[t] == n]
+    if every:
+        verb = "has" if len(every) == 1 else "have"
+        out = (f"Only {' and '.join(_TERM_DESC[t] for t in every)} {verb} a block-bootstrap CI "
+               f"that excludes 0 in all {n} universes.")
+    else:
+        out = f"No decomposition term has a block-bootstrap CI that excludes 0 in all {n} universes."
+    k1 = k["term1_autocov"]
+    if k1 < n:
+        out += (f" {_TERM_DESC['term1_autocov']} has a CI that contains 0 in {n - k1}/{n} "
+                "universes, so the decomposition does not show it to be reliably present.")
+    return out
+
+
+def demean_sentence(results: list[dict]) -> str:
+    """Demean-test summary across the family, incl. the pre-registered negative control."""
+    n = len(results)
+    collapsed = [r["u"].key for r in results if demean_collapses(*_demean_pair(r))]
+    out = (f"Demeaning collapses the rank-weight Sharpe (a positive baseline at least halves) in "
+           f"**{len(collapsed)}/{n}** universes" + (f" ({', '.join(collapsed)})" if collapsed else "")
+           + ".")
+    by_key = {r["u"].key: r for r in results}
+    falls = {k: _demean_pair(r)[0] - _demean_pair(r)[1] for k, r in by_key.items()}
+    hardest = max(falls, key=falls.get)
+    for c in (r for r in results if r["u"].prior == "predicted negative"):
+        key = c["u"].key
+        ok = hardest == key and key in collapsed
+        out += (f" The pre-registered negative control {key} (predicted to collapse hardest under "
+                f"demeaning): **{'confirmed' if ok else 'not confirmed'}** — {key}: "
+                f"{demean_label(*_demean_pair(c))}; the largest fall is {hardest}: "
+                f"{demean_label(*_demean_pair(by_key[hardest]))}.")
+    return out
+
+
+def mechanism_conclusion(results: list[dict]) -> str:
+    """The closing mechanism statement. It may name a common source with TSMOM only when
+    the CIs show term1 in every universe, term2 in none, and a family-wide collapse."""
+    n = len(results)
+    k = terms_excluding_zero([r["decomp"] for r in results])
+    n_coll = sum(demean_collapses(*_demean_pair(r)) for r in results)
+    if k["term1_autocov"] == n and k["term2_leadlag"] == 0 and n_coll > n / 2:
+        return ("On the combined weight of the null Sharpe map, the demean collapse and the "
+                "undemonstrated lead-lag, XSMOM behaves as a market-neutral echo of the same source "
+                "TSMOM harvests; we state that as *not demonstrated otherwise*, not as a proof of zero.")
+    return ("The decomposition therefore cannot separate the terms: it shows neither a lead-lag "
+            "channel nor that XSMOM's profit comes from the own-autocorrelation TSMOM harvests"
+            + ("" if n_coll > n / 2 else ", and the demean test does not show a family-wide static "
+               "premium") + ". What stands is the null Sharpe map and each universe's correlation "
+            "with TSMOM (below), not a demonstrated common source.")
+
+
+def term3_crosscheck_sentence(results: list[dict]) -> str:
+    """term3 vs the demean test: static premium needs BOTH a term3 CI excluding 0 AND a collapse."""
+    n = len(results)
+    both = [r["u"].key for r in results
+            if ci_excludes_zero(r["decomp"]["term3_dispersion"]) and demean_collapses(*_demean_pair(r))]
+    return ("> term3 is cross-checked against the demean test (term3 CI excluding 0 **and** a "
+            "collapse under demeaning ⟹ the dispersion was static premium): both hold in "
+            f"**{len(both)}/{n}** universes" + (f" ({', '.join(both)})." if both else "."))
+
+
 def _common_window(rets: pd.DataFrame, signal: pd.DataFrame) -> pd.DataFrame:
     """Restrict to full-universe months AND the sealed common-window start."""
     full = signal.notna().all(axis=1)
@@ -319,6 +449,7 @@ def _write_report(results, bh, dsr, best, cross) -> None:
         "sealed before these results.*")
     add("")
     n_conf = sum(r["confirmed"] for r in results)
+    n_contain = sum(xst.term2_contains_zero(r["decomp"]) for r in results)
     add("## TL;DR")
     add("")
     add(f"- **CONFIRMED universes: {n_conf} / 5** (BH-FDR at α=0.05 — {_bh_desc(bh)}; "
@@ -327,11 +458,13 @@ def _write_report(results, bh, dsr, best, cross) -> None:
         f"{best['m_terc']['sharpe']:.2f}; **Deflated Sharpe (5 trials) = {dsr['dsr']:.3f}** "
         f"(benchmark SR\\* = {dsr['sr_star']:.3f}/mo, PSR vs 0 = {dsr['psr_vs0']:.3f}).")
     if n_conf == 0:
+        t2_where = ("**not shown to be non-trivial anywhere**" if n_contain == len(results)
+                    else f"not distinguishable from 0 in {n_contain}/{len(results)} universes")
         add("- **Authoritative conclusion:** at liquid-ETF granularity, XSMOM's edge is "
             "**marginal / arbitraged even inside its theoretical domain** — no universe survives "
             "the family-corrected test. Statistically this is *failed-to-reject* (not *proven "
-            "absent*); the power-independent leg is that term2 (lead-lag) is **not shown to be "
-            "non-trivial anywhere** (see Methods). Reported as the headline result, not a failure.")
+            f"absent*); the power-independent leg is that term2 (lead-lag) is {t2_where} "
+            "(see Methods). Reported as the headline result, not a failure.")
     add("")
     add("![map](xsmom_universes_map.png)")
     add("")
@@ -356,8 +489,10 @@ def _write_report(results, bh, dsr, best, cross) -> None:
     add("")
     add("## Methods & honest scope")
     add("")
-    add("**Statistical conclusion = *failed to reject*, not *proved no edge*.** Every universe's "
-        "Sharpe-vs-0 CI contains 0, so we fail to reject H0 at the available power — and the power "
+    n_cross = sum(r["ci"]["crosses_0"] for r in results)
+    ci_where = "Every universe's" if n_cross == len(results) else f"{n_cross}/{len(results)} universes'"
+    add("**Statistical conclusion = *failed to reject*, not *proved no edge*.** "
+        f"{ci_where} Sharpe-vs-0 CI contains 0, so we fail to reject H0 at the available power — and the power "
         "is genuinely limited: thin cross-sections (N as small as **6**; tercile legs of 2 names at "
         "U3/U4/U5), **~218 months**, and bootstrap Sharpe CIs ≈ **±0.45**. The FX/commodity ETFs "
         "only list from ~2006, so even the secondary native-window robustness cannot extend them "
@@ -365,15 +500,9 @@ def _write_report(results, bh, dsr, best, cross) -> None:
         "absent.\"*")
     add("")
     add("**Mechanism conclusion = the power-independent finding.** For XSMOM to beat TSMOM, the "
-        "lead-lag term (term2) had to be non-trivial. In **no** universe is term2 statistically "
-        "distinguishable from 0 (every block-bootstrap CI contains 0) — a statement about the "
-        "lead-lag channel itself, independent of the Sharpe-test power. **But** term2 is "
-        "*imprecisely* estimated (its CI admits magnitudes ≥ |term1| in every universe; widest at "
-        "N=18), so the honest reading is **\"term2 not shown to be non-trivial\"**, not \"term2 "
-        "≈ 0.\" The only reliably-present term is term1 (own-autocorrelation) — which TSMOM already "
-        "harvests. On the combined weight of the all-negative Sharpe map, the demean collapse, and "
-        "the absent (undemonstrated) lead-lag, XSMOM behaves as a market-neutral echo of the same "
-        "source; we state that as *not demonstrated otherwise*, not as a proof of zero.")
+        f"lead-lag term (term2) had to be non-trivial. {term2_sentence(results)} "
+        f"{term_presence_sentence([r['decomp'] for r in results])} {demean_sentence(results)} "
+        f"{mechanism_conclusion(results)}")
     add("")
 
     # mechanism map
@@ -393,24 +522,23 @@ def _write_report(results, bh, dsr, best, cross) -> None:
         t2cell = ("contains 0" if prec["contains_zero"] else "**EXCLUDES 0**") + \
                  f"; {prec['verdict']} (CI≈{prec['ci_vs_term1']:.1f}×|t1|)"
         drows.append([r["u"].key, cell("term1_autocov"), cell("term2_leadlag"), cell("term3_dispersion"),
-                      t2cell, "collapses" if r["conf"]["demeaned"][1] else "survives"])
+                      t2cell, demean_label(*_demean_pair(r))])
     add(_md_table(drows, ["universe", "term1 own-autocov", "term2 lead-lag", "term3 dispersion",
-                          "term2 vs 0 (precision)", "demean test"]))
+                          "term2 vs 0 (precision)", "demean test (rank baseline → demeaned)"]))
     add("")
     # A2 — family zero-overlap statement (flag any term2 CI that excludes 0)
-    n_contain = sum(xst.term2_contains_zero(r["decomp"]) for r in results)
     n_conf_small = sum(xst.term2_precision(r["decomp"])["verdict"] == "confidently small" for r in results)
     flag = "" if n_contain == len(results) else "  ⚠️ FLAG: a term2 CI EXCLUDES 0 — see the table."
+    where = "any of them" if n_contain == len(results) else "those universes"
     add(f"> **A2 — term2 zero-overlap:** **{n_contain}/{len(results)}** universes have a term2 CI "
         f"that contains 0 (the XSMOM-only lead-lag channel is not distinguishable from zero in "
-        f"any of them).{flag}")
+        f"{where}).{flag}")
     add(f"> **C1 — precision fork:** **{n_conf_small}/{len(results)}** universes are *confidently "
         "small* (term2 CI bounded below |term1|); the rest are **imprecise** — the term2 CI admits "
         "magnitudes ≥ |term1| (e.g. U4 term2 CI rivals term1; U2 is very wide at N=18). So the honest "
         "claim is **\"term2 not shown to be non-trivial\"**, NOT \"term2 proven ≈ 0\". `E[π]=term1−"
         "term2+term3`; the block length is 12 months (justified in `src/xsmom_stats.py`).")
-    add("> term3 is cross-validated by the demean test: large term3 **and** Sharpe collapse under "
-        "demeaning ⟹ the dispersion was static premium.")
+    add(term3_crosscheck_sentence(results))
     add("")
 
     # per-universe detail
@@ -479,7 +607,6 @@ def _patch_readme(results, bh, dsr, best, cross) -> None:
     idx = text.find("## THE MAP")
     head = (text[:idx].rstrip() if idx != -1 else text.rstrip()) + "\n\n"
     n_conf = sum(r["confirmed"] for r in results)
-    n_contain = sum(xst.term2_contains_zero(r["decomp"]) for r in results)
 
     b: list[str] = []
     b.append("## THE MAP — results (appended after the pre-registration above was sealed)")
@@ -506,13 +633,9 @@ def _patch_readme(results, bh, dsr, best, cross) -> None:
                  "*failed-to-reject* at limited power (N as small as 6; ~218 months; Sharpe CIs "
                  "≈ ±0.45) — we do **not** claim the edge is *proven* zero. The **power-independent** "
                  "leg is the mechanism: for XSMOM to beat TSMOM the lead-lag term (term2) had to be "
-                 f"non-trivial, yet in **{n_contain}/5** universes term2's block-bootstrap CI "
-                 "contains 0. term2 is *imprecisely* estimated (its CI admits magnitudes ≥ |term1| "
-                 "in every universe; widest at N=18), so we state **\"term2 not shown to be "
-                 "non-trivial\"** — not \"term2 ≈ 0\". The only reliably-present term is term1 "
-                 "(own-autocorrelation), which TSMOM already harvests; on the combined weight of the "
-                 "all-negative map, the demean collapse and the undemonstrated lead-lag, XSMOM "
-                 "behaves as a market-neutral echo of the same source.")
+                 f"non-trivial. {term2_sentence(results)} "
+                 f"{term_presence_sentence([r['decomp'] for r in results])} "
+                 f"{demean_sentence(results)} {mechanism_conclusion(results)}")
     else:
         survivors = ", ".join(r["u"].key for r in results if r["confirmed"])
         b.append(f"**Survivors:** {survivors}. See the report for each survivor's mechanism "

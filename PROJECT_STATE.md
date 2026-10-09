@@ -46,7 +46,7 @@ NEXT_DECISION      = Aaron: whether to fund long-history futures data (revival b
                      Open, not due: D-ETF-COUNT (delegate)
 ```
 
-**Round-2 carry-forward constraints:** see [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md) §7.
+**Round-2 carry-forward constraints:** see [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md) §7.
 
 ## Closed lineages
 
@@ -68,5 +68,5 @@ Each line gives the lineage, its status and where the record lives.
 | F7 | NON-RUN, CLOSED | [F7_NONRUN_DISPOSITION.md](research/extensions/F7_NONRUN_DISPOSITION.md) |
 | F2 / F8 / F9 / F10 | BLOCKED / PARKED / NOT STANDALONE; never opened | [CTA_EDGE_04_CANDIDATE_AUDIT.md](research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md) |
 
-Round-1 dispositions are derived in [`ROUND1_CLOSEOUT.md`](ROUND1_CLOSEOUT.md). Where it
+Round-1 dispositions are derived in [`docs/governance/ROUND1_CLOSEOUT.md`](docs/governance/ROUND1_CLOSEOUT.md). Where it
 disagrees with a lineage's own record, the lineage record wins.

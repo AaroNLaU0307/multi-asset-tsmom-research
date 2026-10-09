@@ -1,22 +1,26 @@
-# Dependencies for the multi-asset TSMOM research project.
-# Minimum versions below; tested with the exact versions noted in the comment.
+# Python 3.13 (matches CI)
+# Dependencies for the multi-asset TSMOM research project, pinned exactly: this file is
+# the lock for the test/research environment. Verified with Python 3.13.12:
+# `python -m pytest -q` passes in full (see README "Validation status").
 #
-# tested with (Python 3.13):
-#   yfinance==1.4.1  pandas==3.0.3  numpy==2.4.6
-#   scipy==1.17.1    matplotlib==3.11.0  pytest==9.1.0
+# pandas must be >= 2.2: config.SIGNAL_RESAMPLE = "ME" (month-end) is rejected by
+# pandas 2.1 ("Invalid frequency: ME"). Test results are stated for these pins only.
+#
+# The live C-A prospective pipeline runs under its own sealed runtime pin
+# (research/extensions/ca/prospective/ca_contract.py PINNED_RUNTIME), not this file.
 
-yfinance>=0.2.40
-pandas>=2.0
-numpy>=1.24
-scipy>=1.10
-matplotlib>=3.7
-pytest>=7.4
+yfinance==1.7.0
+pandas==3.0.6
+numpy==2.5.3
+scipy==1.18.1
+matplotlib==3.11.2
+pytest==9.1.1
 
 # Authenticated encryption for the C-A prospective blindness boundary
 # (AES-256-GCM). Pinned in research/extensions/ca/prospective/ca_contract.py.
-cryptography>=43
+cryptography==50.0.1
 
 # CTA-EDGE-01-TA macro-calendar rebuild only. The normalised
 # research/extensions/ta/TA_MACRO_CALENDAR.csv is committed, so pypdf is needed
 # ONLY to re-parse the 2006/2007 BLS annual-schedule PDFs from raw bytes.
-pypdf>=5
+pypdf==6.19.0

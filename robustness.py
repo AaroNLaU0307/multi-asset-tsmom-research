@@ -42,7 +42,7 @@ _START = None
 def _setup():
     global _PX, _MPX, _START
     prices, _ = fetch_data.fetch_universe(force=False)
-    _PX = prices[universe.TICKERS]
+    _PX = fetch_data.truncate_to_end(prices[universe.TICKERS], config.CORE_END_DATE)
     _MPX = signals.to_monthly(_PX)
     # Fixed evaluation start = main strategy's full-universe start (same as run_backtest).
     port = portfolio.build_portfolio(_PX, method="B")

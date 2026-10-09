@@ -2,11 +2,15 @@
 validation. Reports gross AND net of costs. No parameter is tuned to flatter the
 result; a null (CI crossing 0) is reported as plainly as an edge.
 
-Run:  python run_backtest.py
+The price panel is truncated to ``config.CORE_END_DATE`` (the published window's
+end) and its SHA-256 is checked against ``config.CORE_PANEL_SHA256``.
+
+Run:  python run_backtest.py [--verify-panel]
 """
 
 from __future__ import annotations
 
+import argparse
 import datetime as dt
 
 import numpy as np
@@ -15,6 +19,27 @@ import pandas as pd
 import config
 import universe
 from src import fetch_data, performance as perf, plots, portfolio, signals, validation
+
+
+def verdict_label(ci_sharpe: dict) -> str:
+    """Status wording for the net-Sharpe CI. A CI above 0 supports the edge; it does not
+    confirm it (no held-out or independent confirmation exists for the core)."""
+    if ci_sharpe["lo"] > 0:
+        return "SUPPORTED — CI excludes 0; not independently confirmed"
+    if ci_sharpe["hi"] < 0:
+        return "NEGATIVE — the Sharpe CI lies below 0"
+    return "NOT SUPPORTED — the Sharpe CI crosses 0"
+
+
+def load_core_panel(verify_panel: bool = False) -> pd.DataFrame:
+    """The 17-ticker core panel on the published window.
+
+    Loads the cached panel (or pulls it), checks the cache's SHA-256 against the
+    recorded pin (fatal only with ``verify_panel``) and truncates to CORE_END_DATE."""
+    prices, _ = fetch_data.fetch_universe(force=False)
+    fetch_data.check_file_sha256(config.RAW_PRICES_CSV, config.CORE_PANEL_SHA256,
+                                 strict=verify_panel, label="core panel")
+    return fetch_data.truncate_to_end(prices[universe.TICKERS], config.CORE_END_DATE)
 
 
 def _fmt_pct(x: float) -> str:
@@ -35,10 +60,13 @@ def _md_table(rows, header) -> str:
     return "\n".join([h, s, b])
 
 
-def main() -> None:
+def main(argv: list[str] | None = None) -> None:
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--verify-panel", action="store_true",
+                    help="refuse to run unless the cached panel matches CORE_PANEL_SHA256")
+    args = ap.parse_args(argv)
     config.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    prices, _ = fetch_data.fetch_universe(force=False)
-    px = prices[universe.TICKERS]
+    px = load_core_panel(verify_panel=args.verify_panel)
 
     # ---- portfolio -> returns ----
     port = portfolio.build_portfolio(px, method="B")
@@ -129,8 +157,7 @@ def main() -> None:
           f"P(DD>=20%)={mc['stats']['bootstrap']['p_dd_20']:.3f}  "
           f"P(DD>=30%)={mc['stats']['bootstrap']['p_dd_30']:.3f}")
     print(f"  avg annual turnover={avg_turnover_ann:.1f}x  cost drag={_fmt_pct(cost_drag_ann)}/yr")
-    verdict = "EDGE CONFIRMED" if not ci_sharpe["crosses_0"] else "NO CONFIRMABLE EDGE (CI crosses 0)"
-    print(f"  VERDICT: {verdict}")
+    print(f"  VERDICT: {verdict_label(ci_sharpe)}")
     print(f"  report: {config.BACKTEST_REPORT_MD}")
 
 
@@ -143,20 +170,22 @@ def _write_report(*, net, gross, bh, m_gross, m_net, m_bh, ci_sharpe, ci_ann,
     add(f"*Generated {dt.datetime.now():%Y-%m-%d %H:%M}. Honest validation — results "
         "reported as-is, no parameter tuning.*")
     add(f"*Return period: **{net.index.min().date()} → {net.index.max().date()}** "
-        f"({len(net)} months). rf = {config.RISK_FREE_ANNUAL:.0%} (disclosed).*")
+        f"({len(net)} months), panel truncated at {config.CORE_END_DATE}. "
+        f"rf = {config.RISK_FREE_ANNUAL:.0%} (disclosed).*")
     add("")
 
     # verdict up top
     edge = not ci_sharpe["crosses_0"]
-    add("## TL;DR — does this strategy have a confirmable edge?")
+    add("## TL;DR — does the net-Sharpe CI exclude 0?")
     add("")
     add(f"- **Net Sharpe = {m_net['sharpe']:.2f}**, 95% bootstrap CI "
         f"**[{ci_sharpe['lo']:.2f}, {ci_sharpe['hi']:.2f}]** "
         f"→ **{'DOES NOT cross 0' if edge else 'CROSSES 0'}** "
-        f"({ci_sharpe['frac_gt_0']*100:.1f}% of resamples > 0).")
+        f"({ci_sharpe['frac_gt_0']*100:.2f}% of resamples > 0). Not deflated: the historical "
+        "trial count for this panel is unknown (research/extensions/TRIAL_LEDGER.md).")
     add(f"- Net annualized return 95% CI: **[{_fmt_pct(ci_ann['lo'])}, {_fmt_pct(ci_ann['hi'])}]** "
         f"→ {'excludes 0' if not ci_ann['crosses_0'] else 'includes 0'}.")
-    add(f"- **Verdict: {'a statistically confirmable edge at the 95% level.' if edge else 'NO confirmable edge — the CI crosses 0.'}**")
+    add(f"- **Verdict: {verdict_label(ci_sharpe)}.**")
     add("")
 
     # costs

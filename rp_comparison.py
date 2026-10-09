@@ -36,7 +36,7 @@ def _fmt_pct(x):
 def main():
     config.OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     prices, _ = fetch_data.fetch_universe(force=False)
-    px = prices[universe.TICKERS]
+    px = fetch_data.truncate_to_end(prices[universe.TICKERS], config.CORE_END_DATE)
     mpx = signals.to_monthly(px)
 
     builds = {name: portfolio.build_portfolio(px, method="B", agg=agg) for name, agg in AGGS.items()}

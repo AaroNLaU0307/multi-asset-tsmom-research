@@ -12,7 +12,9 @@ __pycache__/
 .ipynb_checkpoints/
 
 # --- Market data: NEVER commit (yfinance pulls Yahoo data; licensing) ---
-data/
+# Only the provenance note (file names, date ranges, SHA-256 pins) is tracked.
+data/*
+!data/README.md
 data_cache/
 *.parquet
 

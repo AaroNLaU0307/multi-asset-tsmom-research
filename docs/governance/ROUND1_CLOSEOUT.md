@@ -13,7 +13,7 @@ DATE                      = 2026-09-22
 > points at the artifact that actually decides it. Where this page and a lineage
 > artifact disagree, **the lineage artifact wins** and this page is stale.
 > Workflow authority is `../QUANT_WORKFLOW_VNEXT.md` — workspace-local, **not published
-> in this repository**. Per-project *state* is [`PROJECT_STATE.md`](PROJECT_STATE.md).
+> in this repository**. Per-project *state* is [`PROJECT_STATE.md`](../../PROJECT_STATE.md).
 
 ---
 
@@ -58,7 +58,7 @@ finding, and nothing in Round 1 raised or lowered its status.
 | **F10** | — | **NO** | **OVERLAPPING / PRICE-DERIVED** | Price-derived and overlapping with existing work; not standalone. | NO |
 
 Candidate-level triage for F2 / F8 / F9 / F10 is recorded in
-[`research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md`](research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md)
+[`research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md`](../../research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md)
 and the idea registry; they never became lineages and never touched a return.
 
 ---
@@ -67,14 +67,14 @@ and the idea registry; they never became lineages and never touched a return.
 
 | lineage | authoritative artifact |
 |---|---|
-| F1 / TA | [`research/extensions/ta/TA_CLOSURE.md`](research/extensions/ta/TA_CLOSURE.md) · [`TA_EXPOSURE_DISCLOSURE.md`](research/extensions/ta/TA_EXPOSURE_DISCLOSURE.md) |
-| F3 / BENB | [`research/extensions/benb/BENB_CLOSURE.md`](research/extensions/benb/BENB_CLOSURE.md) |
-| PINS | [`research/extensions/pins/PINS_CLOSURE.md`](research/extensions/pins/PINS_CLOSURE.md) |
-| MMV | [`research/extensions/mmv/MMV_CLOSEOUT.md`](research/extensions/mmv/MMV_CLOSEOUT.md) |
-| F4 | [`research/extensions/f4/F4_PREOUTCOME_PARK_CLOSEOUT.md`](research/extensions/f4/F4_PREOUTCOME_PARK_CLOSEOUT.md) |
-| F7 | [`research/extensions/F7_NONRUN_DISPOSITION.md`](research/extensions/F7_NONRUN_DISPOSITION.md) |
-| **F6** | [`research/extensions/f6/F6_CLOSEOUT.md`](research/extensions/f6/F6_CLOSEOUT.md) |
-| F2 / F8 / F9 / F10 | [`research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md`](research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md) |
+| F1 / TA | [`research/extensions/ta/TA_CLOSURE.md`](../../research/extensions/ta/TA_CLOSURE.md) · [`TA_EXPOSURE_DISCLOSURE.md`](../../research/extensions/ta/TA_EXPOSURE_DISCLOSURE.md) |
+| F3 / BENB | [`research/extensions/benb/BENB_CLOSURE.md`](../../research/extensions/benb/BENB_CLOSURE.md) |
+| PINS | [`research/extensions/pins/PINS_CLOSURE.md`](../../research/extensions/pins/PINS_CLOSURE.md) |
+| MMV | [`research/extensions/mmv/MMV_CLOSEOUT.md`](../../research/extensions/mmv/MMV_CLOSEOUT.md) |
+| F4 | [`research/extensions/f4/F4_PREOUTCOME_PARK_CLOSEOUT.md`](../../research/extensions/f4/F4_PREOUTCOME_PARK_CLOSEOUT.md) |
+| F7 | [`research/extensions/F7_NONRUN_DISPOSITION.md`](../../research/extensions/F7_NONRUN_DISPOSITION.md) |
+| **F6** | [`research/extensions/f6/F6_CLOSEOUT.md`](../../research/extensions/f6/F6_CLOSEOUT.md) |
+| F2 / F8 / F9 / F10 | [`research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md`](../../research/extensions/CTA_EDGE_04_CANDIDATE_AUDIT.md) |
 
 ---
 
@@ -112,7 +112,7 @@ was promoted; the upper endpoint sitting above zero is why nothing was excluded.
 An unresolved result is a statement about the evidence, not a finding about the
 world. The full verdict, the interpretation boundary, the rerun prohibition and
 the execution governance reservation are in
-[`F6_CLOSEOUT.md`](research/extensions/f6/F6_CLOSEOUT.md).
+[`F6_CLOSEOUT.md`](../../research/extensions/f6/F6_CLOSEOUT.md).
 
 ---
 
@@ -215,7 +215,7 @@ Carry-forward constraints for whoever opens Round 2:
 workflow authority      ../QUANT_WORKFLOW_VNEXT.md        (workspace-local;
                                                           NOT in this repository)
 project state           PROJECT_STATE.md
-this summary            ROUND1_CLOSEOUT.md                (programme-level, derived)
+this summary            docs/governance/ROUND1_CLOSEOUT.md  (programme-level, derived)
 canonical study         STUDY_SUMMARY.md · README.md §1
 lineages                research/extensions/<lineage>/
 owner decisions         ops/OWNER_DECISION_RECORD_*.md

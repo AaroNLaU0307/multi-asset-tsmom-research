@@ -18,6 +18,25 @@ month — are all same-day knowable (causal). The single "*last* trading day of 
 month" component is a calendar property used here for DESCRIPTION only; a tradeable
 Step-2 rule would replace it with a causal proxy (e.g. an exchange-calendar expected
 month-end). Truncation-invariance of the causal components is unit-tested.
+
+Provenance (statistics helpers)
+-------------------------------
+* Origin: written for this project; not vendored from anywhere. Reused by the
+  yield-curve study (``run_yield_premise.py``).
+* BH-FDR: ``bh_fdr`` defaults to **q = 0.10** (``config.SEAS_FDR_Q``), the level of the
+  seasonality (18-cell) and yield-curve (6-cell) families. (``src/xsmom_stats``'s
+  ``benjamini_hochberg`` is a separate implementation at alpha = 0.05.)
+* ``hac_diff_test``: Newey-West (Bartlett) HAC t-test of the dummy slope, two-sided
+  normal p. ``block_bootstrap_ci``: moving-block percentile bootstrap of Δ, 10,000
+  resamples, seed ``config.RANDOM_SEED``; block ``config.SEAS_BLOCK_LEN`` (10) for
+  seasonality, block = horizon for the yield study.
+* SHA-256 of each function's normalised source (``inspect.getsource``, trailing
+  whitespace stripped per line, joined with "\\n", UTF-8):
+    bh_fdr              dcf0ecce7ebf1cc4c9af7da5b4289530604fb15d5e1a861fc883543ac0304dd0
+    hac_diff_test       b059702e1db1cbd9eaebefab88a39f1d5a6b1ce12231029d08afb6ce02abdc6d
+    block_bootstrap_ci  9035bd2d4365fd0475778f79ca7e2b0726215af69583c0a7052eaf7f85005bd6
+  Pinned in ``tests/test_stats_provenance.py``: any edit to these functions must update
+  the pinned hash (and this list) in the same commit.
 """
 
 from __future__ import annotations

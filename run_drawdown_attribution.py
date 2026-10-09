@@ -1,6 +1,6 @@
 """Drawdown Attribution Diagnostic — DESCRIPTIVE (not a backtest, not an optimization).
 
-Answers one question to gate a future overlay decision: are the confirmed TSMOM
+Answers one question to gate a future overlay decision: are the core TSMOM
 strategy's drawdowns driven primarily by (a) choppy/range-bound whipsaw or (b)
 turning-point momentum crashes (a held trend sharply reversing) — overall and per
 sleeve? Reuses the EXACT vol-scaled positions from the main pipeline (no re-fetch,
@@ -140,7 +140,7 @@ def _write_report(*, rec, episodes, flagged, sleeve_sum, codd, ep_cc, agg, net) 
     add("")
     add(f"*Generated {dt.datetime.now():%Y-%m-%d %H:%M}. DESCRIPTIVE only — no parameter "
         "tuning, no Sharpe optimization, no overlay. Reuses the exact vol-scaled positions "
-        "from the confirmed backtest.*")
+        "from the core backtest (status: supported, not independently confirmed).*")
     add(f"*Evaluation window: **{net.index.min().date()} → {net.index.max().date()}** "
         f"({len(net)} months), the full-17-asset period.*")
     add("")
