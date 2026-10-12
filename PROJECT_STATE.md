@@ -15,7 +15,8 @@ whose authoritative home was that file.
 **Decisions from 2026-09-26 onward** are in [`ops/DECISION_LOG.md`](ops/DECISION_LOG.md).
 
 ```
-UPDATED            = 2026-09-26 — Round 2 PARKED (DL-011); earlier: state cut DL-002,
+UPDATED            = 2026-10-13 — revival (b) declined by Aaron, Round 2 stays PARKED
+                     (DL-012, R2-D1); Round 2 PARKED DL-011; state cut DL-002,
                      C-A closure DL-008
 RESEARCH_QUESTION  = find, and honestly falsify, standalone systematic-macro / CTA
                      edges beyond the frozen canonical TSMOM benchmark
@@ -28,8 +29,8 @@ STAGE              = STOPPED. Round 1 CLOSED / EXHAUSTED. Round 2 PARKED_PRE_OUT
 REVIVAL            = a new S0 under one of: (a) an a-priori annual-horizon mechanism
                      absent from the century literature, on JST, exposure disclosed
                      (delegate gate); (b) Aaron funds long-history futures data
-                     (Owner gate); (c) an honest prospective lineage, MDE stated
-                     up front
+                     (Owner gate) — CLOSED by Aaron 2026-10-13 (DL-012); (c) an
+                     honest prospective lineage, MDE stated up front
 CANONICAL_TSMOM    = SUPPORTED — NOT INDEPENDENTLY CONFIRMED; frozen research
                      benchmark (STUDY_SUMMARY.md)
 ACTIVE_LINEAGES    = NONE
@@ -42,7 +43,9 @@ TRIAL_ACCOUNTING   = research/extensions/TRIAL_LEDGER.md (view) ·
                      ASSERTED (D-ETF-COUNT = UNKNOWN_PENDING_AARON_DECISION); every
                      candidate on it is T0_REUSED_DEPENDENT, ceiling `supported`
 OPEN_BLOCKERS      = NONE
-NEXT_DECISION      = Aaron: whether to fund long-history futures data (revival b).
+NEXT_DECISION      = none: revival (b) declined by Aaron 2026-10-13; reopen conditions
+                     in the assessment file (Workspace Docs/reports/
+                     2026-10-13-tsmom-round2-revival-assessment-fable-02.md).
                      Open, not due: D-ETF-COUNT (delegate)
 ```
 

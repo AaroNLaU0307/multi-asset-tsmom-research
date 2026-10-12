@@ -136,3 +136,23 @@ Verbatim:
 > DELEGATE DECISION (delegated scope; Aaron informed, may override): Round 2 is PARKED — programme disposition PARKED_PRE_OUTCOME at a programme-level identifiability ceiling. No trial spent, no outcome touched, no Round-1 verdict changed. Revival requires a new S0 under one of your three conditions: (a) an a-priori annual-horizon mechanism absent from the century literature, tested on JST with exposure disclosed (delegate gate, free data); (b) Aaron funds long-history futures data (Owner gate); (c) an honest prospective lineage with its MDE stated up front. Record the decision verbatim in the log, write a short R2 closeout beside the two round-2 files, set PROJECT_STATE to Round 2 PARKED with the three revival conditions and NEXT_DECISION = Aaron (whether to fund long-history data), commit locally, no push. Then no further research under the standing mandate until a revival S0 is opened. Finish the public-repository rewrite, report its local commit, and push once Aaron approves in your window; after that, stop and report.
 
 Closeout: `research/round2/R2_CLOSEOUT.md`.
+
+## DL-012 · recorded 2026-10-12T17:19Z · Aaron + delegate · Round 2 stays PARKED; revival (b) closed by Owner (R2-D1)
+
+Aaron's local date for this row is 2026-10-13. Source: `Workspace Docs/reports/2026-10-13-tsmom-round2-revival-assessment-fable-02.md`
+(workspace-local, not in this repository), sha256 `4d397b80bd3c2e852a788a00ac6c88fd09a1f4eeb0e316ba4eb8c79ecb899abf`,
+written by the Fable delegate; the records task was given by Aaron directly in the Opus builder session.
+
+Owner messages, verbatim (2026-10-13):
+
+> 现在我们开启tsmom的round 2的计划 … 开启计划之前要先想好我们是否有足够的预算买数据以及数据能不能取到，不然也是白忙活
+
+> 目前我还有43usd在databento上，以现有的数据做吧，我没有多余的预算准备数据，如果开启不了round2的话也行，不是必须开启round 2的
+
+Delegate decision R2-D1, verbatim (assessment §4):
+
+> **Round 2 stays PARKED_PRE_OUTCOME.** No S0 is opened; no builder window; no trial spent; no outcome touched; Round-1 verdicts and the canonical TSMOM status ("SUPPORTED — NOT INDEPENDENTLY CONFIRMED") unchanged. Revival condition (b) is recorded as closed by the Owner on 2026-10-13 ("我没有多余的预算准备数据"); (a) and (c) stand unchanged. The repo's `NEXT_DECISION` ("Aaron: whether to fund long-history futures data") is answered: no.
+>
+> **Reopen, any of:** the Owner funds long-history futures data (≈ 99–250 USD one-time; expected ceiling `supported`); a specific a-priori annual-horizon mechanism is written down before any data is looked at; a licensed or clearly public long-history futures source appears at zero cost.
+
+Effect: records only. No research, no data read, no trial spent. DL-011 stands; revival condition (b) is closed.
