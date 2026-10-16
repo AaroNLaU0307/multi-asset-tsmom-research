@@ -49,6 +49,14 @@ def _core_ci() -> tuple[float, float]:
     return ci["lo"], ci["hi"]
 
 
+@cache
+def _excess() -> tuple[float, float, float]:
+    x = pd.read_csv(ROOT / "output/excess_return_sensitivity.csv", index_col=0,
+                    parse_dates=True)["excess"]
+    ci = validation.bootstrap_ci(x, stat="sharpe")
+    return performance.sharpe_ratio(x), ci["lo"], ci["hi"]
+
+
 def _crisis(regime: str) -> float:
     cw = _read("research/xsmom/xsmom_crisis_windows.csv").set_index("regime")
     return float(cw.loc[regime, "cum_return_tsmom"])
@@ -115,6 +123,10 @@ RECOMPUTE = {
         lambda: (v := performance.sharpe_ratio(_core_net()), f"{v:.2f}"),
     ("tsmom-core", "95% CI low (2 bps)"): lambda: (v := _core_ci()[0], f"{v:.2f}"),
     ("tsmom-core", "95% CI high (2 bps)"): lambda: (v := _core_ci()[1], f"{v:.2f}"),
+    ("tsmom-core", "net Sharpe, sensitivity: net of 3-month T-bill, whole book"):
+        lambda: (v := _excess()[0], f"{v:.2f}"),
+    ("tsmom-core", "95% CI, sensitivity: net of 3-month T-bill, whole book"):
+        lambda: (None, f"[{_excess()[1]:.2f}, {_excess()[2]:.2f}]"),
     ("tsmom-core", "GFC 2008 window return"): lambda: (v := _crisis("GFC 2008"), f"{v:+.1%}"),
     ("tsmom-core", "COVID 2020 window return"): lambda: (v := _crisis("COVID 2020"), f"{v:+.1%}"),
     ("vol-breakout", "vol expansion after compression"):

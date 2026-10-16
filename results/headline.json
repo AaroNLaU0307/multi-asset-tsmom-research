@@ -1,7 +1,7 @@
 {
   "schema": "headline/v1",
   "repo": "AaroNLaU0307/multi-asset-tsmom-research",
-  "source_commit": "487a50ccdd2d0bd9eebf0911215f3ff839728a27",
+  "source_commit": "40badf972a4cac53965c7ed2aaecef53bdd830ba",
   "as_of": "2026-09-27",
   "rows": [
     {
@@ -34,6 +34,22 @@
           "value": 1.2294,
           "artifact": "research/xsmom/xsmom_monthly_returns.csv",
           "locator": "column tsmom_net, src/validation.bootstrap_ci (iid percentile bootstrap, 10,000 resamples, seed 7)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "net Sharpe, sensitivity: net of 3-month T-bill, whole book",
+          "display": "0.61",
+          "value": 0.6109,
+          "artifact": "output/excess_return_sensitivity.csv",
+          "locator": "column excess = net - rf_t, rf_t from data/DGS3MO.csv under research/extensions/ca/prospective/ca_rf.py (Y/100/12, 7-day freshness, locked at the prior month-end), whole book, 218 months; run_excess_sharpe.py; src/performance.sharpe_ratio (sqrt 12)",
+          "provenance": "reproduced"
+        },
+        {
+          "label": "95% CI, sensitivity: net of 3-month T-bill, whole book",
+          "display": "[0.15, 1.09]",
+          "value": null,
+          "artifact": "output/excess_return_sensitivity.csv",
+          "locator": "column excess = net - rf_t, rf_t from data/DGS3MO.csv under research/extensions/ca/prospective/ca_rf.py (Y/100/12, 7-day freshness, locked at the prior month-end), whole book, 218 months; run_excess_sharpe.py; src/validation.bootstrap_ci (iid percentile bootstrap, 10,000 resamples, seed 7)",
           "provenance": "reproduced"
         },
         {
@@ -83,7 +99,7 @@
         "The core was not pre-registered; the prospective C-A test went live 2026-09-13T18:33:11Z and has scored 0 months",
         "rf = 0 and no financing cost on up to 3x gross exposure",
         "The 218 months include a partial June 2026 (panel ends 2026-06-12)",
-        "Series source: the tsmom_net column of the XSMOM study's committed CSV; the core pipeline's own output/monthly_returns.csv is git-ignored",
+        "Series source: the tsmom_net column of the XSMOM study's committed CSV. It equals the net column of the core pipeline's committed output/monthly_returns.csv (sha256 09388a99569ca61de15ea3e65ddf0df1a16787369bfb247cc8f24de475fe0a8b) in all 218 months; report output/BACKTEST_REPORT.md (sha256 2d0e2d209418c1e3808fa50304fc25322cf524dc08ed6f7117326f0ac8b1571f)",
         "Crisis figures are raw cumulative returns over two fixed windows (config.REGIMES), not benchmark-adjusted alpha"
       ]
     },

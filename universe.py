@@ -9,9 +9,10 @@ Derived from the 30 candidates in ``config.TICKERS`` by a correlation screen plu
 discretionary trims, then a sample-window step — the three steps are listed
 separately at the bottom of this file (``CORRELATION_SCREEN_DROPS``,
 ``DISCRETIONARY_TRIMS``, ``SAMPLE_WINDOW_DROPS``). The screening outputs
-(``output/ANALYSIS_REPORT.md``, ``output/FINAL_UNIVERSE_REPORT.md``) are
-git-ignored and not committed; the correlations below are the ones recorded
-from them.
+(``output/ANALYSIS_REPORT.md``, ``output/recommendations.csv``,
+``output/correlation_matrix.csv``, ``output/FINAL_UNIVERSE_REPORT.md``) are
+committed; ``tests/test_screening.py`` checks the correlations below against
+the committed matrix.
 
 * CPER dropped — 2011 inception caps the backtest and loses 2008; copper partly
   proxied by equity/EEM; also had bad-print spike-and-revert data errors.

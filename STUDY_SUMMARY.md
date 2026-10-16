@@ -110,6 +110,12 @@ live. `rf = 0` (disclosed; ~1–2% cash would trim Sharpe slightly).
   resamples > 0). Annualized-return CI [2.5%, 12.6%] also excludes 0. Not deflated: the
   historical trial count for this panel is unknown
   ([`TRIAL_LEDGER`](research/extensions/TRIAL_LEDGER.md) §3.2).
+- *Sensitivity: net of 3-month T-bill, whole book* — Sharpe **0.61**, 95% CI [0.15, 1.09]
+  (net return minus the month's DGS3MO rate, once for the whole book; no position or
+  leverage financing). The rf = 0 figure above stays the headline.
+  [`run_excess_sharpe.py`](run_excess_sharpe.py) →
+  [`output/excess_return_sensitivity.csv`](output/excess_return_sensitivity.csv);
+  definition in [`research/ERRATA_2026-09-27.md`](research/ERRATA_2026-09-27.md) §11.
 - **Crisis alpha** — the core of TSMOM's value (it can go short; buy & hold cannot):
 
   | Regime | TSMOM cum. return | Buy & hold |
